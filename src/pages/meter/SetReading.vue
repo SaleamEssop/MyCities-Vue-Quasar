@@ -1,85 +1,82 @@
 <template>
-  <q-page class="" padding>
-    <div class="text-h6">
-      {{ meter?.title }} ({{ lastReading.value - firstReading.value }} Units)
-    </div>
-    <q-card class="mobile-full-width">
-      <q-card-section :horizontal="false">
-        <q-card-section class="q-col-gutter-md q-pt-none">
-          <q-input
-            type="number"
-            color="black"
-            :min="lastReading.value + 1"
-            outlined
-            v-model.number="currentReading"
-            label="Current Reading"
-          />
+  <q-page class="column" padding>
+    <div class="text-h6">{{ meter?.title }} ({{ meter?.number }})</div>
+    <div class="row flex-center">
+      <q-card class="no-shadow">
+        <q-card-section :horizontal="false">
+          <q-card-section class="q-pt-none">
+            <div class="relative">
+              <div class="absolute" style="opacity: 0">
+                <q-input
+                  type="number"
+                  color="black"
+                  :min="lastReading.value + 1"
+                  outlined
+                  v-model.number="currentReading"
+                  label="Current Reading"
+                />
+              </div>
+              <div>
+                <MeterComponent
+                  :text="currentReading"
+                  :meterStyle="meter.type.id"
+                  readingType="recorded-reading"
+                />
+              </div>
+            </div>
+          </q-card-section>
+          <q-card-actions align="center">
+            <q-btn color="primary" text-color="black" @click="saveReading(true)"
+              >Submit</q-btn
+            >
+            <q-btn
+              color="primary"
+              text-color="black"
+              @click="saveReading(false)"
+            >
+              Save
+            </q-btn>
+          </q-card-actions>
         </q-card-section>
-        <q-btn color="primary" text-color="black" @click="saveReading(false)">
-          Save
-        </q-btn>
-        <q-btn color="primary" text-color="black" @click="saveReading(true)"
-          >Save and Submit</q-btn
-        >
-        <!-- <q-card-actions>
-          <q-btn color="primary" text-color="black" @click="saveReading(true)">
-            Save & Submit
-          </q-btn>
-          <q-btn color="primary" text-color="black" @click="saveReading(false)">
-            Update Last
-          </q-btn>
-          <q-btn color="primary" text-color="black" @click="saveReading(false)">
-            Save
-          </q-btn>
-        </q-card-actions> -->
-      </q-card-section>
-    </q-card>
-    <div class="q-pa-md">
-      <q-btn color="primary" text-color="black" @click="deleteLast">
-        Delete Last
-      </q-btn>
+      </q-card>
+    </div>
+    <div class="q-pa-xs">
       <q-table
+        :dense="$q.screen.xs"
         class="my-sticky-header-table"
-        :title="meter.title"
+        title="History"
         :rows="meter.readings.data"
         :columns="columns"
         row-key="name"
         flat
         bordered
-      />
+      >
+        <template v-slot:body="props">
+          <q-tr :props="props">
+            <q-td key="time" :props="props">
+              {{ new Date(props.row.time).toLocaleString() }}
+            </q-td>
+            <q-td key="value" :props="props">
+              {{ props.row.value }}
+            </q-td>
+            <q-td key="time" :props="props">
+              <div v-if="props.rowIndex == 0 && allowToDelete">
+                <q-btn
+                  color="primary"
+                  text-color="black"
+                  @click="deleteLast"
+                  round
+                  icon="delete"
+                ></q-btn>
+              </div>
+              <div v-else>
+                {{ props.row.isSubmit ? "Yes" : "-" }}
+              </div>
+            </q-td>
+          </q-tr>
+        </template>
+      </q-table>
     </div>
-    <!-- <q-page class="q-my-2">
-      <q-card class="">
-        <q-card-section :horizontal="false">
-          <q-card-section class="flex flex-center q-py-none"> </q-card-section>
-        </q-card-section>
-        <q-input
-          color="black"
-          type="number"
-          min="0"
-          outlined
-          v-model.number="firstReading.value"
-          readonly
-        />
-        <label
-          >Last Submitted Reading
-          {{ new Date(firstReading.time).toLocaleString() }}</label
-        >
-
-        <q-input
-          color="black"
-          type="number"
-          min="0"
-          outlined
-          v-model.number="lastReading.value"
-          readonly
-        />
-        <label
-          >Last Noted Reading
-          {{ new Date(lastReading.time).toLocaleString() }}</label
-        >
-      </q-card>
-    </q-page> -->
   </q-page>
 </template>
 <script setup>
@@ -88,6 +85,7 @@ import { useRouter, useRoute } from "vue-router";
 import { date } from "quasar";
 import { useMeterStore } from "/src/stores/meter";
 import { useQuasar } from "quasar";
+import MeterComponent from "/src/components/MeterComponent.vue";
 
 const currentReading = ref();
 const firstReading = ref({});
@@ -144,6 +142,11 @@ const showAlert = (msg) => {
   });
 };
 
+const allowToDelete = computed(() => {
+  const data = meter?.readings?.data || [];
+  return data.length > 0 && !data[0].isSubmit;
+});
+
 const deleteLast = () => {
   const data = meter?.readings?.data || [];
   if (data.length > 0 && !data[0].isSubmit) {
@@ -170,13 +173,13 @@ const columns = [
   { name: "value", label: "Reading", align: "center", field: "value" },
   {
     name: "isSubmitted",
-    label: "Submitted",
+    label: "isSubmitted",
     align: "center",
-    field: (row) => {
+    field: (row, index) => {
       if (row.isSubmit) {
-        return "Submitted";
+        return "Yes";
       } else {
-        return "";
+        return "No";
       }
     },
   },

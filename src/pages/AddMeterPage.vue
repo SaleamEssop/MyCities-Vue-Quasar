@@ -1,5 +1,5 @@
 <template>
-  <q-card class="mobile-full-width">
+  <q-card class="mobile-full-width no-shadow">
     <q-card-section class="column q-col-gutter-md" :horizontal="false">
       <q-select
         filled
@@ -51,7 +51,6 @@
         color="black"
         type="text"
         min="0"
-        outlined
         v-model.trim="meter.title"
         label="Meter Title"
       />
@@ -59,7 +58,6 @@
         color="black"
         type="number"
         min="0"
-        outlined
         v-model.number="meter.number"
         label="Meter Number"
       />
@@ -86,16 +84,13 @@
         color="black"
         type="number"
         min="0"
-        outlined
         v-model.number="firstReading.value"
         label="First Reading"
       />
-      <q-btn
-        color="primary"
-        text-color="black"
-        class="q-mt-md"
-        @click="addMeter"
-        >Save</q-btn
+      <q-card-actions align="center">
+        <q-btn color="primary" text-color="black" @click="addMeter"
+          >Save</q-btn
+        ></q-card-actions
       >
     </q-card-section>
   </q-card>

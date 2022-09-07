@@ -1,11 +1,6 @@
 <template>
   <q-page padding class="flex-xs flex-center">
     <div class="row q-col-gutter-md">
-      <q-video
-        src="~assets/animation_electricity_meter.mp4"
-        referrerpolicy="unsafe-url"
-      />
-      <QMediaPlayer />
       <IconButton
         class="col-xs-6 col-sm-6"
         title="Send Reading"
@@ -41,7 +36,7 @@ import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-const playVideo = import(`assets/animation_electricity_meter.mp4`);
+
 const $q = useQuasar();
 const totalItems = ref([
   {

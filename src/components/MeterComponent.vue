@@ -26,10 +26,16 @@ export default defineComponent({
   },
   setup(props) {
     const chars = computed(() => {
-      return [...props.text.toString()];
+      const fillArray = [...(props?.text?.toString() || "")];
+      let newArr = [];
+      if (fillArray.length < 8) {
+        newArr = [...new Array(8 - fillArray.length)].map((x) => 0);
+      }
+      return [...newArr, ...fillArray];
     });
     const styles = (index) => {
-      const size = props.text.toString().length;
+      const size = chars.value.length || 0;
+      console.log(size);
       switch (props.meterStyle) {
         case 1: {
           // Water

@@ -23,10 +23,10 @@ module.exports = configure(function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-webpack/boot-files
-    boot: ["axios", "LocationPicker", "media"],
+    boot: ["axios", "LocationPicker"],
 
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-css
-    css: ["app.scss", "~quasar-ui-qmediaplayer/src/QMediaPlayer.sass"],
+    css: ["app.scss"],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
@@ -52,7 +52,7 @@ module.exports = configure(function (ctx) {
       // Add dependencies for transpiling with Babel (Array of string/regex)
       // (from node_modules, which are by default not transpiled).
       // Applies only if "transpile" is set to true.
-      transpileDependencies: [/quasar-ui-qmediaplayer[\\/]src/],
+      transpileDependencies: [],
 
       // rtl: true, // https://quasar.dev/options/rtl-support
       // preloadChunks: true,

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-card class="text-center cursor-pointer">
+    <q-card class="text-center cursor-pointer no-shadow">
       <q-card-section>
         <q-icon :name="icon" class="material-icons md-48" />
         <br />

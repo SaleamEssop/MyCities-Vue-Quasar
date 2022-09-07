@@ -1,10 +1,10 @@
 <template>
   <q-page padding class="flex-center">
-    <q-card class="mobile-full-width">
+    <q-card class="mobile-full-width no-shadow">
       <q-card-section>
         <l-map
           v-if="site.latLng"
-          style="height: 50vh"
+          style="height: 25vh"
           :zoom="zoom"
           :center="center"
         >
@@ -32,52 +32,46 @@
           >Request For Location</q-btn
         >
       </div>
-      <div>
-        <q-card-section class="column q-col-gutter-md" :horizontal="false">
-          <q-input
-            color="black"
-            type="text"
-            outlined
-            label="Site Title"
-            v-model.trim="site.title"
-          />
-        </q-card-section>
-        <q-card-section>
-          <div
-            class="row rounded-borders q-mt-sm"
-            style="border-style: dotted; border-width: thin"
-            v-for="(account, index) in site.accounts"
-            :key="index"
-          >
-            <div class="col-12 col-md-6">
-              <q-input
-                color="black"
-                type="text"
-                outlined
-                label="Account Name"
-                v-model.trim="account.title"
-              />
-            </div>
-            <div class="col-12 col-md-6">
-              <q-input
-                color="black"
-                type="text"
-                outlined
-                label="Account Number"
-                v-model.number="account.number"
-              />
-            </div>
+      <q-card-section class="column q-col-gutter-md" :horizontal="false">
+        <q-input
+          color="black"
+          type="text"
+          label="Enter the site name or complex name"
+          v-model.trim="site.title"
+        />
+      </q-card-section>
+      <q-card-section v-for="(account, index) in site.accounts" :key="index">
+        <!-- <q-separator /> -->
+        Account {{ index + 1 }}
+        <div class="row">
+          <div class="col-12 col-md-6">
+            <q-input
+              color="black"
+              type="text"
+              label="Enter name - As per bill"
+              v-model.trim="account.title"
+            />
           </div>
-          <q-btn
-            color="primary"
-            text-color="black"
-            class="q-my-sm"
-            @click="addNullAccount"
-          >
-            Add New Account
-          </q-btn>
-        </q-card-section>
-      </div>
+          <div class="col-12 col-md-6">
+            <q-input
+              color="black"
+              type="text"
+              label="Enter account number - As per bill"
+              v-model.number="account.number"
+            />
+          </div>
+        </div>
+      </q-card-section>
+      <q-card-actions align="center">
+        <q-btn
+          color="primary"
+          text-color="black"
+          class="q-my-none"
+          @click="addNullAccount"
+        >
+          Add Account
+        </q-btn>
+      </q-card-actions>
       <q-card-section class="column q-col-gutter-md" :horizontal="false">
         <q-input
           color="black"
@@ -87,10 +81,10 @@
           v-model.trim="site.address"
         />
       </q-card-section>
+      <q-card-actions align="center">
+        <q-btn color="primary" text-color="black" @click="addSite">Save</q-btn>
+      </q-card-actions>
     </q-card>
-    <q-btn color="primary" text-color="black" class="q-mt-md" @click="addSite"
-      >Save</q-btn
-    >
   </q-page>
 </template>
 <script setup>
