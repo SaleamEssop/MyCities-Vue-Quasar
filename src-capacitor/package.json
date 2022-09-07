@@ -1,0 +1,12 @@
+{
+  "name": "com.smart.meter.reading",
+  "version": "0.0.1",
+  "description": "A Quasar Project",
+  "author": "blukhi99 <blukhi99@outlook.com>",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "2.5.0",
+    "@capacitor/cli": "^2.0.0",
+    "@capacitor/core": "^2.0.0"
+  }
+}
