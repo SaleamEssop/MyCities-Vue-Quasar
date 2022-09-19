@@ -1,11 +1,9 @@
 import { defineStore } from "pinia";
-import { useSiteStore } from "./site";
 
-const siteStore = useSiteStore();
 export const useAccountStore = defineStore("account", {
   state: () => ({
     account: 0,
-    accounts: siteStore.sites.flatMap((site) => site.accounts),
+    accounts: [],
   }),
 
   getters: {
@@ -15,6 +13,9 @@ export const useAccountStore = defineStore("account", {
   actions: {
     addAccount(_account) {
       this.accounts.push(_account);
+    },
+    getAccountsById(siteId) {
+      return this.accounts.filter(({ site }) => site.id == siteId);
     },
   },
   persist: true,

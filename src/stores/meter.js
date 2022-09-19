@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { useAccountStore } from "./account";
 import { getCurrentInstance } from "vue";
 
 export const useMeterStore = defineStore("meter", {
@@ -56,6 +55,11 @@ export const useMeterStore = defineStore("meter", {
         // only splice array when item is found
         meter?.readings?.data.splice(readingIndex, 1); // 2nd parameter means remove one item only
       }
+    },
+    getByAccuntId(accountId) {
+      return this.allMeters.filter(({ account }) => {
+        return account.id == accountId;
+      });
     },
   },
 

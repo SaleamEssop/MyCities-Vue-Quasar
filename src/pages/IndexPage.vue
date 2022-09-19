@@ -1,31 +1,37 @@
 <template>
-  <q-page padding class="flex-xs flex-center">
-    <div class="row q-col-gutter-md">
-      <IconButton
-        class="col-xs-6 col-sm-6"
-        title="Send Reading"
-        icon="email"
-        @click="moveTo('send_reading')"
-      />
-      <IconButton
-        class="col-xs-6 col-sm-6"
-        title="History"
-        icon="manage_history"
-        @click="moveTo('history')"
-      />
-      <IconButton
-        class="col-xs-6 col-sm-6"
-        title="Estimator"
-        icon="calculate"
-        @click="moveTo('estimator')"
-      />
-      <IconButton
-        class="col-xs-6 col-sm-6"
-        title="Account Setup"
-        icon="electric_meter"
-        @click="moveTo('account_setup')"
-      />
-    </div>
+  <q-page>
+    <img
+      src="~assets/lightsandwaterapp.jpg"
+      style="width: 100%; max-height: 300px; object-fit: contain"
+    />
+    <q-page class="">
+      <div class="row q-col-gutter-md">
+        <IconButton
+          class="col-xs-6 col-sm-6"
+          title="Send Reading"
+          icon="email"
+          @click="moveTo('send_reading')"
+        />
+        <!-- <IconButton
+          class="col-xs-6 col-sm-6"
+          title="History"
+          icon="manage_history"
+          @click="moveTo('history')"
+        /> -->
+        <IconButton
+          class="col-xs-6 col-sm-6"
+          title="Estimator"
+          icon="calculate"
+          @click="moveTo('estimator')"
+        />
+        <IconButton
+          class="col-xs-6 col-sm-6"
+          title="Account Setup"
+          icon="electric_meter"
+          @click="moveTo('account_setup')"
+        />
+      </div>
+    </q-page>
   </q-page>
 </template>
 

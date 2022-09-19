@@ -32,46 +32,74 @@
           >Request For Location</q-btn
         >
       </div>
+
       <q-card-section class="column q-col-gutter-md" :horizontal="false">
         <q-input
           color="black"
           type="text"
-          label="Enter the site name or complex name"
+          label="Site or complex name. Eg: Home, Tenants"
           v-model.trim="site.title"
         />
       </q-card-section>
-      <q-card-section v-for="(account, index) in site.accounts" :key="index">
-        <!-- <q-separator /> -->
-        Account {{ index + 1 }}
-        <div class="row">
-          <div class="col-12 col-md-6">
-            <q-input
-              color="black"
-              type="text"
-              label="Enter name - As per bill"
-              v-model.trim="account.title"
-            />
+      <!-- <template v-for="(account, index) in site.accounts" :key="index">
+        <q-separator />
+        <q-card-section>
+          <div class="justify-between items-center text-h6 q-py-sm">
+            <div>Account {{ index + 1 }}</div>
           </div>
-          <div class="col-12 col-md-6">
-            <q-input
-              color="black"
-              type="text"
-              label="Enter account number - As per bill"
-              v-model.number="account.number"
-            />
+          <div class="row">
+            <div class="col-12 justify-between items-center">
+              Enter name - As per bill
+              <span class="text-h6 q-px-sm">{{ account.title }}</span>
+            </div>
+            <div class="col-12 justify-between items-center">
+              Enter account number - As per bill
+              <span class="text-h6 q-px-sm">{{ account.number }}</span>
+            </div>
+            <div
+              v-for="(fixedCost, index) in account.fixedCosts"
+              class="col-12"
+              :key="index"
+            >
+              <span>{{ fixedCost.title }}</span>
+              <span class="text-h6 q-px-sm">{{ fixedCost.value }}</span>
+            </div>
           </div>
-        </div>
-      </q-card-section>
-      <q-card-actions align="center">
+          <q-card-actions align="right">
+            <q-btn
+              flat
+              round
+              color="primary"
+              text-color="red"
+              v-if="site.accounts.length > 1"
+              icon="delete"
+              @click="deletAccount(account, index)"
+            />
+            <q-btn
+              color="primary"
+              text-color="black"
+              icon-right="send"
+              label="SetUp Details"
+              @click="
+                selectedAccount = account;
+                startFixedCost = true;
+              "
+            />
+          </q-card-actions>
+        </q-card-section>
+      </template> -->
+
+      <!-- <q-card-actions align="center">
         <q-btn
           color="primary"
           text-color="black"
           class="q-my-none"
+          icon="add"
+          label="Add Account"
+          glossy
           @click="addNullAccount"
-        >
-          Add Account
-        </q-btn>
-      </q-card-actions>
+        />
+      </q-card-actions> -->
       <q-card-section class="column q-col-gutter-md" :horizontal="false">
         <q-input
           color="black"
@@ -81,19 +109,57 @@
           v-model.trim="site.address"
         />
       </q-card-section>
+      <q-separator />
+      <AccountComponent
+        :account="selectedAccount"
+        @close="startFixedCost = false"
+        @save="startFixedCost = false"
+        :autoUpdate="true"
+        @update:account="Object.assign(selectedAccount, $event)"
+      />
+      <q-separator />
+      <!-- {{ selectedMeter }} -->
+      <AddMeter :propsMeter="selectedMeter" />
+      <q-separator />
       <q-card-actions align="center">
         <q-btn color="primary" text-color="black" @click="addSite">Save</q-btn>
       </q-card-actions>
     </q-card>
+
+    <q-dialog
+      v-model="startFixedCost"
+      @hide="startFixedCost = false"
+      :full-width="true"
+      :full-height="true"
+      persistent
+    >
+      <!-- <q-page>
+        <q-page-container> -->
+
+      <AccountComponent
+        :account="selectedAccount"
+        @close="startFixedCost = false"
+        @save="startFixedCost = false"
+        @update:account="Object.assign(selectedAccount, $event)"
+      />
+
+      <!-- </q-page-container> -->
+      <!-- </q-page> -->
+    </q-dialog>
   </q-page>
 </template>
 <script setup>
 import { ref, onBeforeMount, onMounted, onBeforeUnmount, watch } from "vue";
 import { latLng } from "leaflet";
 import { useSiteStore } from "/src/stores/site";
+import { useAccountStore } from "/src/stores/account";
+import { useMeterStore } from "/src/stores/meter";
+
 import { useRouter } from "vue-router";
 //https://capacitorjs.com/docs/apis/geolocation
 import { Plugins } from "@capacitor/core";
+import AccountComponent from "../../components/AccountComponent.vue";
+import AddMeter from "src/components/AddMeter.vue";
 const { Geolocation } = Plugins;
 
 const geojson = ref({
@@ -112,16 +178,66 @@ const site = ref({
   title: "",
   latLng: null,
   address: "",
-  accounts: [],
 });
 
-const addNullAccount = () => {
-  site.value.accounts.push({
-    id: Date.now(),
-    title: "",
-    number: "",
-  });
-};
+const selectedAccount = ref({
+  id: Date.now(),
+  title: "",
+  number: "",
+  site: { id: site.value.id },
+  fixedCosts: [
+    {
+      id: Date.now(),
+      title: "Rates",
+      value: 0,
+      isApplicable: true,
+      isFromServer: true,
+      isFromUser: false,
+    },
+    {
+      id: Date.now(),
+      title: "Water Loss Levy",
+      value: 0,
+      isApplicable: true,
+      isFromServer: true,
+      isFromUser: false,
+    },
+    {
+      id: Date.now(),
+      title: "Refuse Collection",
+      value: 0,
+      isApplicable: true,
+      isFromServer: true,
+      isFromUser: false,
+    },
+    {
+      id: Date.now(),
+      title: "Infrastructure Levy",
+      value: 0,
+      isApplicable: true,
+      isFromServer: true,
+      isFromUser: false,
+    },
+  ],
+});
+
+const selectedMeter = ref({
+  id: Date.now(),
+  title: "",
+  number: 0,
+  type: { id: 1 },
+  readings: {
+    sort: 1,
+    data: [
+      {
+        isSubmit: true,
+        time: Date.now(),
+        value: 0,
+      },
+    ],
+  },
+  account: { id: selectedAccount.value.id },
+});
 
 const zoom = ref(13);
 const center = ref(latLng(-29.813218, 30.940247));
@@ -133,9 +249,18 @@ const onMarkerMove = (newValue) => {
 
 const router = useRouter();
 const siteStore = useSiteStore();
+const accountStore = useAccountStore();
+const meterStore = useMeterStore();
+
 const addSite = () => {
   siteStore.addSite(site.value);
-  router.back();
+  accountStore.addAccount(selectedAccount.value);
+  meterStore.addMeter(selectedMeter.value);
+  router.back(-1);
+};
+const startFixedCost = ref(false);
+const deletAccount = (account, index) => {
+  site.value.accounts.splice(index, 1);
 };
 
 const printCurrentPosition = async () => {
@@ -187,7 +312,6 @@ const watchPosition = () => {
 onMounted(() => {
   printCurrentPosition();
   //watchPosition();
-  addNullAccount();
 });
 </script>
 <!-- https://vue2-leaflet.netlify.app/examples/simple.html -->

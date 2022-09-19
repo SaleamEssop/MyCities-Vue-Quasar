@@ -1,6 +1,9 @@
 <template>
   <q-page class="column" padding>
-    <div class="text-h6">{{ meter?.title }} ({{ meter?.number }})</div>
+    <div class="flex justify-between items-center">
+      <span class="text-bold">{{ meter?.type.title }}</span>
+      <span class="round-cheap">Meter {{ meter?.number }}</span>
+    </div>
     <div class="row flex-center">
       <q-card class="no-shadow">
         <q-card-section :horizontal="false">
@@ -26,16 +29,36 @@
             </div>
           </q-card-section>
           <q-card-actions align="center">
-            <q-btn color="primary" text-color="black" @click="saveReading(true)"
-              >Submit</q-btn
-            >
             <q-btn
+              rounded
               color="primary"
               text-color="black"
               @click="saveReading(false)"
             >
               Save
             </q-btn>
+            <q-btn
+              rounded
+              color="primary"
+              text-color="black"
+              class="btn stroke-primary"
+              @click="saveReading(true)"
+              >Estimate usage cost</q-btn
+            >
+          </q-card-actions>
+          <q-card-actions align="center">
+            <q-btn rounded outline color="primary" @click="$router.back()">
+              <span style="color: black">Back to Manage</span></q-btn
+            >
+          </q-card-actions>
+          <q-card-actions align="center">
+            <q-btn
+              rounded
+              color="primary"
+              text-color="black"
+              @click="saveReading(true)"
+              >Submit to Municipality</q-btn
+            >
           </q-card-actions>
         </q-card-section>
       </q-card>

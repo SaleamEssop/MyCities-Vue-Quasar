@@ -1,12 +1,9 @@
 <template>
-  <q-card>
-    <q-card-section class="text-center q-py-none bg-primary">
+  <q-card class="no-shadow" dense>
+    <q-card-section class="text-center q-py-none">
       <div class="flex justify-between items-center">
-        <b>Account Number</b> <span class="text-h6">{{ meter.account }}</span>
-      </div>
-      <div class="flex justify-between items-center">
-        <b>{{ meter?.title }}</b>
-        <span class="text-h6">{{ meter?.number }}</span>
+        <span class="text-bold">{{ meter?.type.title }}</span>
+        <span class="round-cheap">Meter {{ meter?.number }}</span>
       </div>
     </q-card-section>
 
@@ -35,7 +32,22 @@
       </div>
     </q-card-section>
 
-    <q-slide-transition>
+    <q-card-section class="text-center">
+      <div class="flex justify-between items-center">
+        <span class="round-cheap">Enter Latest Reading</span>
+        <span class="round-cheap">Estimate usage cost</span>
+      </div>
+      <q-btn
+        rounded
+        class="q-mt-lg"
+        color="primary"
+        text-color="black"
+        label="Submit to Municipality"
+        @click="moveTo('setReading', meter?.id)"
+      />
+    </q-card-section>
+
+    <q-slide-transition v-if="false">
       <div v-show="isExpand">
         <q-separator />
         <q-card-section>
@@ -79,7 +91,7 @@
       </div>
     </q-slide-transition>
 
-    <q-card-actions>
+    <q-card-actions v-if="false">
       <q-btn
         class="full-width"
         color="primary"
@@ -89,14 +101,16 @@
       >
     </q-card-actions>
 
-    <q-card-section class="text-center q-py-none bg-primary q-mt-md">
+    <q-card-section
+      v-if="false"
+      class="text-center q-py-none bg-primary q-mt-md"
+    >
       <q-item
         class="flex justify-center"
         clickable
         :class="!isExpand ? 'bubble-bottom' : 'bubble-top'"
         @click="isExpand = !isExpand"
       >
-        <!-- <q-icon name="expand_more" class="text-24" /> -->
         <q-btn
           round
           flat
@@ -104,7 +118,6 @@
           :icon="isExpand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
         />
       </q-item>
-      <!-- <div></div> -->
     </q-card-section>
   </q-card>
 </template>

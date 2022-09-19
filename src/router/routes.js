@@ -14,10 +14,16 @@ const routes = [
         children: [
           {
             path: "",
-            component: () => import("pages/SendReadingPage.vue"),
+            component: () => import("pages/MainPage.vue"),
             name: "send_reading",
-            meta: { title: "Send Reading" },
+            meta: { title: "Manage" },
           },
+          // {
+          //   path: "",
+          //   component: () => import("pages/SendReadingPage.vue"),
+          //   name: "send_reading",
+          //   meta: { title: "Send Reading" },
+          // },
           {
             path: "addMeterPage",
             component: () => import("pages/AddMeterPage.vue"),
@@ -27,7 +33,7 @@ const routes = [
             path: "setReading/:meterId",
             component: () => import("pages/meter/SetReading.vue"),
             name: "set_reading_page",
-            meta: { title: "Set Reading" },
+            meta: { title: "Enter Reading" },
           },
         ],
       },

@@ -73,8 +73,8 @@ export default defineComponent({
   background: #5f0000;
 }
 .submitted-reading {
-  border-color: #333333;
-  background: #0f0f0f;
+  border-color: #b3b3b3;
+  background: #b3b3b3;
 }
 .text-container {
   border-top: 1px dotted black;
