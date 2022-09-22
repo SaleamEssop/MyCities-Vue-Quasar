@@ -61,7 +61,11 @@
               <q-item clickable v-close-popup>
                 <q-item-section>Delete this meter</q-item-section>
               </q-item>
-              <q-item clickable v-close-popup>
+              <q-item
+                clickable
+                @click="modelMeterForNewEdit = true"
+                v-close-popup
+              >
                 <q-item-section>Add a new meter</q-item-section>
               </q-item>
             </q-list>
@@ -164,6 +168,20 @@
       :isNew="true"
     />
   </q-dialog>
+
+  <q-dialog
+    v-model="modelMeterForNewEdit"
+    @hide="modelMeterForNewEdit = false"
+    :full-width="true"
+    persistent
+  >
+    <AddMeter
+      :propsMeter="null"
+      :propsAccount="selectedAccount"
+      @close="modelMeterForNewEdit = false"
+      @save="modelMeterForNewEdit = false"
+    />
+  </q-dialog>
 </template>
 <script>
 import { defineComponent, computed, ref, watch } from "vue";
@@ -175,10 +193,14 @@ import MeterComponent from "./MeterComponent.vue";
 
 import { useMeterStore } from "/src/stores/meter";
 import { useReadingStore } from "/src/stores/reading";
+import { useAccountStore } from "/src/stores/account";
+
 import MeterComponentWithInput from "./MeterComponentWithInput.vue";
+import AddMeter from "./AddMeter.vue";
 
 const meterStore = useMeterStore();
 const readingStore = useReadingStore();
+const accountStore = useAccountStore();
 
 export default defineComponent({
   name: "MeterReadingSet",
@@ -192,6 +214,11 @@ export default defineComponent({
     var readings = [];
 
     const modelForReadingSet = ref(false);
+    const modelMeterForNewEdit = ref(false);
+
+    const selectedAccount = ref(
+      accountStore.getAccountById(props.meter.account.id)
+    );
 
     const groupReading = computed(() => {
       let index = 0;
@@ -322,9 +349,11 @@ export default defineComponent({
       moveTo,
       usesPerDay,
       isExpand,
+      modelMeterForNewEdit,
+      selectedAccount,
     };
   },
-  components: { MeterComponent, MeterComponentWithInput },
+  components: { MeterComponent, MeterComponentWithInput, AddMeter },
 });
 </script>
 <style lang="scss" scoped>

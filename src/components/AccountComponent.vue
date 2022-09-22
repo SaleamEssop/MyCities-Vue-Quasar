@@ -20,7 +20,7 @@
         v-if="isNew"
       />
       <div v-else>
-        {{ site.address }}
+        {{ site?.address }}
       </div>
 
       <q-input
@@ -201,8 +201,9 @@ export default defineComponent({
     const accountStore = useAccountStore();
 
     const selectedAccount = ref(initialState.selectedAccount);
+
     const isNew = computed(
-      () => accountStore.getAccountById(selectedAccount.value.id) === null
+      () => !(accountStore.getAccountById(selectedAccount?.value?.id)?.id > 0)
     );
 
     const site = ref(
