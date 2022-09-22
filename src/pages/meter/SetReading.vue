@@ -8,22 +8,30 @@
       <q-card class="no-shadow">
         <q-card-section :horizontal="false">
           <q-card-section class="q-pt-none">
-            <div class="relative">
+            <div
+              class="relative"
+              :class="inputFocus ? 'stroke-focus' : 'stroke-simple'"
+            >
               <div class="absolute" style="opacity: 0">
                 <q-input
                   type="number"
                   color="black"
                   :min="lastReading.value + 1"
                   outlined
+                  @focus="inputFocus = true"
+                  @blur="inputFocus = false"
                   v-model.number="currentReading"
-                  label="Current Reading"
                 />
               </div>
-              <div>
+              <div class="text-center">
                 <MeterComponent
                   :text="currentReading"
                   :meterStyle="meter.type.id"
-                  readingType="recorded-reading"
+                  :readingType="
+                    meter.type.id == 2
+                      ? 'electricity-recorded-reading'
+                      : 'water-recorded-reading'
+                  "
                 />
               </div>
             </div>
@@ -43,12 +51,7 @@
               text-color="black"
               class="btn stroke-primary"
               @click="saveReading(true)"
-              >Estimate usage cost</q-btn
-            >
-          </q-card-actions>
-          <q-card-actions align="center">
-            <q-btn rounded outline color="primary" @click="$router.back()">
-              <span style="color: black">Back to Manage</span></q-btn
+              >Cost</q-btn
             >
           </q-card-actions>
           <q-card-actions align="center">
@@ -68,7 +71,7 @@
         :dense="$q.screen.xs"
         class="my-sticky-header-table"
         title="History"
-        :rows="meter.readings.data"
+        :rows="readings"
         :columns="columns"
         row-key="name"
         flat
@@ -77,17 +80,21 @@
         <template v-slot:body="props">
           <q-tr :props="props">
             <q-td key="time" :props="props">
-              {{ new Date(props.row.time).toLocaleString() }}
+              {{ new Date(props.row.time).toLocaleString("en-GB") }}
             </q-td>
             <q-td key="value" :props="props">
               {{ props.row.value }}
             </q-td>
             <q-td key="time" :props="props">
-              <div v-if="props.rowIndex == 0 && allowToDelete">
+              <div
+                v-if="
+                  !lastReading.isSubmit && lastReading.time == props.row.time
+                "
+              >
                 <q-btn
                   color="primary"
                   text-color="black"
-                  @click="deleteLast"
+                  @click="deleteLast(lastReading.time)"
                   round
                   icon="delete"
                 ></q-btn>
@@ -106,24 +113,29 @@
 import { defineComponent, computed, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { date } from "quasar";
-import { useMeterStore } from "/src/stores/meter";
 import { useQuasar } from "quasar";
 import MeterComponent from "/src/components/MeterComponent.vue";
+
+import { useMeterStore } from "/src/stores/meter";
+import { useReadingStore } from "/src/stores/reading";
+
+const meterStore = useMeterStore();
+const readingStore = useReadingStore();
 
 const currentReading = ref();
 const firstReading = ref({});
 const lastReading = ref({});
 const route = useRoute();
 const $q = useQuasar();
-const meterStore = useMeterStore();
+const inputFocus = ref(false);
 
 const meterId = route.params.meterId;
-const meter = meterStore?.allMeters.find(({ id }) => {
-  return id == meterId;
-});
+const meter = meterStore?.getMeterById(meterId);
+
+const readings = computed(() => readingStore.getReadingsByMeterId(meterId));
 
 const getSubmitedAndLastReading = () => {
-  const data = (meter?.readings?.data || []).sort((a, b) => b.time - a.time);
+  const data = (readings.value || []).sort((a, b) => b.time - a.time);
   lastReading.value = data[0] || {};
   firstReading.value =
     data.find(({ isSubmit }) => isSubmit) || data[data.length - 1] || {};
@@ -137,12 +149,13 @@ const saveReading = (isSubmit = false) => {
     showAlert("Current Reading must be more then last reading");
     return;
   }
-  meterStore.addReading(meter.id, {
+  readingStore.addReading({
     value: currentReading.value,
     time: Date.now(),
     isSubmit: isSubmit,
+    meter: { id: meter.id },
   });
-  currentReading.value = "";
+  currentReading.value = null;
   // lastReadingOfMonthOrPreviousMonth();
   getSubmitedAndLastReading();
 };
@@ -166,17 +179,18 @@ const showAlert = (msg) => {
 };
 
 const allowToDelete = computed(() => {
-  const data = meter?.readings?.data || [];
+  const data = readings.value || [];
   return data.length > 0 && !data[0].isSubmit;
 });
 
-const deleteLast = () => {
-  const data = meter?.readings?.data || [];
-  if (data.length > 0 && !data[0].isSubmit) {
-    meterStore?.delete(meter?.id, data[0] || {});
-  } else {
-    showAlert("You cant' delete Submitted data");
-  }
+const deleteLast = (timeToDelete) => {
+  readingStore?.delete(timeToDelete, meter.id);
+  // const data = readings.value || [];
+  // if (data.length > 0 && !data[data.length - 1].isSubmit) {
+
+  // } else {
+  //   showAlert("You cant' delete Submitted data");
+  // }
   getSubmitedAndLastReading();
 };
 // const updateMeter = (meterId) => {
@@ -190,7 +204,7 @@ const columns = [
     name: "time",
     label: "Time",
     align: "center",
-    field: (row) => new Date(row.time).toLocaleString(),
+    field: (row) => new Date(row.time).toLocaleString("en-GB"),
     sortable: true,
   },
   { name: "value", label: "Reading", align: "center", field: "value" },
@@ -208,3 +222,15 @@ const columns = [
   },
 ];
 </script>
+<style scoped>
+.stroke-focus {
+  border: 2px solid blue;
+  border-radius: 15px;
+  padding: 5px;
+}
+.stroke-simple {
+  border: 2px solid grey;
+  border-radius: 15px;
+  padding: 5px;
+}
+</style>

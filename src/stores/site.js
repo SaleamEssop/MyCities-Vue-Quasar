@@ -13,6 +13,9 @@ export const useSiteStore = defineStore("site", {
     addSite(_site) {
       this.sites.push(_site);
     },
+    getSiteById(siteId) {
+      return this.sites.filter(({ id }) => id == siteId)[0];
+    },
   },
   persist: true,
 });

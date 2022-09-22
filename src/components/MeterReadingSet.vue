@@ -2,7 +2,9 @@
   <q-card class="no-shadow" dense>
     <q-card-section class="text-center q-py-none">
       <div class="flex justify-between items-center">
-        <span class="text-bold">{{ meter?.type.title }}</span>
+        <span class="text-bold text-h6 text-black">{{
+          meter?.type.title
+        }}</span>
         <span class="round-cheap">Meter {{ meter?.number }}</span>
       </div>
     </q-card-section>
@@ -11,7 +13,7 @@
       <div class="q-mt-md">
         <div class="flex justify-between items-center wrap">
           Submitted Reading
-          <b> {{ new Date(firstReading.time).toLocaleString() }}</b>
+          <b> {{ new Date(firstReading.time).toLocaleString("en-GB") }}</b>
         </div>
         <MeterComponent
           :text="firstReading.value"
@@ -21,30 +23,59 @@
       </div>
       <div class="q-mt-md">
         <div class="flex justify-between items-center wrap">
-          Recorded Reading
-          <b>{{ new Date(lastReading.time).toLocaleString() }}</b>
+          Last saved reading
+          <b>{{ new Date(lastReading.time).toLocaleString("en-GB") }}</b>
         </div>
         <MeterComponent
           :text="lastReading.value"
           :meterStyle="meter?.type?.id"
-          readingType="recorded-reading"
+          :readingType="
+            meter.type.id == 2
+              ? 'electricity-recorded-reading'
+              : 'water-recorded-reading'
+          "
         />
       </div>
     </q-card-section>
 
     <q-card-section class="text-center">
-      <div class="flex justify-between items-center">
-        <span class="round-cheap">Enter Latest Reading</span>
-        <span class="round-cheap">Estimate usage cost</span>
+      <div class="flex justify-center items-center">
+        <span
+          class="round-cheap"
+          clickable
+          v-ripple
+          @click="modelForReadingSet = true"
+          >Enter Latest Reading</span
+        >
+        <p class="q-mx-md"></p>
+        <span class="round-cheap">Cost</span>
+        <q-btn flat icon="more_horiz" text-color="primary">
+          <q-menu anchor="center middle" self="center middle">
+            <q-list style="min-width: 100px">
+              <q-item clickable v-close-popup>
+                <q-item-section>Submit to Municipality</q-item-section>
+              </q-item>
+              <q-item clickable v-close-popup>
+                <q-item-section>Edit this meter</q-item-section>
+              </q-item>
+              <q-item clickable v-close-popup>
+                <q-item-section>Delete this meter</q-item-section>
+              </q-item>
+              <q-item clickable v-close-popup>
+                <q-item-section>Add a new meter</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-btn>
       </div>
-      <q-btn
+
+      <!-- <q-btn
         rounded
         class="q-mt-lg"
         color="primary"
         text-color="black"
         label="Submit to Municipality"
-        @click="moveTo('setReading', meter?.id)"
-      />
+      /> -->
     </q-card-section>
 
     <q-slide-transition v-if="false">
@@ -120,16 +151,34 @@
       </q-item>
     </q-card-section>
   </q-card>
+  <q-dialog
+    v-model="modelForReadingSet"
+    @hide="modelForReadingSet = false"
+    persistent
+    :full-width="true"
+  >
+    <MeterComponentWithInput
+      :meter="meter"
+      @close="modelForReadingSet = false"
+      @save="modelForReadingSet = false"
+      :isNew="true"
+    />
+  </q-dialog>
 </template>
 <script>
 import { defineComponent, computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { date } from "quasar";
-import { useMeterStore } from "/src/stores/meter";
+
 import { useQuasar } from "quasar";
 import MeterComponent from "./MeterComponent.vue";
 
+import { useMeterStore } from "/src/stores/meter";
+import { useReadingStore } from "/src/stores/reading";
+import MeterComponentWithInput from "./MeterComponentWithInput.vue";
+
 const meterStore = useMeterStore();
+const readingStore = useReadingStore();
 
 export default defineComponent({
   name: "MeterReadingSet",
@@ -139,9 +188,14 @@ export default defineComponent({
   setup(props) {
     const $q = useQuasar();
     const router = useRouter();
+
+    var readings = [];
+
+    const modelForReadingSet = ref(false);
+
     const groupReading = computed(() => {
       let index = 0;
-      const data = (props?.meter?.readings?.data || [])
+      const data = (readings || [])
         .sort((b, a) => b.time - a.time)
         .reduce((a, o) => {
           const dateObj = new Date(o.time);
@@ -174,19 +228,17 @@ export default defineComponent({
         showAlert("Current Reading must be more then last reading");
         return;
       }
-      meterStore.addReading(props.meter.id, {
+      useReadingStore.addReading(props.meter.id, {
         value: currentReading.value,
         time: Date.now(),
         isSubmit: isSubmit,
       });
-      currentReading.value = "";
+      currentReading.value = null;
       // lastReadingOfMonthOrPreviousMonth();
       getSubmitedAndLastReading();
     };
     const getSubmitedAndLastReading = () => {
-      const data = (props?.meter?.readings?.data || []).sort(
-        (a, b) => b.time - a.time
-      );
+      const data = (readings || []).sort((a, b) => b.time - a.time);
       lastReading.value = data[0] || {};
       firstReading.value =
         data.find(({ isSubmit }) => isSubmit) || data[data.length - 1] || {};
@@ -213,8 +265,17 @@ export default defineComponent({
       }
       return;
     };
-    // lastReadingOfMonthOrPreviousMonth();
-    getSubmitedAndLastReading();
+
+    watch(
+      () => readingStore.getReadingsByMeterId(props?.meter?.id),
+      (newValue) => {
+        readings = newValue;
+        // lastReadingOfMonthOrPreviousMonth();
+        getSubmitedAndLastReading();
+      },
+      { deep: true }
+    );
+
     const showAlert = (msg) => {
       $q.notify({
         attrs: {
@@ -252,6 +313,7 @@ export default defineComponent({
     // );
     calculateUnitForMonth();
     return {
+      modelForReadingSet,
       firstReading,
       lastReading,
       currentReading,
@@ -262,7 +324,7 @@ export default defineComponent({
       isExpand,
     };
   },
-  components: { MeterComponent },
+  components: { MeterComponent, MeterComponentWithInput },
 });
 </script>
 <style lang="scss" scoped>

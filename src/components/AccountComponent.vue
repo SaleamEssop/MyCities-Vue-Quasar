@@ -17,20 +17,29 @@
         option-label="address"
         emit-value
         map-options
+        v-if="isNew"
       />
+      <div v-else>
+        {{ site.address }}
+      </div>
 
       <q-input
         color="black"
         type="text"
         label="Enter name - As per bill"
+        v-if="isNew"
         v-model.trim="selectedAccount.title"
       />
+      <div v-else>Name : -{{ selectedAccount.title }}</div>
+
       <q-input
         color="black"
         type="text"
         label="Enter account number - As per bill"
+        v-if="isNew"
         v-model="selectedAccount.number"
       />
+      <div v-else>Account :- {{ selectedAccount.number }}</div>
     </q-card-section>
     <q-card-section class="bg-primary">
       <div class="text-subtitle2">Optional Information</div>
@@ -106,7 +115,6 @@
         v-if="!autoUpdate"
         text-color="white"
         class="q-my-none q-mx-none"
-        icon="close"
         label="Cancel"
         glossy
         @click="$emit('close')"
@@ -117,7 +125,6 @@
         text-color="black"
         v-if="!autoUpdate"
         class="q-my-none q-mx-noe"
-        icon="save"
         label="Save"
         glossy
         @click="onSaveSelectAccount"
@@ -126,7 +133,7 @@
   </q-card>
 </template>
 <script>
-import { ref, reactive, watch, defineComponent } from "vue";
+import { ref, reactive, watch, computed, defineComponent } from "vue";
 import { useSiteStore } from "/src/stores/site";
 import { useAccountStore } from "/src/stores/account";
 
@@ -138,9 +145,9 @@ import {
 
 const nullAccount = {
   id: Date.now(),
-  title: "",
-  number: "",
-  option: "",
+  title: null,
+  number: null,
+  option: null,
   site: { id: null },
   fixedCosts: [
     {
@@ -188,13 +195,19 @@ export default defineComponent({
   setup(props, { emit }) {
     const initialState = {
       site: null,
-      selectedAccount: JSON.parse(JSON.stringify(nullAccount)),
+      selectedAccount: JSON.parse(JSON.stringify(props.account || nullAccount)),
     };
     const siteStore = useSiteStore();
     const accountStore = useAccountStore();
 
-    const site = ref(null);
     const selectedAccount = ref(initialState.selectedAccount);
+    const isNew = computed(
+      () => accountStore.getAccountById(selectedAccount.value.id) === null
+    );
+
+    const site = ref(
+      isNew.value ? null : siteStore.getSiteById(selectedAccount.value.site.id)
+    );
     // const selectedAccount = props.autoUpdate
     //   ? ref(props.account)
     //   : props.account
@@ -219,19 +232,24 @@ export default defineComponent({
     };
 
     const onSaveSelectAccount = () => {
-      if (site.value.newSite) {
-        if (site.value.latLng) {
-          //first will save site
-          site.value.id = Date.now();
-          delete site.value["newSite"];
-          siteStore.addSite(site.value);
-        } else {
-          alert("There is no site contact to developer");
-          return;
+      if (isNew.value) {
+        if (site.value.newSite) {
+          if (site.value.latLng) {
+            //first will save site
+            site.value.id = Date.now();
+            delete site.value["newSite"];
+            siteStore.addSite(site.value);
+          } else {
+            alert("There is no site contact to developer");
+            return;
+          }
         }
+        selectedAccount.value.site["id"] = site.value.id;
+        accountStore.addAccount(selectedAccount.value);
+      } else {
+        accountStore.update(selectedAccount.value);
       }
-      selectedAccount.value.site["id"] = site.value.id;
-      accountStore.addAccount(selectedAccount.value);
+
       // emit("update:account", selectedAccount.value);
 
       emit("save");
@@ -331,6 +349,7 @@ export default defineComponent({
       searchByAddress,
       finLatLngByMagicKey,
       watchSite,
+      isNew,
     };
   },
 });

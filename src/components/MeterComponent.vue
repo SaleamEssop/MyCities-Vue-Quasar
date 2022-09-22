@@ -16,6 +16,7 @@ import { defineComponent, computed, ref } from "vue";
 const COLOR_STYLE = [
   { color: "black", background: "white" },
   { color: "white", background: "#b30101" },
+  { color: "white", background: "#666666" },
 ];
 export default defineComponent({
   name: "MeterComponent",
@@ -25,17 +26,30 @@ export default defineComponent({
     readingType: String, //
   },
   setup(props) {
+    let meterStyleDigits = 6;
+    switch (props.meterStyle) {
+      case 1: {
+        meterStyleDigits = 8;
+        break;
+      }
+      case 2: {
+        meterStyleDigits = 6;
+        break;
+      }
+    }
+
     const chars = computed(() => {
       const fillArray = [...(props?.text?.toString() || "")];
       let newArr = [];
-      if (fillArray.length < 8) {
-        newArr = [...new Array(8 - fillArray.length)].map((x) => 0);
+      if (fillArray.length < meterStyleDigits) {
+        newArr = [...new Array(meterStyleDigits - fillArray.length)].map((x) =>
+          (props?.text?.toString()?.trim() || "").length > 0 ? "0" : "_"
+        );
       }
       return [...newArr, ...fillArray];
     });
     const styles = (index) => {
       const size = chars.value.length || 0;
-      console.log(size);
       switch (props.meterStyle) {
         case 1: {
           // Water
@@ -46,12 +60,13 @@ export default defineComponent({
         case 2: {
           // Electricity
           if (index >= size - 1) {
-            return COLOR_STYLE[1];
+            return COLOR_STYLE[2];
           }
         }
       }
       return COLOR_STYLE[0];
     };
+
     return { chars, styles };
   },
 });
@@ -67,8 +82,11 @@ export default defineComponent({
   padding: 2px;
   border-radius: 10px;
 }
-
-.recorded-reading {
+.electricity-recorded-reading {
+  border-color: #000000;
+  background: #000000;
+}
+.water-recorded-reading {
   border-color: #b30101;
   background: #5f0000;
 }
@@ -101,4 +119,17 @@ export default defineComponent({
   content: "";
   border: 1px dotted black;
 } */
+
+.last-char-animated:last-child {
+  animation: fadeIn 1s infinite;
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
 </style>

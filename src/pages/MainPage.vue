@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page v-if="allSites.length > 0">
     <q-list bordered separator>
       <!-- Site -->
       <q-expansion-item
@@ -14,14 +14,14 @@
         <template v-slot:header>
           <q-item-section class="font-size larger"
             >Location -
-            {{ selectedSite?.title || "Select An Location" }}</q-item-section
+            {{ selectedSite?.address || "Select An Location" }}</q-item-section
           >
         </template>
         <!-- clickable v-ripple -->
         <q-item v-for="site in allSites" :key="site.id">
           <q-item-section>
-            <q-item-label>{{ site.title }}</q-item-label>
-            <q-item-label caption>{{ site.address }}</q-item-label>
+            <!-- <q-item-label>{{ site.title }}</q-item-label> -->
+            <q-item-label>{{ site.address }}</q-item-label>
           </q-item-section>
 
           <q-item-section center side>
@@ -29,7 +29,6 @@
               rounded
               color="primary"
               text-color="black"
-              size="sm"
               v-if="site == selectedSite"
               @click="selectSite(site)"
               icon="check"
@@ -40,24 +39,13 @@
               color="primary"
               text-color="black"
               v-else
-              size="sm"
               @click="selectSite(site)"
               >Select</q-btn
             >
           </q-item-section>
         </q-item>
       </q-expansion-item>
-      <q-btn
-        color="primary"
-        rounded
-        outline
-        text-color="black"
-        icon="add"
-        v-else
-        @click="modelAccountForNewEdit = true"
-      >
-        Add a new account
-      </q-btn>
+
       <!-- Site -->
 
       <!-- Account -->
@@ -77,42 +65,71 @@
             {{ selectedAccount?.number || "Select An Account" }}</q-item-section
           >
         </template>
-
-        <q-item
+        <template
           v-for="account in getAccounts(selectedSite.id)"
           :key="account.id"
         >
-          <q-item-section>
-            <q-item-label>{{ account.number }}</q-item-label>
-            <q-item-label caption>{{ account.title }}</q-item-label>
-            <q-item-label caption>{{ account.option }}</q-item-label>
-          </q-item-section>
+          <q-item>
+            <q-item-section>
+              <q-item-label>{{ account.number }}</q-item-label>
+              <q-item-label caption>{{ account.title }}</q-item-label>
+              <q-item-label caption>{{ account.option }}</q-item-label>
+            </q-item-section>
 
-          <q-item-section center side>
-            <q-btn
-              rounded
-              color="primary"
-              text-color="black"
-              size="sm"
-              @click="selectAccount(account)"
-              v-if="account == selectedAccount"
-              icon="check"
-              >Select</q-btn
-            >
-            <q-btn
-              rounded
-              color="primary"
-              text-color="black"
-              v-else
-              size="sm"
-              @click="selectAccount(account)"
-              >Select</q-btn
-            >
-          </q-item-section>
-        </q-item>
+            <q-item-section center side>
+              <q-btn
+                rounded
+                color="primary"
+                text-color="black"
+                @click="selectAccount(account)"
+                v-if="account == selectedAccount"
+                icon="check"
+                >Select</q-btn
+              >
+              <q-btn
+                rounded
+                color="primary"
+                text-color="black"
+                v-else
+                @click="selectAccount(account)"
+                >Select</q-btn
+              >
+              <q-btn flat icon="more_horiz" text-color="primary">
+                <q-menu anchor="center middle" self="center middle">
+                  <q-list style="min-width: 100px">
+                    <q-item
+                      clickable
+                      v-close-popup
+                      @click="
+                        selectedAccount = account;
+                        modelAccountForNewEdit = true;
+                      "
+                    >
+                      <q-item-section>Edit this account</q-item-section>
+                    </q-item>
+                    <q-item clickable v-close-popup>
+                      <q-item-section>Delete this account</q-item-section>
+                    </q-item>
+                    <q-item
+                      clickable
+                      v-close-popup
+                      @click="
+                        selectedAccount = null;
+                        modelAccountForNewEdit = true;
+                      "
+                    >
+                      <q-item-section>Add a new account</q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-menu>
+              </q-btn>
+            </q-item-section>
+          </q-item>
+          <q-separator />
+        </template>
 
         <!-- <q-separator /> -->
-        <q-item class="justify-center">
+        <!-- <q-item class="justify-center">
           <q-btn
             color="primary"
             rounded
@@ -121,9 +138,9 @@
             icon="add"
             @click="modelAccountForNewEdit = true"
           >
-            Add a new account
+            Add New Account
           </q-btn>
-        </q-item>
+        </q-item> -->
       </q-expansion-item>
       <!-- Account -->
 
@@ -142,37 +159,79 @@
           <q-item-section class="font-size larger">Meters</q-item-section>
         </template>
         <!-- {{ accountStore.allAccounts }} -->
-        <q-item
+        <template
           v-for="meter in getMeters(selectedAccount.id)"
           :key="meter.id"
-          clickable
-          v-ripple
-          class="q-px-none"
         >
-          <q-item-section>
-            <MeterReadingSet
-              :key="meter.id"
-              :meter="{ ...meter, account: accountStore.account }"
-            />
-          </q-item-section>
+          <q-item clickable v-ripple class="q-px-none">
+            <q-item-section>
+              <MeterReadingSet :key="meter.id" :meter="{ ...meter }" />
+            </q-item-section>
+          </q-item>
+          <q-separator color="black" />
+        </template>
+
+        <q-item
+          class="justify-center"
+          v-if="getMeters(selectedAccount.id).length == 0"
+        >
+          <q-btn
+            color="primary"
+            rounded
+            outline
+            text-color="black"
+            icon="add"
+            @click="modelMeterForNewEdit = true"
+          >
+            Add New Meters
+          </q-btn>
         </q-item>
       </q-expansion-item>
       <!-- Meter -->
     </q-list>
-    <q-dialog
-      v-model="modelAccountForNewEdit"
-      @hide="modelAccountForNewEdit = false"
-      :full-width="true"
-      :full-height="true"
-      persistent
-    >
-      <AccountComponent
-        :account="null"
-        @close="modelAccountForNewEdit = false"
-        @save="modelAccountForNewEdit = false"
-      />
-    </q-dialog>
   </q-page>
+  <q-page class="flex flex-center" v-if="allSites.length == 0">
+    <div class="column">
+      <q-btn
+        color="primary"
+        rounded
+        text-color="black"
+        @click="modelAccountForNewEdit = true"
+      >
+        Start
+      </q-btn>
+      <span class="q-mt-md round-cheap" clickable v-ripple>Help</span>
+    </div>
+  </q-page>
+
+  <q-dialog
+    v-model="modelAccountForNewEdit"
+    @hide="modelAccountForNewEdit = false"
+    :full-width="true"
+    :full-height="true"
+    persistent
+  >
+    <AccountComponent
+      :account="selectedAccount"
+      @close="modelAccountForNewEdit = false"
+      @save="modelAccountForNewEdit = false"
+    />
+  </q-dialog>
+
+  <q-dialog
+    v-model="modelMeterForNewEdit"
+    @hide="modelMeterForNewEdit = false"
+    :full-width="true"
+    :full-height="true"
+    persistent
+  >
+    <AddMeter
+      :propsMeter="null"
+      :propsAccount="selectedAccount"
+      @close="modelMeterForNewEdit = false"
+      @save="modelMeterForNewEdit = false"
+    />
+  </q-dialog>
 </template>
 <script setup>
 import { ref, onBeforeMount, onMounted, onBeforeUnmount, watch } from "vue";
@@ -183,6 +242,7 @@ import { useAccountStore } from "/src/stores/account";
 import { useMeterStore } from "/src/stores/meter";
 import MeterReadingSet from "src/components/MeterReadingSet.vue";
 import AccountComponent from "src/components/AccountComponent.vue";
+import AddMeter from "src/components/AddMeter.vue";
 
 const siteStore = useSiteStore();
 const accountStore = useAccountStore();
@@ -209,6 +269,7 @@ const isExpandAccount = ref(true);
 const isExpandMeter = ref(true);
 
 const modelAccountForNewEdit = ref(false);
+const modelMeterForNewEdit = ref(false);
 
 const selectSite = (_site) => {
   selectedSite.value = _site;

@@ -1,7 +1,10 @@
+import MainLayout from "layouts/MainLayout";
+import NoToolBarLayout from "layouts/NoToolBarLayout";
+
 const routes = [
   {
     path: "/",
-    component: () => import("layouts/MainLayout.vue"),
+    component: () => NoToolBarLayout,
     children: [
       {
         path: "",
@@ -11,6 +14,7 @@ const routes = [
       },
       {
         path: "/send_reading/",
+        component: () => MainLayout,
         children: [
           {
             path: "",
@@ -33,7 +37,7 @@ const routes = [
             path: "setReading/:meterId",
             component: () => import("pages/meter/SetReading.vue"),
             name: "set_reading_page",
-            meta: { title: "Enter Reading" },
+            meta: { title: "Inputs and History" },
           },
         ],
       },

@@ -1,43 +1,28 @@
 <template>
   <q-page>
     <img
-      src="~assets/lightsandwaterapp.jpg"
+      class="q-pa-lg"
+      src="~assets/lightsandwaterapp.png"
       style="width: 100%; max-height: 300px; object-fit: contain"
     />
-    <q-page class="">
-      <div class="row q-col-gutter-md">
-        <IconButton
+    <q-separator color="primary" />
+    <q-page padding>
+      <div class="text-center">
+        <q-btn
+          flat
           class="col-xs-6 col-sm-6"
-          title="Send Reading"
-          icon="email"
+          label="Manager"
+          icon="square"
           @click="moveTo('send_reading')"
-        />
-        <!-- <IconButton
-          class="col-xs-6 col-sm-6"
-          title="History"
-          icon="manage_history"
-          @click="moveTo('history')"
-        /> -->
-        <IconButton
-          class="col-xs-6 col-sm-6"
-          title="Estimator"
-          icon="calculate"
-          @click="moveTo('estimator')"
-        />
-        <IconButton
-          class="col-xs-6 col-sm-6"
-          title="Account Setup"
-          icon="electric_meter"
-          @click="moveTo('account_setup')"
         />
       </div>
     </q-page>
   </q-page>
 </template>
-
 <script setup>
 import { ref } from "vue";
 import IconButton from "components/IconButton.vue";
+
 import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 
