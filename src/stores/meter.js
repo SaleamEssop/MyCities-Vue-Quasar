@@ -3,6 +3,7 @@ import { getCurrentInstance } from "vue";
 
 export const useMeterStore = defineStore("meter", {
   state: () => ({
+    selectedMeter: null,
     meters: [],
   }),
 

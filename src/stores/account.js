@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 export const useAccountStore = defineStore("account", {
   state: () => ({
     account: 0,
+    selectedAccount: null,
     accounts: [],
   }),
 

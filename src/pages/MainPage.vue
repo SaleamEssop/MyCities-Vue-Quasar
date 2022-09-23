@@ -14,7 +14,9 @@
         <template v-slot:header>
           <q-item-section class="font-size larger"
             >Location -
-            {{ selectedSite?.address || "Select A Location" }}</q-item-section
+            {{
+              siteStore.selectedSite?.address || "Select A Location"
+            }}</q-item-section
           >
         </template>
         <!-- clickable v-ripple -->
@@ -29,7 +31,7 @@
               rounded
               color="primary"
               text-color="black"
-              v-if="site == selectedSite"
+              v-if="site == siteStore.selectedSite"
               @click="selectSite(site)"
               icon="check"
               >Select</q-btn
@@ -53,7 +55,7 @@
         dense
         group="accordion"
         expand-separator
-        v-if="selectedSite"
+        v-if="siteStore.selectedSite"
         :default-opened="true"
         v-model="isExpandAccount"
         header-class="bg-primary"
@@ -62,11 +64,13 @@
         <template v-slot:header>
           <q-item-section class="font-size larger"
             >Accounts -
-            {{ selectedAccount?.number || "Select An Account" }}</q-item-section
+            {{
+              accountStore.selectedAccount?.number || "Select An Account"
+            }}</q-item-section
           >
         </template>
         <template
-          v-for="account in getAccounts(selectedSite.id)"
+          v-for="account in getAccounts(siteStore.selectedSite.id)"
           :key="account.id"
         >
           <q-item>
@@ -82,7 +86,7 @@
                 color="primary"
                 text-color="black"
                 @click="selectAccount(account)"
-                v-if="account == selectedAccount"
+                v-if="account == accountStore.selectedAccount"
                 icon="check"
                 >Select</q-btn
               >
@@ -101,7 +105,7 @@
                       clickable
                       v-close-popup
                       @click="
-                        selectedAccount = account;
+                        accountStore.selectedAccount = account;
                         modelAccountForNewEdit = true;
                       "
                     >
@@ -114,7 +118,7 @@
                       clickable
                       v-close-popup
                       @click="
-                        selectedAccount = null;
+                        accountStore.selectedAccount = null;
                         modelAccountForNewEdit = true;
                       "
                     >
@@ -149,7 +153,7 @@
         dense
         group="accordion"
         expand-separator
-        v-if="selectedAccount"
+        v-if="accountStore.selectedAccount"
         :default-opened="true"
         v-model="isExpandMeter"
         header-class="bg-primary"
@@ -160,7 +164,7 @@
         </template>
         <!-- {{ accountStore.allAccounts }} -->
         <template
-          v-for="meter in getMeters(selectedAccount.id)"
+          v-for="meter in getMeters(accountStore.selectedAccount?.id)"
           :key="meter.id"
         >
           <q-item clickable v-ripple class="q-px-none">
@@ -173,7 +177,7 @@
 
         <q-item
           class="justify-center"
-          v-if="getMeters(selectedAccount.id).length == 0"
+          v-if="getMeters(accountStore.selectedAccount?.id).length == 0"
         >
           <q-btn
             color="primary"
@@ -212,7 +216,7 @@
     persistent
   >
     <AccountComponent
-      :account="selectedAccount"
+      :account="accountStore.selectedAccount"
       @close="modelAccountForNewEdit = false"
       @save="modelAccountForNewEdit = false"
     />
@@ -227,7 +231,7 @@
   >
     <AddMeter
       :propsMeter="null"
-      :propsAccount="selectedAccount"
+      :propsAccount="accountStore.selectedAccount"
       @close="modelMeterForNewEdit = false"
       @save="modelMeterForNewEdit = false"
     />
@@ -260,10 +264,6 @@ const getMeters = (accountId) => {
   return meterStore.getByAccuntId(accountId);
 };
 
-const selectedSite = ref();
-const selectedAccount = ref();
-const selectedMeter = ref();
-
 const isExpandSite = ref(true);
 const isExpandAccount = ref(true);
 const isExpandMeter = ref(true);
@@ -272,16 +272,16 @@ const modelAccountForNewEdit = ref(false);
 const modelMeterForNewEdit = ref(false);
 
 const selectSite = (_site) => {
-  selectedSite.value = _site;
-  selectedAccount.value = null;
-  selectedMeter.value = null;
+  siteStore.selectedSite = _site;
+  accountStore.selectedAccount = null;
+  meterStore.selectedMeter = null;
 
   isExpandAccount.value = true;
 };
 
 const selectAccount = (_account) => {
-  selectedAccount.value = _account;
-  selectedMeter.value = null;
+  accountStore.selectedAccount = _account;
+  meterStore.selectedMeter = null;
 
   isExpandMeter.value = true;
 };

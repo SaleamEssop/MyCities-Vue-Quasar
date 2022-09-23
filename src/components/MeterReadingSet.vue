@@ -47,8 +47,16 @@
           @click="modelForReadingSet = true"
           >Enter Latest Reading</span
         >
+
         <p class="q-mx-md"></p>
-        <span class="round-cheap">Cost</span>
+
+        <span
+          class="round-cheap"
+          clickable
+          v-ripple
+          @click="modelCostForMeter = true"
+          >Cost</span
+        >
         <q-btn flat size="lg" icon="more_horiz" text-color="primary">
           <q-menu anchor="center middle" self="center middle">
             <q-list style="min-width: 100px">
@@ -182,6 +190,20 @@
       @save="modelMeterForNewEdit = false"
     />
   </q-dialog>
+
+  <q-dialog
+    v-model="modelCostForMeter"
+    @hide="modelCostForMeter = false"
+    :full-width="true"
+    persistent
+  >
+    <MeterCost
+      :meter="meter"
+      @close="modelCostForMeter = false"
+      @save="modelCostForMeter = false"
+      :isNew="true"
+    />
+  </q-dialog>
 </template>
 <script>
 import { defineComponent, computed, ref, watch } from "vue";
@@ -197,6 +219,7 @@ import { useAccountStore } from "/src/stores/account";
 
 import MeterComponentWithInput from "./MeterComponentWithInput.vue";
 import AddMeter from "./AddMeter.vue";
+import MeterCost from "./MeterCost.vue";
 
 const meterStore = useMeterStore();
 const readingStore = useReadingStore();
@@ -215,6 +238,7 @@ export default defineComponent({
 
     const modelForReadingSet = ref(false);
     const modelMeterForNewEdit = ref(false);
+    const modelCostForMeter = ref(false);
 
     const selectedAccount = ref(
       accountStore.getAccountById(props.meter.account.id)
@@ -346,6 +370,7 @@ export default defineComponent({
     calculateUnitForMonth();
     return {
       modelForReadingSet,
+      modelCostForMeter,
       firstReading,
       lastReading,
       currentReading,
@@ -358,7 +383,7 @@ export default defineComponent({
       selectedAccount,
     };
   },
-  components: { MeterComponent, MeterComponentWithInput, AddMeter },
+  components: { MeterComponent, MeterComponentWithInput, AddMeter, MeterCost },
 });
 </script>
 <style lang="scss" scoped>
