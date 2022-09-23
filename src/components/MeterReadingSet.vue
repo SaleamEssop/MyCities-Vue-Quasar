@@ -49,7 +49,7 @@
         >
         <p class="q-mx-md"></p>
         <span class="round-cheap">Cost</span>
-        <q-btn flat icon="more_horiz" text-color="primary">
+        <q-btn flat size="lg" icon="more_horiz" text-color="primary">
           <q-menu anchor="center middle" self="center middle">
             <q-list style="min-width: 100px">
               <q-item clickable v-close-popup>
@@ -293,6 +293,11 @@ export default defineComponent({
       return;
     };
 
+    const updateReadings = () => {
+      readings = readingStore.getReadingsByMeterId(props?.meter?.id);
+      getSubmitedAndLastReading();
+    };
+
     watch(
       () => readingStore.getReadingsByMeterId(props?.meter?.id),
       (newValue) => {
@@ -302,7 +307,7 @@ export default defineComponent({
       },
       { deep: true }
     );
-
+    updateReadings();
     const showAlert = (msg) => {
       $q.notify({
         attrs: {

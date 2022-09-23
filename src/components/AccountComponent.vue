@@ -96,14 +96,13 @@
       </q-card-section>
     </template>
 
-    <q-card-actions align="right">
+    <q-card-actions align="center">
       <q-btn
         color="primary"
         text-color="black"
         icon="add"
         label="Add Fixed Cost"
         glossy
-        size="sm"
         @click="addFixedCostField"
       />
     </q-card-actions>
@@ -348,6 +347,25 @@ export default defineComponent({
       }
     });
 
+    function alert({ title, message }) {
+      $q.dialog({
+        dark: false,
+        title: title,
+        message: message,
+        cancel: true,
+        persistent: false,
+      })
+        .onOk((data) => {
+          // console.log('>>>> OK, received', data)
+        })
+        .onCancel(() => {
+          // console.log('>>>> Cancel')
+        })
+        .onDismiss(() => {
+          // console.log('I am triggered on both OK and Cancel')
+        });
+    }
+
     return {
       selectedAccount,
       addFixedCostField,
@@ -359,6 +377,7 @@ export default defineComponent({
       finLatLngByMagicKey,
       watchSite,
       isNew,
+      alert,
     };
   },
 });

@@ -10,9 +10,10 @@
       <div class="text-center">
         <q-btn
           flat
-          class="col-xs-6 col-sm-6"
+          class="col-xs-6 col-sm-6 q-mt-lg"
           label="Manager"
           icon="square"
+          size="lg"
           @click="moveTo('send_reading')"
         />
       </div>

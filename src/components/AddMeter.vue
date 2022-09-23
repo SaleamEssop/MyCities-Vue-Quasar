@@ -38,7 +38,52 @@
         label="Meter Number"
       />
 
-      <q-input filled v-model="readingDate" mask="date" :rules="['date']">
+      <q-separator color="primary" spaced="lg" size="4px" />
+      <div class="text-center">
+        <div>
+          Enter date on which your bill was last read by the municipality
+        </div>
+        <q-separator spaced="lg" />
+        <q-btn icon="event" color="primary" size="lg" text-color="black">
+          <q-popup-proxy
+            @before-show="updateProxy"
+            cover
+            transition-show="scale"
+            transition-hide="scale"
+          >
+            <q-date v-model="readingDate" mask="DD/MM/YYYY">
+              <div class="row items-center justify-end q-gutter-sm">
+                <q-btn label="Cancel" color="primary" flat v-close-popup />
+                <q-btn
+                  label="OK"
+                  color="primary"
+                  flat
+                  @click="save"
+                  v-close-popup
+                />
+              </div>
+            </q-date>
+          </q-popup-proxy>
+        </q-btn>
+        <q-btn
+          class="absolute"
+          icon="help"
+          @click="
+            alert({
+              title: 'Important note',
+              message: `Enter the last reading from your bill. This will be the actual reading by the municipality which is reflected on your bill. Not the estimated reading.
+You may have to go back a few months on your bill. After entering it, you can enter the current reading to get an average.
+If you do have have this reading available, enter the current meter reading, with the current date. Wait a week and update the reading to get an average.`,
+            })
+          "
+          round
+          flat
+          color="primary"
+        />
+        <div>Calendar</div>
+      </div>
+
+      <!-- <q-input filled v-model="readingDate" mask="date" :rules="['date']">
         <template v-slot:append>
           <q-icon name="event" class="cursor-pointer">
             <q-popup-proxy
@@ -54,20 +99,22 @@
             </q-popup-proxy>
           </q-icon>
         </template>
-      </q-input>
-
+      </q-input> -->
+      <q-badge class="q-mt-lg" color="primary" text-color="black">
+        Reading date: {{ readingDate }}
+      </q-badge>
       <q-input
         color="black"
         type="number"
         min="0"
         v-model.number="firstReading.value"
-        label="Last bill reading"
+        label="Enter the reading"
       >
-        <template v-slot:append>
+        <!-- <template v-slot:append>
           <q-avatar>
             <q-icon name="help" />
           </q-avatar>
-        </template>
+        </template> -->
       </q-input>
     </q-card-section>
     <q-space />
@@ -98,6 +145,7 @@ import { date } from "quasar";
 import { useAccountStore } from "/src/stores/account";
 import { useMeterStore } from "/src/stores/meter";
 import { useReadingStore } from "/src/stores/reading";
+import { useQuasar } from "quasar";
 
 const nullReading = {
   isSubmit: true,
@@ -122,14 +170,18 @@ export default defineComponent({
     propsAccount: { type: Object },
   },
   setup(props, { emit }) {
+    const $q = useQuasar();
+
     const readingDate = computed({
       get() {
-        return date.formatDate(new Date(firstReading.value.time), "YYYY/MM/DD");
+        return date.formatDate(new Date(firstReading.value.time), "DD/MM/YYYY");
       },
       set(newValue) {
-        firstReading.value.time = new Date(
-          date.formatDate(newValue, "YYYY/MM/DD")
-        ).getTime();
+        if (newValue !== null) {
+          firstReading.value.time = new Date(
+            date.extractDate(newValue, "DD/MM/YYYY")
+          ).getTime();
+        }
       },
     });
 
@@ -151,10 +203,27 @@ export default defineComponent({
       emit("save");
     };
 
+    function alert({ title, message }) {
+      $q.dialog({
+        dark: false,
+        title: title,
+        message: message,
+      })
+        .onOk((data) => {
+          // console.log('>>>> OK, received', data)
+        })
+        .onCancel(() => {
+          // console.log('>>>> Cancel')
+        })
+        .onDismiss(() => {
+          // console.log('I am triggered on both OK and Cancel')
+        });
+    }
     return {
       readingDate,
       firstReading,
       meter,
+      alert,
       addMeter,
     };
   },

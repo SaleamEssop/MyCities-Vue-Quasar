@@ -1,9 +1,11 @@
 <template>
   <q-card>
     <q-card-section class="bg-primary">
-      <div class="text-subtitle2">{{ meter.title }}</div>
-      <div class="text-subtitle2">{{ meter.number }}</div>
-      <div class="text-subtitle2">{{ lastReadingItem.value }}</div>
+      <div class="text-subtitle2">Title : {{ meter.title }}</div>
+      <div class="text-subtitle2">Meter Number : {{ meter.number }}</div>
+      <div class="text-subtitle2">
+        Last saved reading : {{ lastReadingItem.value }}
+      </div>
     </q-card-section>
     <q-card-section>
       <div

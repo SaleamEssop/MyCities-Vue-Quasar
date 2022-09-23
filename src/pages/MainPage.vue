@@ -14,7 +14,7 @@
         <template v-slot:header>
           <q-item-section class="font-size larger"
             >Location -
-            {{ selectedSite?.address || "Select An Location" }}</q-item-section
+            {{ selectedSite?.address || "Select A Location" }}</q-item-section
           >
         </template>
         <!-- clickable v-ripple -->
@@ -71,9 +71,9 @@
         >
           <q-item>
             <q-item-section>
-              <q-item-label>{{ account.number }}</q-item-label>
-              <q-item-label caption>{{ account.title }}</q-item-label>
-              <q-item-label caption>{{ account.option }}</q-item-label>
+              <q-item-label class="text-h6">{{ account.number }}</q-item-label>
+              <q-item-label>{{ account.title }}</q-item-label>
+              <q-item-label>{{ account.option }}</q-item-label>
             </q-item-section>
 
             <q-item-section center side>
@@ -94,7 +94,7 @@
                 @click="selectAccount(account)"
                 >Select</q-btn
               >
-              <q-btn flat icon="more_horiz" text-color="primary">
+              <q-btn flat size="lg" icon="more_horiz" text-color="primary">
                 <q-menu anchor="center middle" self="center middle">
                   <q-list style="min-width: 100px">
                     <q-item
