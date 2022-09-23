@@ -1,10 +1,10 @@
-import MainLayout from "layouts/MainLayout";
-import NoToolBarLayout from "layouts/NoToolBarLayout";
+// import MainLayout from "layouts/MainLayout";
+// import NoToolBarLayout from "layouts/NoToolBarLayout";
 
 const routes = [
   {
     path: "/",
-    component: () => NoToolBarLayout,
+    component: () => import("layouts/NoToolBarLayout.vue"),
     children: [
       {
         path: "",
@@ -14,7 +14,7 @@ const routes = [
       },
       {
         path: "/send_reading/",
-        component: () => MainLayout,
+        component: () => import("layouts/MainLayout.vue"),
         children: [
           {
             path: "",

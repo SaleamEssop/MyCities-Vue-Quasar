@@ -202,8 +202,16 @@ export default defineComponent({
 
     const selectedAccount = ref(initialState.selectedAccount);
 
+    const checkIdFromDB = accountStore.getAccountById(
+      selectedAccount?.value?.id
+    )?.id;
     const isNew = computed(
-      () => !(accountStore.getAccountById(selectedAccount?.value?.id)?.id > 0)
+      () =>
+        !(
+          checkIdFromDB != null &&
+          checkIdFromDB != undefined &&
+          checkIdFromDB > 0
+        )
     );
 
     const site = ref(
