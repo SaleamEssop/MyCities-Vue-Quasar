@@ -23,7 +23,7 @@
       </div>
       <div class="q-mt-md">
         <div class="flex justify-between items-center wrap">
-          Last saved reading
+          <span>Last saved reading</span>
           <b>{{ new Date(lastReading.time).toLocaleString("en-GB") }}</b>
         </div>
         <MeterComponent
@@ -44,7 +44,10 @@
           class="round-cheap"
           clickable
           v-ripple
-          @click="modelForReadingSet = true"
+          @click="
+            modelForReadingSet_NewReading = true;
+            modelForReadingSet = true;
+          "
           >Enter Latest Reading</span
         >
 
@@ -60,11 +63,19 @@
         <q-btn flat size="lg" icon="more_horiz" text-color="primary">
           <q-menu anchor="center middle" self="center middle">
             <q-list style="min-width: 100px">
-              <q-item clickable v-close-popup>
-                <q-item-section>Submit to Municipality</q-item-section>
+              <q-item
+                clickable
+                v-close-popup
+                v-ripple
+                @click="
+                  modelForReadingSet_NewReading = false;
+                  modelForReadingSet = true;
+                "
+              >
+                <q-item-section>Edit last reading</q-item-section>
               </q-item>
               <q-item clickable v-close-popup>
-                <q-item-section>Edit this meter</q-item-section>
+                <q-item-section>Submit to Municipality</q-item-section>
               </q-item>
               <q-item clickable v-close-popup>
                 <q-item-section>Delete this meter</q-item-section>
@@ -120,7 +131,7 @@
             <div
               class="column flex justify-between items-center no-wrap q-mt-md"
             >
-              <b>Monthly Projected water usage</b>
+              <b>Monthly Projected cost</b>
               <div
                 class="big-rcorners text-h4"
                 color="negative"
@@ -173,7 +184,7 @@
       :meter="meter"
       @close="modelForReadingSet = false"
       @save="modelForReadingSet = false"
-      :isNew="true"
+      :isNew="modelForReadingSet_NewReading"
     />
   </q-dialog>
 
@@ -237,6 +248,8 @@ export default defineComponent({
     var readings = [];
 
     const modelForReadingSet = ref(false);
+    const modelForReadingSet_NewReading = ref(true);
+
     const modelMeterForNewEdit = ref(false);
     const modelCostForMeter = ref(false);
 
@@ -276,7 +289,7 @@ export default defineComponent({
         !currentReading.value ||
         currentReading.value <= lastReading.value.value
       ) {
-        showAlert("Current Reading must be more then last reading");
+        showAlert("Current reading must be greater than the last reading");
         return;
       }
       useReadingStore.addReading(props.meter.id, {

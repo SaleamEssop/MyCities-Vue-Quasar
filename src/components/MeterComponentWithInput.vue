@@ -63,30 +63,6 @@ export default defineComponent({
   setup(props, { emit }) {
     const readingStore = useReadingStore();
     const $q = useQuasar();
-
-    const inputFocus = ref(false);
-    const currentReading = ref();
-    const lastReadingItem = ref(
-      readingStore.getReadingsByMeterId(props.meter.id)[0]
-    );
-    const saveReading = (isSubmit = false) => {
-      if (
-        !currentReading.value ||
-        currentReading.value <= lastReadingItem.value.value
-      ) {
-        showAlert("Current Reading must be more then last reading");
-        return;
-      }
-      readingStore.addReading({
-        value: currentReading.value,
-        time: Date.now(),
-        isSubmit: isSubmit,
-        meter: { id: props.meter.id },
-      });
-
-      emit("save");
-    };
-
     const showAlert = (msg) => {
       $q.notify({
         attrs: {
@@ -102,6 +78,47 @@ export default defineComponent({
           },
         ],
       });
+    };
+
+    const inputFocus = ref(false);
+    const readingItems = readingStore.getReadingsByMeterId(props.meter.id);
+
+    const currentReading = ref();
+    let lastReadingItem = ref(readingItems[0]);
+    if (!props.isNew) {
+      if (lastReadingItem.value.isSubmit) {
+        showAlert("Submitted reading can not update");
+      } else {
+        lastReadingItem = ref(readingItems[1]);
+        currentReading.value = readingItems[0].value;
+      }
+    }
+
+    const saveReading = (isSubmit = false) => {
+      if (
+        !currentReading.value ||
+        currentReading.value <= lastReadingItem.value.value
+      ) {
+        showAlert("Current reading must be greater than the last reading");
+        return;
+      }
+      if (props.isNew) {
+        readingStore.addReading({
+          value: currentReading.value,
+          time: Date.now(),
+          isSubmit: isSubmit,
+          meter: { id: props.meter.id },
+        });
+      } else {
+        readingStore.updateReading({
+          value: currentReading.value,
+          time: readingItems[0].time,
+          isSubmit: isSubmit,
+          meter: { id: props.meter.id },
+        });
+      }
+
+      emit("save");
     };
 
     return {

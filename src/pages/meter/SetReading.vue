@@ -146,7 +146,7 @@ const saveReading = (isSubmit = false) => {
     !currentReading.value ||
     currentReading.value <= lastReading.value.value
   ) {
-    showAlert("Current Reading must be more then last reading");
+    showAlert("Current reading must be greater than the last reading");
     return;
   }
   readingStore.addReading({

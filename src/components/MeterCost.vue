@@ -26,7 +26,7 @@
           </div>
         </div>
         <div class="column flex justify-between items-center no-wrap q-mt-md">
-          <b>Monthly Projected water usage</b>
+          <b>Monthly Projected cost</b>
           <div
             class="big-rcorners text-h4 text-center"
             color="negative"
@@ -79,7 +79,7 @@ export default defineComponent({
     };
     calculateUnitForMonth();
 
-    const unit = computed(() => (props?.meter?.type?.id == 2 ? "U" : "L"));
+    const unit = computed(() => (props?.meter?.type?.id == 2 ? "kW" : "L"));
     return {
       usesPerDay,
       unit,

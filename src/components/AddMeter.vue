@@ -101,7 +101,7 @@ If you do have have this reading available, enter the current meter reading, wit
         </template>
       </q-input> -->
       <q-badge class="q-mt-lg" color="primary" text-color="black">
-        Reading date: {{ readingDate }}
+        <span class="text-body1">Reading date: {{ readingDate }}</span>
       </q-badge>
       <q-input
         color="black"
@@ -131,7 +131,7 @@ If you do have have this reading available, enter the current meter reading, wit
       <q-btn
         color="primary"
         text-color="black"
-        class="q-my-none q-mx-noe"
+        class="q-my-none q-mx-none"
         label="Save"
         glossy
         @click="addMeter"

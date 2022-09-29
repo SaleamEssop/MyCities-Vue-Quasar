@@ -12,10 +12,14 @@ export const useReadingStore = defineStore("reading", {
     addReading(_reading) {
       this.readings.push(_reading);
     },
+    updateReading(_reading) {
+      this.delete(_reading.time, _reading.meter.id);
+      this.addReading(_reading);
+    },
     delete(timeToDelete, meterId) {
-      const readingIndex = this.readings
-        .filter(({ meter }) => meter.id === meterId)
-        .findIndex((item) => item.time == timeToDelete);
+      const readingIndex = this.readings.findIndex(
+        (item) => item.time == timeToDelete && item.meter.id === meterId
+      );
       this.readings.splice(readingIndex, 1);
     },
     getReadingsByMeterId(meterId) {
