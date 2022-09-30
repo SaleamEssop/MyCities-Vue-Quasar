@@ -106,6 +106,16 @@
                       v-close-popup
                       @click="
                         accountStore.selectedAccount = account;
+                        modelAccountForFullBill = true;
+                      "
+                    >
+                      <q-item-section>Full Bill</q-item-section>
+                    </q-item>
+                    <q-item
+                      clickable
+                      v-close-popup
+                      @click="
+                        accountStore.selectedAccount = account;
                         modelAccountForNewEdit = true;
                       "
                     >
@@ -209,6 +219,19 @@
   </q-page>
 
   <q-dialog
+    v-model="modelAccountForFullBill"
+    @hide="modelAccountForFullBill = false"
+    :full-width="true"
+    :full-height="false"
+  >
+    <AccountCost
+      :account="accountStore.selectedAccount"
+      @close="modelAccountForFullBill = false"
+      @save="modelAccountForFullBill = false"
+    />
+  </q-dialog>
+
+  <q-dialog
     v-model="modelAccountForNewEdit"
     @hide="modelAccountForNewEdit = false"
     :full-width="true"
@@ -247,6 +270,7 @@ import { useMeterStore } from "/src/stores/meter";
 import MeterReadingSet from "src/components/MeterReadingSet.vue";
 import AccountComponent from "src/components/AccountComponent.vue";
 import AddMeter from "src/components/AddMeter.vue";
+import AccountCost from "src/components/AccountCost.vue";
 
 const siteStore = useSiteStore();
 const accountStore = useAccountStore();
@@ -270,6 +294,7 @@ const isExpandMeter = ref(true);
 
 const modelAccountForNewEdit = ref(false);
 const modelMeterForNewEdit = ref(false);
+const modelAccountForFullBill = ref(false);
 
 const selectSite = (_site) => {
   siteStore.selectedSite = _site;

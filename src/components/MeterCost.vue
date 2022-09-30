@@ -1,6 +1,8 @@
 <template>
   <q-card>
-    <q-card-section class="bg-primary"> Estimated Cost </q-card-section>
+    <q-card-section class="bg-primary">
+      Estimated Cost {{ meter.number ? `(${meter.number})` : "" }}
+    </q-card-section>
     <q-card-section>
       <div>
         <div class="row flex justify-between items-center">
@@ -21,10 +23,24 @@
               color="negative"
               text-color="white"
             >
-              R{{ (0.840625 * usesPerDay).toFixed(2) }}
+              R{{ (projectionCost["total"] / 30.0).toFixed(2) }}
             </div>
           </div>
         </div>
+
+        <div class="q-my-lg">
+          <div
+            class="row no-wrap"
+            v-for="(cost, index) in projectionCost['projection']"
+            :key="index"
+          >
+            <div class="col">
+              {{ cost.title }}
+            </div>
+            <div class="col-auto">R {{ cost.value.toFixed(2) }}</div>
+          </div>
+        </div>
+
         <div class="column flex justify-between items-center no-wrap q-mt-md">
           <b>Monthly Projected cost</b>
           <div
@@ -32,7 +48,7 @@
             color="negative"
             text-color="white"
           >
-            R{{ (0.840625 * usesPerDay * 30).toFixed(2) }}
+            R {{ projectionCost["total"].toFixed(2) }}
           </div>
         </div>
       </div>
@@ -47,6 +63,7 @@
 <script>
 import { defineComponent, ref, computed } from "vue";
 import { useReadingStore } from "/src/stores/reading";
+import waterDurban from "/src/services/waterDurban.js";
 
 export default defineComponent({
   name: "MeterCost",
@@ -57,35 +74,25 @@ export default defineComponent({
   setup(props) {
     const readingStore = useReadingStore();
 
-    const usesPerDay = ref(0);
-    const firstReading = ref({}); //Submitted
-    const lastReading = ref({}); //Recorded
+    const durbanReading = new waterDurban();
+    const getCost = durbanReading.getCost;
 
-    const getSubmitedAndLastReading = () => {
-      const data = (readings || []).sort((a, b) => b.time - a.time);
-      lastReading.value = data[0] || {};
-      firstReading.value =
-        data.find(({ isSubmit }) => isSubmit) || data[data.length - 1] || {};
-    };
+    const usesPerDay = ref(0);
 
     var readings = readingStore.getReadingsByMeterId(props?.meter?.id);
-    getSubmitedAndLastReading();
+    usesPerDay.value = durbanReading.calculateUnitForMonth(
+      durbanReading.getSubmitedAndLastReading(readings)
+    );
 
-    const calculateUnitForMonth = () => {
-      const consumeUnits = lastReading.value.value - firstReading.value.value;
-      const consumeTime = lastReading.value.time - firstReading.value.time;
-      usesPerDay.value =
-        (consumeUnits / consumeTime || 0) * 1000 * 60 * 60 * 24;
-    };
-    calculateUnitForMonth();
+    const unit = computed(() => (props?.meter?.type?.id == 2 ? "kWh" : "L"));
 
-    const unit = computed(() => (props?.meter?.type?.id == 2 ? "kW" : "L"));
+    const projectionCost = getCost(usesPerDay.value, props?.meter);
+
     return {
+      getCost,
       usesPerDay,
       unit,
-      calculateUnitForMonth,
-      firstReading,
-      lastReading,
+      projectionCost,
     };
   },
 });
