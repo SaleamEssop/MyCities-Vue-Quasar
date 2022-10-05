@@ -21,8 +21,31 @@ const suggestLocation = async (text) => {
 
 const findAddressCandidates = async (singleLine, magicKey) => {
   return await locationApi.get(
-    `/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=pjson&token=${GEOCODE_API_TOKEN}&singleLine=${singleLine}&magicKey=${magicKey}`
+    `/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=pjson&token=${GEOCODE_API_TOKEN}&singleLine=${singleLine}&magicKey=${magicKey}&outSR=%7B%22wkid%22%3A102100%7D&countryCode=ZAF`
   );
+};
+
+const findEmailFromLocation = async (geometry) => {
+  let request = {
+    f: "json",
+    returnGeometry: false,
+    spatialRel: "esriSpatialRelIntersects",
+    geometryType: "esriGeometryPoint",
+    geometry: geometry,
+    inSR: 102100,
+    outFields: "*",
+    outSR: 102100,
+  };
+  return await axios
+    .create({
+      baseURL: "https://services3.arcgis.com",
+    })
+    .get(
+      "/HO0zfySJshlD6Twu/arcgis/rest/services/MeterReadingSuburbs/FeatureServer/0/query",
+      {
+        params: request,
+      }
+    );
 };
 
 export default boot(({ app }) => {
@@ -38,4 +61,10 @@ export default boot(({ app }) => {
   //       so you can easily perform requests against your app's API
 });
 
-export { api, locationApi, suggestLocation, findAddressCandidates };
+export {
+  api,
+  locationApi,
+  suggestLocation,
+  findAddressCandidates,
+  findEmailFromLocation,
+};

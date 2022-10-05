@@ -23,6 +23,8 @@
         {{ site?.address }}
       </div>
 
+      <h4>Email {{ site?.email }}</h4>
+
       <q-input
         color="black"
         type="text"
@@ -140,6 +142,7 @@ import {
   locationApi,
   suggestLocation,
   findAddressCandidates,
+  findEmailFromLocation,
 } from "boot/axios";
 
 const nullAccount = {
@@ -147,7 +150,7 @@ const nullAccount = {
   title: null,
   number: null,
   option: null,
-  site: { id: null },
+  site: { id: null, email: null },
   fixedCosts: [
     {
       id: Date.now(),
@@ -337,6 +340,15 @@ export default defineComponent({
             newValue.magicKey
           );
           if (address.length == 1) {
+            console.log("address", address[0]);
+            let { data } = await findEmailFromLocation({
+              x: address[0].latLng.lat,
+              y: address[0].latLng.lng,
+            });
+            const spatialData = data;
+            console.log(spatialData);
+            address[0]["email"] =
+              spatialData["features"][0]["attributes"]["MREMAIL"];
             site.value = address[0];
           } else {
             alert("Choose address");
