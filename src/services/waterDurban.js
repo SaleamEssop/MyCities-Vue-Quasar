@@ -26,8 +26,8 @@ export default class {
       {
         min: 1500,
         max: Number.MAX_SAFE_INTEGER,
-        ir: 65.39,
-        or: 22.26,
+        ir: 71.91,
+        or: 25.48,
         out: 65.0 / 100.0,
       },
     ].map((rate) => {
