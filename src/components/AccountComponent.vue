@@ -23,7 +23,7 @@
         {{ site?.address }}
       </div>
 
-      <h4>Email {{ site?.email }}</h4>
+      <h6>Email {{ site?.email }}</h6>
 
       <q-input
         color="black"

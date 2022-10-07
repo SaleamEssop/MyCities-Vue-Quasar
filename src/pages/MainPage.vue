@@ -116,6 +116,17 @@
                       v-close-popup
                       @click="
                         accountStore.selectedAccount = account;
+                        modelAccountForHistory = true;
+                      "
+                    >
+                      <q-item-section>History</q-item-section>
+                    </q-item>
+
+                    <q-item
+                      clickable
+                      v-close-popup
+                      @click="
+                        accountStore.selectedAccount = account;
                         modelAccountForNewEdit = true;
                       "
                     >
@@ -219,6 +230,19 @@
   </q-page>
 
   <q-dialog
+    v-model="modelAccountForHistory"
+    @hide="modelAccountForHistory = false"
+    :full-width="true"
+    :full-height="false"
+  >
+    <AccountHistory
+      :account="accountStore.selectedAccount"
+      @close="modelAccountForHistory = false"
+      @save="modelAccountForHistory = false"
+    />
+  </q-dialog>
+
+  <q-dialog
     v-model="modelAccountForFullBill"
     @hide="modelAccountForFullBill = false"
     :full-width="true"
@@ -271,6 +295,7 @@ import MeterReadingSet from "src/components/MeterReadingSet.vue";
 import AccountComponent from "src/components/AccountComponent.vue";
 import AddMeter from "src/components/AddMeter.vue";
 import AccountCost from "src/components/AccountCost.vue";
+import AccountHistory from "src/components/AccountHistory.vue";
 
 const siteStore = useSiteStore();
 const accountStore = useAccountStore();
@@ -295,6 +320,7 @@ const isExpandMeter = ref(true);
 const modelAccountForNewEdit = ref(false);
 const modelMeterForNewEdit = ref(false);
 const modelAccountForFullBill = ref(false);
+const modelAccountForHistory = ref(false);
 
 const selectSite = (_site) => {
   siteStore.selectedSite = _site;
