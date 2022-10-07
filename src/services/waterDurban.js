@@ -23,6 +23,13 @@ export default class {
       { min: 200, max: 833, ir: 31.83, or: 7.48, out: 75.0 / 100.0 },
       { min: 833, max: 1000, ir: 42.43, or: 14.26, out: 75.0 / 100.0 },
       { min: 1000, max: 1500, ir: 65.39, or: 22.26, out: 65.0 / 100.0 },
+      {
+        min: 1500,
+        max: Number.MAX_SAFE_INTEGER,
+        ir: 65.39,
+        or: 22.26,
+        out: 65.0 / 100.0,
+      },
     ].map((rate) => {
       return {
         min: rate.min,
