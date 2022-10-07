@@ -2,6 +2,7 @@
   <q-card>
     <q-card-section class="bg-primary">
       Estimated Cost {{ meter.number ? `(${meter.number})` : "" }}
+      {{ returnLastReadings.period }}
     </q-card-section>
     <q-card-section>
       <div>
@@ -62,6 +63,7 @@
 </template>
 <script>
 import { defineComponent, ref, computed } from "vue";
+import { date } from "quasar";
 import { useReadingStore } from "/src/stores/reading";
 import waterDurban from "/src/services/waterDurban.js";
 
@@ -80,9 +82,9 @@ export default defineComponent({
     const usesPerDay = ref(0);
 
     var readings = readingStore.getReadingsByMeterId(props?.meter?.id);
-    usesPerDay.value = durbanReading.calculateUnitForMonth(
-      durbanReading.getSubmitedAndLastReading(readings)
-    );
+    const returnLastReadings =
+      durbanReading.getSubmitedAndLastReading(readings);
+    usesPerDay.value = durbanReading.calculateUnitForMonth(returnLastReadings);
 
     const unit = computed(() => (props?.meter?.type?.id == 2 ? "kWh" : "L"));
 
@@ -93,6 +95,7 @@ export default defineComponent({
       usesPerDay,
       unit,
       projectionCost,
+      returnLastReadings,
     };
   },
 });

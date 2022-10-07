@@ -1,8 +1,29 @@
 <template>
   <q-card>
-    <q-card-section class="bg-primary">
-      Estimated Full Bill Cost {{ account.number ? `(${account.number})` : "" }}
+    <q-card-section class="text-h6 text-center">
+      Projected bill for {{ readingPeriod }}
+      <!-- {{ account.number ? `(${account.number})` : "" }} -->
     </q-card-section>
+    <div class="text-center">
+      <q-btn
+        icon="help"
+        @click="
+          alert({
+            title: 'Important note',
+            message: `This bill is estimated and is based upon your inputs.
+
+            The water calculation includes the incoming and outgoing water cost, based on the municipal tariff.
+
+            Property Rates is not subjected to VAT.
+
+            Check your fixed cost for accuracy as these amounts may change from time to time.`,
+          })
+        "
+        round
+        flat
+        color="primary"
+      />
+    </div>
     <q-card-section>
       <q-card-section class="bg-primary">
         <div class="text-subtitle2">Meters</div>
@@ -41,7 +62,7 @@
     </q-card-section>
 
     <q-card-section class="bg-primary">
-      <div class="text-subtitle2">
+      <div class="text-h6">
         <div class="row no-wrap">
           <div class="col">Total</div>
 
@@ -59,12 +80,12 @@
 </template>
 <script>
 import { defineComponent, ref, computed } from "vue";
-
+import { date } from "quasar";
 import { useMeterStore } from "/src/stores/meter";
 import { useReadingStore } from "/src/stores/reading";
 import waterDurban from "/src/services/waterDurban.js";
 import { LogLevel } from "@firebase/logger";
-
+import { useQuasar } from "quasar";
 export default defineComponent({
   name: "AccountCost",
   props: {
@@ -73,16 +94,23 @@ export default defineComponent({
   setup(props) {
     const readingStore = useReadingStore();
     const meterStore = useMeterStore();
+    const $q = useQuasar();
 
     const meters = meterStore.getByAccuntId(props.account.id);
 
     const calculationsForMeters = new Array();
     const durbanReading = new waterDurban();
+
+    const readingPeriod = date.formatDate(new Date(), "MMM YYYY");
+
     meters.forEach((meter) => {
       var readings = readingStore.getReadingsByMeterId(meter.id);
-      const usesPerDay = durbanReading.calculateUnitForMonth(
-        durbanReading.getSubmitedAndLastReading(readings)
+      const returnLastReadings = durbanReading.getSubmitedAndLastReading(
+        readings,
+        readingPeriod
       );
+      const usesPerDay =
+        durbanReading.calculateUnitForMonth(returnLastReadings);
       const projectionCost = durbanReading.getCost(usesPerDay, meter);
       calculationsForMeters.push({
         title: `${meter.title} - ${meter.number}`,
@@ -109,18 +137,30 @@ export default defineComponent({
       totalFullBill.value = totalFullBill.value + value;
     });
 
-    // const usesPerDay = ref(0);
+    function alert({ title, message }) {
+      $q.dialog({
+        dark: false,
+        title: title,
+        message: message,
+      })
+        .onOk((data) => {
+          // console.log('>>>> OK, received', data)
+        })
+        .onCancel(() => {
+          // console.log('>>>> Cancel')
+        })
+        .onDismiss(() => {
+          // console.log('I am triggered on both OK and Cancel')
+        });
+    }
 
-    // var readings = readingStore.getReadingsByMeterId(props?.meter?.id);
-    // usesPerDay.value = durbanReading.calculateUnitForMonth(
-    //   durbanReading.getSubmitedAndLastReading(readings)
-    // );
-
-    // const unit = computed(() => (props?.meter?.type?.id == 2 ? "kWh" : "L"));
-
-    // const projectionCost = getCost(usesPerDay.value, props?.meter);
-
-    return { calculationsForMeters, calculationsForAccount, totalFullBill };
+    return {
+      calculationsForMeters,
+      calculationsForAccount,
+      totalFullBill,
+      readingPeriod,
+      alert,
+    };
   },
 });
 </script>

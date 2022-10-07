@@ -1,11 +1,85 @@
 //All Unit should be in liter
+import { date } from "quasar";
+
+var groupBy = function (xs, key) {
+  return xs.reduce(function (rv, x) {
+    (rv[x[key]] = rv[x[key]] || []).push(x);
+    return rv;
+  }, {});
+};
+
 export default class {
-  getSubmitedAndLastReading = (readings) => {
-    const data = (readings || []).sort((a, b) => b.time - a.time);
-    const lastReading = data[0] || {};
-    const firstReading =
-      data.find(({ isSubmit }) => isSubmit) || data[data.length - 1] || {};
-    return { firstReading, lastReading };
+  getSubmitedAndLastReading = (readings, monthYear) => {
+    const formatForPeriod = "MMM YYYY";
+    const getBothSideReading = (readings, month) => {
+      let data =
+        groupBy(
+          (readings || []).map((item) => {
+            item["period"] = date.formatDate(
+              new Date(item.time),
+              formatForPeriod
+            );
+            return item;
+          }),
+          "period"
+        )[month] || [];
+
+      data = data.sort((a, b) => b.time - a.time);
+
+      const lastReading = data[0] || {};
+      const firstReading = data[data.length - 1] || {};
+      return { firstReading, lastReading };
+    };
+
+    let returnableLastReading = {};
+    let returnableFirstReading = {};
+
+    let currentMonthDate = monthYear
+      ? date.extractDate(monthYear, formatForPeriod)
+      : new Date();
+
+    const period = date.formatDate(currentMonthDate, formatForPeriod);
+
+    let i = 24; //check at maximum 24 months
+    do {
+      let month = date.formatDate(
+        date.subtractFromDate(currentMonthDate, { months: 24 - i }),
+        formatForPeriod
+      );
+      const { firstReading, lastReading } = getBothSideReading(readings, month);
+      if (
+        Object.keys(returnableLastReading).length === 0 &&
+        Object.keys(lastReading).length > 0
+      ) {
+        returnableLastReading = lastReading;
+
+        if (firstReading.time != lastReading.time) {
+          returnableFirstReading = firstReading;
+        }
+      } else {
+        if (
+          Object.keys(returnableLastReading).length > 0 &&
+          Object.keys(returnableFirstReading).length === 0 &&
+          Object.keys(lastReading).length > 0 &&
+          returnableLastReading.time != lastReading.time
+        ) {
+          returnableFirstReading = lastReading;
+        }
+      }
+
+      if (
+        Object.keys(returnableLastReading).length > 0 &&
+        Object.keys(returnableFirstReading).length > 0
+      ) {
+        break;
+      }
+    } while (--i > 0);
+
+    return {
+      firstReading: returnableFirstReading,
+      lastReading: returnableLastReading,
+      period: period,
+    };
   };
 
   calculateUnitForMonth = ({ firstReading, lastReading }) => {
