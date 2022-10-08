@@ -137,6 +137,7 @@
 import { ref, reactive, watch, computed, defineComponent } from "vue";
 import { useSiteStore } from "/src/stores/site";
 import { useAccountStore } from "/src/stores/account";
+import { useQuasar } from "quasar";
 
 import {
   locationApi,
@@ -201,6 +202,7 @@ export default defineComponent({
     };
     const siteStore = useSiteStore();
     const accountStore = useAccountStore();
+    const $q = useQuasar();
 
     const selectedAccount = ref(initialState.selectedAccount);
 

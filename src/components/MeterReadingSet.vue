@@ -10,7 +10,7 @@
     </q-card-section>
 
     <q-card-section class="q-pt-none text-center">
-      <div class="q-mt-md">
+      <!-- <div class="q-mt-md">
         <div class="flex justify-between items-center wrap">
           Submitted Reading
           <b> {{ new Date(firstReading.time).toLocaleString("en-GB") }}</b>
@@ -20,7 +20,7 @@
           :meterStyle="meter?.type?.id"
           readingType="submitted-reading"
         />
-      </div>
+      </div> -->
       <div class="q-mt-md">
         <div class="flex justify-between items-center wrap">
           <span>Last saved reading</span>
