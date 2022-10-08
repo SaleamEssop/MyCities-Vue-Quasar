@@ -132,7 +132,11 @@
                     >
                       <q-item-section>Edit this account</q-item-section>
                     </q-item>
-                    <q-item clickable v-close-popup>
+                    <q-item
+                      clickable
+                      v-close-popup
+                      @click="deleteAccount(account)"
+                    >
                       <q-item-section>Delete this account</q-item-section>
                     </q-item>
                     <q-item
@@ -296,10 +300,12 @@ import AccountComponent from "src/components/AccountComponent.vue";
 import AddMeter from "src/components/AddMeter.vue";
 import AccountCost from "src/components/AccountCost.vue";
 import AccountHistory from "src/components/AccountHistory.vue";
+import { date, Dialog, useQuasar } from "quasar";
 
 const siteStore = useSiteStore();
 const accountStore = useAccountStore();
 const meterStore = useMeterStore();
+const $q = useQuasar();
 
 const allSites = siteStore.allSites;
 //const allAccounts = accountStore.allAccounts;
@@ -335,6 +341,31 @@ const selectAccount = (_account) => {
   meterStore.selectedMeter = null;
 
   isExpandMeter.value = true;
+};
+
+const deleteAccount = (account) => {
+  let meters = meterStore.getByAccuntId(account.id);
+  if (meters.length || [] > 0) {
+    $q.notify({
+      message: "Delete meter for this account",
+      color: "error",
+    });
+    return;
+  }
+  $q.dialog({
+    title: "Confirm",
+    message: "Would you like to delete this account?",
+    cancel: true,
+    persistent: true,
+  })
+    .onOk(() => {
+      // console.log('>>>> OK')
+      accountStore.deleteAccount(account);
+    })
+    .onOk(() => {
+      // console.log('>>>> second OK catcher')
+      accountStore.deleteAccount(account);
+    });
 };
 </script>
 <style scoped>

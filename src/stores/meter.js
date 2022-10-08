@@ -45,12 +45,25 @@ export const useMeterStore = defineStore("meter", {
     //   }
     // },
     getByAccuntId(accountId) {
-      return this.allMeters.filter(({ account }) => {
-        return account.id == accountId;
-      });
+      return this.allMeters
+        .filter(({ account }) => {
+          return account.id == accountId;
+        })
+        .filter((meter) => {
+          return meter["deletedAt"] == undefined || meter["deletedAt"] == null;
+        });
     },
     getMeterById(meterId) {
       return this.allMeters.find(({ id }) => id == meterId);
+    },
+    deleteMeter(_meter) {
+      let meterIndex = this.meters.findIndex(({ id }) => {
+        return _meter.id == id;
+      });
+      this.meters[meterIndex]["deletedAt"] = Date.now();
+      // if (meterIndex > -1) {
+      //   this.meters.splice(meterIndex, 1);
+      // }
     },
   },
 

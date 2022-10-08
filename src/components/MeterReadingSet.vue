@@ -77,7 +77,7 @@
               <q-item clickable v-close-popup>
                 <q-item-section>Submit to Municipality</q-item-section>
               </q-item>
-              <q-item clickable v-close-popup>
+              <q-item clickable v-close-popup @click="deleteMeter(meter)">
                 <q-item-section>Delete this meter</q-item-section>
               </q-item>
               <q-item
@@ -219,9 +219,8 @@
 <script>
 import { defineComponent, computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { date } from "quasar";
+import { date, Dialog, useQuasar } from "quasar";
 
-import { useQuasar } from "quasar";
 import MeterComponent from "./MeterComponent.vue";
 
 import { useMeterStore } from "/src/stores/meter";
@@ -381,6 +380,24 @@ export default defineComponent({
     //   }
     // );
     calculateUnitForMonth();
+
+    const deleteMeter = (meter) => {
+      $q.dialog({
+        title: "Confirm",
+        message: "Would you like to delete theis meter?",
+        cancel: true,
+        persistent: true,
+      })
+        .onOk(() => {
+          // console.log('>>>> OK')
+          meterStore.deleteMeter(meter);
+        })
+        .onOk(() => {
+          // console.log('>>>> second OK catcher')
+          meterStore.deleteMeter(meter);
+        });
+    };
+
     return {
       modelForReadingSet,
       modelCostForMeter,
@@ -394,6 +411,7 @@ export default defineComponent({
       isExpand,
       modelMeterForNewEdit,
       selectedAccount,
+      deleteMeter,
     };
   },
   components: { MeterComponent, MeterComponentWithInput, AddMeter, MeterCost },
