@@ -6,15 +6,15 @@
       style="width: 100%; max-height: 300px; object-fit: contain"
     />
     <q-btn
-      icon="logout"
-      style="position: absolute; right: 0px; top: 0px"
-      rounded
+      icon="settings_power"
+      style="position: absolute; right: 10px; top: 10px"
+      round
       @click="logout"
     ></q-btn>
     <q-separator color="primary" />
     <q-page padding>
-      <p>{{ name }}</p>
-      <p>{{ email }}</p>
+      <!-- <p>{{ name }}</p>
+      <p>{{ email }}</p> -->
       <div class="text-center">
         <q-btn
           flat

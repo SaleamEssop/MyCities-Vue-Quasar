@@ -245,6 +245,21 @@ export default defineComponent({
     };
 
     const onSaveSelectAccount = () => {
+      if (site.value == null || site.value.email == null) {
+        $q.notify({
+          message: "Fill valid location",
+        });
+        return;
+      }
+      if (
+        selectedAccount.value == null ||
+        !(selectedAccount.value.title && selectedAccount.value.number)
+      ) {
+        $q.notify({
+          message: "Fill valid name and number details",
+        });
+        return;
+      }
       if (isNew.value) {
         if (site.value.newSite) {
           if (site.value.latLng) {
@@ -253,7 +268,7 @@ export default defineComponent({
             delete site.value["newSite"];
             siteStore.addSite(site.value);
           } else {
-            alert("There is no site contact to developer");
+            alert({ message: "There is no site contact to developer" });
             return;
           }
         }
