@@ -2,7 +2,7 @@
   <q-table
     :dense="$q.screen.xs"
     class="my-sticky-header-table"
-    :title="`${meter.title} ( ${meter.number} )`"
+    :title="` ${meter.type.title} : ${meter.title} ( ${meter.number} )`"
     :rows="readings"
     :columns="columns"
     row-key="name"

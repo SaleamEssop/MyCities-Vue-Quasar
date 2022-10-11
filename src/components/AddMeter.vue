@@ -199,23 +199,13 @@ export default defineComponent({
       }
       firstReading.value.meter.id = meter.value.id;
 
-      if (firstReading.value.value == null) {
+      if (
+        firstReading.value.value == null ||
+        meter.value.title == null ||
+        meter.value.number == null
+      ) {
         $q.notify({
-          message: "Set First Reading",
-        });
-        return;
-      }
-
-      if (meter.value.title == null) {
-        $q.notify({
-          message: "Set Meter Title",
-        });
-        return;
-      }
-
-      if (meter.value.number == null) {
-        $q.notify({
-          message: "Set Meter Number",
+          message: "Fill all details before saving",
         });
         return;
       }

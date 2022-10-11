@@ -1,10 +1,12 @@
 <template>
   <q-card>
     <q-card-section class="bg-primary">
-      <div class="text-subtitle2">Title : {{ meter.title }}</div>
-      <div class="text-subtitle2">Meter Number : {{ meter.number }}</div>
+      <div class="text-subtitle2">Title : {{ meter?.title }}</div>
       <div class="text-subtitle2">
-        Last saved reading : {{ lastReadingItem.value }}
+        Meter Number : {{ meter ? meter?.number : "" }}
+      </div>
+      <div class="text-subtitle2">
+        Last saved reading : {{ lastReadingItem?.value }}
       </div>
     </q-card-section>
     <q-card-section>
@@ -26,7 +28,7 @@
         </div>
         <div class="text-center">
           <MeterComponent
-            :text="currentReading"
+            :text="currentReading ? currentReading / 10.0 : ''"
             :meterStyle="meter.type.id"
             :readingType="
               meter.type.id == 2
@@ -95,27 +97,29 @@ export default defineComponent({
     }
 
     const saveReading = (isSubmit = false) => {
-      if (lastReadingItem.value.time + 24 * 60 * 60 * 1000 > Date.now()) {
-        showAlert("You already took sample before 24 hours");
-        return;
-      }
+      // if (lastReadingItem.value.time + 24 * 60 * 60 * 1000 > Date.now()) {
+      //   showAlert("You already took sample before 24 hours");
+      //   return;
+      // }
+      const currentReadingValue = currentReading.value / 10.0;
       if (
-        !currentReading.value ||
-        currentReading.value <= lastReadingItem.value.value
+        !currentReadingValue ||
+        currentReadingValue <= lastReadingItem.value.value
       ) {
         showAlert("Current reading must be greater than the last reading");
         return;
       }
+
       if (props.isNew) {
         readingStore.addReading({
-          value: currentReading.value,
+          value: currentReadingValue,
           time: Date.now(),
           isSubmit: isSubmit,
           meter: { id: props.meter.id },
         });
       } else {
         readingStore.updateReading({
-          value: currentReading.value,
+          value: currentReadingValue,
           time: readingItems[0].time,
           isSubmit: isSubmit,
           meter: { id: props.meter.id },

@@ -39,7 +39,19 @@ export default defineComponent({
     }
 
     const chars = computed(() => {
-      const fillArray = [...(props?.text?.toString() || "")];
+      let inputReading = props?.text?.toString();
+      if (inputReading) {
+        if (!inputReading.includes(".")) {
+          inputReading += "0";
+        } else {
+          inputReading = inputReading.replace(".", "");
+        }
+      } else {
+        inputReading = "";
+      }
+      //const inputReading = props?.text?.toString() || "";
+      //console.log("inputReading", inputReading);
+      const fillArray = [...inputReading];
       let newArr = [];
       if (fillArray.length < meterStyleDigits) {
         newArr = [...new Array(meterStyleDigits - fillArray.length)].map((x) =>
@@ -114,6 +126,9 @@ export default defineComponent({
   border-top: 0px;
   border-bottom: 0px;
   height: fit-content;
+}
+.text-h4:last-child:after {
+  border-right: 4px dashed white;
 }
 /* .text-h4:before {
   content: "";
