@@ -95,6 +95,10 @@ export default defineComponent({
     }
 
     const saveReading = (isSubmit = false) => {
+      if (lastReadingItem.value.time + 24 * 60 * 60 * 1000 > Date.now()) {
+        showAlert("You already took sample before 24 hours");
+        return;
+      }
       if (
         !currentReading.value ||
         currentReading.value <= lastReadingItem.value.value

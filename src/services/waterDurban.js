@@ -129,9 +129,9 @@ export default class {
       const rate = rates[index];
       const maxiumForMonth = Math.round((rate.max - rate.min) * 30);
 
-      const conditionInputUses =
-        Math.max(Math.round(Math.min(maxiumForMonth, uses) / 1000.0), 1) *
-        1000.0;
+      const conditionInputUses = Math.min(maxiumForMonth, uses);
+      //Math.round(Math.min(maxiumForMonth, uses) / 1000.0) * 1000.0;
+
       const conditionOutputUses = conditionInputUses * rate.out;
 
       return {
@@ -202,11 +202,14 @@ export default class {
     });
 
     const returnProjection = {};
-    returnProjection["projection"] = projection;
-    returnProjection["total"] = projection.reduce((acc, { value }) => {
-      acc += value;
-      return acc;
-    }, 0);
+    returnProjection["projection"] = monthlyUses > 0 ? projection : [];
+    returnProjection["total"] =
+      monthlyUses > 0
+        ? projection.reduce((acc, { value }) => {
+            acc += value;
+            return acc;
+          }, 0)
+        : 0;
     returnProjection["readingCharges"] = readingCharges;
     returnProjection["extraCharges"] = extraCharges;
     // Projection

@@ -198,6 +198,28 @@ export default defineComponent({
         meter.value.account.id = props.propsAccount.id;
       }
       firstReading.value.meter.id = meter.value.id;
+
+      if (firstReading.value.value == null) {
+        $q.notify({
+          message: "Set First Reading",
+        });
+        return;
+      }
+
+      if (meter.value.title == null) {
+        $q.notify({
+          message: "Set Meter Title",
+        });
+        return;
+      }
+
+      if (meter.value.number == null) {
+        $q.notify({
+          message: "Set Meter Number",
+        });
+        return;
+      }
+
       readingStore.addReading(firstReading.value);
       meterStore.addMeter(meter.value);
       emit("save");
