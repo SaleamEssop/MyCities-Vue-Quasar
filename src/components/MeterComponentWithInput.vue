@@ -9,6 +9,7 @@
         Last saved reading : {{ lastReadingItem?.value }}
       </div>
     </q-card-section>
+
     <q-card-section>
       <div
         class="relative"
@@ -23,18 +24,20 @@
             @focus="inputFocus = true"
             @blur="inputFocus = false"
             autofocus
-            v-model.number="currentReading"
+            v-model="currentReading"
           />
         </div>
         <div class="text-center">
           <MeterComponent
-            :text="currentReading ? currentReading / 10.0 : ''"
+            ref="meterComopnentReadValue"
+            :text="currentReading"
             :meterStyle="meter.type.id"
             :readingType="
               meter.type.id == 2
                 ? 'electricity-recorded-reading'
                 : 'water-recorded-reading'
             "
+            :isInput="true"
           />
         </div>
       </div>
@@ -63,6 +66,7 @@ export default defineComponent({
     isNew: Boolean,
   },
   setup(props, { emit }) {
+    const meterComopnentReadValue = ref();
     const readingStore = useReadingStore();
     const $q = useQuasar();
     const showAlert = (msg) => {
@@ -92,7 +96,7 @@ export default defineComponent({
         showAlert("Submitted reading can not update");
       } else {
         lastReadingItem = ref(readingItems[1]);
-        currentReading.value = readingItems[0].value;
+        currentReading.value = readingItems[0].valueInString;
       }
     }
 
@@ -101,7 +105,8 @@ export default defineComponent({
       //   showAlert("You already took sample before 24 hours");
       //   return;
       // }
-      const currentReadingValue = currentReading.value / 10.0;
+      const valueInString = meterComopnentReadValue.value.getValueInString();
+      const currentReadingValue = valueInString / 10.0;
       if (
         !currentReadingValue ||
         currentReadingValue <= lastReadingItem.value.value
@@ -113,6 +118,7 @@ export default defineComponent({
       if (props.isNew) {
         readingStore.addReading({
           value: currentReadingValue,
+          valueInString: valueInString,
           time: Date.now(),
           isSubmit: isSubmit,
           meter: { id: props.meter.id },
@@ -120,6 +126,7 @@ export default defineComponent({
       } else {
         readingStore.updateReading({
           value: currentReadingValue,
+          valueInString: valueInString,
           time: readingItems[0].time,
           isSubmit: isSubmit,
           meter: { id: props.meter.id },
@@ -134,6 +141,7 @@ export default defineComponent({
       currentReading,
       lastReadingItem,
       saveReading,
+      meterComopnentReadValue,
     };
   },
   components: { MeterComponent },

@@ -103,19 +103,47 @@ If you do have have this reading available, enter the current meter reading, wit
       <q-badge class="q-mt-lg" color="primary" text-color="black">
         <span class="text-body1">Reading date: {{ readingDate }}</span>
       </q-badge>
-      <q-input
+      <div class="text-center">
+        <q-card-section>
+          <div
+            class="relative"
+            :class="inputFocus ? 'stroke-focus' : 'stroke-simple'"
+          >
+            <div class="absolute" style="opacity: 0">
+              <q-input
+                type="number"
+                color="black"
+                :min="0"
+                outlined
+                @focus="inputFocus = true"
+                @blur="inputFocus = false"
+                autofocus
+                v-model="firstReading.valueInString"
+              />
+            </div>
+            <div class="text-center">
+              <MeterComponent
+                ref="meterComopnentReadValue"
+                :text="firstReading.valueInString"
+                :meterStyle="meter.type.id"
+                :readingType="
+                  meter.type.id == 2
+                    ? 'electricity-recorded-reading'
+                    : 'water-recorded-reading'
+                "
+                :isInput="true"
+              />
+            </div>
+          </div>
+        </q-card-section>
+      </div>
+      <!-- <q-input
         color="black"
         type="number"
         min="0"
         v-model.number="firstReading.value"
         label="Enter the reading"
-      >
-        <!-- <template v-slot:append>
-          <q-avatar>
-            <q-icon name="help" />
-          </q-avatar>
-        </template> -->
-      </q-input>
+      /> -->
     </q-card-section>
     <q-space />
     <q-card-actions align="center">
@@ -146,11 +174,14 @@ import { useAccountStore } from "/src/stores/account";
 import { useMeterStore } from "/src/stores/meter";
 import { useReadingStore } from "/src/stores/reading";
 import { useQuasar } from "quasar";
+import MeterComponent from "/src/components/MeterComponent.vue";
+import MeterComponentWithInput from "./MeterComponentWithInput.vue";
 
 const nullReading = {
   isSubmit: true,
   time: Date.now(),
   value: null,
+  valueInString: "",
   meter: { id: null },
 };
 
@@ -191,6 +222,9 @@ export default defineComponent({
     const meter = ref(
       props.propsMeter || JSON.parse(JSON.stringify(nullMeter))
     );
+
+    const meterComopnentReadValue = ref();
+
     const firstReading = ref(JSON.parse(JSON.stringify(nullReading)));
     const addMeter = () => {
       if (meter.value.id == null) {
@@ -200,7 +234,7 @@ export default defineComponent({
       firstReading.value.meter.id = meter.value.id;
 
       if (
-        firstReading.value.value == null ||
+        firstReading.value.valueInString == null ||
         meter.value.title == null ||
         meter.value.number == null
       ) {
@@ -210,6 +244,9 @@ export default defineComponent({
         return;
       }
 
+      firstReading.value.valueInString =
+        meterComopnentReadValue.value.getValueInString();
+      firstReading.value.value = firstReading.value.valueInString / 10.0;
       readingStore.addReading(firstReading.value);
       meterStore.addMeter(meter.value);
       emit("save");
@@ -231,13 +268,18 @@ export default defineComponent({
           // console.log('I am triggered on both OK and Cancel')
         });
     }
+
+    const inputFocus = ref(false);
     return {
       readingDate,
       firstReading,
       meter,
       alert,
       addMeter,
+      inputFocus,
+      meterComopnentReadValue,
     };
   },
+  components: { MeterComponent },
 });
 </script>

@@ -24,42 +24,63 @@ export default defineComponent({
     text: String,
     meterStyle: Number,
     readingType: String, //
+    isInput: { default: false, type: Boolean },
   },
   setup(props) {
-    let meterStyleDigits = 6;
-    switch (props.meterStyle) {
-      case 1: {
-        meterStyleDigits = 8;
-        break;
-      }
-      case 2: {
-        meterStyleDigits = 6;
-        break;
-      }
-    }
-
+    let lastPendingArray = [];
     const chars = computed(() => {
-      let inputReading = props?.text?.toString();
-      if (inputReading) {
-        if (!inputReading.includes(".")) {
-          inputReading += "0";
-        } else {
-          inputReading = inputReading.replace(".", "");
+      let meterStyleDigits = 6;
+      switch (props.meterStyle) {
+        case 1: {
+          meterStyleDigits = 8;
+          break;
         }
+        case 2: {
+          meterStyleDigits = 6;
+          break;
+        }
+      }
+
+      let inputReading = props?.text?.toString()?.trim();
+
+      if (props.isInput) {
+        if (inputReading) {
+          if (inputReading.includes(".")) {
+            inputReading = inputReading.replace(".", "");
+          }
+        } else {
+          inputReading = "";
+        }
+        const fillArray = [...inputReading];
+        let newArr = [];
+        if (fillArray.length < meterStyleDigits) {
+          newArr = [...new Array(meterStyleDigits - fillArray.length)].map(
+            (x) => (props.isInput ? "_" : "0")
+            // (inputReading || "").length > 0 ? "0" : "_"
+            // "_"
+          );
+        }
+        lastPendingArray = newArr;
+        return [...fillArray, ...newArr];
       } else {
-        inputReading = "";
+        if (inputReading) {
+          if (inputReading.includes(".")) {
+            inputReading = inputReading.replace(".", "");
+          }
+        } else {
+          inputReading = "";
+        }
+        const fillArray = [...inputReading];
+        let newArr = [];
+        if (fillArray.length < meterStyleDigits) {
+          newArr = [...new Array(meterStyleDigits - fillArray.length)].map(
+            (x) => ((inputReading || "").length > 0 ? "0" : "_")
+          );
+        }
+        return [...newArr, ...fillArray];
       }
-      //const inputReading = props?.text?.toString() || "";
-      //console.log("inputReading", inputReading);
-      const fillArray = [...inputReading];
-      let newArr = [];
-      if (fillArray.length < meterStyleDigits) {
-        newArr = [...new Array(meterStyleDigits - fillArray.length)].map((x) =>
-          (props?.text?.toString()?.trim() || "").length > 0 ? "0" : "_"
-        );
-      }
-      return [...newArr, ...fillArray];
     });
+
     const styles = (index) => {
       const size = chars.value.length || 0;
       switch (props.meterStyle) {
@@ -79,7 +100,11 @@ export default defineComponent({
       return COLOR_STYLE[0];
     };
 
-    return { chars, styles };
+    function getValueInString() {
+      return chars.value.map((_char) => (_char == "_" ? 0 : _char)).join("");
+    }
+
+    return { chars, styles, getValueInString };
   },
 });
 </script>

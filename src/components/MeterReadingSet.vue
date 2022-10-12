@@ -27,7 +27,7 @@
           <b>{{ new Date(lastReading.time).toLocaleString("en-GB") }}</b>
         </div>
         <MeterComponent
-          :text="lastReading.value"
+          :text="lastReading.valueInString"
           :meterStyle="meter?.type?.id"
           :readingType="
             meter.type.id == 2
@@ -283,54 +283,11 @@ export default defineComponent({
     const usesPerDay = ref();
     const isExpand = ref(false);
 
-    const saveReading = (isSubmit = false) => {
-      if (lastReading.value.time + 24 * 60 * 60 * 1000 > Date.now()) {
-        showAlert("You already took sample before 24 hours");
-        return;
-      }
-      if (
-        !currentReading.value ||
-        currentReading.value <= lastReading.value.value
-      ) {
-        showAlert("Current reading must be greater than the last reading");
-        return;
-      }
-      useReadingStore.addReading(props.meter.id, {
-        value: currentReading.value,
-        time: Date.now(),
-        isSubmit: isSubmit,
-      });
-      currentReading.value = null;
-      // lastReadingOfMonthOrPreviousMonth();
-      getSubmitedAndLastReading();
-    };
     const getSubmitedAndLastReading = () => {
       const data = (readings || []).sort((a, b) => b.time - a.time);
       lastReading.value = data[0] || {};
       firstReading.value =
         data.find(({ isSubmit }) => isSubmit) || data[data.length - 1] || {};
-    };
-    const lastReadingOfMonthOrPreviousMonth = () => {
-      const _data = groupReading.value;
-      const keys = Object.keys(_data);
-      if (keys.length > 1) {
-        const currentMonthKey = keys[0]; //Current Month Group
-        const lastMonthKey = keys[1]; //Last Month Group
-        const firstData = _data[lastMonthKey].group[0];
-        const lastData = _data[currentMonthKey].group[0];
-        firstReading.value = firstData;
-        lastReading.value = lastData;
-        console.log("Reading2");
-      } else if (keys.length == 1) {
-        const key = keys[0];
-        const group = _data[key].group;
-        const firstData = group[group.length - 1];
-        const lastData = group[0];
-        firstReading.value = firstData;
-        lastReading.value = lastData;
-        console.log("Reading1");
-      }
-      return;
     };
 
     const updateReadings = () => {
@@ -342,7 +299,6 @@ export default defineComponent({
       () => readingStore.getReadingsByMeterId(props?.meter?.id),
       (newValue) => {
         readings = newValue;
-        // lastReadingOfMonthOrPreviousMonth();
         getSubmitedAndLastReading();
       },
       { deep: true }
@@ -408,7 +364,6 @@ export default defineComponent({
       firstReading,
       lastReading,
       currentReading,
-      saveReading,
       showAlert,
       moveTo,
       usesPerDay,
