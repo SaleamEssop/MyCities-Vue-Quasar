@@ -152,8 +152,8 @@ export default defineComponent({
   border-bottom: 0px;
   height: fit-content;
 }
-.text-h4:last-child:after {
-  border-right: 4px dashed white;
+.text-h4:last-child {
+  border: 2px solid white;
 }
 /* .text-h4:before {
   content: "";

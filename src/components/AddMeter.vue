@@ -117,8 +117,21 @@ If you do have have this reading available, enter the current meter reading, wit
                 outlined
                 @focus="inputFocus = true"
                 @blur="inputFocus = false"
+                :step="1"
                 autofocus
                 v-model="firstReading.valueInString"
+                @keypress="
+                  (event) => {
+                    if (
+                      `${firstReading.valueInString}`.length >=
+                        (meter.type.id == 2 ? 6 : 8) ||
+                      event.keyCode == 46
+                    ) {
+                      event.preventDefault();
+                    } else {
+                    }
+                  }
+                "
               />
             </div>
             <div class="text-center">
@@ -270,6 +283,24 @@ export default defineComponent({
     }
 
     const inputFocus = ref(false);
+
+    const showAlert = (msg) => {
+      $q.notify({
+        attrs: {
+          // for the notification itself:
+          role: "alertdialog",
+        },
+        message: msg,
+        actions: [
+          {
+            icon: "close",
+            // for individual action (button):
+            "aria-label": "Dismiss",
+          },
+        ],
+      });
+    };
+
     return {
       readingDate,
       firstReading,
@@ -278,6 +309,7 @@ export default defineComponent({
       addMeter,
       inputFocus,
       meterComopnentReadValue,
+      showAlert,
     };
   },
   components: { MeterComponent },

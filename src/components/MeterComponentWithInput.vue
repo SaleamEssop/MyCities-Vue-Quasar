@@ -23,8 +23,20 @@
             outlined
             @focus="inputFocus = true"
             @blur="inputFocus = false"
+            :step="1"
             autofocus
             v-model="currentReading"
+            @keypress="
+              (event) => {
+                if (
+                  `${currentReading}`.length >= (meter.type.id == 2 ? 6 : 8) ||
+                  event.keyCode == 46
+                ) {
+                  event.preventDefault();
+                } else {
+                }
+              }
+            "
           />
         </div>
         <div class="text-center">
@@ -89,7 +101,7 @@ export default defineComponent({
     const inputFocus = ref(false);
     const readingItems = readingStore.getReadingsByMeterId(props.meter.id);
 
-    const currentReading = ref();
+    const currentReading = ref("");
     let lastReadingItem = ref(readingItems[0]);
     if (!props.isNew) {
       if (lastReadingItem.value.isSubmit) {
@@ -142,6 +154,7 @@ export default defineComponent({
       lastReadingItem,
       saveReading,
       meterComopnentReadValue,
+      showAlert,
     };
   },
   components: { MeterComponent },
