@@ -245,14 +245,24 @@ export default defineComponent({
         meter.value.account.id = props.propsAccount.id;
       }
       firstReading.value.meter.id = meter.value.id;
+      console.log(
+        "firstReading.value.valueInString",
+        firstReading.value.valueInString
+      );
+      if (meter.value.title == null || meter.value.number == null) {
+        $q.notify({
+          message: "Fill all details before saving.",
+        });
+        return;
+      }
 
       if (
         firstReading.value.valueInString == null ||
-        meter.value.title == null ||
-        meter.value.number == null
+        firstReading.value.valueInString.trim() == ""
       ) {
         $q.notify({
-          message: "Fill all details before saving",
+          message:
+            "You must enter a reading before saving even if it is all zeroes.",
         });
         return;
       }

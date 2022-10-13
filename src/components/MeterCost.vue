@@ -14,7 +14,12 @@
               color="negative"
               text-color="white"
             >
-              {{ usesPerDay?.toFixed(2) }} {{ unit }}
+              {{
+                meter.type.id == 2
+                  ? usesPerDay?.toFixed(2)
+                  : (usesPerDay * 1000.0)?.toFixed(2)
+              }}
+              {{ unit }}
             </div>
           </div>
           <div class="column col-5">
@@ -53,10 +58,8 @@
           </div>
         </div>
         <div class="text-center text-h6 q-mt-md">
-          Date:
-          {{ lastReadingDisplayFormat.timeDisplay }}
-          Reading
-          {{ lastReadingDisplayFormat.value }}
+          <div>Date: {{ lastReadingDisplayFormat.timeDisplay }}</div>
+          <div>Reading {{ lastReadingDisplayFormat.value }}</div>
         </div>
       </div>
     </q-card-section>
@@ -106,31 +109,29 @@ export default defineComponent({
       durbanReading.getSubmitedAndLastReading(readings);
     usesPerDay.value = durbanReading.calculateUnitForMonth(returnLastReadings);
 
-    const unit = computed(() => (props?.meter?.type?.id == 2 ? "kWh" : "kL"));
+    const unit = computed(() => (props?.meter?.type?.id == 2 ? "kWh" : "L"));
 
     const projectionCost = getCost(usesPerDay.value, props?.meter);
 
     const readingPeriod = date.formatDate(new Date(), "MMM YYYY");
+
+    String.prototype.insert = function (index, string) {
+      if (index > 0) {
+        return (
+          this.substring(0, index) + string + this.substring(index, this.length)
+        );
+      }
+
+      return string + this;
+    };
 
     const submitBill = () => {
       const email = site.email;
       const subject = `Account: ${account.number}`;
       let body = ``;
       body += `Account Number: ${account.number}\n`;
-      body += `Account Number: ${props.meter.number}\n`;
-      body += `Meter reading: ${readingPeriod}\n`;
-
-      String.prototype.insert = function (index, string) {
-        if (index > 0) {
-          return (
-            this.substring(0, index) +
-            string +
-            this.substring(index, this.length)
-          );
-        }
-
-        return string + this;
-      };
+      // body += `Account Number: ${props.meter.number}\n`;
+      // body += `Meter reading: ${readingPeriod}\n`;
 
       meters.forEach((meter) => {
         var readings = readingStore.getReadingsByMeterId(meter.id);
@@ -189,8 +190,11 @@ export default defineComponent({
         new Date(returnLastReadings.lastReading.time),
         "DD MMMM YYYY"
       );
-      const value = returnLastReadings.lastReading.value;
-      console.log(timeDisplay, value);
+      const seprated = props.meter.type.id == 2 ? 5 : 4;
+      const value = returnLastReadings.lastReading.valueInString.insert(
+        seprated,
+        "."
+      );
       return { timeDisplay, value };
     });
 

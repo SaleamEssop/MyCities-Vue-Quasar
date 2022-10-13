@@ -113,10 +113,10 @@ export default defineComponent({
     }
 
     const saveReading = (isSubmit = false) => {
-      // if (lastReadingItem.value.time + 24 * 60 * 60 * 1000 > Date.now()) {
-      //   showAlert("You already took sample before 24 hours");
-      //   return;
-      // }
+      if (lastReadingItem.value.time + 24 * 60 * 60 * 1000 > Date.now()) {
+        showAlert("You already took sample before 24 hours");
+        return;
+      }
       const valueInString = meterComopnentReadValue.value.getValueInString();
       const currentReadingValue =
         valueInString / (props.meter.type.id == 2 ? 10.0 : 10000.0);
