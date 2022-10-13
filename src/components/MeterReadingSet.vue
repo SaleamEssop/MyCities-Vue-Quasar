@@ -74,9 +74,9 @@
               >
                 <q-item-section>Edit last reading</q-item-section>
               </q-item>
-              <q-item clickable v-close-popup>
+              <!-- <q-item clickable v-close-popup>
                 <q-item-section>Submit to Municipality</q-item-section>
-              </q-item>
+              </q-item> -->
               <q-item clickable v-close-popup @click="deleteMeter(meter)">
                 <q-item-section>Delete this meter</q-item-section>
               </q-item>

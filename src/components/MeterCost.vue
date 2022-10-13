@@ -52,9 +52,18 @@
             R {{ projectionCost["total"].toFixed(2) }}
           </div>
         </div>
+        <div class="text-center text-h6 q-mt-md">
+          Date:
+          {{ lastReadingDisplayFormat.timeDisplay }}
+          Reading
+          {{ lastReadingDisplayFormat.value }}
+        </div>
       </div>
     </q-card-section>
-    <q-card-actions align="right">
+    <q-card-actions align="evenly">
+      <q-btn color="primary" text-color="black" @click="submitBill"
+        >Submit</q-btn
+      >
       <q-btn color="primary" text-color="black" @click="$emit('close')"
         >Close</q-btn
       >
@@ -65,6 +74,9 @@
 import { defineComponent, ref, computed } from "vue";
 import { date } from "quasar";
 import { useReadingStore } from "/src/stores/reading";
+import { useSiteStore } from "/src/stores/site";
+import { useAccountStore } from "/src/stores/account";
+
 import waterDurban from "/src/services/waterDurban.js";
 
 export default defineComponent({
@@ -75,6 +87,14 @@ export default defineComponent({
   },
   setup(props) {
     const readingStore = useReadingStore();
+    const siteStore = useSiteStore();
+    const accountStore = useAccountStore();
+
+    const account = accountStore.getAccountById(props.meter.account.id);
+
+    const meters = [props.meter];
+
+    const site = siteStore.getSiteById(account.site.id);
 
     const durbanReading = new waterDurban();
     const getCost = durbanReading.getCost;
@@ -90,12 +110,98 @@ export default defineComponent({
 
     const projectionCost = getCost(usesPerDay.value, props?.meter);
 
+    const readingPeriod = date.formatDate(new Date(), "MMM YYYY");
+
+    const submitBill = () => {
+      const email = site.email;
+      const subject = `Account: ${account.number}`;
+      let body = ``;
+      body += `Account Number: ${account.number}\n`;
+      body += `Account Number: ${props.meter.number}\n`;
+      body += `Meter reading: ${readingPeriod}\n`;
+
+      String.prototype.insert = function (index, string) {
+        if (index > 0) {
+          return (
+            this.substring(0, index) +
+            string +
+            this.substring(index, this.length)
+          );
+        }
+
+        return string + this;
+      };
+
+      meters.forEach((meter) => {
+        var readings = readingStore.getReadingsByMeterId(meter.id);
+        const returnLastReadings = durbanReading.getSubmitedAndLastReading(
+          readings,
+          readingPeriod
+        );
+        const lastReadingTime = returnLastReadings.lastReading;
+        // const usesPerDay = durbanReading.calculateUnitForMonth(returnLastReadings);
+
+        //const splitDigit = meter.type.id == 2 ? 5 : 4;
+        const unit = meter.type.id == 2 ? "kWh" : "kl";
+        // const valueInString = (lastReadingTime.valueInString || "").insert(
+        //   splitDigit,
+        //   "-"
+        // );
+
+        let valueInString = ""; //(lastReadingTime.value / 100.0 || "") + unit;
+
+        valueInString = `Last Reading:\t${
+          meter.type.id == 2
+            ? lastReadingTime.value
+            : lastReadingTime.value.toFixed(2)
+        }\nDate:\t\t\t${date.formatDate(
+          new Date(lastReadingTime.time),
+          "DD MMMM YYYY"
+        )}\n`;
+        //valueInString = (usesPerDay * 30).toFixed(2) + " " + unit;
+
+        body += `\n`;
+        body += `${meter.type.title}\n`;
+        body += `Meter:\t\t\t${meter.number}\n`;
+        body += `${valueInString}\n`;
+
+        body += `\n\n`;
+      });
+
+      body += `Powered by The LightsandWaterapp\n`;
+      body += `Visit www.lightsandwater.co.za for information on how we can help you save on electricity and water with cutting edge technologies.`;
+
+      let urlString =
+        "mailto:" +
+        encodeURI(email) +
+        "?subject=" +
+        encodeURI(subject) +
+        "&body=" +
+        encodeURI(body);
+      console.log(body);
+      //        https://mail.google.com/mail/?view=cm&fs=1&to=someone@example.com&cc=someone@ola.example&bcc=someone.else@example.com&su=SUBJECT&body=BODY
+
+      window.open(urlString, "_blank");
+    };
+
+    const lastReadingDisplayFormat = computed(() => {
+      const timeDisplay = date.formatDate(
+        new Date(returnLastReadings.lastReading.time),
+        "DD MMMM YYYY"
+      );
+      const value = returnLastReadings.lastReading.value;
+      console.log(timeDisplay, value);
+      return { timeDisplay, value };
+    });
+
     return {
       getCost,
       usesPerDay,
       unit,
       projectionCost,
       returnLastReadings,
+      submitBill,
+      lastReadingDisplayFormat,
     };
   },
 });

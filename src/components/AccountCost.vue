@@ -104,7 +104,7 @@ export default defineComponent({
 
     const $q = useQuasar();
 
-    const meters = meterStore.getByAccuntId(props.account.id);
+    const meters = meterStore.getByAccuntId(props.account.number);
     const site = siteStore.getSiteById(props.account.site.id);
 
     const calculationsForMeters = new Array();
@@ -231,7 +231,7 @@ export default defineComponent({
       console.log(body);
       //        https://mail.google.com/mail/?view=cm&fs=1&to=someone@example.com&cc=someone@ola.example&bcc=someone.else@example.com&su=SUBJECT&body=BODY
 
-      //window.open(urlString, "_blank");
+      window.open(urlString, "_blank");
     };
 
     return {

@@ -177,14 +177,14 @@ const nullAccount = {
       isFromServer: true,
       isFromUser: false,
     },
-    {
-      id: Date.now(),
-      title: "Infrastructure Levy",
-      value: null,
-      isApplicable: true,
-      isFromServer: true,
-      isFromUser: false,
-    },
+    // {
+    //   id: Date.now(),
+    //   title: "Infrastructure Levy",
+    //   value: null,
+    //   isApplicable: true,
+    //   isFromServer: true,
+    //   isFromUser: false,
+    // },
   ],
 };
 export default defineComponent({
