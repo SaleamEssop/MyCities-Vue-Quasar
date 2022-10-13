@@ -259,7 +259,9 @@ export default defineComponent({
 
       firstReading.value.valueInString =
         meterComopnentReadValue.value.getValueInString();
-      firstReading.value.value = firstReading.value.valueInString / 10.0;
+      firstReading.value.value =
+        firstReading.value.valueInString /
+        (meter.value.type.id == 2 ? 10.0 : 10000.0);
       readingStore.addReading(firstReading.value);
       meterStore.addMeter(meter.value);
       emit("save");

@@ -118,7 +118,8 @@ export default defineComponent({
       //   return;
       // }
       const valueInString = meterComopnentReadValue.value.getValueInString();
-      const currentReadingValue = valueInString / 10.0;
+      const currentReadingValue =
+        valueInString / (props.meter.type.id == 2 ? 10.0 : 10000.0);
       if (
         !currentReadingValue ||
         currentReadingValue <= lastReadingItem.value.value

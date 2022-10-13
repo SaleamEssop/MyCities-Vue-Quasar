@@ -108,8 +108,8 @@ export default class {
       return {
         min: rate.min,
         max: rate.max,
-        ir: rate.ir / 1000.0,
-        or: rate.or / 1000.0,
+        ir: rate.ir,
+        or: rate.or,
         out: rate.out,
       };
     });
@@ -117,7 +117,7 @@ export default class {
     const extraCharges = [
       {
         title: "Infrastructure Surcharge",
-        amountPerUnit: 1.48 / 1000.0,
+        amountPerUnit: 1.48,
         amount: 0,
       },
       { title: "Water Loss Levy", amountPerUnit: 0, amount: 14.9 },
@@ -127,7 +127,7 @@ export default class {
 
     const fractionInputReading = (index, uses) => {
       const rate = rates[index];
-      const maxiumForMonth = Math.round((rate.max - rate.min) * 30);
+      const maxiumForMonth = Math.round(((rate.max - rate.min) * 30) / 1000.0);
 
       const conditionInputUses = Math.min(maxiumForMonth, uses);
       //Math.round(Math.min(maxiumForMonth, uses) / 1000.0) * 1000.0;
@@ -223,8 +223,8 @@ export default class {
     const returnProjection = {};
 
     const projection = [];
-    projection.push({ title: "Electricity bill", value: monthlyUses * 2.24 });
-    projection.push({ title: "VAT", value: monthlyUses * 2.24 * 0.15 });
+    projection.push({ title: "Electricity bill", value: monthlyUses * 2.2425 });
+    projection.push({ title: "VAT", value: monthlyUses * 2.2425 * 0.15 });
 
     returnProjection["projection"] = projection;
     returnProjection["total"] = projection.reduce((acc, { value }) => {
@@ -235,7 +235,7 @@ export default class {
   };
 
   getCost = (perDayUses, meter) => {
-    console.log(perDayUses, meter);
+    // console.log(perDayUses, meter);
     if (meter?.type?.id == 2) {
       return this.getElectricMeterCost(perDayUses);
     }

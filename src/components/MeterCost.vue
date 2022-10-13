@@ -86,7 +86,7 @@ export default defineComponent({
       durbanReading.getSubmitedAndLastReading(readings);
     usesPerDay.value = durbanReading.calculateUnitForMonth(returnLastReadings);
 
-    const unit = computed(() => (props?.meter?.type?.id == 2 ? "kWh" : "L"));
+    const unit = computed(() => (props?.meter?.type?.id == 2 ? "kWh" : "kL"));
 
     const projectionCost = getCost(usesPerDay.value, props?.meter);
 

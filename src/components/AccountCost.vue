@@ -170,6 +170,18 @@ export default defineComponent({
 
       body += `Meter reading:${readingPeriod}\n`;
 
+      String.prototype.insert = function (index, string) {
+        if (index > 0) {
+          return (
+            this.substring(0, index) +
+            string +
+            this.substring(index, this.length)
+          );
+        }
+
+        return string + this;
+      };
+
       meters.forEach((meter) => {
         var readings = readingStore.getReadingsByMeterId(meter.id);
         const returnLastReadings = durbanReading.getSubmitedAndLastReading(
@@ -177,19 +189,37 @@ export default defineComponent({
           readingPeriod
         );
         const lastReadingTime = returnLastReadings.lastReading;
-        body += `\n`;
-        body += `${meter.type.title}\n`;
-        body += `Meter:${meter.number}\n`;
-        body += `Last Reading:${lastReadingTime.value} at ${date.formatDate(
+        // const usesPerDay = durbanReading.calculateUnitForMonth(returnLastReadings);
+
+        //const splitDigit = meter.type.id == 2 ? 5 : 4;
+        const unit = meter.type.id == 2 ? "kWh" : "kl";
+        // const valueInString = (lastReadingTime.valueInString || "").insert(
+        //   splitDigit,
+        //   "-"
+        // );
+
+        let valueInString = ""; //(lastReadingTime.value / 100.0 || "") + unit;
+
+        valueInString = `Last Reading:\t${
+          meter.type.id == 2
+            ? lastReadingTime.value
+            : lastReadingTime.value.toFixed(2)
+        }\nDate:\t\t\t${date.formatDate(
           new Date(lastReadingTime.time),
           "DD MMMM YYYY"
         )}\n`;
+        //valueInString = (usesPerDay * 30).toFixed(2) + " " + unit;
+
+        body += `\n`;
+        body += `${meter.type.title}\n`;
+        body += `Meter:\t\t\t${meter.number}\n`;
+        body += `${valueInString}\n`;
 
         body += `\n\n`;
       });
 
       body += `Powered by The LightsandWaterapp\n`;
-      body += `<a href="https://www.lightsandwater.co.za">www.lightsandwater.co.za</a>`;
+      body += `Visit www.lightsandwater.co.za for information on how we can help you save on electricity and water with cutting edge technologies.`;
 
       let urlString =
         "mailto:" +
@@ -198,10 +228,10 @@ export default defineComponent({
         encodeURI(subject) +
         "&body=" +
         encodeURI(body);
-
+      console.log(body);
       //        https://mail.google.com/mail/?view=cm&fs=1&to=someone@example.com&cc=someone@ola.example&bcc=someone.else@example.com&su=SUBJECT&body=BODY
 
-      window.open(urlString, "_blank");
+      //window.open(urlString, "_blank");
     };
 
     return {
