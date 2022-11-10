@@ -344,7 +344,7 @@ export default defineComponent({
     const deleteMeter = (meter) => {
       $q.dialog({
         title: "Confirm",
-        message: "Would you like to delete theis meter?",
+        message: "Would you like to delete this meter?",
         cancel: true,
         persistent: true,
       })

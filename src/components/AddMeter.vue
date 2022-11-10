@@ -123,7 +123,7 @@ If you do have have this reading available, enter the current meter reading, wit
                 @keypress="
                   (event) => {
                     if (
-                      `${firstReading.valueInString}`.length >=
+                      `${firstReading.valueInString || ''}`.length >=
                         (meter.type.id == 2 ? 6 : 8) ||
                       event.keyCode == 46
                     ) {

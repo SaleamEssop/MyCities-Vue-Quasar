@@ -104,46 +104,57 @@ export default defineComponent({
 
     const $q = useQuasar();
 
-    const meters = meterStore.getByAccuntId(props.account.number);
+    const meters = meterStore.getByAccuntId(props.account.id);
     const site = siteStore.getSiteById(props.account.site.id);
 
-    const calculationsForMeters = new Array();
     const durbanReading = new waterDurban();
 
     const readingPeriod = date.formatDate(new Date(), "MMM YYYY");
 
-    meters.forEach((meter) => {
-      var readings = readingStore.getReadingsByMeterId(meter.id);
-      const returnLastReadings = durbanReading.getSubmitedAndLastReading(
-        readings,
-        readingPeriod
-      );
-      const usesPerDay =
-        durbanReading.calculateUnitForMonth(returnLastReadings);
-      const projectionCost = durbanReading.getCost(usesPerDay, meter);
-      calculationsForMeters.push({
-        title: `${meter.title} - ${meter.number}`,
-        value: projectionCost.total,
-      });
-    });
+    const calculationsForMeters = computed(() => {
+      const meterReadings = new Array();
 
-    const calculationsForAccount = new Array();
-
-    props.account.fixedCosts.forEach((fixedCost) => {
-      if (fixedCost.isApplicable) {
-        calculationsForAccount.push({
-          title: fixedCost.title,
-          value: fixedCost.value || 0,
+      meters.forEach((meter) => {
+        var readings = readingStore.getReadingsByMeterId(meter.id);
+        const returnLastReadings = durbanReading.getSubmitedAndLastReading(
+          readings,
+          readingPeriod
+        );
+        const usesPerDay =
+          durbanReading.calculateUnitForMonth(returnLastReadings);
+        const projectionCost = durbanReading.getCost(usesPerDay, meter);
+        meterReadings.push({
+          title: `${meter.title} - ${meter.number}`,
+          value: projectionCost.total,
         });
-      }
+      });
+
+      return meterReadings;
     });
 
-    const totalFullBill = ref(0);
-    calculationsForMeters.forEach(({ value }) => {
-      totalFullBill.value = totalFullBill.value + value;
+    const calculationsForAccount = computed(() => {
+      const readingForAccount = new Array();
+
+      props.account.fixedCosts.forEach((fixedCost) => {
+        if (fixedCost.isApplicable) {
+          readingForAccount.push({
+            title: fixedCost.title,
+            value: fixedCost.value || 0,
+          });
+        }
+      });
+      return readingForAccount;
     });
-    calculationsForAccount.forEach(({ value }) => {
-      totalFullBill.value = totalFullBill.value + value;
+
+    const totalFullBill = computed(() => {
+      let total = 0;
+      calculationsForMeters.value.forEach(({ value }) => {
+        total = total + value;
+      });
+      calculationsForAccount.value.forEach(({ value }) => {
+        total = total + value;
+      });
+      return total;
     });
 
     function alert({ title, message }) {

@@ -1,6 +1,14 @@
 <template>
   <q-card>
     <q-card-section class="bg-primary">
+      <div
+        class="q-my-sm"
+        text-color="negative"
+        style="color: red; font-style: italic"
+      >
+        {{ alertIfLessThen24Hours }}
+      </div>
+
       <div class="text-subtitle2">Title : {{ meter?.title }}</div>
       <div class="text-subtitle2">
         Meter Number : {{ meter ? meter?.number : "" }}
@@ -29,7 +37,8 @@
             @keypress="
               (event) => {
                 if (
-                  `${currentReading}`.length >= (meter.type.id == 2 ? 6 : 8) ||
+                  `${currentReading || ''}`.length >=
+                    (meter.type.id == 2 ? 6 : 8) ||
                   event.keyCode == 46
                 ) {
                   event.preventDefault();
@@ -65,11 +74,13 @@
   </q-card>
 </template>
 <script>
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import MeterComponent from "./MeterComponent.vue";
 import { useReadingStore } from "/src/stores/reading";
 import { date } from "quasar";
 import { useQuasar } from "quasar";
+
+import waterDurban from "/src/services/waterDurban.js";
 
 export default defineComponent({
   name: "MeterComponentWithInput",
@@ -108,13 +119,56 @@ export default defineComponent({
         showAlert("Submitted reading can not update");
       } else {
         lastReadingItem = ref(readingItems[1]);
-        currentReading.value = readingItems[0].valueInString;
+        currentReading.value = readingItems[0].valueInString || "";
       }
+    }
+
+    const alertIfLessThen24Hours = computed(() => {
+      if (lastReadingItem.value.time + 24 * 60 * 60 * 1000 > Date.now()) {
+        let time = durbanReading.timeDiffCalc(
+          lastReadingItem.value.time + 24 * 60 * 60 * 1000,
+          Date.now()
+        );
+        return `Your last entry was less than 24 hours ago. Please wait ${time} before you read again.`;
+      } else {
+        return "";
+      }
+    });
+
+    const durbanReading = new waterDurban();
+
+    function confirm(msg, callback) {
+      $q.dialog({
+        title: "Confirm",
+        message: `${msg}`,
+        cancel: true,
+        persistent: true,
+      })
+        .onOk(() => {
+          // console.log('>>>> OK')
+          callback();
+        })
+        .onOk(() => {
+          // console.log('>>>> second OK catcher')
+          callback();
+        })
+        .onCancel(() => {
+          // console.log('>>>> Cancel')
+        })
+        .onDismiss(() => {
+          // console.log('I am triggered on both OK and Cancel')
+        });
     }
 
     const saveReading = (isSubmit = false) => {
       if (lastReadingItem.value.time + 24 * 60 * 60 * 1000 > Date.now()) {
-        showAlert("You already took sample before 24 hours");
+        let time = durbanReading.timeDiffCalc(
+          lastReadingItem.value.time + 24 * 60 * 60 * 1000,
+          Date.now()
+        );
+        showAlert(
+          `Your last entry was less than 24 hours ago. Please wait ${time} before you read again.`
+        );
         return;
       }
       const valueInString = meterComopnentReadValue.value.getValueInString();
@@ -124,29 +178,34 @@ export default defineComponent({
         !currentReadingValue ||
         currentReadingValue <= lastReadingItem.value.value
       ) {
-        showAlert("Current reading must be greater than the last reading");
+        const maximum = props.meter.type.id == 2 ? 99999.9 : 9999999.9;
+        confirm(
+          `This meter will rollover from ${lastReadingItem.value.valueInString} to ${valueInString}. Please confirm.`,
+          () => {
+            if (props.isNew) {
+              readingStore.addReading({
+                value: currentReadingValue,
+                valueInString: valueInString,
+                time: Date.now(),
+                isSubmit: isSubmit,
+                meter: { id: props.meter.id },
+              });
+            } else {
+              readingStore.updateReading({
+                value: currentReadingValue,
+                valueInString: valueInString,
+                time: readingItems[0].time,
+                isSubmit: isSubmit,
+                meter: { id: props.meter.id },
+              });
+            }
+
+            emit("save");
+          }
+        );
+        // showAlert("Current reading must be greater than the last reading");
         return;
       }
-
-      if (props.isNew) {
-        readingStore.addReading({
-          value: currentReadingValue,
-          valueInString: valueInString,
-          time: Date.now(),
-          isSubmit: isSubmit,
-          meter: { id: props.meter.id },
-        });
-      } else {
-        readingStore.updateReading({
-          value: currentReadingValue,
-          valueInString: valueInString,
-          time: readingItems[0].time,
-          isSubmit: isSubmit,
-          meter: { id: props.meter.id },
-        });
-      }
-
-      emit("save");
     };
 
     return {
@@ -156,6 +215,7 @@ export default defineComponent({
       saveReading,
       meterComopnentReadValue,
       showAlert,
+      alertIfLessThen24Hours,
     };
   },
   components: { MeterComponent },
