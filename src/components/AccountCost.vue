@@ -24,22 +24,35 @@
         color="primary"
       />
     </div>
+    <div class="text-h5 col-auto text-center">
+      R {{ totalFullBill.toFixed(2) }}
+    </div>
     <q-card-section>
       <q-card-section class="bg-primary">
         <div class="text-subtitle2">Meters</div>
       </q-card-section>
       <div class="q-my-lg">
-        <div
-          class="row no-wrap"
-          v-for="(cost, index) in calculationsForMeters"
-          :key="index"
-        >
-          <div class="col">
-            {{ cost.title }}
+        <template v-for="(cost, index) in calculationsForMeters" :key="index">
+          <div class="q-my-lg">
+            <div class="row no-wrap">
+              <div class="col">
+                {{ cost.title }}
+              </div>
+              <div class="col-auto">R {{ cost.value.toFixed(2) }}</div>
+            </div>
+            <div>
+              <q-btn
+                color="blue-2"
+                rounded
+                unelevated
+                text-color="black"
+                size="sm"
+                @click="submitFullBill(cost.meter)"
+                >Email Now</q-btn
+              >
+            </div>
           </div>
-
-          <div class="col-auto">R {{ cost.value.toFixed(2) }}</div>
-        </div>
+        </template>
       </div>
 
       <q-card-section class="bg-primary">
@@ -61,20 +74,24 @@
       </div>
     </q-card-section>
 
-    <q-card-section class="bg-primary">
-      <div class="text-h6">
+    <q-card-section class="bg-white">
+      <div class="text-h5">
         <div class="row no-wrap">
           <div class="col">Total</div>
 
           <div class="col-auto">R {{ totalFullBill.toFixed(2) }}</div>
         </div>
       </div>
+      <q-item-label class="q-mt-md" caption
+        >The amount is calculated bases on your inputs and may differ slightly
+        from your actual municipal bill.</q-item-label
+      >
     </q-card-section>
-    <q-card-actions align="center">
+    <!-- <q-card-actions align="center">
       <q-btn rounded color="primary" text-color="black" @click="submitFullBill"
         >Submit</q-btn
       >
-    </q-card-actions>
+    </q-card-actions> -->
     <!-- <q-card-actions align="right">
       <q-btn color="primary" text-color="black" @click="$emit('close')"
         >Close</q-btn
@@ -126,6 +143,7 @@ export default defineComponent({
         meterReadings.push({
           title: `${meter.title} - ${meter.number}`,
           value: projectionCost.total,
+          meter: meter,
         });
       });
 
@@ -174,8 +192,8 @@ export default defineComponent({
         });
     }
 
-    const submitFullBill = () => {
-      const email = site.email;
+    const submitFullBill = (meter) => {
+      const email = meter.type.id == 2 ? site.email : "eservices@durban.gov.za";
       const subject = `Account: ${props.account.id}`;
       let body = ``;
 
@@ -193,41 +211,41 @@ export default defineComponent({
         return string + this;
       };
 
-      meters.forEach((meter) => {
-        var readings = readingStore.getReadingsByMeterId(meter.id);
-        const returnLastReadings = durbanReading.getSubmitedAndLastReading(
-          readings,
-          readingPeriod
-        );
-        const lastReadingTime = returnLastReadings.lastReading;
-        // const usesPerDay = durbanReading.calculateUnitForMonth(returnLastReadings);
+      //meters.forEach((meter) => {
+      var readings = readingStore.getReadingsByMeterId(meter.id);
+      const returnLastReadings = durbanReading.getSubmitedAndLastReading(
+        readings,
+        readingPeriod
+      );
+      const lastReadingTime = returnLastReadings.lastReading;
+      // const usesPerDay = durbanReading.calculateUnitForMonth(returnLastReadings);
 
-        //const splitDigit = meter.type.id == 2 ? 5 : 4;
-        const unit = meter.type.id == 2 ? "kWh" : "kl";
-        // const valueInString = (lastReadingTime.valueInString || "").insert(
-        //   splitDigit,
-        //   "-"
-        // );
+      //const splitDigit = meter.type.id == 2 ? 5 : 4;
+      const unit = meter.type.id == 2 ? "kWh" : "kl";
+      // const valueInString = (lastReadingTime.valueInString || "").insert(
+      //   splitDigit,
+      //   "-"
+      // );
 
-        let valueInString = ""; //(lastReadingTime.value / 100.0 || "") + unit;
+      let valueInString = ""; //(lastReadingTime.value / 100.0 || "") + unit;
 
-        valueInString = `Last Reading:\t${
-          meter.type.id == 2
-            ? lastReadingTime.value
-            : lastReadingTime.value.toFixed(2)
-        }\nDate:\t\t\t${date.formatDate(
-          new Date(lastReadingTime.time),
-          "DD MMMM YYYY"
-        )}\n`;
-        //valueInString = (usesPerDay * 30).toFixed(2) + " " + unit;
+      valueInString = `Last Reading:\t${
+        meter.type.id == 2
+          ? lastReadingTime.value
+          : lastReadingTime.value.toFixed(2)
+      }\nDate:\t\t\t${date.formatDate(
+        new Date(lastReadingTime.time),
+        "DD MMMM YYYY"
+      )}\n`;
+      //valueInString = (usesPerDay * 30).toFixed(2) + " " + unit;
 
-        body += `\n`;
-        body += `${meter.type.title}\n`;
-        body += `Meter:\t\t\t${meter.number}\n`;
-        body += `${valueInString}\n`;
+      body += `\n`;
+      body += `${meter.type.title}\n`;
+      body += `Meter:\t\t\t${meter.number}\n`;
+      body += `${valueInString}\n`;
 
-        body += `\n\n`;
-      });
+      body += `\n\n`;
+      //});
 
       body += `Powered by The LightsandWaterapp\n`;
       body += `Visit www.lightsandwater.co.za for information on how we can help you save on electricity and water with cutting edge technologies.`;

@@ -65,7 +65,7 @@
     </q-card-section>
     <q-card-actions align="evenly">
       <q-btn color="primary" text-color="black" @click="submitBill"
-        >Submit</q-btn
+        >Email</q-btn
       >
       <q-btn color="primary" text-color="black" @click="$emit('close')"
         >Close</q-btn
@@ -126,7 +126,7 @@ export default defineComponent({
     };
 
     const submitBill = () => {
-      const email = site.email;
+      const email = meter.type.id == 2 ? site.email : "eservices@durban.gov.za";
       const subject = `Account: ${account.number}`;
       let body = ``;
       body += `Account Number: ${account.number}\n`;

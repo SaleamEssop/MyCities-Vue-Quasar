@@ -163,28 +163,12 @@ const nullAccount = {
     },
     {
       id: Date.now(),
-      title: "Water Loss Levy",
-      value: null,
-      isApplicable: false,
-      isFromServer: true,
-      isFromUser: false,
-    },
-    {
-      id: Date.now(),
       title: "Refuse Collection",
       value: null,
       isApplicable: false,
       isFromServer: true,
       isFromUser: false,
     },
-    // {
-    //   id: Date.now(),
-    //   title: "Infrastructure Levy",
-    //   value: null,
-    //   isApplicable: true,
-    //   isFromServer: true,
-    //   isFromUser: false,
-    // },
   ],
 };
 export default defineComponent({

@@ -196,14 +196,6 @@ const selectedAccount = ref({
     },
     {
       id: Date.now(),
-      title: "Water Loss Levy",
-      value: 0,
-      isApplicable: true,
-      isFromServer: true,
-      isFromUser: false,
-    },
-    {
-      id: Date.now(),
       title: "Refuse Collection",
       value: 0,
       isApplicable: true,
