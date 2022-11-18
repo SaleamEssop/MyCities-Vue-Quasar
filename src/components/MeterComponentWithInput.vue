@@ -145,22 +145,44 @@ export default defineComponent({
         persistent: true,
       })
         .onOk(() => {
-          // console.log('>>>> OK')
+          console.log(">>>> OK");
           callback();
         })
         .onOk(() => {
-          // console.log('>>>> second OK catcher')
+          console.log(">>>> second OK catcher");
           callback();
         })
         .onCancel(() => {
-          // console.log('>>>> Cancel')
+          console.log(">>>> Cancel");
         })
         .onDismiss(() => {
-          // console.log('I am triggered on both OK and Cancel')
+          console.log("I am triggered on both OK and Cancel");
         });
     }
 
     const saveReading = (isSubmit = false) => {
+      const doSave = (currentReadingValue, valueInString) => {
+        if (props.isNew) {
+          readingStore.addReading({
+            value: currentReadingValue,
+            valueInString: valueInString,
+            time: Date.now(),
+            isSubmit: isSubmit,
+            meter: { id: props.meter.id },
+          });
+        } else {
+          readingStore.updateReading({
+            value: currentReadingValue,
+            valueInString: valueInString,
+            time: readingItems[0].time,
+            isSubmit: isSubmit,
+            meter: { id: props.meter.id },
+          });
+        }
+
+        emit("save");
+      };
+
       if (lastReadingItem.value.time + 24 * 60 * 60 * 1000 > Date.now()) {
         let time = durbanReading.timeDiffCalc(
           lastReadingItem.value.time + 24 * 60 * 60 * 1000,
@@ -174,6 +196,7 @@ export default defineComponent({
       const valueInString = meterComopnentReadValue.value.getValueInString();
       const currentReadingValue =
         valueInString / (props.meter.type.id == 2 ? 10.0 : 10000.0);
+
       if (
         !currentReadingValue ||
         currentReadingValue <= lastReadingItem.value.value
@@ -182,29 +205,12 @@ export default defineComponent({
         confirm(
           `This meter will rollover from ${lastReadingItem.value.valueInString} to ${valueInString}. Please confirm.`,
           () => {
-            if (props.isNew) {
-              readingStore.addReading({
-                value: currentReadingValue,
-                valueInString: valueInString,
-                time: Date.now(),
-                isSubmit: isSubmit,
-                meter: { id: props.meter.id },
-              });
-            } else {
-              readingStore.updateReading({
-                value: currentReadingValue,
-                valueInString: valueInString,
-                time: readingItems[0].time,
-                isSubmit: isSubmit,
-                meter: { id: props.meter.id },
-              });
-            }
-
-            emit("save");
+            doSave(currentReadingValue, valueInString);
           }
         );
         // showAlert("Current reading must be greater than the last reading");
-        return;
+      } else {
+        doSave(currentReadingValue, valueInString);
       }
     };
 
