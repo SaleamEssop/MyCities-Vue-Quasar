@@ -34,6 +34,7 @@
             :step="1"
             autofocus
             v-model="currentReading"
+            :maxlength="meter.type.id == 2 ? 6 : 8"
             @keypress="
               (event) => {
                 if (
