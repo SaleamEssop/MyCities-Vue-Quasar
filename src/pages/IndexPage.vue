@@ -31,28 +31,30 @@
 <script setup>
 import { ref } from "vue";
 import IconButton from "components/IconButton.vue";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+// import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
+import { useUserStore } from "src/stores/user";
 
 const router = useRouter();
+const userStore = useUserStore();
 
 const $q = useQuasar();
 
 const email = ref("");
 const name = ref("");
-
-const auth = getAuth();
+// const auth = getAuth();
 // if we want to get the user details, this is how its done
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    email.value = user.email;
-    name.value = user.displayName;
-  }
-});
+// onAuthStateChanged(auth, (user) => {
+//   if (user) {
+//     email.value = user.email;
+//     name.value = user.displayName;
+//   }
+// });
 const logout = () => {
-  getAuth().signOut();
+  // getAuth().signOut();
+  userStore.signOut();
   router
     .push("/auth/login")
     .then(() => {

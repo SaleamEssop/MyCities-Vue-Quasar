@@ -295,6 +295,8 @@ import { useRouter } from "vue-router";
 import { useSiteStore } from "/src/stores/site";
 import { useAccountStore } from "/src/stores/account";
 import { useMeterStore } from "/src/stores/meter";
+import { useUserStore } from "/src/stores/user";
+
 import MeterReadingSet from "src/components/MeterReadingSet.vue";
 import AccountComponent from "src/components/AccountComponent.vue";
 import AddMeter from "src/components/AddMeter.vue";
@@ -305,6 +307,7 @@ import { date, Dialog, useQuasar } from "quasar";
 const siteStore = useSiteStore();
 const accountStore = useAccountStore();
 const meterStore = useMeterStore();
+const userStore = useUserStore();
 const $q = useQuasar();
 
 const allSites = siteStore.allSites;

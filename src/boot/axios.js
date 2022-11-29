@@ -7,7 +7,11 @@ import axios from "axios";
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const api = axios.create({ baseURL: "https://api.example.com" });
+const api = axios.create({ baseURL: "http://146.190.105.178/api" });
+api.interceptors.response.use((response) => {
+  return response.data;
+});
+
 const locationApi = axios.create({ baseURL: "https://geocode-api.arcgis.com" });
 
 const GEOCODE_API_TOKEN =
@@ -48,6 +52,16 @@ const findEmailFromLocation = async (geometry) => {
     );
 };
 
+//SignUp
+
+const userLogin = async (req) => {
+  return api.post("/v1/user/login", req);
+};
+
+const userSignUp = async (req) => {
+  return api.post("/v1/user/register", req);
+};
+
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 
@@ -67,4 +81,6 @@ export {
   suggestLocation,
   findAddressCandidates,
   findEmailFromLocation,
+  userLogin,
+  userSignUp,
 };
