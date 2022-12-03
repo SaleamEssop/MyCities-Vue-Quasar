@@ -144,7 +144,10 @@ import {
   suggestLocation,
   findAddressCandidates,
   findEmailFromLocation,
+  addSiteAndAccount,
 } from "boot/axios";
+
+import { updateAllData } from "boot/firebase";
 
 const nullAccount = {
   id: Date.now(),
@@ -228,7 +231,7 @@ export default defineComponent({
       });
     };
 
-    const onSaveSelectAccount = () => {
+    const onSaveSelectAccount = async () => {
       if (site.value == null || site.value.email == null) {
         $q.notify({
           message: "Fill valid location",
@@ -244,26 +247,55 @@ export default defineComponent({
         });
         return;
       }
+
       if (isNew.value) {
         if (site.value.newSite) {
           if (site.value.latLng) {
             //first will save site
-            site.value.id = Date.now();
+            //site.value.id = Date.now();
             delete site.value["newSite"];
-            siteStore.addSite(site.value);
+            // siteStore.addSite(site.value);
+            //add site and account
+            const siteValue = site.value;
+            const accountValue = selectedAccount.value;
+            await addSiteAndAccount({
+              address: siteValue.address,
+              email: siteValue.email,
+              lat: siteValue.latLng.lat,
+              lng: siteValue.latLng.lng,
+              title: siteValue.email,
+              account_name: accountValue.title,
+              account_number: accountValue.number,
+              optional_information: accountValue.option,
+            });
           } else {
             alert({ message: "There is no site contact to developer" });
             return;
           }
+        } else {
+          const accountValue = selectedAccount.value;
+          await addSiteAndAccount({
+            site_id: site.value.id,
+            account_name: accountValue.title,
+            account_number: accountValue.number,
+            optional_information: accountValue.option,
+          });
         }
-        selectedAccount.value.site["id"] = site.value.id;
-        accountStore.addAccount(selectedAccount.value);
+        // selectedAccount.value.site["id"] = site.value.id;
+        // accountStore.addAccount(selectedAccount.value);
       } else {
-        accountStore.update(selectedAccount.value);
+        // const accountValue = selectedAccount.value;
+        // await addSiteAndAccount({
+        //   site_id: site.value.id,
+        //   account_name: accountValue.title,
+        //   account_number: accountValue.number,
+        //   optional_information: accountValue.option,
+        // });
+        //accountStore.update(selectedAccount.value);
       }
 
       // emit("update:account", selectedAccount.value);
-
+      updateAllData();
       emit("save");
     };
 

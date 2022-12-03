@@ -302,6 +302,8 @@ import AccountComponent from "src/components/AccountComponent.vue";
 import AddMeter from "src/components/AddMeter.vue";
 import AccountCost from "src/components/AccountCost.vue";
 import AccountHistory from "src/components/AccountHistory.vue";
+import { fetchAndSaveMeterOnAccount } from "src/boot/axios";
+
 import { date, Dialog, useQuasar } from "quasar";
 
 const siteStore = useSiteStore();
@@ -344,6 +346,7 @@ const selectAccount = (_account) => {
   meterStore.selectedMeter = null;
 
   isExpandMeter.value = true;
+  fetchAndSaveMeterOnAccount(_account.id);
 };
 
 const deleteAccount = (account) => {

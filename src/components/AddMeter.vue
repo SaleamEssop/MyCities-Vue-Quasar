@@ -189,6 +189,7 @@ import { useReadingStore } from "/src/stores/reading";
 import { useQuasar } from "quasar";
 import MeterComponent from "/src/components/MeterComponent.vue";
 import MeterComponentWithInput from "./MeterComponentWithInput.vue";
+import { addMeterAndReading } from "src/boot/axios";
 
 const nullReading = {
   isSubmit: true,
@@ -245,14 +246,9 @@ export default defineComponent({
         meter.value.account.id = props.propsAccount.id;
       }
       firstReading.value.meter.id = meter.value.id;
-      console.log(
-        "firstReading.value.valueInString",
-        firstReading.value.valueInString
-      );
+
       if (meter.value.title == null || meter.value.number == null) {
-        $q.notify({
-          message: "Fill all details before saving.",
-        });
+        $q.notify({ message: "Fill all details before saving." });
         return;
       }
 
@@ -272,9 +268,21 @@ export default defineComponent({
       firstReading.value.value =
         firstReading.value.valueInString /
         (meter.value.type.id == 2 ? 10.0 : 10000.0);
-      readingStore.addReading(firstReading.value);
-      meterStore.addMeter(meter.value);
-      emit("save");
+
+      addMeterAndReading({
+        meter_type_id: meter.value.type.id,
+        meter_title: meter.value.title,
+        meter_number: meter.value.number,
+        meter_reading_date: firstReading.value.time,
+        meter_reading: firstReading.value.valueInString,
+        account_id: meter.value.account.id,
+      }).then(({ status, data }) => {
+        if (status) {
+          // readingStore.addReading(firstReading.value);
+          // meterStore.addMeter(meter.value);
+          emit("save");
+        }
+      });
     };
 
     function alert({ title, message }) {

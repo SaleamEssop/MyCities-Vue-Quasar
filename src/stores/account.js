@@ -46,6 +46,9 @@ export const useAccountStore = defineStore("account", {
       //   this.meters.splice(meterIndex, 1);
       // }
     },
+    replace(_accounts) {
+      this.accounts = _accounts;
+    },
   },
   persist: true,
 });

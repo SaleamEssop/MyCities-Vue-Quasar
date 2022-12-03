@@ -65,6 +65,19 @@ export const useMeterStore = defineStore("meter", {
       //   this.meters.splice(meterIndex, 1);
       // }
     },
+    saveMeterByAccountId(meters, accountId) {
+      const alreadySavedMeters = this.getByAccuntId(accountId);
+
+      alreadySavedMeters.forEach((_meter) => {
+        let meterIndex = this.meters.findIndex(({ id }) => {
+          return _meter.id == id;
+        });
+        if (meterIndex > -1) {
+          this.meters.splice(meterIndex, 1);
+        }
+      });
+      this.meters.push(...meters);
+    },
   },
 
   persist: true,

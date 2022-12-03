@@ -12,11 +12,53 @@ const firebaseConfig = {
   appId: "1:1002729962409:web:e6b9209a285f44965922b8",
 };
 
-import { useUserStore } from "../stores/user";
+import { useUserStore } from "src/stores/user";
+import { useSiteStore } from "src/stores/site";
+import { useAccountStore } from "src/stores/account";
+
+import { getAllData } from "boot/axios";
+
+const userStore = useUserStore();
+const siteStore = useSiteStore();
+const accountStore = useAccountStore();
+
+const updateAllData = () => {
+  getAllData().then(({ status, data }) => {
+    const sitesSplit = data.reduce(
+      (acc, site) => {
+        acc.accounts = acc.accounts.concat(
+          site.account.map((account) => {
+            return {
+              title: account.account_name,
+              id: account.id,
+              number: account.account_number,
+              option: account.optional_information,
+              site: { id: account.site_id },
+              fixedCost: account.fixed_costs,
+              defaultFixedCost: account.default_fixed_costs,
+            };
+          })
+        );
+        site["latLng"] = { lat: site.lat, lng: site.lng };
+        delete site.account;
+        delete site.lat;
+        delete site.lng;
+        acc.sites.push(site);
+
+        return acc;
+      },
+      { sites: [], accounts: [] }
+    );
+    siteStore.replace(sitesSplit.sites);
+    accountStore.replace(sitesSplit.accounts);
+  });
+};
+
 // "async" is optional;
 // more info on params: https://v2.quasar.dev/quasar-cli/boot-files
 export default boot(async ({ router, app }) => {
-  const userStore = useUserStore();
+  updateAllData();
+
   router.beforeEach((to, from, next) => {
     const user = userStore.getUser;
     if (!user && to.path != "/auth/login") {
@@ -67,3 +109,5 @@ export default boot(async ({ router, app }) => {
   //   });
   // });
 });
+
+export { updateAllData };

@@ -1,6 +1,15 @@
 import { defineStore } from "pinia";
 import { getCurrentInstance } from "vue";
 
+const groupByKey = (list, key1, key2) =>
+  list.reduce(
+    (hash, obj) => ({
+      ...hash,
+      [obj[key1][key2]]: (hash[obj[key1][key2]] || []).concat(obj),
+    }),
+    {}
+  );
+
 export const useReadingStore = defineStore("reading", {
   state: () => ({
     readings: [],
@@ -26,6 +35,18 @@ export const useReadingStore = defineStore("reading", {
       return this.readings
         .filter(({ meter }) => meter.id == meterId)
         .sort((a, b) => b.time - a.time);
+    },
+    saveReadings(_readings) {
+      const readings = groupByKey(_readings, "meter", "id");
+      const keyOfReadings = Object.keys(readings);
+
+      const readingIndex = this.readings.findIndex(({ meter }) => {
+        return keyOfReadings.hasOwnProperty(meter.id);
+      });
+      if (readingIndex > -1) {
+        this.readings.splice(readingIndex, 1);
+      }
+      this.readings.push(..._readings);
     },
   },
   persist: true,

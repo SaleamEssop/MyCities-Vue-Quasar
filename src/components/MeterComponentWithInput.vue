@@ -83,6 +83,8 @@ import { useQuasar } from "quasar";
 
 import waterDurban from "/src/services/waterDurban.js";
 
+import { addReadingInMeter } from "src/boot/axios";
+
 export default defineComponent({
   name: "MeterComponentWithInput",
   props: {
@@ -164,12 +166,20 @@ export default defineComponent({
     const saveReading = (isSubmit = false) => {
       const doSave = (currentReadingValue, valueInString) => {
         if (props.isNew) {
-          readingStore.addReading({
-            value: currentReadingValue,
-            valueInString: valueInString,
-            time: Date.now(),
-            isSubmit: isSubmit,
-            meter: { id: props.meter.id },
+          addReadingInMeter({
+            meter_id: props.meter.id,
+            meter_reading_date: Date.now(),
+            meter_reading: valueInString,
+          }).then(({ status, data }) => {
+            if (status) {
+              // readingStore.addReading({
+              //   value: currentReadingValue,
+              //   valueInString: valueInString,
+              //   time: Date.now(),
+              //   isSubmit: isSubmit,
+              //   meter: { id: props.meter.id },
+              // });
+            }
           });
         } else {
           readingStore.updateReading({
