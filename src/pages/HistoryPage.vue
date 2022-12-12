@@ -1,1 +1,0 @@
-<template>History Page</template>

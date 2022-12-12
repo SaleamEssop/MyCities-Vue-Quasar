@@ -92,14 +92,6 @@ import { defineComponent, reactive, ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "/src/stores/user";
 
-// import {
-//   GoogleAuthProvider,
-//   getAuth,
-//   signInWithPopup,
-//   signInWithEmailAndPassword,
-//   createUserWithEmailAndPassword,
-// } from "firebase/auth";
-
 import { userLogin, userSignUp } from "boot/axios";
 import { updateAllData } from "boot/firebase";
 
@@ -149,21 +141,6 @@ export default defineComponent({
       return errorMsg;
     };
 
-    // const google = () => {
-    //   console.log("google login & signup");
-    //   const provider = new GoogleAuthProvider();
-    //   const auth = getAuth();
-    //   signInWithPopup(auth, provider)
-    //     .then((result) => {
-    //       console.log("result", result);
-    //       $q.notify({ message: "Sign in success" });
-    //       router.push("/");
-    //     })
-    //     .catch((error) => {
-    //       $q.notify({ message: getErrorMsg(error) });
-    //       console.log(error);
-    //     });
-    // };
     const signInExistingUser = (email, password) => {
       userLogin({ email, password })
         .then(async ({ status, code, msg, data, token }) => {
@@ -180,18 +157,6 @@ export default defineComponent({
           $q.notify({ message: getErrorMsg(error) });
           console.log(error);
         });
-
-      //console.log(email, password);
-      // const auth = getAuth();
-      // signInWithEmailAndPassword(auth, email, password)
-      //   .then((userCredential) => {
-      //     $q.notify({ message: "Sign in success" });
-      //     router.push("/");
-      //   })
-      //   .catch((error) => {
-      //     $q.notify({ message: getErrorMsg(error) });
-      //     console.log(error);
-      //   });
     };
     const createUser = (formData) => {
       userSignUp(formData)
@@ -208,17 +173,6 @@ export default defineComponent({
           $q.notify({ message: getErrorMsg(error) });
           console.log(error);
         });
-      // console.log(email, password);
-      // const auth = getAuth();
-      // createUserWithEmailAndPassword(auth, email, password)
-      //   .then((auth) => {
-      //     $q.notify({ message: "Sign in success" });
-      //     router.push("/");
-      //   })
-      //   .catch((error) => {
-      //     $q.notify({ message: getErrorMsg(error) });
-      //     console.log(error);
-      //   });
     };
     const forgotPassword = () => {
       resetPwdDialog.value = true;

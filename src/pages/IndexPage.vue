@@ -30,7 +30,6 @@
 </template>
 <script setup>
 import { ref } from "vue";
-import IconButton from "components/IconButton.vue";
 // import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { useQuasar } from "quasar";
