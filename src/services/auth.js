@@ -7,7 +7,6 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
  */
 export const getIdToken = () => {
   return new Promise((resolve, reject) => {
-    alert("getIdToken");
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       unsubscribe(); // unsubscribe the observer that we've just created

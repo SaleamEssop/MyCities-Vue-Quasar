@@ -278,8 +278,22 @@ export default defineComponent({
         account_id: meter.value.account.id,
       }).then(({ status, data }) => {
         if (status) {
-          // readingStore.addReading(firstReading.value);
-          // meterStore.addMeter(meter.value);
+          readingStore.addReading({
+            id: data.id,
+            meter: { id: data.meter_id },
+            time: new Date(data.reading_date).getTime(),
+            value: firstReading.value.value,
+            valueInString: firstReading.value.valueInString,
+          });
+          meterStore.addMeter({
+            account: { id: meter.value.account.id },
+            id: data.meter_id,
+            number: meter.value.number,
+            title: meter.value.title,
+            type: {
+              id: meter.value.type.id,
+            },
+          });
           emit("save");
         }
       });

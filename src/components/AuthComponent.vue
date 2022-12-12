@@ -101,6 +101,7 @@ import { useUserStore } from "/src/stores/user";
 // } from "firebase/auth";
 
 import { userLogin, userSignUp } from "boot/axios";
+import { updateAllData } from "boot/firebase";
 
 import { useQuasar } from "quasar";
 export default defineComponent({
@@ -165,11 +166,12 @@ export default defineComponent({
     // };
     const signInExistingUser = (email, password) => {
       userLogin({ email, password })
-        .then(({ status, code, msg, data }) => {
+        .then(async ({ status, code, msg, data, token }) => {
           if (status) {
             $q.notify({ message: "Sign in success" });
-            userStore.setUser(data);
+            userStore.setUser(data, token);
             router.push("/");
+            await updateAllData();
           } else {
             throw { code, msg };
           }

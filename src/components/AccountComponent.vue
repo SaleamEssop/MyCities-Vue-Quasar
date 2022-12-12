@@ -147,7 +147,7 @@ import {
   addSiteAndAccount,
 } from "boot/axios";
 
-import { updateAllData } from "boot/firebase";
+//import { updateAllData } from "boot/firebase";
 
 const nullAccount = {
   id: Date.now(),
@@ -258,7 +258,7 @@ export default defineComponent({
             //add site and account
             const siteValue = site.value;
             const accountValue = selectedAccount.value;
-            await addSiteAndAccount({
+            addSiteAndAccount({
               address: siteValue.address,
               email: siteValue.email,
               lat: siteValue.latLng.lat,
@@ -267,6 +267,29 @@ export default defineComponent({
               account_name: accountValue.title,
               account_number: accountValue.number,
               optional_information: accountValue.option,
+            }).then(({ status, code, msg, data }) => {
+              if (status) {
+                siteStore.addSite({
+                  id: data.site_id,
+                  address: siteValue.address,
+                  email: siteValue.email,
+                  latLng: {
+                    lat: siteValue.latLng.lat,
+                    lng: siteValue.latLng.lng,
+                  },
+                  title: data.title,
+                  user_id: data.user_id,
+                });
+                accountStore.addAccount({
+                  id: data.id,
+                  defaultFixedCost: data.default_fixed_costs,
+                  fixedCost: data.fixed_costs,
+                  number: accountValue.number,
+                  option: accountValue.option,
+                  site: { id: data.site_id },
+                  title: accountValue.title,
+                });
+              }
             });
           } else {
             alert({ message: "There is no site contact to developer" });
@@ -274,11 +297,23 @@ export default defineComponent({
           }
         } else {
           const accountValue = selectedAccount.value;
-          await addSiteAndAccount({
+          addSiteAndAccount({
             site_id: site.value.id,
             account_name: accountValue.title,
             account_number: accountValue.number,
             optional_information: accountValue.option,
+          }).then(({ status, code, msg, data }) => {
+            if (status) {
+              accountStore.addAccount({
+                id: data.id,
+                defaultFixedCost: data.default_fixed_costs,
+                fixedCost: data.fixed_costs,
+                number: accountValue.number,
+                option: accountValue.option,
+                site: { id: data.site_id },
+                title: accountValue.title,
+              });
+            }
           });
         }
         // selectedAccount.value.site["id"] = site.value.id;
@@ -295,7 +330,6 @@ export default defineComponent({
       }
 
       // emit("update:account", selectedAccount.value);
-      updateAllData();
       emit("save");
     };
 

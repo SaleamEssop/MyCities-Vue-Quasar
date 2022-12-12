@@ -172,23 +172,23 @@ export default defineComponent({
             meter_reading: valueInString,
           }).then(({ status, data }) => {
             if (status) {
-              // readingStore.addReading({
-              //   value: currentReadingValue,
-              //   valueInString: valueInString,
-              //   time: Date.now(),
-              //   isSubmit: isSubmit,
-              //   meter: { id: props.meter.id },
-              // });
+              readingStore.addReading({
+                value: currentReadingValue,
+                valueInString: valueInString,
+                time: Date.now(),
+                isSubmit: isSubmit,
+                meter: { id: props.meter.id },
+              });
             }
           });
         } else {
-          readingStore.updateReading({
-            value: currentReadingValue,
-            valueInString: valueInString,
-            time: readingItems[0].time,
-            isSubmit: isSubmit,
-            meter: { id: props.meter.id },
-          });
+          // readingStore.updateReading({
+          //   value: currentReadingValue,
+          //   valueInString: valueInString,
+          //   time: readingItems[0].time,
+          //   isSubmit: isSubmit,
+          //   meter: { id: props.meter.id },
+          // });
         }
 
         emit("save");

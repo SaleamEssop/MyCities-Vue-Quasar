@@ -6,6 +6,11 @@ import { useAccountStore } from "src/stores/account";
 import { useMeterStore } from "src/stores/meter";
 import { useReadingStore } from "src/stores/reading";
 
+const userStore = useUserStore();
+const accountStore = useAccountStore();
+const meterStore = useMeterStore();
+const readingStore = useReadingStore();
+
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
 // If any client changes this (global) instance, it might be a
@@ -13,6 +18,10 @@ import { useReadingStore } from "src/stores/reading";
 // "export default () => {}" function below (which runs individually
 // for each client)
 const api = axios.create({ baseURL: "http://146.190.105.178/api" });
+api.interceptors.request.use((config) => {
+  config.headers["Authorization"] = `Bearer ${userStore.getToken}`;
+  return config;
+});
 api.interceptors.response.use((response) => {
   return response.data;
 });
@@ -59,11 +68,6 @@ const findEmailFromLocation = async (geometry) => {
 
 //SignUp
 
-const userStore = useUserStore();
-const accountStore = useAccountStore();
-const meterStore = useMeterStore();
-const readingStore = useReadingStore();
-
 const userLogin = async (req) => {
   return await api.post("/v1/user/login", req);
 };
@@ -99,7 +103,7 @@ const fetchMetersByAccountId = async (accountId) => {
 };
 
 const addReadingInMeter = async (req) => {
-  return await api.post("/v1/meter/add-readings");
+  return await api.post("/v1/meter/add-readings", req);
 };
 
 const waterThumb =
@@ -120,7 +124,7 @@ const fetchAndSaveMeterOnAccount = (accountId) => {
             return {
               id: reading.id,
               meter: { id: reading.meter_id },
-              time: new Date(reading.updated_at).getTime(),
+              time: new Date(reading.reading_date).getTime(),
               value: parseFloat(reading.reading_value) / decimal,
               valueInString: reading.reading_value,
             };
