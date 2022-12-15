@@ -34,7 +34,14 @@ const updateAllData = () => {
               number: account.account_number,
               option: account.optional_information,
               site: { id: account.site_id },
-              fixedCosts: account.fixed_costs,
+              fixedCosts: account.fixed_costs.map((cost) => {
+                return {
+                  title: cost.title,
+                  value: parseFloat(cost.value),
+                  isApplicable: cost.is_default == 1,
+                  isFromUser: true,
+                };
+              }),
               defaultFixedCost: account.default_fixed_costs,
             };
           })
