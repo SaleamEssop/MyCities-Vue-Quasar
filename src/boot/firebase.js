@@ -40,6 +40,7 @@ const updateAllData = () => {
                   value: parseFloat(cost.value),
                   isApplicable: cost.is_default == 1,
                   isFromUser: true,
+                  id: cost.id,
                 };
               }),
               defaultFixedCost: account.default_fixed_costs,

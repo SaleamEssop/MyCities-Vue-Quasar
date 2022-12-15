@@ -83,16 +83,16 @@ const addSiteAndAccount = async (req) => {
   });
 };
 
+const updateAccount = async (req) => {
+  return await api.post("/v1/account/update", {
+    user_id: userStore.getUser.id,
+    ...req,
+  });
+};
+
 const addMeterAndReading = async (req) => {
   return api.post("/v1/meter/add", req);
 };
-
-// const updateAccount = async (req) => {
-//   return await api.post("/v1/account/add", {
-//     user_id: userStore.getUser.id,
-//     ...req,
-//   });
-// };
 
 const getAllData = async () => {
   return await api.get(`/v1/all-data?user_id=${userStore.getUser.id}`);
@@ -180,6 +180,7 @@ export {
   userLogin,
   userSignUp,
   addSiteAndAccount,
+  updateAccount,
   getAllData,
   fetchAndSaveMeterOnAccount,
   addReadingInMeter,

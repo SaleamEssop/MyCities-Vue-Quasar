@@ -145,6 +145,7 @@ import {
   findAddressCandidates,
   findEmailFromLocation,
   addSiteAndAccount,
+  updateAccount,
 } from "boot/axios";
 
 //import { updateAllData } from "boot/firebase";
@@ -300,6 +301,7 @@ export default defineComponent({
                       value: parseFloat(cost.value),
                       isApplicable: cost.is_default == 1,
                       isFromUser: true,
+                      id: cost.id,
                     };
                   }),
                   number: accountValue.number,
@@ -342,6 +344,7 @@ export default defineComponent({
                     value: parseFloat(cost.value),
                     isApplicable: cost.is_default == 1,
                     isFromUser: true,
+                    id: cost.id,
                   };
                 }),
                 number: accountValue.number,
@@ -355,14 +358,46 @@ export default defineComponent({
         // selectedAccount.value.site["id"] = site.value.id;
         // accountStore.addAccount(selectedAccount.value);
       } else {
-        // const accountValue = selectedAccount.value;
-        // await addSiteAndAccount({
-        //   site_id: site.value.id,
-        //   account_name: accountValue.title,
-        //   account_number: accountValue.number,
-        //   optional_information: accountValue.option,
-        // });
-        //accountStore.update(selectedAccount.value);
+        const accountValue = selectedAccount.value;
+        const fixed_cost = accountValue.fixedCosts
+          .map((cost) => {
+            return {
+              name: cost.title,
+              value: cost.value,
+              is_default: cost.isApplicable ? 1 : 0,
+              id: cost.id,
+            };
+          })
+          .filter((cost) => cost !== null);
+
+        updateAccount({
+          site_id: site.value.id,
+          account_name: accountValue.title,
+          account_number: accountValue.number,
+          optional_information: accountValue.option,
+          fixed_cost: fixed_cost,
+          account_id: accountValue.id,
+        }).then(({ status, code, msg, data }) => {
+          if (status) {
+            accountStore.update({
+              id: data.id,
+              defaultFixedCost: data.default_fixed_costs,
+              fixedCosts: data.fixed_costs.map((cost) => {
+                return {
+                  title: cost.title,
+                  value: parseFloat(cost.value),
+                  isApplicable: cost.is_default == 1,
+                  isFromUser: true,
+                  id: cost.id,
+                };
+              }),
+              number: accountValue.number,
+              option: accountValue.option,
+              site: { id: data.site_id },
+              title: accountValue.title,
+            });
+          }
+        });
       }
 
       // emit("update:account", selectedAccount.value);
