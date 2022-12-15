@@ -1,10 +1,10 @@
 <template>
   <q-card>
-    <q-card-section class="bg-primary">
+    <q-card-section>
       <div
         class="q-my-sm"
         text-color="negative"
-        style="color: red; font-style: italic"
+        style="color: red; font-weight: bold"
       >
         {{ alertIfLessThen24Hours }}
       </div>
