@@ -38,14 +38,13 @@ export const useReadingStore = defineStore("reading", {
     },
     saveReadings(_readings) {
       const readings = groupByKey(_readings, "meter", "id");
-      const keyOfReadings = Object.keys(readings);
-
-      const readingIndex = this.readings.findIndex(({ meter }) => {
-        return keyOfReadings.hasOwnProperty(meter.id);
+      //const keyOfReadings = Object.keys(readings);
+      this.readings = this.readings.filter((readingItem) => {
+        return !(
+          readingItem.meter.id == undefined ||
+          readings[readingItem.meter.id] !== undefined
+        );
       });
-      if (readingIndex > -1) {
-        this.readings.splice(readingIndex, 1);
-      }
       this.readings.push(..._readings);
     },
   },

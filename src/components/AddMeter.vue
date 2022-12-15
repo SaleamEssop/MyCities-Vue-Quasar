@@ -273,25 +273,27 @@ export default defineComponent({
         meter_type_id: meter.value.type.id,
         meter_title: meter.value.title,
         meter_number: meter.value.number,
-        meter_reading_date: firstReading.value.time,
+        meter_reading_date: new Date(firstReading.value.time).toISOString(),
         meter_reading: firstReading.value.valueInString,
         account_id: meter.value.account.id,
       }).then(({ status, data }) => {
         if (status) {
-          readingStore.addReading({
-            id: data.id,
-            meter: { id: data.meter_id },
-            time: new Date(data.reading_date).getTime(),
-            value: firstReading.value.value,
-            valueInString: firstReading.value.valueInString,
+          data.readings.forEach((reading) => {
+            readingStore.addReading({
+              id: reading.id,
+              meter: { id: reading.meter_id },
+              time: new Date(reading.reading_date).getTime(),
+              value: firstReading.value.value,
+              valueInString: reading.reading_value,
+            });
           });
           meterStore.addMeter({
-            account: { id: meter.value.account.id },
-            id: data.meter_id,
-            number: meter.value.number,
-            title: meter.value.title,
+            account: { id: data.account_id },
+            id: data.id,
+            number: data.meter_number,
+            title: data.meter_title,
             type: {
-              id: meter.value.type.id,
+              id: data.meter_type_id,
             },
           });
           emit("save");

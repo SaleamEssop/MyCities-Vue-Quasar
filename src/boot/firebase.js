@@ -34,7 +34,7 @@ const updateAllData = () => {
               number: account.account_number,
               option: account.optional_information,
               site: { id: account.site_id },
-              fixedCost: account.fixed_costs,
+              fixedCosts: account.fixed_costs,
               defaultFixedCost: account.default_fixed_costs,
             };
           })

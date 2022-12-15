@@ -83,7 +83,7 @@ import { useQuasar } from "quasar";
 
 import waterDurban from "/src/services/waterDurban.js";
 
-import { addReadingInMeter } from "src/boot/axios";
+import { addReadingInMeter, updateReadingInMeter } from "src/boot/axios";
 
 export default defineComponent({
   name: "MeterComponentWithInput",
@@ -116,6 +116,7 @@ export default defineComponent({
     const readingItems = readingStore.getReadingsByMeterId(props.meter.id);
 
     const currentReading = ref("");
+    const currentReadingItem = ref();
     let lastReadingItem = ref(readingItems[0]);
     if (!props.isNew) {
       if (lastReadingItem.value.isSubmit) {
@@ -123,6 +124,7 @@ export default defineComponent({
       } else {
         lastReadingItem = ref(readingItems[1]);
         currentReading.value = readingItems[0].valueInString || "";
+        currentReadingItem.value = readingItems[0];
       }
     }
 
@@ -165,30 +167,42 @@ export default defineComponent({
 
     const saveReading = (isSubmit = false) => {
       const doSave = (currentReadingValue, valueInString) => {
+        const timeToSave = new Date().toISOString();
         if (props.isNew) {
           addReadingInMeter({
             meter_id: props.meter.id,
-            meter_reading_date: Date.now(),
+            meter_reading_date: timeToSave,
             meter_reading: valueInString,
           }).then(({ status, data }) => {
             if (status) {
               readingStore.addReading({
+                id: data.id,
                 value: currentReadingValue,
                 valueInString: valueInString,
-                time: Date.now(),
+                time: new Date(timeToSave).getTime(),
                 isSubmit: isSubmit,
                 meter: { id: props.meter.id },
               });
             }
           });
         } else {
-          // readingStore.updateReading({
-          //   value: currentReadingValue,
-          //   valueInString: valueInString,
-          //   time: readingItems[0].time,
-          //   isSubmit: isSubmit,
-          //   meter: { id: props.meter.id },
-          // });
+          updateReadingInMeter({
+            meter_id: props.meter.id,
+            meter_reading_date: timeToSave,
+            meter_reading: valueInString,
+            meter_reading_id: currentReadingItem.value.id,
+          }).then(({ status, data }) => {
+            if (status) {
+              readingStore.updateReading({
+                id: currentReadingItem.value.id,
+                value: currentReadingValue,
+                valueInString: valueInString,
+                time: new Date(timeToSave).getTime(),
+                isSubmit: isSubmit,
+                meter: { id: props.meter.id },
+              });
+            }
+          });
         }
 
         emit("save");
@@ -228,6 +242,7 @@ export default defineComponent({
     return {
       inputFocus,
       currentReading,
+      currentReadingItem,
       lastReadingItem,
       saveReading,
       meterComopnentReadValue,

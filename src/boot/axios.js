@@ -106,6 +106,10 @@ const addReadingInMeter = async (req) => {
   return await api.post("/v1/meter/add-readings", req);
 };
 
+const updateReadingInMeter = async (req) => {
+  return await api.post("/v1/meter/update-readings", req);
+};
+
 const waterThumb =
   "https://media.istockphoto.com/vectors/water-faucet-icon-vector-vector-id604383296?k=20&m=604383296&s=612x612&w=0&h=rAPcq11vU1posV21tn1d6Tu6NeNIC0sGUwJ6gPZ8oW0=";
 const electThumb =
@@ -179,5 +183,6 @@ export {
   getAllData,
   fetchAndSaveMeterOnAccount,
   addReadingInMeter,
+  updateReadingInMeter,
   addMeterAndReading,
 };

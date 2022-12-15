@@ -283,7 +283,7 @@ export default defineComponent({
                 accountStore.addAccount({
                   id: data.id,
                   defaultFixedCost: data.default_fixed_costs,
-                  fixedCost: data.fixed_costs,
+                  fixedCosts: data.fixed_costs,
                   number: accountValue.number,
                   option: accountValue.option,
                   site: { id: data.site_id },
@@ -307,7 +307,7 @@ export default defineComponent({
               accountStore.addAccount({
                 id: data.id,
                 defaultFixedCost: data.default_fixed_costs,
-                fixedCost: data.fixed_costs,
+                fixedCosts: data.fixed_costs,
                 number: accountValue.number,
                 option: accountValue.option,
                 site: { id: data.site_id },

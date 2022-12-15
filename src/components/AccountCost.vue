@@ -152,8 +152,7 @@ export default defineComponent({
 
     const calculationsForAccount = computed(() => {
       const readingForAccount = new Array();
-
-      props.account.fixedCosts.forEach((fixedCost) => {
+      (props.account.fixedCosts || []).forEach((fixedCost) => {
         if (fixedCost.isApplicable) {
           readingForAccount.push({
             title: fixedCost.title,
