@@ -17,7 +17,8 @@ const readingStore = useReadingStore();
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const api = axios.create({ baseURL: "http://146.190.105.178/api" });
+const SERVER_URL = "http://146.190.105.178";
+const api = axios.create({ baseURL: `${SERVER_URL}/api` });
 api.interceptors.request.use((config) => {
   config.headers["Authorization"] = `Bearer ${userStore.getToken}`;
   return config;
@@ -110,6 +111,10 @@ const updateReadingInMeter = async (req) => {
   return await api.post("/v1/meter/update-readings", req);
 };
 
+const getAds = async () => {
+  return await api.get("/v1/ads/get");
+};
+
 const waterThumb =
   "https://media.istockphoto.com/vectors/water-faucet-icon-vector-vector-id604383296?k=20&m=604383296&s=612x612&w=0&h=rAPcq11vU1posV21tn1d6Tu6NeNIC0sGUwJ6gPZ8oW0=";
 const electThumb =
@@ -186,4 +191,6 @@ export {
   addReadingInMeter,
   updateReadingInMeter,
   addMeterAndReading,
+  getAds,
+  SERVER_URL,
 };

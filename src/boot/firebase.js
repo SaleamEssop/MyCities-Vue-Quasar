@@ -15,12 +15,14 @@ const firebaseConfig = {
 import { useUserStore } from "src/stores/user";
 import { useSiteStore } from "src/stores/site";
 import { useAccountStore } from "src/stores/account";
+import { useAdStore } from "src/stores/ads";
 
-import { getAllData } from "boot/axios";
+import { getAllData, getAds, SERVER_URL } from "boot/axios";
 
 const userStore = useUserStore();
 const siteStore = useSiteStore();
 const accountStore = useAccountStore();
+const adStore = useAdStore();
 
 const updateAllData = () => {
   getAllData().then(({ status, data }) => {
@@ -62,10 +64,22 @@ const updateAllData = () => {
   });
 };
 
+const updateAds = () => {
+  getAds().then(({ status, data }) => {
+    adStore.setAds(
+      data.map((ad) => {
+        ad.image = `${SERVER_URL}/${ad.image}`;
+        return ad;
+      })
+    );
+  });
+};
+
 // "async" is optional;
 // more info on params: https://v2.quasar.dev/quasar-cli/boot-files
 export default boot(async ({ router, app }) => {
   updateAllData();
+  updateAds();
 
   router.beforeEach((to, from, next) => {
     const user = userStore.getUser;
