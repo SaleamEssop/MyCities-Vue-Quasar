@@ -67,10 +67,11 @@ const updateAllData = () => {
 const updateAds = () => {
   getAds().then(({ status, data }) => {
     adStore.setAds(
-      data.map((ad) => {
-        ad.image = `${SERVER_URL}/${ad.image}`;
-        return ad;
-      })
+      data
+      // data.map((ad) => {
+      //   ad.image = `${SERVER_URL}/${ad.image}`;
+      //   return ad;
+      // })
     );
   });
 };
