@@ -40,7 +40,7 @@ const updateAllData = () => {
                 return {
                   title: cost.title,
                   value: parseFloat(cost.value),
-                  isApplicable: cost.is_default == 1,
+                  isApplicable: cost.is_active == 1,
                   isFromUser: true,
                   id: cost.id,
                 };

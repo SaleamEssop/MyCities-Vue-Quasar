@@ -230,6 +230,7 @@ import { useAccountStore } from "/src/stores/account";
 import MeterComponentWithInput from "./MeterComponentWithInput.vue";
 import AddMeter from "./AddMeter.vue";
 import MeterCost from "./MeterCost.vue";
+import { deleteMainMeter } from "src/boot/axios";
 
 const meterStore = useMeterStore();
 const readingStore = useReadingStore();
@@ -340,22 +341,28 @@ export default defineComponent({
     //   }
     // );
     calculateUnitForMonth();
-
     const deleteMeter = (meter) => {
       $q.dialog({
         title: "Confirm",
         message: "Would you like to delete this meter?",
         cancel: true,
         persistent: true,
-      })
-        .onOk(() => {
-          // console.log('>>>> OK')
-          meterStore.deleteMeter(meter);
-        })
-        .onOk(() => {
-          // console.log('>>>> second OK catcher')
-          meterStore.deleteMeter(meter);
+      }).onOk(() => {
+        deleteMainMeter({ meter_id: meter.id }).then((status) => {
+          if (status.code == 200) {
+            meterStore.deleteMeter(meter);
+          }
         });
+      });
+
+      // .onOk(() => {
+      //   // console.log('>>>> OK')
+      //   meterStore.deleteMeter(meter);
+      // })
+      // .onOk(() => {
+      //   // console.log('>>>> second OK catcher')
+      //   meterStore.deleteMeter(meter);
+      // });
     };
 
     return {

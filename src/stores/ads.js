@@ -18,7 +18,6 @@ function shuffle(array) {
       array[currentIndex],
     ];
   }
-
   return array;
 }
 
@@ -30,6 +29,7 @@ export const useAdStore = defineStore("ads", {
   getters: {
     getAds: (state) => shuffle(state.ads).slice(0, 2),
   },
+
   actions: {
     setAds(_ads) {
       this.ads = _ads;

@@ -302,7 +302,7 @@ import AccountComponent from "src/components/AccountComponent.vue";
 import AddMeter from "src/components/AddMeter.vue";
 import AccountCost from "src/components/AccountCost.vue";
 import AccountHistory from "src/components/AccountHistory.vue";
-import { fetchAndSaveMeterOnAccount } from "src/boot/axios";
+import { fetchAndSaveMeterOnAccount, deleteMainAccount } from "src/boot/axios";
 
 import { date, Dialog, useQuasar } from "quasar";
 
@@ -364,14 +364,22 @@ const deleteAccount = (account) => {
     cancel: true,
     persistent: true,
   })
-    .onOk(() => {
-      // console.log('>>>> OK')
-      accountStore.deleteAccount(account);
-    })
-    .onOk(() => {
-      // console.log('>>>> second OK catcher')
-      accountStore.deleteAccount(account);
+  .onOk(() => {
+    deleteMainAccount({ account_id: account.id }).then((status) => {
+      if (status.code == 200) {
+        accountStore.deleteAccount(account);
+      }
     });
+  });
+
+  // .onOk(() => {
+  //   // console.log('>>>> OK')
+  //   accountStore.deleteAccount(account);
+  // })
+  // .onOk(() => {
+  //   // console.log('>>>> second OK catcher')
+  //   accountStore.deleteAccount(account);
+  // });
 };
 </script>
 <style scoped>

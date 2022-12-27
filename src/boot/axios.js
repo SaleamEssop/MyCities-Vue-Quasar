@@ -115,6 +115,16 @@ const getAds = async () => {
   return await api.get("/v1/ads/get");
 };
 
+// Delete Main account
+const deleteMainAccount = async (req) => {
+  return await api.post("/v1/account/delete", req);
+};
+
+// Delete Meter Account
+const deleteMainMeter = async (req) => {
+  return await api.post("/v1/meter/delete", req);
+};
+
 const waterThumb =
   "https://media.istockphoto.com/vectors/water-faucet-icon-vector-vector-id604383296?k=20&m=604383296&s=612x612&w=0&h=rAPcq11vU1posV21tn1d6Tu6NeNIC0sGUwJ6gPZ8oW0=";
 const electThumb =
@@ -192,5 +202,7 @@ export {
   updateReadingInMeter,
   addMeterAndReading,
   getAds,
+  deleteMainAccount,
+  deleteMainMeter,
   SERVER_URL,
 };

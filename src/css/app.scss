@@ -37,3 +37,20 @@
 .font-size.larger {
   font-size: larger;
 }
+
+.q-carousel__arrow .q-icon {
+  background: #d8a402 !important;
+  border-radius: 50% !important;
+}
+
+.add_description {
+  background-color: #d8a402;
+  border: 2px solid white;
+  color: white;
+  padding: 10px;
+  padding-left: 30px;
+  border-radius: 48%;
+  position: absolute;
+  bottom: 0;
+  min-width: 200px;
+}

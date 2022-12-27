@@ -264,7 +264,7 @@ export default defineComponent({
                 return {
                   name: cost.title,
                   value: cost.value,
-                  is_default: cost.isApplicable ? 1 : 0,
+                  is_active: cost.isApplicable ? 1 : 0,
                 };
               })
               .filter((cost) => cost !== null);
@@ -299,7 +299,7 @@ export default defineComponent({
                     return {
                       title: cost.title,
                       value: parseFloat(cost.value),
-                      isApplicable: cost.is_default == 1,
+                      isApplicable: cost.is_active ? 1 : 0,
                       isFromUser: true,
                       id: cost.id,
                     };
@@ -318,11 +318,12 @@ export default defineComponent({
         } else {
           const accountValue = selectedAccount.value;
           const fixed_cost = accountValue.fixedCosts
+            .filter((cost) => cost.isApplicable)
             .map((cost) => {
               return {
                 name: cost.title,
                 value: cost.value,
-                is_default: cost.isApplicable ? 1 : 0,
+                // is_active: cost.isApplicable ? 1 : 0,
               };
             })
             .filter((cost) => cost !== null);
@@ -342,7 +343,7 @@ export default defineComponent({
                   return {
                     title: cost.title,
                     value: parseFloat(cost.value),
-                    isApplicable: cost.is_default == 1,
+                    isApplicable: cost.is_active ? 0 : 1,
                     isFromUser: true,
                     id: cost.id,
                   };
@@ -364,7 +365,7 @@ export default defineComponent({
             return {
               name: cost.title,
               value: cost.value,
-              is_default: cost.isApplicable ? 1 : 0,
+              is_active: cost.isApplicable ? 1 : 0,
               id: cost.id,
             };
           })
@@ -386,7 +387,7 @@ export default defineComponent({
                 return {
                   title: cost.title,
                   value: parseFloat(cost.value),
-                  isApplicable: cost.is_default == 1,
+                  isApplicable: cost.is_active ? 0 : 1,
                   isFromUser: true,
                   id: cost.id,
                 };
