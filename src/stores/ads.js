@@ -27,7 +27,8 @@ export const useAdStore = defineStore("ads", {
   }),
 
   getters: {
-    getAds: (state) => shuffle(state.ads).slice(0, 2),
+    // getAds: (state) => shuffle(state.ads).slice(0, 2),
+    getAds: (state) => state.ads.slice(0, 2),
   },
 
   actions: {

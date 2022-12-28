@@ -60,13 +60,18 @@
 
       <div class="ads">
         <div class="q-pa-md">
-          {{ getAds }}
           <div class="q-gutter-md">
             <q-carousel
               v-model="slide"
               swipeable
               animated
               arrows
+              infinite
+              :autoplay="autoplay"
+              @mouseenter="autoplay = false"
+              @mouseleave="autoplay = true"
+              transition-prev="slide-right"
+              transition-next="slide-left"
               class="text-white shadow-1 rounded-borders"
             >
               <q-carousel-slide
@@ -77,7 +82,7 @@
                 class="addImage"
                 @click="window.open(`${ad.url}`, '_blank').focus()"
               >
-                <div class="add_description">
+                <div v-show="ad.price > 0" class="add_description">
                   <div class="text-h6">{{ ad.name }}</div>
                   <div class="text-h6 text-bold">Price {{ ad.price }}</div>
                 </div>
@@ -90,7 +95,7 @@
   </q-page>
 </template>
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, watch, ref } from "vue";
 // import { getAuth, onAuthStateChanged } from "firebase/auth";
 // import { onBeforeUpdate } from "vue";
 import { useQuasar } from "quasar";
@@ -101,18 +106,15 @@ import { useAdStore } from "src/stores/ads";
 const router = useRouter();
 const userStore = useUserStore();
 const adStore = useAdStore();
+const slide = ref(1);
+const autoplay = ref(true);
 
 const $q = useQuasar();
-const slide = ref(1);
 const email = ref("");
 const name = ref("");
 
-// onBeforeUpdate(() => {
-//   const getAds = adStore.getAds;
-//   console.log("getAds", getAds);
-// });
-const getAds = adStore.getAds;
-console.log("getAds", getAds);
+const getAds = computed(() => adStore.getAds);
+
 // const auth = getAuth();
 // if we want to get the user details, this is how its done
 // onAuthStateChanged(auth, (user) => {
@@ -161,15 +163,14 @@ function moveTo(name) {
 
 .header {
 }
-.fakeAddimage {
-  height: 50px !important;
-  width: 50px !important;
-}
+
 .ads {
   flex-grow: 0.5;
   overflow: auto;
 }
-
+.shadow-1 {
+  box-shadow: none !important;
+}
 .addImage {
   height: 400px !important;
   max-width: 300px !important;

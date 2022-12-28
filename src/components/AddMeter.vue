@@ -1,4 +1,4 @@
-<template>
+  <template>
   <q-card>
     <q-card-section class="bg-primary">
       <div class="text-subtitle2">Necessary Details</div>
