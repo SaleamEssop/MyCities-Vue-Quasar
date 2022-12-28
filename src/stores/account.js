@@ -39,6 +39,7 @@ export const useAccountStore = defineStore("account", {
     },
     deleteAccount(_account) {
       let accountIndex = this.accounts.findIndex(({ id }) => {
+        this.selectedAccount = null;
         return _account.id == id;
       });
       this.accounts[accountIndex]["deletedAt"] = Date.now();

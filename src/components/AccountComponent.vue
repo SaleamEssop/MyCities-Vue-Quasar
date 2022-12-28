@@ -97,7 +97,6 @@
         />
       </q-card-section>
     </template>
-
     <q-card-actions align="center">
       <q-btn
         color="primary"

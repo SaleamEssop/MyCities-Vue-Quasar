@@ -176,5 +176,6 @@ function moveTo(name) {
   max-width: 300px !important;
   margin: auto;
   position: relative;
+  border: 2px solid #d8a402;
 }
 </style>

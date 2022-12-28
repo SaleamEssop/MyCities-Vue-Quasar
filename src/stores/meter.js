@@ -58,6 +58,7 @@ export const useMeterStore = defineStore("meter", {
     },
     deleteMeter(_meter) {
       let meterIndex = this.meters.findIndex(({ id }) => {
+        this.selectedMeter = null;
         return _meter.id == id;
       });
       this.meters[meterIndex]["deletedAt"] = Date.now();
@@ -79,6 +80,5 @@ export const useMeterStore = defineStore("meter", {
       this.meters.push(...meters);
     },
   },
-
   persist: true,
 });
