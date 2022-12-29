@@ -17,12 +17,14 @@ import { useSiteStore } from "src/stores/site";
 import { useAccountStore } from "src/stores/account";
 import { useAdStore } from "src/stores/ads";
 
-import { getAllData, getAds, SERVER_URL } from "boot/axios";
+import { getAllData, getAds, defaultCost, SERVER_URL } from "boot/axios";
+import { useDefaultCostStore } from "src/stores/defaultCost";
 
 const userStore = useUserStore();
 const siteStore = useSiteStore();
 const accountStore = useAccountStore();
 const adStore = useAdStore();
+const defaultCostStore = useDefaultCostStore();
 
 const updateAllData = () => {
   getAllData().then(({ status, data }) => {
@@ -76,11 +78,18 @@ const updateAds = () => {
   });
 };
 
+const updateDefaultCost = () => {
+  defaultCost().then(({ status, data }) => {
+    defaultCostStore.setDefaultCost(data);
+  });
+};
+
 // "async" is optional;
 // more info on params: https://v2.quasar.dev/quasar-cli/boot-files
 export default boot(async ({ router, app }) => {
   updateAllData();
   updateAds();
+  updateDefaultCost();
 
   router.beforeEach((to, from, next) => {
     const user = userStore.getUser;

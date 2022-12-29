@@ -97,6 +97,7 @@
         />
       </q-card-section>
     </template>
+
     <q-card-actions align="center">
       <q-btn
         color="primary"
@@ -107,6 +108,51 @@
         @click="addFixedCostField"
       />
     </q-card-actions>
+    <!-- Default cost from server -->
+    <q-card-section class="bg-primary">
+      <div class="text-subtitle2">Default Cost - according to Server</div>
+      <q-btn
+        fab
+        color="white"
+        text-color="primary"
+        icon="help"
+        class="absolute"
+        style="top: 0; right: 12px; transform: translateY(-0%)"
+      />
+    </q-card-section>
+
+    <!-- {{ getDefaultCostServer }} -->
+
+    <template v-for="(defaultCost, index) in getDefaultCostServer" :key="index">
+      <q-separator />
+      <q-card-section>
+        <div class="flex justify-between items-center">
+          <div v-if="defaultCost" class="text-h7">
+            {{ defaultCost.title }}
+          </div>
+          <div v-if="defaultCost.isFromUser">
+            <q-input
+              outlined
+              dense
+              label="defaultCost title"
+              color="black"
+              v-model="defaultCost.title"
+              :disable="!defaultCost.isApplicable"
+              :readonly="!defaultCost.isApplicable"
+            />
+          </div>
+          <q-toggle v-model="defaultCost.isApplicable" />
+        </div>
+        <q-input
+          placeholder="R0.00"
+          v-model.number="defaultCost.value"
+          type="number"
+          :disable="!defaultCost.isApplicable"
+          :readonly="!defaultCost.isApplicable"
+        />
+      </q-card-section>
+    </template>
+
     <q-separator />
     <q-space />
     <q-card-actions align="center">
@@ -137,6 +183,8 @@ import { ref, reactive, watch, computed, defineComponent } from "vue";
 import { useSiteStore } from "/src/stores/site";
 import { useAccountStore } from "/src/stores/account";
 import { useQuasar } from "quasar";
+import { useDefaultCostStore } from "src/stores/defaultCost";
+import { getProxyData } from "src/utils";
 
 import {
   locationApi,
@@ -174,6 +222,9 @@ const nullAccount = {
     },
   ],
 };
+const defaultCostStore = useDefaultCostStore();
+const getDefaultCostServer = computed(() => defaultCostStore.getDefaultCost);
+
 export default defineComponent({
   name: "AccountComponent",
   props: {
@@ -232,6 +283,7 @@ export default defineComponent({
     };
 
     const onSaveSelectAccount = async () => {
+      console.log("selected Account", selectedAccount);
       if (site.value == null || site.value.email == null) {
         $q.notify({
           message: "Fill valid location",
@@ -517,6 +569,7 @@ export default defineComponent({
     }
 
     return {
+      getDefaultCostServer,
       selectedAccount,
       addFixedCostField,
       onSaveSelectAccount,

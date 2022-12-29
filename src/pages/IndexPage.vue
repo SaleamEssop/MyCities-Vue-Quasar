@@ -114,6 +114,7 @@ const email = ref("");
 const name = ref("");
 
 const getAds = computed(() => adStore.getAds);
+console.log("ads", getAds);
 
 // const auth = getAuth();
 // if we want to get the user details, this is how its done
