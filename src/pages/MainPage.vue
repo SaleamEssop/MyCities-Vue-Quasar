@@ -69,6 +69,7 @@
             }}</q-item-section
           >
         </template>
+
         <template
           v-for="account in getAccounts(siteStore.selectedSite.id)"
           :key="account.id"
@@ -157,8 +158,12 @@
           <q-separator />
         </template>
 
-        <!-- <q-separator /> -->
-        <!-- <q-item class="justify-center">
+        <q-separator />
+
+        <q-item
+          class="justify-center"
+          v-if="getAccounts(siteStore.selectedSite.id).length == 0"
+        >
           <q-btn
             color="primary"
             rounded
@@ -169,7 +174,7 @@
           >
             Add New Account
           </q-btn>
-        </q-item> -->
+        </q-item>
       </q-expansion-item>
       <!-- Account -->
 
@@ -363,8 +368,7 @@ const deleteAccount = (account) => {
     message: "Would you like to delete this account?",
     cancel: true,
     persistent: true,
-  })
-  .onOk(() => {
+  }).onOk(() => {
     deleteMainAccount({ account_id: account.id }).then((status) => {
       if (status.code == 200) {
         accountStore.deleteAccount(account);

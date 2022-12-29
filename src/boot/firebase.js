@@ -64,32 +64,38 @@ const updateAllData = () => {
     siteStore.replace(sitesSplit.sites);
     accountStore.replace(sitesSplit.accounts);
   });
-};
-
-const updateAds = () => {
-  getAds().then(({ status, data }) => {
-    adStore.setAds(
-      data
-      // data.map((ad) => {
-      //   ad.image = `${SERVER_URL}/${ad.image}`;
-      //   return ad;
-      // })
-    );
+  getAds().then(({ data }) => {
+    adStore.setAds(data);
   });
-};
-
-const updateDefaultCost = () => {
-  defaultCost().then(({ status, data }) => {
+  defaultCost().then(({ data }) => {
     defaultCostStore.setDefaultCost(data);
   });
 };
+
+// const updateAds = () => {
+//   getAds().then(({ status, data }) => {
+//     adStore.setAds(
+//       data
+//       // data.map((ad) => {
+//       //   ad.image = `${SERVER_URL}/${ad.image}`;
+//       //   return ad;
+//       // })
+//     );
+//   });
+// };
+
+// const updateDefaultCost = () => {
+//   defaultCost().then(({ status, data }) => {
+//     defaultCostStore.setDefaultCost(data);
+//   });
+// };
 
 // "async" is optional;
 // more info on params: https://v2.quasar.dev/quasar-cli/boot-files
 export default boot(async ({ router, app }) => {
   updateAllData();
-  updateAds();
-  updateDefaultCost();
+  // updateAds();
+  // updateDefaultCost();
 
   router.beforeEach((to, from, next) => {
     const user = userStore.getUser;

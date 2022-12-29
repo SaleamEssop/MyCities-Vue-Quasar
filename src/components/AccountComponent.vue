@@ -121,8 +121,6 @@
       />
     </q-card-section>
 
-    <!-- {{ getDefaultCostServer }} -->
-
     <template v-for="(defaultCost, index) in getDefaultCostServer" :key="index">
       <q-separator />
       <q-card-section>

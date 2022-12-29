@@ -1,4 +1,5 @@
 import { defineStore, getActivePinia } from "pinia";
+// import { getAds } from "src/boot/axios";
 
 // const activePinia = getActivePinia();
 
@@ -35,6 +36,11 @@ export const useAdStore = defineStore("ads", {
     setAds(_ads) {
       this.ads = _ads;
     },
+    // setAds() {
+    //   getAds().then(({ status, data }) => {
+    //     this.ads = data;
+    //   });
+    // },
   },
   persist: true,
 });
