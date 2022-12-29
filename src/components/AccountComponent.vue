@@ -120,7 +120,6 @@
         style="top: 0; right: 12px; transform: translateY(-0%)"
       />
     </q-card-section>
-
     <template
       v-for="(defaultCost, index) in selectedAccount.defaultCosts"
       :key="index"
@@ -316,7 +315,8 @@ export default defineComponent({
             const default_cost = accountValue.getDefaultCost
               .map((cost) => {
                 return {
-                  name: cost.title,
+                  // name: cost.title,
+                  id: cost.id,
                   value: cost.value,
                   is_active: cost.isApplicable ? 1 : 0,
                 };
@@ -377,6 +377,7 @@ export default defineComponent({
               return {
                 name: cost.title,
                 value: cost.value,
+                id: cost.id,
                 // is_active: cost.isApplicable ? 1 : 0,
               };
             })
@@ -387,16 +388,17 @@ export default defineComponent({
             account_name: accountValue.title,
             account_number: accountValue.number,
             optional_information: accountValue.option,
-            default_cost: default_cost,
+            default_fixed_cost: default_cost,
           }).then(({ status, code, msg, data }) => {
             if (status) {
+              console.log("data", data);
               accountStore.addAccount({
                 id: data.id,
                 // defaultFixedCost: data.default_fixed_costs,
-                defaultCosts: data.defaultCosts.map((cost) => {
+                defaultCosts: data.default_fixed_costs.map((cost) => {
                   return {
-                    title: cost.title,
-                    value: parseFloat(cost.value),
+                    // title: cost.title,
+                    // value: parseFloat(cost.value),
                     isApplicable: cost.is_active ? 0 : 1,
                     isFromUser: true,
                     id: cost.id,
