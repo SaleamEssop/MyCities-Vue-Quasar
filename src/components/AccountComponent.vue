@@ -65,7 +65,7 @@
         style="top: 0; right: 12px; transform: translateY(-0%)"
       />
     </q-card-section>
-    <template
+    <!-- <template
       v-for="(fixedCost, index) in selectedAccount.fixedCosts"
       :key="index"
     >
@@ -96,7 +96,7 @@
           :readonly="!fixedCost.isApplicable"
         />
       </q-card-section>
-    </template>
+    </template> -->
 
     <q-card-actions align="center">
       <q-btn
@@ -121,7 +121,10 @@
       />
     </q-card-section>
 
-    <template v-for="(defaultCost, index) in getDefaultCostServer" :key="index">
+    <template
+      v-for="(defaultCost, index) in selectedAccount.defaultCosts"
+      :key="index"
+    >
       <q-separator />
       <q-card-section>
         <div class="flex justify-between items-center">
@@ -201,27 +204,29 @@ const nullAccount = {
   number: null,
   option: null,
   site: { id: null, email: null },
-  fixedCosts: [
-    {
-      id: Date.now(),
-      title: "Rates",
-      value: null,
-      isApplicable: false,
-      isFromServer: true,
-      isFromUser: false,
-    },
-    {
-      id: Date.now(),
-      title: "Refuse Collection",
-      value: null,
-      isApplicable: false,
-      isFromServer: true,
-      isFromUser: false,
-    },
-  ],
+  fixedCosts: [],
+  defaultCosts: [],
+  // fixedCosts: [
+  //   {
+  //     id: Date.now(),
+  //     title: "Rates",
+  //     value: null,
+  //     isApplicable: false,
+  //     isFromServer: true,
+  //     isFromUser: false,
+  //   },
+  //   {
+  //     id: Date.now(),
+  //     title: "Refuse Collection",
+  //     value: null,
+  //     isApplicable: false,
+  //     isFromServer: true,
+  //     isFromUser: false,
+  //   },
+  // ],
 };
 const defaultCostStore = useDefaultCostStore();
-const getDefaultCostServer = computed(() => defaultCostStore.getDefaultCost);
+const getDefaultCost = computed(() => defaultCostStore.getDefaultCost);
 
 export default defineComponent({
   name: "AccountComponent",
@@ -236,6 +241,7 @@ export default defineComponent({
       site: null,
       selectedAccount: JSON.parse(JSON.stringify(props.account || nullAccount)),
     };
+    initialState["selectedAccount"]["defaultCosts"] = getDefaultCost;
     const siteStore = useSiteStore();
     const accountStore = useAccountStore();
     const $q = useQuasar();
@@ -281,7 +287,6 @@ export default defineComponent({
     };
 
     const onSaveSelectAccount = async () => {
-      console.log("selected Account", selectedAccount);
       if (site.value == null || site.value.email == null) {
         $q.notify({
           message: "Fill valid location",
@@ -308,7 +313,7 @@ export default defineComponent({
             //add site and account
             const siteValue = site.value;
             const accountValue = selectedAccount.value;
-            const fixed_cost = accountValue.fixedCosts
+            const default_cost = accountValue.getDefaultCost
               .map((cost) => {
                 return {
                   name: cost.title,
@@ -326,8 +331,8 @@ export default defineComponent({
               account_name: accountValue.title,
               account_number: accountValue.number,
               optional_information: accountValue.option,
-              fixed_cost: fixed_cost,
-              default_fixed_cost: [],
+              // fixed_cost: fixed_cost,
+              default_fixed_cost: default_cost,
             }).then(({ status, code, msg, data }) => {
               if (status) {
                 siteStore.addSite({
@@ -343,8 +348,8 @@ export default defineComponent({
                 });
                 accountStore.addAccount({
                   id: data.id,
-                  defaultFixedCost: data.default_fixed_costs,
-                  fixedCosts: data.fixed_costs.map((cost) => {
+                  // defaultFixedCost: data.default_fixed_costs,
+                  defaultCosts: data.defaultCosts.map((cost) => {
                     return {
                       title: cost.title,
                       value: parseFloat(cost.value),
@@ -366,7 +371,7 @@ export default defineComponent({
           }
         } else {
           const accountValue = selectedAccount.value;
-          const fixed_cost = accountValue.fixedCosts
+          const default_cost = accountValue.defaultCosts
             .filter((cost) => cost.isApplicable)
             .map((cost) => {
               return {
@@ -382,13 +387,13 @@ export default defineComponent({
             account_name: accountValue.title,
             account_number: accountValue.number,
             optional_information: accountValue.option,
-            fixed_cost: fixed_cost,
+            default_cost: default_cost,
           }).then(({ status, code, msg, data }) => {
             if (status) {
               accountStore.addAccount({
                 id: data.id,
-                defaultFixedCost: data.default_fixed_costs,
-                fixedCosts: data.fixed_costs.map((cost) => {
+                // defaultFixedCost: data.default_fixed_costs,
+                defaultCosts: data.defaultCosts.map((cost) => {
                   return {
                     title: cost.title,
                     value: parseFloat(cost.value),
@@ -567,7 +572,7 @@ export default defineComponent({
     }
 
     return {
-      getDefaultCostServer,
+      getDefaultCost,
       selectedAccount,
       addFixedCostField,
       onSaveSelectAccount,

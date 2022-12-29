@@ -17,3 +17,10 @@ export const useDefaultCostStore = defineStore("defaultCost", {
 
   persist: true,
 });
+
+// fixedCosts = getDefaultCostServer
+// fixed_cost = default_cost
+// fixed_costs =  default_fixed_costs
+
+// fixedCosts =  defaultCosts
+// mapp = getDefaultCost
