@@ -56,8 +56,9 @@
       </div>
 
       <q-card-section class="bg-primary">
-        <div class="text-subtitle2">Fixed Cost</div>
+        <div class="text-subtitle2">Default Fixed Cost</div>
       </q-card-section>
+      {{ calculationsForAccount }}
       <div class="q-my-lg">
         <div
           class="row no-wrap"
@@ -151,22 +152,23 @@ export default defineComponent({
 
     const calculationsForAccount = computed(() => {
       const readingForAccount = new Array();
-      (props.account.fixedCosts || []).forEach((fixedCost) => {
-        if (fixedCost) {
-          readingForAccount.push({
-            title: fixedCost.title,
-            value: fixedCost.value || 0,
-          });
-        }
-      });
-      // (props.account.defaultFixedCost || []).forEach((defaultCost) => {
-      //   if (defaultCost) {
+      // (props.account.fixedCosts || []).forEach((fixedCost) => {
+      //   if (fixedCost) {
       //     readingForAccount.push({
-      //       title: defaultCost.title,
-      //       value: defaultCost.value || 0,
+      //       title: fixedCost.title,
+      //       value: fixedCost.value || 0,
       //     });
       //   }
       // });
+
+      (props.account.defaultFixedCost || []).forEach((defaultCost) => {
+        if (defaultCost) {
+          readingForAccount.push({
+            title: defaultCost.title,
+            value: defaultCost.value || 0,
+          });
+        }
+      });
       return readingForAccount;
     });
 

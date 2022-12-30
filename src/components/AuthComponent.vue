@@ -15,13 +15,41 @@
               v-model="formData.email"
             />
             <q-input
-              outlined
               class="q-mb-md"
-              type="password"
               label="Password"
+              outlined
               v-model="formData.password"
-            />
+              :type="isPwd ? 'password' : 'text'"
+              ref="checkPassword"
+              :rules="Required"
+            >
+              <template v-slot:append>
+                <q-icon
+                  :name="isPwd ? 'visibility_off' : 'visibility'"
+                  @click="isPwd = !isPwd"
+                  class="cursor-pointer"
+                ></q-icon>
+              </template>
+            </q-input>
+
             <div v-if="!isLogin">
+              <q-input
+                class="q-mb-md"
+                label="Confirm Password"
+                outlined
+                v-model="formData.confirmPassword"
+                :type="isConfirmPwd ? 'password' : 'text'"
+                ref="checkConfirmPassword"
+                :rules="confirmPWD"
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="isConfirmPwd ? 'visibility_off' : 'visibility'"
+                    @click="isConfirmPwd = !isConfirmPwd"
+                    class="cursor-pointer"
+                  ></q-icon>
+                </template>
+              </q-input>
               <q-input
                 outlined
                 class="q-mb-md"
@@ -36,6 +64,11 @@
                 label="Phone number"
                 v-model="formData.phone_number"
               />
+              <q-checkbox
+                class="q-pb-md"
+                v-model="agreeToTCs"
+                label="Tick agree to our T&Cs"
+              ></q-checkbox>
             </div>
             <div class="row">
               <q-btn
@@ -109,8 +142,13 @@ export default defineComponent({
       email: "",
       phone_number: "",
       password: "",
+      confirmPassword: "",
       action: "insert",
     });
+    const isPwd = ref(true);
+    const isConfirmPwd = ref(true);
+    const agreeToTCs = ref(false);
+
     const title = computed(() => {
       return props.tab === "login" ? "Sign in" : "Sign up";
     });
@@ -159,26 +197,35 @@ export default defineComponent({
         });
     };
     const createUser = (formData) => {
-      userSignUp(formData)
-        .then(({ status, code, msg }) => {
-          if (status) {
-            // $q.notify({ message: "Sign in success" });
-            signInExistingUser(formData.email, formData.password);
-            // router.push("/");
-          } else {
-            throw { code, msg };
-          }
-        })
-        .catch((error) => {
-          $q.notify({ message: getErrorMsg(error) });
-          console.log(error);
-        });
+      if (formData.password === formData.confirmPassword) {
+        if (agreeToTCs.value) {
+          userSignUp(formData)
+            .then(({ status, code, msg }) => {
+              if (status) {
+                // $q.notify({ message: "Sign in success" });
+                signInExistingUser(formData.email, formData.password);
+                // router.push("/");
+              } else {
+                throw { code, msg };
+              }
+            })
+            .catch((error) => {
+              $q.notify({ message: getErrorMsg(error) });
+              console.log(error);
+            });
+        } else {
+          $q.notify("Please agree terms and condition");
+        }
+      } else {
+        $q.notify("Your password and confirmation password do not match.");
+      }
     };
     const forgotPassword = () => {
       resetPwdDialog.value = true;
     };
     return {
       formData,
+      isConfirmPwd,
       resetPwdDialog,
       submitForm,
       signInExistingUser,
@@ -186,7 +233,16 @@ export default defineComponent({
       forgotPassword,
       title,
       isLogin,
+      isPwd,
+      agreeToTCs,
     };
   },
 });
 </script>
+
+<style scoped>
+/* .q-checkbox__bg {
+  left: 0 !important;
+  margin-right: -5px !important;
+} */
+</style>

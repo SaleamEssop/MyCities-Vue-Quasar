@@ -43,6 +43,7 @@
       />
       <div v-else>Account :- {{ selectedAccount.number }}</div>
     </q-card-section>
+
     <q-card-section class="bg-primary">
       <div class="text-subtitle2">Optional Information</div>
     </q-card-section>
@@ -120,6 +121,7 @@
         style="top: 0; right: 12px; transform: translateY(-0%)"
       />
     </q-card-section>
+
     <template
       v-for="(defaultCost, index) in selectedAccount.defaultCosts"
       :key="index"
@@ -312,10 +314,10 @@ export default defineComponent({
             //add site and account
             const siteValue = site.value;
             const accountValue = selectedAccount.value;
-            const default_cost = accountValue.getDefaultCost
+            const default_cost = accountValue.defaultCosts
               .map((cost) => {
                 return {
-                  // name: cost.title,
+                  name: cost.title,
                   id: cost.id,
                   value: cost.value,
                   is_active: cost.isApplicable ? 1 : 0,
@@ -378,7 +380,7 @@ export default defineComponent({
                 name: cost.title,
                 value: cost.value,
                 id: cost.id,
-                // is_active: cost.isApplicable ? 1 : 0,
+                is_active: cost.isApplicable ? 1 : 0,
               };
             })
             .filter((cost) => cost !== null);
@@ -398,7 +400,7 @@ export default defineComponent({
                 defaultCosts: data.default_fixed_costs.map((cost) => {
                   return {
                     // title: cost.title,
-                    // value: parseFloat(cost.value),
+                    value: parseFloat(cost.value),
                     isApplicable: cost.is_active ? 0 : 1,
                     isFromUser: true,
                     id: cost.id,
@@ -416,32 +418,31 @@ export default defineComponent({
         // accountStore.addAccount(selectedAccount.value);
       } else {
         const accountValue = selectedAccount.value;
-        const fixed_cost = accountValue.fixedCosts
+        const default_cost = accountValue.defaultCosts
           .map((cost) => {
-            return {
-              name: cost.title,
-              value: cost.value,
-              is_active: cost.isApplicable ? 1 : 0,
-              id: cost.id,
-            };
+            if (cost.isApplicable) {
+              return {
+                name: cost.title,
+                value: cost.value,
+                is_active: cost.isApplicable ? 1 : 0,
+                id: cost.id,
+              };
+            }
           })
           .filter((cost) => cost !== null);
-
         updateAccount({
           site_id: site.value.id,
           account_name: accountValue.title,
           account_number: accountValue.number,
           optional_information: accountValue.option,
-          fixed_cost: fixed_cost,
+          default_fixed_cost: default_cost,
           account_id: accountValue.id,
         }).then(({ status, code, msg, data }) => {
           if (status) {
             accountStore.update({
               id: data.id,
-              defaultFixedCost: data.default_fixed_costs,
-              fixedCosts: data.fixed_costs.map((cost) => {
+              defaultCosts: data.default_fixed_costs.map((cost) => {
                 return {
-                  title: cost.title,
                   value: parseFloat(cost.value),
                   isApplicable: cost.is_active ? 0 : 1,
                   isFromUser: true,

@@ -1,4 +1,4 @@
-  <template>
+<template>
   <q-card>
     <q-card-section class="bg-primary">
       <div class="text-subtitle2">Necessary Details</div>
@@ -71,9 +71,8 @@
           @click="
             alert({
               title: 'Important note',
-              message: `Enter the last reading from your bill. This will be the actual reading by the municipality which is reflected on your bill. Not the estimated reading.
-You may have to go back a few months on your bill. After entering it, you can enter the current reading to get an average.
-If you do have have this reading available, enter the current meter reading, with the current date. Wait a week and update the reading to get an average.`,
+              message: `If available, select from the calendar the last actual date on which the meter was read by the municipality, not estimated.
+If not available, simply enter the current date and meter reading and update it after 24 hours.The app will then start to calculate the usage and cost.`,
             })
           "
           round
