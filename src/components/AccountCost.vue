@@ -58,7 +58,6 @@
       <q-card-section class="bg-primary">
         <div class="text-subtitle2">Default Fixed Cost</div>
       </q-card-section>
-      {{ calculationsForAccount }}
       <div class="q-my-lg">
         <div
           class="row no-wrap"
@@ -68,7 +67,6 @@
           <div class="col">
             {{ cost.title }}
           </div>
-
           <div class="col-auto">R {{ cost.value.toFixed(2) }}</div>
         </div>
       </div>
@@ -163,8 +161,9 @@ export default defineComponent({
 
       (props.account.defaultFixedCost || []).forEach((defaultCost) => {
         if (defaultCost) {
+          console.log("defaultCost", defaultCost);
           readingForAccount.push({
-            title: defaultCost.title,
+            title: defaultCost.fixed_cost.title,
             value: defaultCost.value || 0,
           });
         }

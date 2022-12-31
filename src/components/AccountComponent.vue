@@ -132,6 +132,7 @@
           <div v-if="defaultCost" class="text-h7">
             {{ defaultCost.title }}
           </div>
+
           <div v-if="defaultCost.isFromUser">
             <q-input
               outlined
@@ -246,8 +247,8 @@ export default defineComponent({
     const siteStore = useSiteStore();
     const accountStore = useAccountStore();
     const $q = useQuasar();
-
     const selectedAccount = ref(initialState.selectedAccount);
+    console.log("AccountStore", selectedAccount.value.defaultFixedCost);
 
     const checkIdFromDB = accountStore.getAccountById(
       selectedAccount?.value?.id
@@ -315,6 +316,7 @@ export default defineComponent({
             const siteValue = site.value;
             const accountValue = selectedAccount.value;
             const default_cost = accountValue.defaultCosts
+              .filter((cost) => cost.isApplicable)
               .map((cost) => {
                 return {
                   name: cost.title,
@@ -333,7 +335,6 @@ export default defineComponent({
               account_name: accountValue.title,
               account_number: accountValue.number,
               optional_information: accountValue.option,
-              // fixed_cost: fixed_cost,
               default_fixed_cost: default_cost,
             }).then(({ status, code, msg, data }) => {
               if (status) {
@@ -350,16 +351,16 @@ export default defineComponent({
                 });
                 accountStore.addAccount({
                   id: data.id,
-                  // defaultFixedCost: data.default_fixed_costs,
-                  defaultCosts: data.defaultCosts.map((cost) => {
-                    return {
-                      title: cost.title,
-                      value: parseFloat(cost.value),
-                      isApplicable: cost.is_active ? 1 : 0,
-                      isFromUser: true,
-                      id: cost.id,
-                    };
-                  }),
+                  defaultFixedCost: data.default_fixed_costs,
+                  // defaultCosts: data.default_fixed_costs.map((cost) => {
+                  //   return {
+                  //     title: cost.title,
+                  //     value: parseFloat(cost.value),
+                  //     isApplicable: cost.is_active ? 1 : 0,
+                  //     isFromUser: true,
+                  //     id: cost.id,
+                  //   };
+                  // }),
                   number: accountValue.number,
                   option: accountValue.option,
                   site: { id: data.site_id },
@@ -376,6 +377,7 @@ export default defineComponent({
           const default_cost = accountValue.defaultCosts
             .filter((cost) => cost.isApplicable)
             .map((cost) => {
+              console.log("ADd cost", cost);
               return {
                 name: cost.title,
                 value: cost.value,
@@ -384,28 +386,28 @@ export default defineComponent({
               };
             })
             .filter((cost) => cost !== null);
+          // const fixed_cost = accountValue.fixedCosts;
 
           addSiteAndAccount({
             site_id: site.value.id,
             account_name: accountValue.title,
             account_number: accountValue.number,
             optional_information: accountValue.option,
+            // fixed_cost: fixed_cost,
             default_fixed_cost: default_cost,
           }).then(({ status, code, msg, data }) => {
             if (status) {
-              console.log("data", data);
               accountStore.addAccount({
                 id: data.id,
-                // defaultFixedCost: data.default_fixed_costs,
-                defaultCosts: data.default_fixed_costs.map((cost) => {
-                  return {
-                    // title: cost.title,
-                    value: parseFloat(cost.value),
-                    isApplicable: cost.is_active ? 0 : 1,
-                    isFromUser: true,
-                    id: cost.id,
-                  };
-                }),
+                defaultFixedCost: data.default_fixed_costs,
+                // defaultCosts: data.default_fixed_costs.map((cost) => {
+                //   return {
+                //     value: parseFloat(cost.value),
+                //     isApplicable: cost.is_active ? 0 : 1,
+                //     isFromUser: true,
+                //     id: cost.id,
+                //   };
+                // }),
                 number: accountValue.number,
                 option: accountValue.option,
                 site: { id: data.site_id },
@@ -418,18 +420,27 @@ export default defineComponent({
         // accountStore.addAccount(selectedAccount.value);
       } else {
         const accountValue = selectedAccount.value;
+        console.log("selectAccount", accountValue, selectedAccount);
+        // const default_cost = selectedAccount.value.defaultFixedCost
         const default_cost = accountValue.defaultCosts
+          .filter((cost) => cost.isApplicable)
           .map((cost) => {
-            if (cost.isApplicable) {
-              return {
-                name: cost.title,
-                value: cost.value,
-                is_active: cost.isApplicable ? 1 : 0,
-                id: cost.id,
-              };
+            let id = cost.id;
+            const accountCost = accountValue.defaultFixedCost.find(
+              (_cost) => _cost.fixed_cost.id === cost.id
+            );
+            if (accountCost) {
+              id = accountCost.id;
             }
+            return {
+              name: cost.title,
+              value: cost.value,
+              is_active: cost.isApplicable ? 1 : 0,
+              id: id,
+            };
           })
           .filter((cost) => cost !== null);
+
         updateAccount({
           site_id: site.value.id,
           account_name: accountValue.title,
@@ -438,17 +449,19 @@ export default defineComponent({
           default_fixed_cost: default_cost,
           account_id: accountValue.id,
         }).then(({ status, code, msg, data }) => {
+          console.log("Updated data", data.default_fixed_costs);
           if (status) {
             accountStore.update({
               id: data.id,
-              defaultCosts: data.default_fixed_costs.map((cost) => {
-                return {
-                  value: parseFloat(cost.value),
-                  isApplicable: cost.is_active ? 0 : 1,
-                  isFromUser: true,
-                  id: cost.id,
-                };
-              }),
+              defaultFixedCost: data.default_fixed_costs,
+              // defaultCosts: data.default_fixed_costs.map((cost) => {
+              //   return {
+              //     value: parseFloat(cost.value),
+              //     isApplicable: cost.is_active ? 0 : 1,
+              //     isFromUser: true,
+              //     id: cost.id,
+              //   };
+              // }),
               number: accountValue.number,
               option: accountValue.option,
               site: { id: data.site_id },

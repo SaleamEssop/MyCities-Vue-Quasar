@@ -43,9 +43,9 @@ export const useAccountStore = defineStore("account", {
         return _account.id == id;
       });
       this.accounts[accountIndex]["deletedAt"] = Date.now();
-      // if (meterIndex > -1) {
-      //   this.meters.splice(meterIndex, 1);
-      // }
+      if (accountIndex > -1) {
+        this.accounts.splice(accountIndex, 1);
+      }
     },
     replace(_accounts) {
       this.accounts = _accounts;

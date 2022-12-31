@@ -122,6 +122,13 @@ export default class {
       },
       { title: "Water Loss Levy", amountPerUnit: 0, amount: 14.9 },
     ];
+    // const extraCharges = [
+    //   {
+    //     title: "Infrastructure Surcharge",
+    //     amountPerUnit: 1.48,
+    //     amount: 0,
+    //   },
+    // ];
 
     const percentageCharges = [{ title: "VAT", onTotalAmount: 0.15 }];
 
