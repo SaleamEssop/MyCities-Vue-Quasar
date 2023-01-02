@@ -55,7 +55,7 @@
         v-model="selectedAccount.option"
       />
     </q-card-section>
-    <q-card-section class="bg-primary">
+    <!-- <q-card-section class="bg-primary">
       <div class="text-subtitle2">Fixed Cost - according to bill</div>
       <q-btn
         fab
@@ -65,7 +65,7 @@
         class="absolute"
         style="top: 0; right: 12px; transform: translateY(-0%)"
       />
-    </q-card-section>
+    </q-card-section> -->
     <!-- <template
       v-for="(fixedCost, index) in selectedAccount.fixedCosts"
       :key="index"
@@ -99,7 +99,7 @@
       </q-card-section>
     </template> -->
 
-    <q-card-actions align="center">
+    <!-- <q-card-actions align="center">
       <q-btn
         color="primary"
         text-color="black"
@@ -108,7 +108,7 @@
         glossy
         @click="addFixedCostField"
       />
-    </q-card-actions>
+    </q-card-actions> -->
     <!-- Default cost from server -->
     <q-card-section class="bg-primary">
       <div class="text-subtitle2">Default Cost - according to Server</div>
@@ -122,15 +122,18 @@
       />
     </q-card-section>
 
+    <!-- v-for="(defaultCost, index) in selectedAccount.defaultCosts" -->
     <template
-      v-for="(defaultCost, index) in selectedAccount.defaultCosts"
+      v-for="(defaultCost, index) in isNew
+        ? selectedAccount.defaultCosts
+        : selectedAccount.defaultFixedCost"
       :key="index"
     >
       <q-separator />
       <q-card-section>
         <div class="flex justify-between items-center">
           <div v-if="defaultCost" class="text-h7">
-            {{ defaultCost.title }}
+            {{ isNew ? defaultCost.title : defaultCost.fixed_cost.title }}
           </div>
 
           <div v-if="defaultCost.isFromUser">
@@ -248,7 +251,7 @@ export default defineComponent({
     const accountStore = useAccountStore();
     const $q = useQuasar();
     const selectedAccount = ref(initialState.selectedAccount);
-    console.log("AccountStore", selectedAccount.value.defaultFixedCost);
+    // console.log("AccountStore", selectedAccount.value.defaultFixedCost);
 
     const checkIdFromDB = accountStore.getAccountById(
       selectedAccount?.value?.id
@@ -420,9 +423,9 @@ export default defineComponent({
         // accountStore.addAccount(selectedAccount.value);
       } else {
         const accountValue = selectedAccount.value;
-        console.log("selectAccount", accountValue, selectedAccount);
+        // console.log("selectAccount", accountValue, selectedAccount);
         // const default_cost = selectedAccount.value.defaultFixedCost
-        const default_cost = accountValue.defaultCosts
+        const default_cost = accountValue.defaultFixedCost
           .filter((cost) => cost.isApplicable)
           .map((cost) => {
             let id = cost.id;

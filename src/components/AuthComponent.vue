@@ -13,6 +13,7 @@
               type="email"
               label="Email"
               v-model="formData.email"
+              :input-style="{ fontSize: '18px' }"
             />
             <q-input
               class="q-mb-md"
@@ -21,6 +22,7 @@
               v-model="formData.password"
               :type="isPwd ? 'password' : 'text'"
               ref="checkPassword"
+              :input-style="{ fontSize: '18px' }"
               :rules="Required"
             >
               <template v-slot:append>
@@ -41,6 +43,7 @@
                 :type="isConfirmPwd ? 'password' : 'text'"
                 ref="checkConfirmPassword"
                 :rules="confirmPWD"
+                :input-style="{ fontSize: '18px' }"
               >
                 <template v-slot:append>
                   <q-icon
@@ -56,6 +59,7 @@
                 type="text"
                 label="Full Name"
                 v-model="formData.full_name"
+                :input-style="{ fontSize: '18px' }"
               />
               <q-input
                 outlined
@@ -63,6 +67,7 @@
                 type="tel"
                 label="Phone number"
                 v-model="formData.phone_number"
+                :input-style="{ fontSize: '18px' }"
               />
               <q-checkbox
                 class="q-pb-md"

@@ -17,16 +17,42 @@
         <q-separator color="primary q-mt-xs" />
         <!-- <p>{{ name }}</p>
       <p>{{ email }}</p> -->
-        <div class="text-center">
-          <q-btn
-            flat
-            class="col-xs-6 col-sm-6 q-my-sm"
-            label="Manager"
-            icon="square"
-            size="lg"
-            @click="moveTo('send_reading')"
-          />
+        <div class="ads_main">
+          <div class="text-center">
+            <q-btn-dropdown
+              flat
+              class="col-xs-6 col-sm-6 q-my-sm adsBtn"
+              icon="menu"
+              size="lg"
+            >
+              <q-list v-for="ad in getAds" :key="ad.id">
+                <q-item clickable v-close-popup @click="onItemClick">
+                  <q-item-section>
+                    <q-item-label> {{ ad.category.name }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
+          </div>
+          <div class="text-center">
+            <q-btn
+              flat
+              class="col-xs-6 col-sm-6 q-my-sm adsBtn"
+              label="Manager"
+              size="lg"
+              @click="moveTo('send_reading')"
+            />
+          </div>
+          <div class="text-center">
+            <q-btn
+              flat
+              class="col-xs-6 col-sm-6 q-my-sm adsBtn"
+              icon="help"
+              size="lg"
+            />
+          </div>
         </div>
+
         <q-separator color="primary" />
         <q-separator color="primary q-mt-xs" />
       </div>
@@ -180,4 +206,13 @@ function moveTo(name) {
   position: relative;
   border: 2px solid #d8a402;
 }
+.ads_main {
+  display: flex;
+  margin: auto;
+  justify-content: space-between;
+}
+
+/* .adsBtn {
+  color: #d8a402;
+} */
 </style>

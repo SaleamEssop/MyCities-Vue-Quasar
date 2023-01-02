@@ -64,10 +64,28 @@
           v-for="(cost, index) in calculationsForAccount"
           :key="index"
         >
-          <div class="col">
+          <div v-show="cost.title !== 'Rates'" class="col">
             {{ cost.title }}
           </div>
-          <div class="col-auto">R {{ cost.value.toFixed(2) }}</div>
+          <div v-show="cost.title !== 'Rates'" class="col-auto">R {{ cost.value.toFixed(2) }}</div>
+        </div>
+      </div>
+      <div class="q-my-lg">
+        <div class="row no-wrap">
+          <div class="col">VAT</div>
+          <div class="col-auto">R {{ totalVAT.toFixed(2) }}</div>
+        </div>
+      </div>
+      <div class="q-my-lg">
+        <div
+          class="row no-wrap"
+          v-for="(cost, index) in calculationsForAccount"
+          :key="index"
+        >
+          <div v-show="cost.title === 'Rates'" class="col">
+            {{ cost.title }}
+          </div>
+          <div v-show="cost.title === 'Rates'" class="col-auto">R {{ cost.value.toFixed(2) }}</div>
         </div>
       </div>
     </q-card-section>
@@ -150,18 +168,8 @@ export default defineComponent({
 
     const calculationsForAccount = computed(() => {
       const readingForAccount = new Array();
-      // (props.account.fixedCosts || []).forEach((fixedCost) => {
-      //   if (fixedCost) {
-      //     readingForAccount.push({
-      //       title: fixedCost.title,
-      //       value: fixedCost.value || 0,
-      //     });
-      //   }
-      // });
-
       (props.account.defaultFixedCost || []).forEach((defaultCost) => {
         if (defaultCost) {
-          console.log("defaultCost", defaultCost);
           readingForAccount.push({
             title: defaultCost.fixed_cost.title,
             value: defaultCost.value || 0,
@@ -169,6 +177,22 @@ export default defineComponent({
         }
       });
       return readingForAccount;
+    });
+
+    const totalVAT = computed(() => {
+      let total = 0;
+      calculationsForMeters.value.forEach(({ value }) => {
+        total = total + value;
+      });
+      // calculationsForAccount.value.forEach(({ value }) => {
+      //   total = total + value;
+      // });
+      calculationsForAccount.value.forEach(({ title, value }) => {
+        if (title !== "Rates") {
+          total = total + value;
+        }
+      });
+      return total * 0.15;
     });
 
     const totalFullBill = computed(() => {
@@ -179,6 +203,8 @@ export default defineComponent({
       calculationsForAccount.value.forEach(({ value }) => {
         total = total + value;
       });
+      total = total + totalVAT.value;
+
       return total;
     });
 
@@ -277,6 +303,7 @@ export default defineComponent({
       readingPeriod,
       submitFullBill,
       alert,
+      totalVAT,
     };
   },
 });

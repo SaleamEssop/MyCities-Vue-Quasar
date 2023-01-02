@@ -114,21 +114,21 @@ export default class {
       };
     });
 
-    const extraCharges = [
-      {
-        title: "Infrastructure Surcharge",
-        amountPerUnit: 1.48,
-        amount: 0,
-      },
-      { title: "Water Loss Levy", amountPerUnit: 0, amount: 14.9 },
-    ];
     // const extraCharges = [
     //   {
     //     title: "Infrastructure Surcharge",
     //     amountPerUnit: 1.48,
     //     amount: 0,
     //   },
+    //   { title: "Water Loss Levy", amountPerUnit: 0, amount: 14.9 },
     // ];
+    const extraCharges = [
+      {
+        title: "Infrastructure Surcharge",
+        amountPerUnit: 1.48,
+        amount: 0,
+      },
+    ];
 
     const percentageCharges = [{ title: "VAT", onTotalAmount: 0.15 }];
 
@@ -197,14 +197,17 @@ export default class {
     });
 
     const sumOfTotalBill = projection.reduce((acc, _project) => {
+      // console.log("projection", projection);
       acc += _project.value;
       return acc;
     }, 0.0);
 
+    const sumOfVatableValue = sumOfTotalBill - projection[2].value;
+
     percentageCharges.forEach((_percentage) => {
       projection.push({
         title: _percentage.title,
-        value: _percentage.onTotalAmount * sumOfTotalBill,
+        value: _percentage.onTotalAmount * sumOfVatableValue,
       });
     });
 

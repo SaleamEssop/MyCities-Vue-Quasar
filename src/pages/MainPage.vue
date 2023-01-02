@@ -224,7 +224,7 @@
       <!-- Meter -->
     </q-list>
   </q-page>
-  
+
   <q-page class="flex flex-center" v-if="allSites.length == 0">
     <div class="column">
       <q-btn
@@ -346,14 +346,14 @@ const selectSite = (_site) => {
 
   isExpandAccount.value = true;
 };
-
 const selectAccount = (_account) => {
   accountStore.selectedAccount = _account;
   meterStore.selectedMeter = null;
-
+  
   isExpandMeter.value = true;
   fetchAndSaveMeterOnAccount(_account.id);
 };
+console.log("Select Account", accountStore.selectedAccount);
 
 const deleteAccount = (account) => {
   let meters = meterStore.getByAccuntId(account.id);
