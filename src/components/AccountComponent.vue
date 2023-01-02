@@ -380,7 +380,7 @@ export default defineComponent({
           const default_cost = accountValue.defaultCosts
             .filter((cost) => cost.isApplicable)
             .map((cost) => {
-              console.log("ADd cost", cost);
+              // console.log("ADd cost", cost);
               return {
                 name: cost.title,
                 value: cost.value,

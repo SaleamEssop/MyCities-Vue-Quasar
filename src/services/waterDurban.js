@@ -196,20 +196,20 @@ export default class {
       });
     });
 
-    const sumOfTotalBill = projection.reduce((acc, _project) => {
-      // console.log("projection", projection);
-      acc += _project.value;
-      return acc;
-    }, 0.0);
+    // const sumOfTotalBill = projection.reduce((acc, _project) => {
+    //   // console.log("projection", projection);
+    //   acc += _project.value;
+    //   return acc;
+    // }, 0.0);
 
-    const sumOfVatableValue = sumOfTotalBill - projection[2].value;
+    // const sumOfVatableValue = sumOfTotalBill - projection[2].value;
 
-    percentageCharges.forEach((_percentage) => {
-      projection.push({
-        title: _percentage.title,
-        value: _percentage.onTotalAmount * sumOfVatableValue,
-      });
-    });
+    // percentageCharges.forEach((_percentage) => {
+    //   projection.push({
+    //     title: _percentage.title,
+    //     value: _percentage.onTotalAmount * sumOfVatableValue,
+    //   });
+    // });
 
     const returnProjection = {};
     returnProjection["projection"] = monthlyUses > 0 ? projection : [];

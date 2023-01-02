@@ -34,16 +34,44 @@
           </div>
         </div>
 
-        <div class="q-my-lg">
+        <div class="q-mt-lg">
           <div
             class="row no-wrap"
             v-for="(cost, index) in projectionCost['projection']"
             :key="index"
           >
-            <div class="col">
+            <div v-show="cost.title !== 'VAT'" class="col">
               {{ cost.title }}
             </div>
-            <div class="col-auto">R {{ cost.value.toFixed(2) }}</div>
+            <div v-show="cost.title !== 'VAT'" class="col-auto">
+              R {{ cost.value.toFixed(2) }}
+            </div>
+          </div>
+        </div>
+
+        <!-- <div
+          class="row no-wrap"
+          v-for="(cost, index) in waterLevyCostByServer"
+          :key="index"
+        >
+          <div class="col">
+            {{ cost.title }}
+          </div>
+          <div class="col-auto">R {{ cost.value.toFixed(2) }}</div>
+        </div> -->
+
+        <div class="q-mb-lg">
+          <div
+            class="row no-wrap"
+            v-for="(cost, index) in projectionCost['projection']"
+            :key="index"
+          >
+            <div v-show="cost.title === 'VAT'" class="col">
+              {{ cost.title }}
+            </div>
+            <div v-show="cost.title === 'VAT'" class="col-auto">
+              R {{ cost.value.toFixed(2) }}
+            </div>
           </div>
         </div>
 
@@ -54,7 +82,8 @@
             color="negative"
             text-color="white"
           >
-            R {{ projectionCost["total"].toFixed(2) }}
+          R {{ projectionCost["total"].toFixed(2) }}
+            
           </div>
         </div>
         <div class="text-center text-h6 q-mt-md">
@@ -63,6 +92,7 @@
         </div>
       </div>
     </q-card-section>
+
     <q-card-actions align="evenly">
       <q-btn color="primary" text-color="black" @click="submitBill"
         >Email</q-btn
@@ -87,6 +117,7 @@ export default defineComponent({
   props: {
     meter: Object,
     isNew: Boolean,
+    account: Object,
   },
   setup(props) {
     const readingStore = useReadingStore();
@@ -121,9 +152,30 @@ export default defineComponent({
           this.substring(0, index) + string + this.substring(index, this.length)
         );
       }
-
       return string + this;
     };
+
+    // const waterLevyCostByServer = computed(() => {
+    //   const waterLevy = new Array();
+    //   (account.defaultFixedCost || []).forEach((defaultCost) => {
+    //     if (defaultCost.fixed_cost.title === "Water Loss Levy") {
+    //       waterLevy.push({
+    //         title: defaultCost.fixed_cost.title,
+    //         value: defaultCost.value || 0,
+    //       });
+    //     }
+    //   });
+    //   return waterLevy;
+    // });
+
+    // const projectionCost = getCost(usesPerDay.value, props?.meter);
+    // const totalProjectionCost = computed(() => {
+    //   let total = 0;
+    //   waterLevyCostByServer.value.forEach(({ value }) => {
+    //     total = projectionCost.total + value;
+    //   });
+    //   return total;
+    // });
 
     const submitBill = () => {
       const meter = props.meter;
@@ -207,6 +259,8 @@ export default defineComponent({
       returnLastReadings,
       submitBill,
       lastReadingDisplayFormat,
+      // waterLevyCostByServer,
+      // totalProjectionCost,
     };
   },
 });
