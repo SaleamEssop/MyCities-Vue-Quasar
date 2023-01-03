@@ -1,5 +1,5 @@
 <template>
-  <q-card>
+  <q-card class="mainBackground">
     <q-card-section class="text-h6 text-center">
       Projected bill for {{ readingPeriod }}
       <!-- {{ account.number ? `(${account.number})` : "" }} -->
@@ -161,7 +161,7 @@
         </div>
       </div>
       <q-item-label class="q-mt-md" caption
-        >The amount is calculated bases on your inputs and may differ slightly
+        >The amount is calculated based on your inputs and may differ slightly
         from your actual municipal bill.</q-item-label
       >
     </q-card-section>
@@ -414,8 +414,11 @@ export default defineComponent({
 
 <style scoped>
 .titleofcost {
-  background: #eaeaea !important;
+  background: #ebebeb !important;
   border-radius: 8px !important;
   padding: 12px;
+}
+.mainBackground {
+  background-color: #fafafa;
 }
 </style>

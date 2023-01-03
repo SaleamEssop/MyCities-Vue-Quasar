@@ -80,7 +80,7 @@
               <q-item clickable v-close-popup @click="deleteMeter(meter)">
                 <q-item-section>Delete this meter</q-item-section>
               </q-item>
-              
+
               <q-item
                 clickable
                 @click="modelMeterForNewEdit = true"
@@ -345,7 +345,8 @@ export default defineComponent({
     const deleteMeter = (meter) => {
       $q.dialog({
         title: "Confirm",
-        message: "Would you like to delete this meter?",
+        message:
+          "“Are you sure you want to delete this meter? All data will be permanently lost.",
         cancel: true,
         persistent: true,
       }).onOk(() => {

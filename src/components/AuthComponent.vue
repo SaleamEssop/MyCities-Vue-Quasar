@@ -34,6 +34,13 @@
               </template>
             </q-input>
 
+            <q-checkbox
+              v-if="isLogin"
+              class="q-pb-md"
+              v-model="agreeToTCs"
+              label="Tick agree to our T&Cs"
+            ></q-checkbox>
+
             <div v-if="!isLogin">
               <q-input
                 class="q-mb-md"
@@ -185,21 +192,25 @@ export default defineComponent({
     };
 
     const signInExistingUser = (email, password) => {
-      userLogin({ email, password })
-        .then(async ({ status, code, msg, data, token }) => {
-          if (status) {
-            $q.notify({ message: "Sign in success" });
-            userStore.setUser(data, token);
-            router.push("/");
-            await updateAllData();
-          } else {
-            throw { code, msg };
-          }
-        })
-        .catch((error) => {
-          $q.notify({ message: getErrorMsg(error) });
-          console.log(error);
-        });
+      if (agreeToTCs.value) {
+        userLogin({ email, password })
+          .then(async ({ status, code, msg, data, token }) => {
+            if (status) {
+              $q.notify({ message: "Sign in success" });
+              userStore.setUser(data, token);
+              router.push("/");
+              await updateAllData();
+            } else {
+              throw { code, msg };
+            }
+          })
+          .catch((error) => {
+            $q.notify({ message: getErrorMsg(error) });
+            console.log(error);
+          });
+      } else {
+        $q.notify("Please agree terms and condition");
+      }
     };
     const createUser = (formData) => {
       if (formData.password === formData.confirmPassword) {

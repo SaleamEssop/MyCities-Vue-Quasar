@@ -349,7 +349,7 @@ const selectSite = (_site) => {
 const selectAccount = (_account) => {
   accountStore.selectedAccount = _account;
   meterStore.selectedMeter = null;
-  
+
   isExpandMeter.value = true;
   fetchAndSaveMeterOnAccount(_account.id);
 };
@@ -359,14 +359,16 @@ const deleteAccount = (account) => {
   let meters = meterStore.getByAccuntId(account.id);
   if (meters.length || [] > 0) {
     $q.notify({
-      message: "Delete meter for this account",
+      message:
+        "You can only delete an account after you delete all meters associated with the account.",
       color: "error",
     });
     return;
   }
   $q.dialog({
     title: "Confirm",
-    message: "Would you like to delete this account?",
+    message:
+      "Are you sure you want to delete this account? All data will be permanently lost.",
     cancel: true,
     persistent: true,
   }).onOk(() => {
