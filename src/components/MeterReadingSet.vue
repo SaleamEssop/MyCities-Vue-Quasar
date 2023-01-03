@@ -80,6 +80,7 @@
               <q-item clickable v-close-popup @click="deleteMeter(meter)">
                 <q-item-section>Delete this meter</q-item-section>
               </q-item>
+              
               <q-item
                 clickable
                 @click="modelMeterForNewEdit = true"

@@ -353,7 +353,7 @@ const selectAccount = (_account) => {
   isExpandMeter.value = true;
   fetchAndSaveMeterOnAccount(_account.id);
 };
-console.log("Select Account", accountStore.selectedAccount);
+// console.log("Select Account", accountStore.selectedAccount);
 
 const deleteAccount = (account) => {
   let meters = meterStore.getByAccuntId(account.id);

@@ -49,18 +49,26 @@
           </div>
         </div>
 
-        <!-- <div
+        <div
           class="row no-wrap"
           v-for="(cost, index) in waterLevyCostByServer"
           :key="index"
         >
-          <div class="col">
+          <div
+            v-show="projectionCost.projection[0].title !== 'Electricity bill'"
+            class="col"
+          >
             {{ cost.title }}
           </div>
-          <div class="col-auto">R {{ cost.value.toFixed(2) }}</div>
-        </div> -->
+          <div
+            v-show="projectionCost.projection[0].title !== 'Electricity bill'"
+            class="col-auto"
+          >
+            R {{ cost.value.toFixed(2) }}
+          </div>
+        </div>
 
-        <div class="q-mb-lg">
+        <div class="">
           <div
             class="row no-wrap"
             v-for="(cost, index) in projectionCost['projection']"
@@ -74,6 +82,16 @@
             </div>
           </div>
         </div>
+        <div class="q-mb-lg">
+          <div class="row no-wrap">
+            <div class="col">
+              {{ newVATOnMeterBill?.title }}
+            </div>
+            <div v-show="newVATOnMeterBill?.value" class="col-auto">
+              R {{ newVATOnMeterBill.value?.toFixed(2) }}
+            </div>
+          </div>
+        </div>
 
         <div class="column flex justify-between items-center no-wrap q-mt-md">
           <b>Monthly Projected cost</b>
@@ -82,8 +100,8 @@
             color="negative"
             text-color="white"
           >
-          R {{ projectionCost["total"].toFixed(2) }}
-            
+            <!-- R {{ projectionCost["total"].toFixed(2) }} -->
+            R {{ totalProjectionCost.toFixed(2) }}
           </div>
         </div>
         <div class="text-center text-h6 q-mt-md">
@@ -142,9 +160,11 @@ export default defineComponent({
 
     const unit = computed(() => (props?.meter?.type?.id == 2 ? "kWh" : "L"));
 
-    const projectionCost = getCost(usesPerDay.value, props?.meter);
+    // const projectionCost = getCost(usesPerDay.value, props?.meter);
 
     const readingPeriod = date.formatDate(new Date(), "MMM YYYY");
+
+    const percentageCharges = [{ title: "VAT", onTotalAmount: 0.15 }];
 
     String.prototype.insert = function (index, string) {
       if (index > 0) {
@@ -155,27 +175,45 @@ export default defineComponent({
       return string + this;
     };
 
-    // const waterLevyCostByServer = computed(() => {
-    //   const waterLevy = new Array();
-    //   (account.defaultFixedCost || []).forEach((defaultCost) => {
-    //     if (defaultCost.fixed_cost.title === "Water Loss Levy") {
-    //       waterLevy.push({
-    //         title: defaultCost.fixed_cost.title,
-    //         value: defaultCost.value || 0,
-    //       });
-    //     }
-    //   });
-    //   return waterLevy;
-    // });
+    // console.log("Projection", projectionCost);
 
-    // const projectionCost = getCost(usesPerDay.value, props?.meter);
-    // const totalProjectionCost = computed(() => {
-    //   let total = 0;
-    //   waterLevyCostByServer.value.forEach(({ value }) => {
-    //     total = projectionCost.total + value;
-    //   });
-    //   return total;
-    // });
+    const waterLevyCostByServer = computed(() => {
+      const waterLevy = new Array();
+      (account.defaultFixedCost || []).forEach((defaultCost) => {
+        if (defaultCost.fixed_cost.title === "Water Loss Levy") {
+          waterLevy.push({
+            title: defaultCost.fixed_cost.title,
+            value: defaultCost.value || 0,
+          });
+        }
+      });
+      return waterLevy;
+    });
+
+    const projectionCost = getCost(usesPerDay.value, props?.meter);
+
+    const totalProjectionCost = computed(() => {
+      let total = 0;
+      waterLevyCostByServer.value.forEach(({ value }) => {
+        total = projectionCost.total + value || 0;
+        total = newVATOnMeterBill.value.value + total;
+      });
+      return total;
+    });
+
+    const newVATOnMeterBill = computed(() => {
+      const VAT = new Object();
+      const val = percentageCharges.forEach((_percentage) => {
+        waterLevyCostByServer.value.forEach(({ value }) => {
+          VAT["title"] = _percentage.title;
+          VAT["value"] =
+            _percentage.onTotalAmount * projectionCost["total"] +
+            value * _percentage.onTotalAmount   
+        });
+        // console.log("LFOF", projectionCost["total"]);
+      });
+      return VAT;
+    });
 
     const submitBill = () => {
       const meter = props.meter;
@@ -259,8 +297,10 @@ export default defineComponent({
       returnLastReadings,
       submitBill,
       lastReadingDisplayFormat,
-      // waterLevyCostByServer,
-      // totalProjectionCost,
+      waterLevyCostByServer,
+      totalProjectionCost,
+      percentageCharges,
+      newVATOnMeterBill,
     };
   },
 });

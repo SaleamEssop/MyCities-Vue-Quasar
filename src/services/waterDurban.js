@@ -234,7 +234,7 @@ export default class {
 
     const projection = [];
     projection.push({ title: "Electricity bill", value: monthlyUses * 2.2425 });
-    projection.push({ title: "VAT", value: monthlyUses * 2.2425 * 0.15 });
+    // projection.push({ title: "VAT", value: monthlyUses * 2.2425 * 0.15 });
 
     returnProjection["projection"] = projection;
     returnProjection["total"] = projection.reduce((acc, { value }) => {
