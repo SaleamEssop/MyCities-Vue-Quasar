@@ -65,7 +65,7 @@
             </q-date>
           </q-popup-proxy>
         </q-btn>
-        <q-btn
+        <!-- <q-btn
           class="absolute"
           icon="help"
           @click="
@@ -78,7 +78,7 @@ If not available, simply enter the current date and meter reading and update it 
           round
           flat
           color="primary"
-        />
+        /> -->
         <div>Calendar</div>
       </div>
 

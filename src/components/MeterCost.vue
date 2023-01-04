@@ -195,8 +195,15 @@ export default defineComponent({
     const totalProjectionCost = computed(() => {
       let total = 0;
       waterLevyCostByServer.value.forEach(({ value }) => {
-        total = projectionCost.total + value || 0;
-        total = newVATOnMeterBill.value.value + total;
+        projectionCost.projection.forEach(({ title }) => {
+          if (title !== "Electricity bill") {
+            total = projectionCost.total + value || 0;
+            total = newVATOnMeterBill.value.value + total;
+          } else {
+            total = projectionCost.total;
+            total = newVATOnMeterBill.value.value + total;
+          }
+        });
       });
       return total;
     });
@@ -205,12 +212,19 @@ export default defineComponent({
       const VAT = new Object();
       const val = percentageCharges.forEach((_percentage) => {
         waterLevyCostByServer.value.forEach(({ value }) => {
-          VAT["title"] = _percentage.title;
-          VAT["value"] =
-            _percentage.onTotalAmount * projectionCost["total"] +
-            value * _percentage.onTotalAmount   
+          projectionCost.projection.forEach(({ title }) => {
+            if (title !== "Electricity bill") {
+              VAT["title"] = _percentage.title;
+              VAT["value"] =
+                _percentage.onTotalAmount * projectionCost["total"] +
+                value * _percentage.onTotalAmount;
+            } else {
+              VAT["title"] = _percentage.title;
+              VAT["value"] =
+                _percentage.onTotalAmount * projectionCost["total"];
+            }
+          });
         });
-        // console.log("LFOF", projectionCost["total"]);
       });
       return VAT;
     });

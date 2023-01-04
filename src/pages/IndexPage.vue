@@ -17,6 +17,7 @@
         <q-separator color="primary q-mt-xs" />
         <!-- <p>{{ name }}</p>
       <p>{{ email }}</p> -->
+
         <div class="ads_main">
           <div class="text-center">
             <q-btn-dropdown
@@ -28,7 +29,12 @@
               <q-list v-for="ad in getAds" :key="ad.id">
                 <q-item clickable v-close-popup @click="onItemClick">
                   <q-item-section>
-                    <q-item-label> {{ ad.category.name }}</q-item-label>
+                    <q-item-label
+                      v-model="name"
+                      @click="activeMenuItem(ad.name)"
+                    >
+                      {{ ad.name }}</q-item-label
+                    >
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -49,6 +55,7 @@
               class="col-xs-6 col-sm-6 q-my-sm adsBtn"
               icon="help"
               size="lg"
+              @click="activeMenuItem('Help')"
             />
           </div>
         </div>
@@ -101,7 +108,7 @@
               class="text-white shadow-1 rounded-borders"
             >
               <q-carousel-slide
-                v-for="ad in getAds"
+                v-for="ad in getAdsWithCategory[0].ads"
                 :key="ad.id"
                 :name="ad.id"
                 :img-src="ad.image"
@@ -132,16 +139,44 @@ import { useAdStore } from "src/stores/ads";
 const router = useRouter();
 const userStore = useUserStore();
 const adStore = useAdStore();
-const slide = ref(1);
+const slide = ref(7);
 const autoplay = ref(true);
 
 const $q = useQuasar();
 const email = ref("");
 const name = ref("");
+const selectCategory = ref(null);
 
 const getAds = computed(() => adStore.getAds);
 
-// console.log("ads", getAds);
+const activeMenuItem = (name) => {
+  let data = getAds.value.filter((_el) => {
+    return _el["name"] === name;
+  });
+  slide.value = data[0].ads[0].id;
+  selectCategory.value = data;
+};
+const getAdsWithCategory = computed(() => {
+  if (selectCategory.value !== null) {
+    return selectCategory.value;
+  } else {
+    // return getAds.value.filter((_el) => {
+    //   return _el["name"] === "Top" ;
+    // });
+    // console.log(
+    //   "ADA",
+    //   getAds.value.filter((_el) => {
+    //     return _el["name"] === "Top";
+    //   })[0].ads
+    // );
+    let data = getAds.value.filter((_el) => {
+      return _el["name"] === "Top";
+    });
+    return data;
+  }
+});
+
+// slide.value = getAdsWithCategory.value[0].ads[0].id;
 
 // const auth = getAuth();
 // if we want to get the user details, this is how its done
@@ -204,7 +239,9 @@ function moveTo(name) {
   max-width: 300px !important;
   margin: auto;
   position: relative;
-  border: 2px solid #d8a402;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 20%), 0 1px 1px rgb(0 0 0 / 14%),
+    0 2px 1px -1px rgb(0 0 0 / 12%);
+  /* border: 2px solid #d8a402; */
 }
 .ads_main {
   display: flex;
@@ -212,6 +249,9 @@ function moveTo(name) {
   justify-content: space-between;
 }
 
+.q-item-type:hover {
+  background: #ededed;
+}
 /* .adsBtn {
   color: #d8a402;
 } */

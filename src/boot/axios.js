@@ -112,8 +112,11 @@ const updateReadingInMeter = async (req) => {
   return await api.post("/v1/meter/update-readings", req);
 };
 
+// const getAds = async () => {
+//   return await api.get("/v1/ads/get");
+// };
 const getAds = async () => {
-  return await api.get("/v1/ads/get");
+  return await api.get("/v1/ads/get-categories");
 };
 
 // Delete Main account

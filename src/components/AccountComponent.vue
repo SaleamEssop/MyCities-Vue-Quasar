@@ -111,18 +111,21 @@
     </q-card-actions> -->
     <!-- Default cost from server -->
     <q-card-section class="bg-primary">
-      <div class="text-subtitle2">Default Cost - according to Server</div>
-      <q-btn
+      <div class="text-subtitle2">Additional Charges</div>
+      <!-- <q-btn
         fab
         color="white"
         text-color="primary"
         icon="help"
         class="absolute"
         style="top: 0; right: 12px; transform: translateY(-0%)"
-      />
+      /> -->
     </q-card-section>
 
     <!-- v-for="(defaultCost, index) in selectedAccount.defaultCosts" -->
+    <!-- edit update -->
+    <!-- v-for="(defaultCost, index) in isNew ? selectedAccount.defaultCosts  : selectedAccount.defaultFixedCost" -->
+
     <template
       v-for="(defaultCost, index) in isNew
         ? selectedAccount.defaultCosts
@@ -134,19 +137,19 @@
         <div class="flex justify-between items-center">
           <div v-if="defaultCost" class="text-h7">
             {{ isNew ? defaultCost.title : defaultCost.fixed_cost.title }}
+            <!-- {{ defaultCost.title }} -->
           </div>
-
-          <div v-if="defaultCost.isFromUser">
+          <!-- <div v-if="defaultCost.isFromUser">
             <q-input
               outlined
               dense
               label="defaultCost title"
               color="black"
               v-model="defaultCost.title"
-              :disable="!defaultCost.isApplicable"
               :readonly="!defaultCost.isApplicable"
+              :disable="!defaultCost.isApplicable"
             />
-          </div>
+          </div> -->
           <q-toggle v-model="defaultCost.isApplicable" />
         </div>
         <q-input
@@ -154,7 +157,11 @@
           v-model.number="defaultCost.value"
           type="number"
           :disable="!defaultCost.isApplicable"
-          :readonly="!defaultCost.isApplicable"
+          :readonly="
+            defaultCost.title || defaultCost.fixed_cost.title === 'Rates'
+              ? !defaultCost.isApplicable
+              : defaultCost.isApplicable
+          "
         />
       </q-card-section>
     </template>
@@ -251,7 +258,7 @@ export default defineComponent({
     const accountStore = useAccountStore();
     const $q = useQuasar();
     const selectedAccount = ref(initialState.selectedAccount);
-    // console.log("AccountStore", selectedAccount.value.defaultFixedCost);
+    console.log("AccountStore", selectedAccount.value.defaultCosts);
 
     const checkIdFromDB = accountStore.getAccountById(
       selectedAccount?.value?.id
@@ -423,10 +430,10 @@ export default defineComponent({
         // accountStore.addAccount(selectedAccount.value);
       } else {
         const accountValue = selectedAccount.value;
-        // console.log("selectAccount", accountValue, selectedAccount);
+        // console.log("selectAccount", accountValue);
         // const default_cost = selectedAccount.value.defaultFixedCost
         const default_cost = accountValue.defaultFixedCost
-          .filter((cost) => cost.isApplicable)
+          // .filter((cost) => cost.isApplicable )
           .map((cost) => {
             let id = cost.id;
             const accountCost = accountValue.defaultFixedCost.find(
@@ -443,7 +450,7 @@ export default defineComponent({
             };
           })
           .filter((cost) => cost !== null);
-
+        console.log("default_cost", default_cost);
         updateAccount({
           site_id: site.value.id,
           account_name: accountValue.title,

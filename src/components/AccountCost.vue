@@ -5,7 +5,7 @@
       <!-- {{ account.number ? `(${account.number})` : "" }} -->
     </q-card-section>
     <div class="text-center">
-      <q-btn
+      <!-- <q-btn
         icon="help"
         @click="
           alert({
@@ -22,7 +22,7 @@
         round
         flat
         color="primary"
-      />
+      /> -->
     </div>
 
     <div class="text-h5 col-auto text-center">
@@ -34,7 +34,9 @@
         <div class="text-subtitle2">Water</div>
       </q-card-section>
       <div class="q-my-lg">
-        <div class="text-subtitle2 q-mb-sm">Meter: {{ getMeterNumber[0] }}</div>
+        <div v-if="getMeterNumber.length" class="text-subtitle2 q-mb-sm">
+          Meter: {{ getMeterNumber[0] }}
+        </div>
         <template v-for="(cost, index) in calculationsForMeters" :key="index">
           <div class=" ">
             <div class="row no-wrap">
@@ -68,7 +70,9 @@
       </q-card-section>
 
       <div class="q-my-lg">
-        <div class="text-subtitle2 q-mb-sm">Meter: {{ getMeterNumber[1] }}</div>
+        <div v-if="getMeterNumber.length" class="text-subtitle2 q-mb-sm">
+          Meter: {{ getMeterNumber[1] }}
+        </div>
         <template v-for="(cost, index) in calculationsForMeters" :key="index">
           <div>
             <div class="row no-wrap">
@@ -97,7 +101,7 @@
       </div>
 
       <q-card-section class="titleofcost">
-        <div class="text-subtitle2">Additional Cost</div>
+        <div class="text-subtitle2">Additional Charges</div>
       </q-card-section>
       <div class="q-mt-lg">
         <div
@@ -224,6 +228,7 @@ export default defineComponent({
           meterReadings.push({
             title: _el.title,
             value: _el.value,
+            meter: meter,
           });
         });
         // meterReadings.push({
@@ -248,7 +253,7 @@ export default defineComponent({
     const calculationsForAccount = computed(() => {
       const readingForAccount = new Array();
       (props.account.defaultFixedCost || []).forEach((defaultCost) => {
-        if (defaultCost) {
+        if (defaultCost.is_active) {
           readingForAccount.push({
             title: defaultCost.fixed_cost.title,
             value: defaultCost.value || 0,
