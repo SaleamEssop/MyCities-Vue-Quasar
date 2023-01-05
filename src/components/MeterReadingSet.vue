@@ -81,9 +81,18 @@
                 <q-item-section>Delete this meter</q-item-section>
               </q-item>
 
+              <!-- v-if="meter?.number" -->
+
+              <!-- {{Object.keys(meter).length}} -->
+              <!-- {{meter}} -->
+              <!-- {{meter.type.id}} -->
+
+              <!-- :disabled="meter?.number > 0 ? 'true' : 'false'"
+                :clickable="meter?.number > 0 ? 'fasle' : 'true'" -->
+
               <q-item
-                clickable
                 @click="modelMeterForNewEdit = true"
+                clickable
                 v-close-popup
               >
                 <q-item-section>Add a new meter</q-item-section>

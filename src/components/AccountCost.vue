@@ -282,9 +282,12 @@ export default defineComponent({
     const additionalAllCost = computed(() => {
       let subTotal = 0;
       const total = props.account.defaultFixedCost.map((_el) => {
-        return _el.value;
+        if (_el.is_active) {
+          return _el.value;
+        }
       });
-      subTotal = total.reduce((a, b) => a + b, 0);
+      subTotal = total.reduce((a, b) => (b += a ? a : 0));
+      // console.log("subTotal", subTotal);
       calculationsForMeters.value.forEach(({ value }) => {
         subTotal = subTotal + value;
       });

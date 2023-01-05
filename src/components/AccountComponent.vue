@@ -139,18 +139,15 @@
             {{ isNew ? defaultCost.title : defaultCost.fixed_cost.title }}
             <!-- {{ defaultCost.title }} -->
           </div>
-          <!-- <div v-if="defaultCost.isFromUser">
-            <q-input
-              outlined
-              dense
-              label="defaultCost title"
-              color="black"
-              v-model="defaultCost.title"
-              :readonly="!defaultCost.isApplicable"
-              :disable="!defaultCost.isApplicable"
-            />
-          </div> -->
-          <q-toggle v-model="defaultCost.isApplicable" />
+          <!-- <q-toggle
+            v-model="defaultCost.isApplicable"
+            :model-value="defaultCost.isApplicable === true"
+          /> -->
+          {{ defaultCost.is_active }}
+          <q-toggle
+            v-model="defaultCost.isApplicable"
+            :model-value="defaultCost.isApplicable === true"
+          />
         </div>
         <q-input
           placeholder="R0.00"
@@ -287,16 +284,16 @@ export default defineComponent({
       selectedAccount.value = initialState.selectedAccount;
     };
 
-    const addFixedCostField = () => {
-      selectedAccount.value.fixedCosts.push({
-        id: Date.now(),
-        title: "",
-        value: 0,
-        isApplicable: false,
-        isFromServer: false,
-        isFromUser: true,
-      });
-    };
+    // const addFixedCostField = () => {
+    //   selectedAccount.value.fixedCosts.push({
+    //     id: Date.now(),
+    //     title: "",
+    //     value: 0,
+    //     isApplicable: false,
+    //     isFromServer: false,
+    //     isFromUser: true,
+    //   });
+    // };
 
     const onSaveSelectAccount = async () => {
       if (site.value == null || site.value.email == null) {
@@ -326,7 +323,7 @@ export default defineComponent({
             const siteValue = site.value;
             const accountValue = selectedAccount.value;
             const default_cost = accountValue.defaultCosts
-              .filter((cost) => cost.isApplicable)
+              // .filter((cost) => cost.isApplicable)
               .map((cost) => {
                 return {
                   name: cost.title,
@@ -385,9 +382,8 @@ export default defineComponent({
         } else {
           const accountValue = selectedAccount.value;
           const default_cost = accountValue.defaultCosts
-            .filter((cost) => cost.isApplicable)
+            // .filter((cost) => cost.isApplicable)
             .map((cost) => {
-              // console.log("ADd cost", cost);
               return {
                 name: cost.title,
                 value: cost.value,
@@ -600,7 +596,7 @@ export default defineComponent({
     return {
       getDefaultCost,
       selectedAccount,
-      addFixedCostField,
+      // addFixedCostField,
       onSaveSelectAccount,
       siteOptions,
       filterFn,

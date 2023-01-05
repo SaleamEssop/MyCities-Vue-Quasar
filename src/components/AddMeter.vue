@@ -41,7 +41,8 @@
       <q-separator color="primary" spaced="lg" size="4px" />
       <div class="text-center">
         <div>
-          Click on the calendar and enter the date, if available,  on which the meter was last read by the municipality.
+          Click on the calendar and enter the date, if available, on which the
+          meter was last read by the municipality.
         </div>
         <q-separator spaced="lg" />
         <q-btn icon="event" color="primary" size="lg" text-color="black">

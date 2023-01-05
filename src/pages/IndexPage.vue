@@ -90,7 +90,6 @@
           </div>
         </div>
       </div> -->
-
       <div class="ads">
         <div class="q-pa-md">
           <div class="q-gutter-md">
@@ -105,16 +104,19 @@
               @mouseleave="autoplay = true"
               transition-prev="slide-right"
               transition-next="slide-left"
-              class="text-white shadow-1 rounded-borders"
+              class="text-white adsShadow shadow-1 rounded-borders"
             >
               <q-carousel-slide
-                v-for="ad in getAdsWithCategory[0].ads"
+                v-for="ad in getAdsWithCategory"
                 :key="ad.id"
                 :name="ad.id"
                 :img-src="ad.image"
                 class="addImage"
-                @click="window.open(`${ad.url}`, '_blank').focus()"
+                role="link"
+                @click="openAds(ad.url)"
               >
+                <!-- @click="window.open(`${ad.url}`, '_blank').focus()" -->
+
                 <div v-show="ad.price > 0" class="add_description">
                   <div class="text-h6">{{ ad.name }}</div>
                   <div class="text-h6 text-bold">Price {{ ad.price }}</div>
@@ -149,30 +151,28 @@ const selectCategory = ref(null);
 
 const getAds = computed(() => adStore.getAds);
 
+const openAds = (link) => {
+  console.log("link", link);
+  // window.open("https:www.shutterstock.com");
+  window.open(link, "_blank");
+};
+
 const activeMenuItem = (name) => {
   let data = getAds.value.filter((_el) => {
     return _el["name"] === name;
   });
-  slide.value = data[0].ads[0].id;
-  selectCategory.value = data;
+  slide.value = data[0].ads[0]?.id;
+  selectCategory.value = data[0]?.ads;
 };
 const getAdsWithCategory = computed(() => {
   if (selectCategory.value !== null) {
     return selectCategory.value;
   } else {
-    // return getAds.value.filter((_el) => {
-    //   return _el["name"] === "Top" ;
-    // });
-    // console.log(
-    //   "ADA",
-    //   getAds.value.filter((_el) => {
-    //     return _el["name"] === "Top";
-    //   })[0].ads
-    // );
-    let data = getAds.value.filter((_el) => {
+    let defaultAds = getAds.value.filter((_el) => {
       return _el["name"] === "Top";
     });
-    return data;
+    // console.log("defautlad", defaultAds[0].ads);
+    return defaultAds[0]?.ads;
   }
 });
 
@@ -234,14 +234,18 @@ function moveTo(name) {
 .shadow-1 {
   box-shadow: none !important;
 }
+
+.adsShadow {
+  /* -webkit-box-shadow: 18px 18px 40px -25px rgba(0,0,0,0.75);
+-moz-box-shadow: 18px 18px 40px -25px rgba(0,0,0,0.75);
+box-shadow: 18px 18px 40px -25px rgba(0,0,0,0.75); */
+}
 .addImage {
   height: 400px !important;
   max-width: 300px !important;
   margin: auto;
   position: relative;
-  box-shadow: 0 1px 3px rgb(0 0 0 / 20%), 0 1px 1px rgb(0 0 0 / 14%),
-    0 2px 1px -1px rgb(0 0 0 / 12%);
-  /* border: 2px solid #d8a402; */
+  border-radius: 5px;
 }
 .ads_main {
   display: flex;
