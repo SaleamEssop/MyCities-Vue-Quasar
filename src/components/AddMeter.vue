@@ -110,6 +110,7 @@ If not available, simply enter the current date and meter reading and update it 
             :class="inputFocus ? 'stroke-focus' : 'stroke-simple'"
           >
             <div class="absolute" style="opacity: 0">
+              <!-- autofocus -->
               <q-input
                 type="number"
                 color="black"
@@ -118,7 +119,6 @@ If not available, simply enter the current date and meter reading and update it 
                 @focus="inputFocus = true"
                 @blur="inputFocus = false"
                 :step="1"
-                autofocus
                 v-model="firstReading.valueInString"
                 @keypress="
                   (event) => {

@@ -192,6 +192,7 @@ import { useSiteStore } from "/src/stores/site";
 import waterDurban from "/src/services/waterDurban.js";
 import { LogLevel } from "@firebase/logger";
 import { useQuasar } from "quasar";
+import { useUserStore } from "src/stores/user";
 export default defineComponent({
   name: "AccountCost",
   props: {
@@ -201,7 +202,7 @@ export default defineComponent({
     const readingStore = useReadingStore();
     const meterStore = useMeterStore();
     const siteStore = useSiteStore();
-
+    const userName = useUserStore();
     const $q = useQuasar();
 
     const meters = meterStore.getByAccuntId(props.account.id);
@@ -249,7 +250,6 @@ export default defineComponent({
       // });
       return meterName;
     });
-
     const calculationsForAccount = computed(() => {
       const readingForAccount = new Array();
       (props.account.defaultFixedCost || []).forEach((defaultCost) => {
@@ -386,15 +386,15 @@ export default defineComponent({
       )}\n`;
       //valueInString = (usesPerDay * 30).toFixed(2) + " " + unit;
 
-      body += `\n`;
-      body += `${meter.type.title}\n`;
-      body += `Meter:\t\t\t${meter.number}\n`;
+      body += `Account Number: ${props.account.number}\n`;
+      body += `${userName.user.name}\n`;
+      body += `${meter.type.title} Meter:\t${meter.number}\n`;
       body += `${valueInString}\n`;
 
       body += `\n\n`;
       //});
 
-      body += `Powered by The LightsandWaterapp\n`;
+      body += `Powered by The LIGHTSANDWATERAPP\n`;
       body += `Visit www.lightsandwater.co.za for information on how we can help you save on electricity and water with cutting edge technologies.`;
 
       let urlString =

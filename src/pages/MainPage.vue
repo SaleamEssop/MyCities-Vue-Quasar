@@ -131,14 +131,14 @@
                         modelAccountForNewEdit = true;
                       "
                     >
-                      <q-item-section>Edit this account</q-item-section>
+                      <q-item-section>Edit Account</q-item-section>
                     </q-item>
                     <q-item
                       clickable
                       v-close-popup
                       @click="deleteAccount(account)"
                     >
-                      <q-item-section>Delete this account</q-item-section>
+                      <q-item-section>Delete Account</q-item-section>
                     </q-item>
                     <q-item
                       clickable
@@ -148,7 +148,7 @@
                         modelAccountForNewEdit = true;
                       "
                     >
-                      <q-item-section>Add a new account</q-item-section>
+                      <q-item-section>Add Account</q-item-section>
                     </q-item>
                   </q-list>
                 </q-menu>

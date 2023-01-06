@@ -152,9 +152,10 @@ const selectCategory = ref(null);
 const getAds = computed(() => adStore.getAds);
 
 const openAds = (link) => {
-  console.log("link", link);
-  // window.open("https:www.shutterstock.com");
-  window.open(link, "_blank");
+  if (!link.match(/^https?:\/\//i)) {
+    link = "http://" + link;
+  }
+  return window.open(link, "_blank");
 };
 
 const activeMenuItem = (name) => {
@@ -235,17 +236,14 @@ function moveTo(name) {
   box-shadow: none !important;
 }
 
-.adsShadow {
-  /* -webkit-box-shadow: 18px 18px 40px -25px rgba(0,0,0,0.75);
--moz-box-shadow: 18px 18px 40px -25px rgba(0,0,0,0.75);
-box-shadow: 18px 18px 40px -25px rgba(0,0,0,0.75); */
-}
 .addImage {
   height: 400px !important;
   max-width: 300px !important;
+  /* width: 300px !important; */
   margin: auto;
   position: relative;
   border-radius: 5px;
+  /* -webkit-box-shadow: 7px 7px 11px -3px rgba(0, 0, 0, 0.75); */
 }
 .ads_main {
   display: flex;
