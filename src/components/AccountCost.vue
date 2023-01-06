@@ -281,13 +281,19 @@ export default defineComponent({
 
     const additionalAllCost = computed(() => {
       let subTotal = 0;
-      const total = props.account.defaultFixedCost.map((_el) => {
-        if (_el.is_active) {
-          return _el.value;
+      let total = props.account.defaultFixedCost.map((_el) => {
+        if (_el.is_active === 1) {
+          return _el.value || 0;
         }
       });
-      subTotal = total.reduce((a, b) => (b += a ? a : 0));
-      // console.log("subTotal", subTotal);
+      const arraySum = (total) => {
+        const sum = total.reduce((acc, val) => {
+          return acc + (val || 0);
+        }, 0);
+        return sum;
+      };
+      subTotal = subTotal + arraySum(total);
+      // subTotal = total.reduce((a, b) => (b += a ? a : 0));
       calculationsForMeters.value.forEach(({ value }) => {
         subTotal = subTotal + value;
       });

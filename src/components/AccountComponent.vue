@@ -66,38 +66,6 @@
         style="top: 0; right: 12px; transform: translateY(-0%)"
       />
     </q-card-section> -->
-    <!-- <template
-      v-for="(fixedCost, index) in selectedAccount.fixedCosts"
-      :key="index"
-    >
-      <q-separator />
-      <q-card-section>
-        <div class="flex justify-between items-center">
-          <div v-if="fixedCost.isFromServer" class="text-h7">
-            {{ fixedCost.title }}
-          </div>
-          <div v-if="fixedCost.isFromUser">
-            <q-input
-              outlined
-              dense
-              label="FixedCost title"
-              color="black"
-              v-model="fixedCost.title"
-              :disable="!fixedCost.isApplicable"
-              :readonly="!fixedCost.isApplicable"
-            />
-          </div>
-          <q-toggle v-model="fixedCost.isApplicable" />
-        </div>
-        <q-input
-          placeholder="R0.00"
-          v-model.number="fixedCost.value"
-          type="number"
-          :disable="!fixedCost.isApplicable"
-          :readonly="!fixedCost.isApplicable"
-        />
-      </q-card-section>
-    </template> -->
 
     <!-- <q-card-actions align="center">
       <q-btn
@@ -133,32 +101,31 @@
       :key="index"
     >
       <q-separator />
+
       <q-card-section>
         <div class="flex justify-between items-center">
           <div v-if="defaultCost" class="text-h7">
             {{ isNew ? defaultCost.title : defaultCost.fixed_cost.title }}
             <!-- {{ defaultCost.title }} -->
           </div>
-          <!-- <q-toggle
-            v-model="defaultCost.isApplicable"
-            :model-value="defaultCost.isApplicable === true"
-          /> -->
-          {{ defaultCost.is_active }}
-          <q-toggle
-            v-model="defaultCost.isApplicable"
-            :model-value="defaultCost.isApplicable === true"
-          />
+          <q-toggle v-model="defaultCost.isApplicable" />
+          <!-- :model-value="defaultCost.isApplicable" -->
         </div>
         <q-input
+          v-if="isNew"
           placeholder="R0.00"
           v-model.number="defaultCost.value"
           type="number"
           :disable="!defaultCost.isApplicable"
-          :readonly="
-            defaultCost.title || defaultCost.fixed_cost.title === 'Rates'
-              ? !defaultCost.isApplicable
-              : defaultCost.isApplicable
-          "
+          :readonly="defaultCost.title === 'Rates' ? false : true"
+        />
+        <q-input
+          v-else
+          placeholder="R0.00"
+          v-model.number="defaultCost.value"
+          type="number"
+          :disable="!defaultCost.isApplicable"
+          :readonly="defaultCost.fixed_cost.title === 'Rates' ? false : true"
         />
       </q-card-section>
     </template>
@@ -235,7 +202,7 @@ const nullAccount = {
   // ],
 };
 const defaultCostStore = useDefaultCostStore();
-const getDefaultCost = computed(() => defaultCostStore.getDefaultCost);
+// const getDefaultCost = computed(() => defaultCostStore.getDefaultCost);
 
 export default defineComponent({
   name: "AccountComponent",
@@ -250,12 +217,25 @@ export default defineComponent({
       site: null,
       selectedAccount: JSON.parse(JSON.stringify(props.account || nullAccount)),
     };
-    initialState["selectedAccount"]["defaultCosts"] = getDefaultCost;
+    initialState["selectedAccount"]["defaultCosts"] =
+      defaultCostStore.getDefaultCost.map((_cost) => {
+        _cost["isApplicable"] = true;
+        return _cost;
+      });
+
     const siteStore = useSiteStore();
     const accountStore = useAccountStore();
     const $q = useQuasar();
     const selectedAccount = ref(initialState.selectedAccount);
-    console.log("AccountStore", selectedAccount.value.defaultCosts);
+
+    selectedAccount.value.defaultFixedCost?.map((_cost) => {
+      if (_cost.is_active === 1) {
+        _cost["isApplicable"] = true;
+      } else {
+        _cost["isApplicable"] = false;
+      }
+      return _cost;
+    });
 
     const checkIdFromDB = accountStore.getAccountById(
       selectedAccount?.value?.id
@@ -384,6 +364,7 @@ export default defineComponent({
           const default_cost = accountValue.defaultCosts
             // .filter((cost) => cost.isApplicable)
             .map((cost) => {
+              console.log("cost.isApplicable", cost.isApplicable);
               return {
                 name: cost.title,
                 value: cost.value,
@@ -594,7 +575,6 @@ export default defineComponent({
     }
 
     return {
-      getDefaultCost,
       selectedAccount,
       // addFixedCostField,
       onSaveSelectAccount,
