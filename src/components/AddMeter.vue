@@ -104,6 +104,13 @@ If not available, simply enter the current date and meter reading and update it 
         <span class="text-body1">Reading date: {{ readingDate }}</span>
       </q-badge>
       <div class="text-center">
+        <!-- <input
+          name="number"
+          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+          type="number"
+           :maxlength="meter.type.id == 2 ? 6 : 8"
+          placeholder="PUT INPUT"
+        /> -->
         <q-card-section>
           <div
             class="relative"
@@ -112,9 +119,11 @@ If not available, simply enter the current date and meter reading and update it 
             <div class="absolute" style="opacity: 0">
               <!-- autofocus -->
               <q-input
-                type="text"
+                type="number"
                 color="black"
                 :min="0"
+                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                :maxlength="meter.type.id == 2 ? 6 : 8"
                 outlined
                 @focus="inputFocus = true"
                 @blur="inputFocus = false"
@@ -122,25 +131,13 @@ If not available, simply enter the current date and meter reading and update it 
                 v-model="firstReading.valueInString"
                 @keypress="
                   (event) => {
-                    // if (
-                    //   `${firstReading.valueInString || ''}`.length >=
-                    //     (meter.type.id == 2 ? 6 : 8) ||
-                    //   event.keyCode == 46
-                    // ) {
-                    //   event.preventDefault();
-                    // } else {
-                    // }
-                    if (event.keyCode == 46 || event.keyCode == 8) {
-                      //do nothing
+                    if (
+                      `${firstReading.valueInString || ''}`.length >=
+                        (meter.type.id == 2 ? 6 : 8) ||
+                      event.keyCode == 46
+                    ) {
+                      event.preventDefault();
                     } else {
-                      if (
-                        `${firstReading.valueInString || ''}`.length >=
-                          (meter.type.id == 2 ? 6 : 8) ||
-                        event.keyCode < 48 ||
-                        event.keyCode > 57
-                      ) {
-                        event.preventDefault();
-                      }
                     }
                   }
                 "
@@ -193,7 +190,7 @@ If not available, simply enter the current date and meter reading and update it 
   </q-card>
 </template>
 <script>
-import { ref, computed, defineComponent } from "vue";
+import { ref, computed, defineComponent, watch } from "vue";
 import { date } from "quasar";
 import { useAccountStore } from "/src/stores/account";
 import { useMeterStore } from "/src/stores/meter";

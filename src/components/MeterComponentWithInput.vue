@@ -35,6 +35,7 @@
             :step="1"
             autofocus
             v-model="currentReading"
+            oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
             :maxlength="meter.type.id == 2 ? 6 : 8"
             @keypress="
               (event) => {
