@@ -112,7 +112,7 @@ If not available, simply enter the current date and meter reading and update it 
             <div class="absolute" style="opacity: 0">
               <!-- autofocus -->
               <q-input
-                type="number"
+                type="text"
                 color="black"
                 :min="0"
                 outlined
@@ -122,13 +122,25 @@ If not available, simply enter the current date and meter reading and update it 
                 v-model="firstReading.valueInString"
                 @keypress="
                   (event) => {
-                    if (
-                      `${firstReading.valueInString || ''}`.length >=
-                        (meter.type.id == 2 ? 6 : 8) ||
-                      event.keyCode == 46
-                    ) {
-                      event.preventDefault();
+                    // if (
+                    //   `${firstReading.valueInString || ''}`.length >=
+                    //     (meter.type.id == 2 ? 6 : 8) ||
+                    //   event.keyCode == 46
+                    // ) {
+                    //   event.preventDefault();
+                    // } else {
+                    // }
+                    if (event.keyCode == 46 || event.keyCode == 8) {
+                      //do nothing
                     } else {
+                      if (
+                        `${firstReading.valueInString || ''}`.length >=
+                          (meter.type.id == 2 ? 6 : 8) ||
+                        event.keyCode < 48 ||
+                        event.keyCode > 57
+                      ) {
+                        event.preventDefault();
+                      }
                     }
                   }
                 "
