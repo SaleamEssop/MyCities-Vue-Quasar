@@ -235,7 +235,7 @@
       >
         Start
       </q-btn>
-      <span class="q-mt-md round-cheap" clickable v-ripple>Help</span>
+      <!-- <span class="q-mt-md round-cheap" clickable v-ripple>Help</?span> -->
     </div>
   </q-page>
 
