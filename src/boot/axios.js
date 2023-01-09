@@ -134,6 +134,11 @@ const defaultCost = async () => {
   return await api.get("/v1/default-cost/get");
 };
 
+//Get default Cost From Server
+const getAlarms = async () => {
+  return await api.get("/v1/get-alarms");
+};
+
 const waterThumb =
   "https://media.istockphoto.com/vectors/water-faucet-icon-vector-vector-id604383296?k=20&m=604383296&s=612x612&w=0&h=rAPcq11vU1posV21tn1d6Tu6NeNIC0sGUwJ6gPZ8oW0=";
 const electThumb =
@@ -215,4 +220,5 @@ export {
   deleteMainMeter,
   defaultCost,
   SERVER_URL,
+  getAlarms
 };

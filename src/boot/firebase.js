@@ -17,14 +17,22 @@ import { useSiteStore } from "src/stores/site";
 import { useAccountStore } from "src/stores/account";
 import { useAdStore } from "src/stores/ads";
 
-import { getAllData, getAds, defaultCost, SERVER_URL } from "boot/axios";
+import {
+  getAllData,
+  getAds,
+  defaultCost,
+  getAlarms,
+  SERVER_URL,
+} from "boot/axios";
 import { useDefaultCostStore } from "src/stores/defaultCost";
+import { useGetAlarmsStore } from "src/stores/alarm";
 
 const userStore = useUserStore();
 const siteStore = useSiteStore();
 const accountStore = useAccountStore();
 const adStore = useAdStore();
 const defaultCostStore = useDefaultCostStore();
+const alarmStore = useGetAlarmsStore();
 
 const updateAllData = () => {
   getAllData().then(({ status, data }) => {
@@ -69,6 +77,9 @@ const updateAllData = () => {
   });
   defaultCost().then(({ data }) => {
     defaultCostStore.setDefaultCost(data);
+  });
+  getAlarms().then(({ data }) => {
+    alarmStore.setAlarms(data);
   });
 };
 
