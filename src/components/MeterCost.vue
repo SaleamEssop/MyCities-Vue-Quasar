@@ -127,6 +127,8 @@ import { date } from "quasar";
 import { useReadingStore } from "/src/stores/reading";
 import { useSiteStore } from "/src/stores/site";
 import { useAccountStore } from "/src/stores/account";
+import { useUserStore } from "src/stores/user";
+
 
 import waterDurban from "/src/services/waterDurban.js";
 
@@ -147,6 +149,7 @@ export default defineComponent({
     const meters = [props.meter];
 
     const site = siteStore.getSiteById(account.site.id);
+    const userName = useUserStore();
 
     const durbanReading = new waterDurban();
     const getCost = durbanReading.getCost;
@@ -266,9 +269,13 @@ export default defineComponent({
         )}\n`;
         //valueInString = (usesPerDay * 30).toFixed(2) + " " + unit;
 
-        body += `\n`;
-        body += `${meter.type.title}\n`;
-        body += `Meter:\t\t\t${meter.number}\n`;
+        // body += `\n`;
+        // body += `${meter.type.title}\n`;
+        // body += `Meter:\t\t\t${meter.number}\n`;
+        // body += `${valueInString}\n`;
+        
+        body += `${userName.user.name}\n`;
+        body += `${meter.type.title} Meter:\t${meter.number}\n`;
         body += `${valueInString}\n`;
 
         body += `\n\n`;
@@ -315,6 +322,7 @@ export default defineComponent({
       totalProjectionCost,
       percentageCharges,
       newVATOnMeterBill,
+      userName
     };
   },
 });
