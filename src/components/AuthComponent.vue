@@ -33,13 +33,18 @@
                 ></q-icon>
               </template>
             </q-input>
-
-            <q-checkbox
-              v-if="isLogin"
-              class="q-pb-md"
-              v-model="agreeToTCs"
-              label="Tick agree to our T&Cs"
-            ></q-checkbox>
+            <div v-if="isLogin" class="row q-pb-md">
+              <q-checkbox v-model="agreeToTCs" label="Agree and"> </q-checkbox>
+              <q-btn
+                calss="q-p-none"
+                no-caps
+                color="grey-7"
+                flat
+                label="Read our T&Cs"
+                style="padding-left: 6px"
+              >
+              </q-btn>
+            </div>
 
             <div v-if="!isLogin">
               <q-input
@@ -76,11 +81,24 @@
                 v-model="formData.phone_number"
                 :input-style="{ fontSize: '18px' }"
               />
-              <q-checkbox
+              <div class="row q-pb-md">
+                <q-checkbox v-model="agreeToTCs" label="Agree and">
+                </q-checkbox>
+                <q-btn
+                  calss="q-p-none"
+                  no-caps
+                  color="grey-7"
+                  flat
+                  label="Read our T&Cs"
+                  style="padding-left: 6px"
+                >
+                </q-btn>
+              </div>
+              <!-- <q-checkbox
                 class="q-pb-md"
                 v-model="agreeToTCs"
                 label="Tick agree to our T&Cs"
-              ></q-checkbox>
+              ></q-checkbox> -->
             </div>
             <div class="row">
               <q-btn
@@ -256,9 +274,4 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-/* .q-checkbox__bg {
-  left: 0 !important;
-  margin-right: -5px !important;
-} */
-</style>
+<style scoped></style>
