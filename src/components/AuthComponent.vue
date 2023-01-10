@@ -196,7 +196,7 @@ export default defineComponent({
         userLogin({ email, password })
           .then(async ({ status, code, msg, data, token }) => {
             if (status) {
-              $q.notify({ message: "Sign in success" });
+              $q.notify({ message: "Signed in" });
               userStore.setUser(data, token);
               router.push("/");
               await updateAllData();
@@ -209,7 +209,7 @@ export default defineComponent({
             console.log(error);
           });
       } else {
-        $q.notify("Please agree terms and condition");
+        $q.notify("Please agree to the terms and conditions");
       }
     };
     const createUser = (formData) => {
@@ -230,10 +230,10 @@ export default defineComponent({
               console.log(error);
             });
         } else {
-          $q.notify("Please agree terms and condition");
+          $q.notify("Please agree to the terms and conditions");
         }
       } else {
-        $q.notify("Your password and confirmation password do not match.");
+        $q.notify("Your password and confirmation password do not match");
       }
     };
     const forgotPassword = () => {

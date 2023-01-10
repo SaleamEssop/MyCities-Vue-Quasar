@@ -41,6 +41,10 @@
 .q-carousel__arrow .q-icon {
   background: #d8a402 !important;
   border-radius: 50% !important;
+  border: 2px solid black;
+  color: black;
+
+  // margin-top: 270px;
 }
 
 .add_description {
@@ -59,6 +63,13 @@
   display: none !important;
 }
 
+.q-carousel__prev-arrow--horizontal {
+  left: 0 !important;
+}
+
+.q-carousel__next-arrow--horizontal {
+  right: 0 !important;
+}
 // .q-carousel__slides-container{
 //   height: 400px !important;
 //   max-width: 300px !important;

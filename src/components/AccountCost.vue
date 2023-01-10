@@ -202,7 +202,7 @@ export default defineComponent({
     const readingStore = useReadingStore();
     const meterStore = useMeterStore();
     const siteStore = useSiteStore();
-    const userName = useUserStore();
+    // const userName = useUserStore();
     const $q = useQuasar();
 
     const meters = meterStore.getByAccuntId(props.account.id);
@@ -387,14 +387,14 @@ export default defineComponent({
       //valueInString = (usesPerDay * 30).toFixed(2) + " " + unit;
 
       body += `Account Number: ${props.account.number}\n`;
-      body += `${userName.user.name}\n`;
+      body += `Account Name: \t${props.account.title}\n`;
       body += `${meter.type.title} Meter:\t${meter.number}\n`;
       body += `${valueInString}\n`;
 
       body += `\n\n`;
       //});
 
-      body += `Powered by The LIGHTSANDWATERAPP\n`;
+      body += `Powered by The LightsAndWaterApp\n`;
       body += `Visit www.lightsandwater.co.za for information on how we can help you save on electricity and water with cutting edge technologies.`;
 
       let urlString =

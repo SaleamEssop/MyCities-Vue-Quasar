@@ -145,8 +145,8 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: `Smart Meter Reading`,
-        short_name: `Smart Meter Reading`,
+        name: `LightsAndWater`,
+        short_name: `LightsAndWater`,
         description: `A Quasar Project`,
         display: "standalone",
         orientation: "portrait",

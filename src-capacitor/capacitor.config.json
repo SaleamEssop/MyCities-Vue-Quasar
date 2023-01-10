@@ -1,6 +1,6 @@
 {
   "appId": "org.capacitor.quasar.app",
-  "appName": "Smart Meter Reading",
+  "appName": "LightsAndWater",
   "bundledWebRuntime": false,
   "npmClient": "yarn",
   "webDir": "www"

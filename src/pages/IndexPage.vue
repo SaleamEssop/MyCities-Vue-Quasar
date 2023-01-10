@@ -13,8 +13,8 @@
           src="~assets/lightsandwaterapp.png"
           style="width: 100%; max-height: 300px; object-fit: contain"
         />
-        <q-separator color="primary" />
-        <q-separator color="primary q-mt-xs" />
+        <q-separator color="gray" />
+        <q-separator color="gray q-mt-xs" />
         <!-- <p>{{ name }}</p>
       <p>{{ email }}</p> -->
 
@@ -40,6 +40,19 @@
               </q-list>
             </q-btn-dropdown>
           </div>
+          <div class="text-center q-pt-xs">
+            <q-btn
+              @click="alarm = true"
+              round
+              icon="notifications"
+              class="col-xs-6 col-sm-6 q-my-sm adsBtn"
+            >
+              <q-badge floating color="red" rounded>
+                {{ getAlarm.length }}
+              </q-badge>
+            </q-btn>
+            <!-- @click="activeMenuItem('Help')" -->
+          </div>
           <div class="text-center">
             <q-btn
               flat
@@ -60,38 +73,13 @@
           </div>
         </div>
 
-        <q-separator color="primary" />
-        <q-separator color="primary q-mt-xs" />
+        <q-separator color="gray" />
+        <q-separator color="gray q-mt-xs" />
       </div>
 
-      <!-- <div class="ads">
-        <div class="q-pa-md">
-          <div class="q-gutter-md row justify-center">
-            <q-card
-              v-ripple
-              class="my-card col-5"
-              v-for="ad in getAds"
-              :key="ad.id"
-              @click="window.open(`${ad.url}`, '_blank').focus()"
-            >
-              <img :src="ad.image" />
-
-              <q-card-section>
-                <div class="text-h6">{{ ad.name }}</div>
-                <div class="text-subtitle2">Price {{ ad.price }}</div>
-              </q-card-section>
-            </q-card>
-
-            <q-img>
-              <div class="absolute-full text-subtitle2 flex flex-center">
-                Caption
-              </div>
-            </q-img>
-          </div>
-        </div>
-      </div> -->
       <div class="ads">
-        <div class="q-pa-md">
+        <!-- q-pa-md -->
+        <div class="q-pa-xs">
           <div class="q-gutter-md">
             <q-carousel
               v-model="slide"
@@ -104,7 +92,7 @@
               @mouseleave="autoplay = true"
               transition-prev="slide-right"
               transition-next="slide-left"
-              class="text-white adsShadow shadow-1 rounded-borders"
+              class="text-white adsShadow shadow-1 rounded-borders imageHeight"
             >
               <q-carousel-slide
                 v-for="ad in getAdsWithCategory"
@@ -128,6 +116,55 @@
       </div>
     </div>
   </q-page>
+  <q-dialog v-model="alarm" persistent>
+    <q-card class="modalborder">
+      <q-card-section>
+        <div v-if="getAlarm.length">
+          <div class="text-h6 text-center">Get Latest Notification</div>
+          <div class="q-mt-lg">
+            <div class="" v-for="alarm in getAlarm" :key="alarm.id">
+              <div class="row no-wrap">
+                <div class="col text-subtitle1 q-py-sm">
+                  {{ alarm.message }}
+                </div>
+                <div class="col-auto markAsread q-pl-lg">
+                  <q-btn
+                    flat
+                    icon="close"
+                    @click="markAsRead(alarm.id)"
+                  ></q-btn>
+                </div>
+              </div>
+              <q-separator color="gray" />
+            </div>
+          </div>
+        </div>
+        <div v-else class="text-h6 text-center">No Latest Notification</div>
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn dense label="Done" v-close-popup />
+        <!-- <q-btn dense label="Remind me later" v-close-popup /> -->
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+  <!-- <q-dialog v-model="message">
+    <q-card class="modalborder">
+      <q-card-section>
+        <div class="q-mt-lg">
+          <div class="row no-wrap" v-for="alarm in getAlarm" :key="alarm.id">
+            <div v-if="alarm.id === 2" class="col text-subtitle1 q-pb-sm">
+              {{ alarm.message }}
+            </div>
+          </div>
+        </div>
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn dense label="Done" v-close-popup />
+      </q-card-actions>
+    </q-card>
+  </q-dialog> -->
 </template>
 <script setup>
 import { computed, onMounted, watch, ref } from "vue";
@@ -137,10 +174,18 @@ import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 import { useUserStore } from "src/stores/user";
 import { useAdStore } from "src/stores/ads";
+import { useGetAlarmsStore } from "src/stores/alarm";
 
 const router = useRouter();
 const userStore = useUserStore();
 const adStore = useAdStore();
+const alarm = ref(false);
+const message = ref(false);
+// const markAsRead = ref(false);
+
+const alaramStore = useGetAlarmsStore();
+const getAlarm = computed(() => alaramStore.getAlarms);
+
 const slide = ref(7);
 const autoplay = ref(true);
 
@@ -151,11 +196,25 @@ const selectCategory = ref(null);
 
 const getAds = computed(() => adStore.getAds);
 
-const openAds = (link) => {
-  if (!link.match(/^https?:\/\//i)) {
-    link = "http://" + link;
+const markAsRead = (id) => {
+  let alarm = getAlarm.value.findIndex(({ id }) => {
+    return id == id;
+  });
+  if (id > -1) {
+    getAlarm.value.splice(alarm, 1);
   }
-  return window.open(link, "_blank");
+};
+
+const openAds = (link) => {
+  if (link == "www") {
+    return;
+  } else {
+    if (!link.match(/^https?:\/\//i)) {
+      link = "http://" + link;
+      console.log("links", link);
+    }
+    return window.open(link, "_blank");
+  }
 };
 
 const activeMenuItem = (name) => {
@@ -193,7 +252,7 @@ const logout = () => {
   router
     .push("/auth/login")
     .then(() => {
-      $q.notify({ message: "Sign Out Success." });
+      $q.notify({ message: "Signed out" });
     })
     .catch((error) => console.log("error", error));
 };
@@ -232,14 +291,22 @@ function moveTo(name) {
   flex-grow: 0.5;
   overflow: auto;
 }
+
+.imageHeight {
+  /* max-height: 260px !important; */
+  height: 260px !important;
+  width: auto;
+  /* width: 100%; */
+}
 .shadow-1 {
   box-shadow: none !important;
 }
 
 .addImage {
-  height: 400px !important;
-  max-width: 300px !important;
-  /* width: 300px !important; */
+  /* height: 300px !important;
+  max-width: 350px !important;
+  min-width: 300px !important; */
+
   margin: auto;
   position: relative;
   border-radius: 5px;
@@ -257,4 +324,10 @@ function moveTo(name) {
 /* .adsBtn {
   color: #d8a402;
 } */
+
+.markAsread {
+  /* background: rgb(198, 126, 126); */
+  align-items: center;
+  display: flex;
+}
 </style>
