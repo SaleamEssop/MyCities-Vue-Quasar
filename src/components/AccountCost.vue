@@ -387,7 +387,7 @@ export default defineComponent({
       //valueInString = (usesPerDay * 30).toFixed(2) + " " + unit;
 
       body += `Account Number: ${props.account.number}\n`;
-      body += `Account Name: \t${props.account.title}\n`;
+      body += `Account Holder: \t${props.account.title}\n`;
       body += `${meter.type.title} Meter:\t${meter.number}\n`;
       body += `${valueInString}\n`;
 

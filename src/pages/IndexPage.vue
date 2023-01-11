@@ -53,20 +53,28 @@
             </q-btn>
             <!-- @click="activeMenuItem('Help')" -->
           </div>
-          <div class="text-center">
+          <div class="text-center q-pt-xs">
             <q-btn
-              flat
+              round
               class="col-xs-6 col-sm-6 q-my-sm adsBtn"
-              label="Manager"
-              size="lg"
+              icon="account_circle"
               @click="moveTo('send_reading')"
+            />
+          </div>
+          
+          <div v-if="webShareApiSupported" class="text-center q-pt-xs">
+            <q-btn
+              round
+              class="col-xs-6 col-sm-6 q-my-sm adsBtn"
+              icon="share"
+              @click="shareViaWebShare()"
             />
           </div>
           <div class="text-center">
             <q-btn
-              flat
               class="col-xs-6 col-sm-6 q-my-sm adsBtn"
               icon="help"
+              flat
               size="lg"
               @click="activeMenuItem('Help')"
             />
@@ -77,15 +85,14 @@
         <q-separator color="gray q-mt-xs" />
       </div>
 
-      <div class="ads">
+      <div class="ads q-pt-md">
         <!-- q-pa-md -->
         <div class="q-pa-xs">
-          <div class="q-gutter-md">
+          <div>
             <q-carousel
               v-model="slide"
               swipeable
               animated
-              arrows
               infinite
               :autoplay="autoplay"
               @mouseenter="autoplay = false"
@@ -130,6 +137,7 @@
                 <div class="col-auto markAsread q-pl-lg">
                   <q-btn
                     flat
+                    class="adsBtn"
                     icon="close"
                     @click="markAsRead(alarm.id)"
                   ></q-btn>
@@ -217,6 +225,18 @@ const openAds = (link) => {
   }
 };
 
+const webShareApiSupported = computed(() => {
+  return navigator.share;
+});
+
+const shareViaWebShare = () => {
+  navigator.share({
+    title: "You Tube",
+    text: "Text to be shared",
+    url: "https://play.google.com/store/apps/details?id=com.google.android.youtube",
+  });
+};
+
 const activeMenuItem = (name) => {
   let data = getAds.value.filter((_el) => {
     return _el["name"] === name;
@@ -293,24 +313,27 @@ function moveTo(name) {
 }
 
 .imageHeight {
-  /* max-height: 260px !important; */
-  height: 260px !important;
-  width: auto;
-  /* width: 100%; */
+  height: 320px !important;
+  width: 320px !important;
+  margin: auto;
+  justify-content: center;
+  display: flex;
+  border-radius: 5px;
+  aspect-ratio: 1/1;
 }
 .shadow-1 {
   box-shadow: none !important;
 }
 
 .addImage {
-  /* height: 300px !important;
-  max-width: 350px !important;
-  min-width: 300px !important; */
-
+  height: 320px !important;
+  width: 320px !important;
+  aspect-ratio: 1/1;
+  /* display: flex;
+  justify-content: center;
   margin: auto;
-  position: relative;
-  border-radius: 5px;
-  /* -webkit-box-shadow: 7px 7px 11px -3px rgba(0, 0, 0, 0.75); */
+  position: relative; */
+  /* border-radius: 5px; */
 }
 .ads_main {
   display: flex;
@@ -321,9 +344,9 @@ function moveTo(name) {
 .q-item-type:hover {
   background: #ededed;
 }
-/* .adsBtn {
-  color: #d8a402;
-} */
+.adsBtn {
+  color: #65666b;
+}
 
 .markAsread {
   /* background: rgb(198, 126, 126); */

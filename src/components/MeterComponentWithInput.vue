@@ -1,7 +1,6 @@
 <template>
   <q-card>
     <q-card-section>
-      
       <div
         class="q-my-sm"
         text-color="negative"
@@ -9,16 +8,17 @@
       >
         {{ alertIfLessThen24Hours }}
       </div>
-
       <div class="text-subtitle2">Title : {{ meter?.title }}</div>
+
       <div class="text-subtitle2">
         Meter Number : {{ meter ? meter?.number : "" }}
       </div>
+
       <div class="text-subtitle2">
         Last saved reading : {{ lastReadingItem?.value }}
+        <!-- Last saved reading : {{ lastReadingItem?.valueInString / 100000 * 10000 }} -->
       </div>
     </q-card-section>
-
     <q-card-section>
       <div
         class="relative"
@@ -53,8 +53,8 @@
         </div>
         <div class="text-center">
           <MeterComponent
-            ref="meterComopnentReadValue"
             :text="currentReading"
+            ref="meterComopnentReadValue"
             :meterStyle="meter.type.id"
             :readingType="
               meter.type.id == 2
@@ -116,15 +116,17 @@ export default defineComponent({
 
     const inputFocus = ref(false);
     const readingItems = readingStore.getReadingsByMeterId(props.meter.id);
+    // console.log("readingItems", readingItems);
 
     const currentReading = ref("");
     const currentReadingItem = ref();
     let lastReadingItem = ref(readingItems[0]);
+
     if (!props.isNew) {
       if (lastReadingItem.value.isSubmit) {
         showAlert("Submitted reading can not update");
       } else {
-        lastReadingItem = ref(readingItems[1]);
+        lastReadingItem = ref(readingItems[0]);
         currentReading.value = readingItems[0].valueInString || "";
         currentReadingItem.value = readingItems[0];
       }
