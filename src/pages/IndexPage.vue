@@ -61,8 +61,8 @@
               @click="moveTo('send_reading')"
             />
           </div>
-          
-          <div v-if="webShareApiSupported" class="text-center q-pt-xs">
+
+          <div class="text-center q-pt-xs">
             <q-btn
               round
               class="col-xs-6 col-sm-6 q-my-sm adsBtn"
@@ -84,10 +84,9 @@
         <q-separator color="gray" />
         <q-separator color="gray q-mt-xs" />
       </div>
-
       <div class="ads q-pt-md">
         <!-- q-pa-md -->
-        <div class="q-pa-xs">
+        <div class=" ">
           <div>
             <q-carousel
               v-model="slide"
@@ -100,6 +99,7 @@
               transition-prev="slide-right"
               transition-next="slide-left"
               class="text-white adsShadow shadow-1 rounded-borders imageHeight"
+              height="2rem"
             >
               <q-carousel-slide
                 v-for="ad in getAdsWithCategory"
@@ -225,16 +225,21 @@ const openAds = (link) => {
   }
 };
 
-const webShareApiSupported = computed(() => {
-  return navigator.share;
-});
+// const webShareApiSupported = computed(() => {
+//   return navigator.share;
+// });
 
 const shareViaWebShare = () => {
-  navigator.share({
-    title: "You Tube",
-    text: "Text to be shared",
-    url: "https://play.google.com/store/apps/details?id=com.google.android.youtube",
-  });
+  if (navigator.share) {
+    navigator
+      .share({
+        title: "web.dev",
+        text: "Check out web.dev.",
+        url: "https://web.dev/",
+      })
+      .then(() => console.log("Successful share"))
+      .catch((error) => console.log("Error sharing", error));
+  }
 };
 
 const activeMenuItem = (name) => {
@@ -289,6 +294,13 @@ const totalItems = ref([
   },
 ]);
 
+const shareOpts = {
+  title: "Jabberwocky",
+  text: "Check out this great poem about a Jabberwocky.",
+  url: "https://en.wikipedia.org/wiki/Jabberwocky",
+};
+navigator.share(shareOpts);
+
 function log() {
   console.log(msg);
 }
@@ -308,32 +320,31 @@ function moveTo(name) {
 }
 
 .ads {
-  flex-grow: 0.5;
+  /* flex-grow: 0.5; */
   overflow: auto;
 }
 
 .imageHeight {
-  height: 320px !important;
-  width: 320px !important;
-  margin: auto;
+  /* height: 320px !important;
+  width: 320px !important; */
+  width: 100vw;
+  height: 100%;
+  min-height: 100vw;
+
+  /* margin: auto;
   justify-content: center;
   display: flex;
-  border-radius: 5px;
-  aspect-ratio: 1/1;
+  border-radius: 5px; */
 }
 .shadow-1 {
   box-shadow: none !important;
 }
 
 .addImage {
-  height: 320px !important;
-  width: 320px !important;
-  aspect-ratio: 1/1;
-  /* display: flex;
-  justify-content: center;
-  margin: auto;
-  position: relative; */
-  /* border-radius: 5px; */
+  /* height: 320px !important;
+  width: 320px !important; */
+  width: 100%;
+  height: 100%;
 }
 .ads_main {
   display: flex;

@@ -38,8 +38,8 @@
         label="Meter Number"
       />
 
-      <q-separator color="primary q-my-lg" size="4px" />
-      <div class="text-center">
+      <!-- <q-separator color="primary q-my-lg" size="4px" /> -->
+      <!-- <div class="text-center">
         <div>
           Click on the calendar and enter the date, if available, on which the
           meter was last read by the municipality.
@@ -65,7 +65,7 @@
               </div>
             </q-date>
           </q-popup-proxy>
-        </q-btn>
+        </q-btn> -->
 
         <!-- <q-btn
           class="absolute"
@@ -81,9 +81,9 @@ If not available, simply enter the current date and meter reading and update it 
           flat
           color="primary"
         /> -->
-        <div class="q-my-sm">Calendar</div>
+        <!-- <div class="q-my-sm">Calendar</div>
         <q-separator spaced="lg" />
-      </div>
+      </div> -->
 
       <!-- <q-input filled v-model="readingDate" mask="date" :rules="['date']">
         <template v-slot:append>
@@ -102,7 +102,7 @@ If not available, simply enter the current date and meter reading and update it 
           </q-icon>
         </template>
       </q-input> -->
-      <div class="row justify-center">
+      <div class="row justify-center q-mt-lg">
         <q-badge color="primary" text-color="black">
           <span class="text-body1">Reading date: {{ readingDate }}</span>
         </q-badge>
