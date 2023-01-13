@@ -55,13 +55,13 @@
           :key="index"
         >
           <div
-            v-show="projectionCost.projection[0].title !== 'Electricity bill'"
+            v-show="projectionCost.projection[0]?.title !== 'Electricity bill'"
             class="col"
           >
             {{ cost.title }}
           </div>
           <div
-            v-show="projectionCost.projection[0].title !== 'Electricity bill'"
+            v-show="projectionCost.projection[0]?.title !== 'Electricity bill'"
             class="col-auto"
           >
             R {{ cost.value.toFixed(2) }}
@@ -87,6 +87,7 @@
             <div class="col">
               {{ newVATOnMeterBill?.title }}
             </div>
+            
             <div v-show="newVATOnMeterBill?.value" class="col-auto">
               R {{ newVATOnMeterBill.value?.toFixed(2) }}
             </div>
@@ -195,9 +196,12 @@ export default defineComponent({
     const totalProjectionCost = computed(() => {
       let total = 0;
       waterLevyCostByServer.value.forEach(({ value }) => {
+        if (projectionCost.projection.length === 0) {
+          total = total + value;
+        }
         projectionCost.projection.forEach(({ title }) => {
           if (title !== "Electricity bill") {
-            total = projectionCost.total + value || 0;
+            total = projectionCost.total + value;
             total = newVATOnMeterBill.value.value + total;
           } else {
             total = projectionCost.total;

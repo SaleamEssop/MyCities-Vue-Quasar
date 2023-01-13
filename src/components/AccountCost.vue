@@ -1,8 +1,24 @@
 <template>
   <q-card class="mainBackground">
-    <q-card-section class="text-h6 text-center">
-      Projected bill for {{ readingPeriod }}
+    <q-card-section class="text-h6 headline text-center">
+      <!-- <q-btn flat icon="Prev" /> -->
+      <q-icon
+        name="chevron_left"
+        size="lg"
+        @click="previousMonth(readingPeriod)"
+      />
+      <span class="q-gutter-sm">
+        Projected bill for
+        {{ readingPeriod }}
+      </span>
+      <q-icon
+        name="chevron_right"
+        size="lg"
+        @click="nextMonth(readingPeriod)"
+      />
+      <!--  for {{ readingPeriod }} -->
       <!-- {{ account.number ? `(${account.number})` : "" }} -->
+      <!-- <q-btn flat icon="Next" /> -->
     </q-card-section>
     <div class="text-center">
       <!-- <q-btn
@@ -193,6 +209,7 @@ import waterDurban from "/src/services/waterDurban.js";
 import { LogLevel } from "@firebase/logger";
 import { useQuasar } from "quasar";
 import { useUserStore } from "src/stores/user";
+
 export default defineComponent({
   name: "AccountCost",
   props: {
@@ -210,36 +227,62 @@ export default defineComponent({
 
     const durbanReading = new waterDurban();
 
-    const readingPeriod = date.formatDate(new Date(), "MMM YYYY");
+    const readingPeriod = ref(date.formatDate(new Date(), "MMM YYYY"));
+
+    const previousMonth = (_month) => {
+      const getPreviousMonth = date.subtractFromDate(_month, {
+        months: 1,
+      });
+      readingPeriod.value = date.formatDate(getPreviousMonth, "MMM YYYY");
+    };
+
+    const nextMonth = (_month) => {
+      let currentMonth = date.formatDate(new Date(), "MMM YYYY");
+      if (_month !== currentMonth) {
+        const getNextMonth = date.addToDate(_month, {
+          months: 1,
+        });
+        readingPeriod.value = date.formatDate(getNextMonth, "MMM YYYY");
+      }
+    };
 
     const calculationsForMeters = computed(() => {
       const meterReadings = new Array();
-
       meters.forEach((meter) => {
         var readings = readingStore.getReadingsByMeterId(meter.id);
         const returnLastReadings = durbanReading.getSubmitedAndLastReading(
           readings,
-          readingPeriod
+          readingPeriod.value
         );
+        // console.log("returnLastReadings", returnLastReadings);
         const usesPerDay =
           durbanReading.calculateUnitForMonth(returnLastReadings);
         const projectionCost = durbanReading.getCost(usesPerDay, meter);
-        // console.log("totalProjection", projectionCost);
-        projectionCost.projection.forEach((_el, index) => {
+
+        projectionCost.projection.forEach((_el) => {
           meterReadings.push({
             title: _el.title,
             value: _el.value,
             meter: meter,
           });
         });
-        // meterReadings.push({
-        //   title: `${meter.title} - ${meter.number}`,
-        //   value: projectionCost.total,
-        //   meter: meter,
-        // });
       });
       return meterReadings;
     });
+
+    // console.log("calculationsForMeters", calculationsForMeters);
+
+    // const readingTime = computed(() => {
+    //   const getMonth = new Array();
+    //   readingStore.readings.forEach(({ time }) => {
+    //     getMonth.push({
+    //       month: date.formatDate(new Date(time), "MMMM"),
+    //     });
+    //   });
+    //   return getMonth;
+    // });
+
+    // console.log("get readings", readingStore.readings);
 
     const getMeterNumber = computed(() => {
       const meterName = meters.map((_el) => {
@@ -255,8 +298,8 @@ export default defineComponent({
       (props.account.defaultFixedCost || []).forEach((defaultCost) => {
         if (defaultCost.is_active) {
           readingForAccount.push({
-            title: defaultCost.fixed_cost.title,
-            value: defaultCost.value || 0,
+            title: defaultCost.fixed_cost?.title,
+            value: defaultCost?.value || 0,
           });
         }
       });
@@ -344,7 +387,7 @@ export default defineComponent({
       const subject = `Account: ${props.account.id}`;
       let body = ``;
 
-      body += `Meter reading:${readingPeriod}\n`;
+      body += `Meter reading:${readingPeriod.value}\n`;
 
       String.prototype.insert = function (index, string) {
         if (index > 0) {
@@ -362,7 +405,7 @@ export default defineComponent({
       var readings = readingStore.getReadingsByMeterId(meter.id);
       const returnLastReadings = durbanReading.getSubmitedAndLastReading(
         readings,
-        readingPeriod
+        readingPeriod.value
       );
       const lastReadingTime = returnLastReadings.lastReading;
       // const usesPerDay = durbanReading.calculateUnitForMonth(returnLastReadings);
@@ -421,12 +464,17 @@ export default defineComponent({
       additionalAllCost,
       VATonAdditionalCost,
       getMeterNumber,
+      previousMonth,
+      nextMonth,
     };
   },
 });
 </script>
 
 <style scoped>
+.headline {
+  font-size: 18px !important;
+}
 .titleofcost {
   background: #ebebeb !important;
   border-radius: 8px !important;

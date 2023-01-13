@@ -53,11 +53,19 @@
             </q-btn>
             <!-- @click="activeMenuItem('Help')" -->
           </div>
-          <div class="text-center q-pt-xs">
+          <!-- <div class="text-center q-pt-xs">
             <q-btn
               round
               class="col-xs-6 col-sm-6 q-my-sm adsBtn"
-              icon="account_circle"
+              src="account_circle"
+              @click="moveTo('send_reading')"
+            />
+          </div> -->
+          <div class="text-center q-pt-sm">
+            <img
+              class="col-xs-6 col-sm-6 q-my-sm adsBtn enterMenu"
+              src="../assets/enter.png"
+              alt="enter-menu"
               @click="moveTo('send_reading')"
             />
           </div>
@@ -123,6 +131,7 @@
       </div>
     </div>
   </q-page>
+
   <q-dialog v-model="alarm" persistent>
     <q-card class="modalborder">
       <q-card-section>
@@ -156,23 +165,6 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
-  <!-- <q-dialog v-model="message">
-    <q-card class="modalborder">
-      <q-card-section>
-        <div class="q-mt-lg">
-          <div class="row no-wrap" v-for="alarm in getAlarm" :key="alarm.id">
-            <div v-if="alarm.id === 2" class="col text-subtitle1 q-pb-sm">
-              {{ alarm.message }}
-            </div>
-          </div>
-        </div>
-      </q-card-section>
-
-      <q-card-actions align="right">
-        <q-btn dense label="Done" v-close-popup />
-      </q-card-actions>
-    </q-card>
-  </q-dialog> -->
 </template>
 <script setup>
 import { computed, onMounted, watch, ref } from "vue";
@@ -233,12 +225,14 @@ const shareViaWebShare = () => {
   if (navigator.share) {
     navigator
       .share({
-        title: "web.dev",
-        text: "Check out web.dev.",
-        url: "https://web.dev/",
+        title: "title.value",
+        text: "text.value",
+        url: "url.value",
       })
       .then(() => console.log("Successful share"))
       .catch((error) => console.log("Error sharing", error));
+  } else {
+    console.log("Web Share API is not supported in your browser.");
   }
 };
 
@@ -293,13 +287,6 @@ const totalItems = ref([
     type: { title: "Water", id: 1 },
   },
 ]);
-
-const shareOpts = {
-  title: "Jabberwocky",
-  text: "Check out this great poem about a Jabberwocky.",
-  url: "https://en.wikipedia.org/wiki/Jabberwocky",
-};
-navigator.share(shareOpts);
 
 function log() {
   console.log(msg);
@@ -363,5 +350,12 @@ function moveTo(name) {
   /* background: rgb(198, 126, 126); */
   align-items: center;
   display: flex;
+}
+
+.enterMenu {
+  width: 80px;
+  height: 32px;
+  border: 1px solid #65666b;
+  border-radius: 16px !important;
 }
 </style>

@@ -1,4 +1,5 @@
 <template>
+  {{ date.formatDate(new Date(readings[0].time), "MMMM") }}
   <q-table
     :dense="$q.screen.xs"
     class="my-sticky-header-table"

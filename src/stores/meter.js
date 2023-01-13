@@ -62,9 +62,9 @@ export const useMeterStore = defineStore("meter", {
         return _meter.id == id;
       });
       this.meters[meterIndex]["deletedAt"] = Date.now();
-      // if (meterIndex > -1) {
-      //   this.meters.splice(meterIndex, 1);
-      // }
+      if (meterIndex > -1) {
+        this.meters.splice(meterIndex, 1);
+      }
     },
     saveMeterByAccountId(meters, accountId) {
       const alreadySavedMeters = this.getByAccuntId(accountId);
