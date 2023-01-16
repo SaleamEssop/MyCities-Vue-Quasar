@@ -28,7 +28,7 @@
         type="text"
         min="0"
         v-model.trim="meter.title"
-        label="Meter Title"
+        label="Meter Description"
       />
       <q-input
         color="black"
@@ -38,7 +38,7 @@
         label="Meter Number"
       />
 
-      <q-separator color="primary q-my-lg" size="4px" />
+      <!-- <q-separator color="primary q-my-lg" size="4px" />
       <div class="text-center">
         <div>
           Click on the calendar and enter the date, if available, on which the
@@ -46,26 +46,26 @@
         </div>
         <q-separator spaced="lg" />
         <q-btn icon="event" color="primary" size="lg" text-color="black">
-          <q-popup-proxy
-            @before-show="updateProxy"
-            cover
-            transition-show="scale"
-            transition-hide="scale"
-          >
-            <q-date v-model="readingDate" mask="DD/MM/YYYY">
-              <div class="row items-center justify-end q-gutter-sm">
-                <q-btn label="Cancel" color="primary" flat v-close-popup />
-                <q-btn
-                  label="OK"
-                  color="primary"
-                  flat
-                  @click="save"
-                  v-close-popup
-                />
-              </div>
-            </q-date>
-          </q-popup-proxy>
-        </q-btn>
+        <q-popup-proxy
+          @before-show="updateProxy"
+          cover
+          transition-show="scale"
+          transition-hide="scale"
+        >
+          <q-date v-model="readingDate" mask="DD/MM/YYYY">
+            <div class="row items-center justify-end q-gutter-sm">
+              <q-btn label="Cancel" color="primary" flat v-close-popup />
+              <q-btn
+                label="OK"
+                color="primary"
+                flat
+                @click="save"
+                v-close-popup
+              />
+            </div>
+          </q-date>
+        </q-popup-proxy>
+        </q-btn> -->
 
       <!-- <q-btn
           class="absolute"
@@ -81,9 +81,9 @@ If not available, simply enter the current date and meter reading and update it 
           flat
           color="primary"
         /> -->
-      <div class="q-my-sm">Calendar</div>
+      <!-- <div class="q-my-sm">Calendar</div>
         <q-separator spaced="lg" />
-      </div>
+      </div> -->
 
       <!-- <q-input filled v-model="readingDate" mask="date" :rules="['date']">
         <template v-slot:append>
@@ -103,8 +103,39 @@ If not available, simply enter the current date and meter reading and update it 
         </template>
       </q-input> -->
       <div class="row justify-center q-mt-lg">
-        <q-badge color="primary" text-color="black">
+        <q-badge class="bg-grey-4" text-color="black">
           <span class="text-body1">Reading date: {{ readingDate }}</span>
+        </q-badge>
+      </div>
+      <div class="q-pt-md justify-center flex">
+        <span class="round-cheap text-center"
+          >Edit date
+          <q-popup-proxy
+            @before-show="updateProxy"
+            cover
+            transition-show="scale"
+            transition-hide="scale"
+          >
+            <q-date v-model="readingDate" mask="DD/MM/YYYY">
+              <div class="row items-center justify-end q-gutter-sm">
+                <q-btn label="Cancel" color="primary" flat v-close-popup />
+                <q-btn
+                  label="OK"
+                  color="primary"
+                  flat
+                  @click="save"
+                  v-close-popup
+                />
+              </div>
+            </q-date>
+          </q-popup-proxy>
+        </span>
+      </div>
+      <q-separator class="q-mt-md" />
+
+      <div class="row justify-center q-mt-lg">
+        <q-badge class="bg-grey-4" text-color="black">
+          <span class="text-body1">Click to enter a reading</span>
         </q-badge>
       </div>
       <div class="text-center">

@@ -42,6 +42,7 @@
                 flat
                 label="Read our T&Cs"
                 style="padding-left: 6px"
+                @click="readTerms()"
               >
               </q-btn>
             </div>
@@ -91,6 +92,7 @@
                   flat
                   label="Read our T&Cs"
                   style="padding-left: 6px"
+                  @click="readTerms()"
                 >
                 </q-btn>
               </div>
@@ -194,6 +196,12 @@ export default defineComponent({
       }
     };
 
+    const readTerms = () => {
+      let link =
+        "https://docs.google.com/document/d/1R1Ogorbm106ux-4BY5FPQVsBeVHLQDbOD4LejdftTsw/edit?usp=sharing";
+      window.open(link, "_blank");
+    };
+
     const getErrorMsg = (error) => {
       let errorMsg;
       switch (error.code) {
@@ -269,6 +277,7 @@ export default defineComponent({
       isLogin,
       isPwd,
       agreeToTCs,
+      readTerms,
     };
   },
 });

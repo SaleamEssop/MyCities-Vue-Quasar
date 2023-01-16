@@ -97,7 +97,7 @@ const addMeterAndReading = async (req) => {
 };
 
 const getAllData = async () => {
-  return await api.get(`/v1/all-data?user_id=${userStore.getUser.id}`);
+  return await api.get(`/v1/all-data?user_id=${userStore.getUser?.id}`);
 };
 
 const fetchMetersByAccountId = async (accountId) => {

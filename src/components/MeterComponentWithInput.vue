@@ -18,6 +18,39 @@
         Last saved reading : {{ lastReadingItem?.value }}
         <!-- Last saved reading : {{ lastReadingItem?.valueInString / 100000 * 10000 }} -->
       </div>
+
+      <!-- Edit Readings with Date -->
+
+      <div class="row justify-center q-mt-lg">
+        <q-badge class="bg-grey-4" text-color="black">
+          <span class="text-body1">Reading date: {{ readingDate }}</span>
+        </q-badge>
+      </div>
+      <div class="q-pt-md justify-center flex">
+        <span class="round-cheap text-center"
+          >Edit date
+          <q-popup-proxy
+            @before-show="updateProxy"
+            cover
+            transition-show="scale"
+            transition-hide="scale"
+          >
+            <q-date v-model="readingDate" mask="DD/MM/YYYY">
+              <div class="row items-center justify-end q-gutter-sm">
+                <q-btn label="Cancel" color="primary" flat v-close-popup />
+                <q-btn
+                  label="OK"
+                  color="primary"
+                  flat
+                  @click="save"
+                  v-close-popup
+                />
+              </div>
+            </q-date>
+          </q-popup-proxy>
+        </span>
+      </div>
+      <q-separator class="q-mt-md" />
     </q-card-section>
     <q-card-section>
       <div
@@ -114,6 +147,8 @@ export default defineComponent({
       });
     };
 
+    const readingDate = ref(date.formatDate(new Date(), "DD/MM/YYYY"));
+
     const inputFocus = ref(false);
     const readingItems = readingStore.getReadingsByMeterId(props.meter.id);
     // console.log("readingItems", readingItems);
@@ -171,7 +206,12 @@ export default defineComponent({
 
     const saveReading = (isSubmit = false) => {
       const doSave = (currentReadingValue, valueInString) => {
-        const timeToSave = new Date().toISOString();
+        // const timeToSave = new Date().toISOString();
+        const timeToSave = new Date(
+          date.formatDate(`${readingDate.value}`, "DD/MM/YYYY")
+        ).toISOString();
+        // console.log("timeToSave", timeToSave);
+
         if (props.isNew) {
           addReadingInMeter({
             meter_id: props.meter.id,
@@ -252,6 +292,7 @@ export default defineComponent({
       meterComopnentReadValue,
       showAlert,
       alertIfLessThen24Hours,
+      readingDate,
     };
   },
   components: { MeterComponent },

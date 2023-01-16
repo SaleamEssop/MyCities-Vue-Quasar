@@ -45,7 +45,7 @@
     </q-card-section>
 
     <q-card-section class="bg-primary">
-      <div class="text-subtitle2">Optional Information</div>
+      <div class="text-subtitle2">Description under Account setup</div>
     </q-card-section>
     <q-card-section>
       <q-input
@@ -278,7 +278,8 @@ export default defineComponent({
     const onSaveSelectAccount = async () => {
       if (site.value == null || site.value.email == null) {
         $q.notify({
-          message: "Fill valid location",
+          message:
+            "Invalid address. You need to select a valid location from the suggestions given by the app. Begin typing your address again.",
         });
         return;
       }

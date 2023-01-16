@@ -13,8 +13,8 @@
           src="~assets/lightsandwaterapp.png"
           style="width: 100%; max-height: 300px; object-fit: contain"
         />
-        <q-separator color="gray" />
-        <q-separator color="gray q-mt-xs" />
+        <q-separator color="grey" />
+        <q-separator color="grey q-mt-xs" />
         <!-- <p>{{ name }}</p>
       <p>{{ email }}</p> -->
 
@@ -89,9 +89,12 @@
           </div>
         </div>
 
-        <q-separator color="gray" />
-        <q-separator color="gray q-mt-xs" />
+        <q-separator color="grey" />
+        <q-separator color="grey q-mt-xs" />
       </div>
+      <!-- {{ slide }} -->
+      <!-- {{ autoplay }} -->
+
       <div class="ads q-pt-md">
         <!-- q-pa-md -->
         <div class=" ">
@@ -131,7 +134,6 @@
       </div>
     </div>
   </q-page>
-
   <q-dialog v-model="alarm" persistent>
     <q-card class="modalborder">
       <q-card-section>
@@ -152,7 +154,7 @@
                   ></q-btn>
                 </div>
               </div>
-              <q-separator color="gray" />
+              <q-separator color="grey" />
             </div>
           </div>
         </div>
@@ -186,7 +188,7 @@ const message = ref(false);
 const alaramStore = useGetAlarmsStore();
 const getAlarm = computed(() => alaramStore.getAlarms);
 
-const slide = ref(7);
+const slide = ref(null);
 const autoplay = ref(true);
 
 const $q = useQuasar();
@@ -242,20 +244,36 @@ const activeMenuItem = (name) => {
   });
   slide.value = data[0].ads[0]?.id;
   selectCategory.value = data[0]?.ads;
+  // if (_el["name"] === "Help") {
+  //   autoplay.value = false;
+  // } else {
+  //   autoplay.value = true;
+  // }
 };
+
 const getAdsWithCategory = computed(() => {
+  // getAds.value.map((_el) => {
+  //   console.log("NAme", _el.name === "Help" || _el.name === "Top");
+  //   if (_el.name === "Help") {
+  //     autoplay.value = false;
+  //   } else if (_el.name === "Top") {
+  //     autoplay.value = false;
+  //   }
+  // });
+
   if (selectCategory.value !== null) {
     return selectCategory.value;
   } else {
     let defaultAds = getAds.value.filter((_el) => {
+      // autoplay.value = false;
       return _el["name"] === "Top";
     });
-    // console.log("defautlad", defaultAds[0].ads);
+    defaultAds.findIndex(({ ads }) => {
+      slide.value = ads[0]?.id;
+    });
     return defaultAds[0]?.ads;
   }
 });
-
-// slide.value = getAdsWithCategory.value[0].ads[0].id;
 
 // const auth = getAuth();
 // if we want to get the user details, this is how its done

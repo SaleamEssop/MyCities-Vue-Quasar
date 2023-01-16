@@ -1,7 +1,7 @@
 import { boot } from "quasar/wrappers";
 // import firebase from 'firebase'
 // import { initializeApp, getCurrentUser } from "firebase/app";
-// import { getAuth } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBm2iQusA8JG7sKxXU0aRj6YXqefMH7vps",
@@ -130,6 +130,7 @@ export default boot(async ({ router, app }) => {
     }
   });
   // initializeApp(firebaseConfig);
+  
   // const auth = getAuth();
   // router.beforeEach((to, from, next) => {
   //   return new Promise((resolve, reject) => {
