@@ -33,15 +33,18 @@
                 ></q-icon>
               </template>
             </q-input>
-            <div v-if="isLogin" class="row q-pb-md">
-              <q-checkbox v-model="agreeToTCs" label="Agree and"> </q-checkbox>
+            <div v-if="isLogin">
+              <div class="row">
+                <q-checkbox v-model="agreeToTCs" label="Agree our T&Cs">
+                </q-checkbox>
+              </div>
               <q-btn
-                calss="q-p-none"
                 no-caps
-                color="grey-7"
+                class="readTerms"
+                color="blue-8"
                 flat
-                label="Read our T&Cs"
-                style="padding-left: 6px"
+                label="Read our Term & Conditions"
+                style="padding-bottom: 12px; padding-left: 6px"
                 @click="readTerms()"
               >
               </q-btn>
@@ -82,20 +85,22 @@
                 v-model="formData.phone_number"
                 :input-style="{ fontSize: '18px' }"
               />
-              <div class="row q-pb-md">
-                <q-checkbox v-model="agreeToTCs" label="Agree and">
+
+              <div class="row">
+                <q-checkbox v-model="agreeToTCs" label="Agree our T&Cs">
                 </q-checkbox>
-                <q-btn
-                  calss="q-p-none"
-                  no-caps
-                  color="grey-7"
-                  flat
-                  label="Read our T&Cs"
-                  style="padding-left: 6px"
-                  @click="readTerms()"
-                >
-                </q-btn>
               </div>
+              <q-btn
+                no-caps
+                class="readTerms"
+                color="blue-8"
+                flat
+                label="Read our Term & Conditions"
+                style="padding-bottom: 12px; padding-left: 6px"
+                @click="readTerms()"
+              >
+              </q-btn>
+
               <!-- <q-checkbox
                 class="q-pb-md"
                 v-model="agreeToTCs"
@@ -283,4 +288,9 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.readTerms {
+  font-style: italic !important;
+  padding: none !important;
+}
+</style>

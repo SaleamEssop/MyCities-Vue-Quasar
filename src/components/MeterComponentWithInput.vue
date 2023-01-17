@@ -21,7 +21,7 @@
 
       <!-- Edit Readings with Date -->
 
-      <div class="row justify-center q-mt-lg">
+      <!-- <div class="row justify-center q-mt-lg">
         <q-badge class="bg-grey-4" text-color="black">
           <span class="text-body1">Reading date: {{ readingDate }}</span>
         </q-badge>
@@ -50,7 +50,7 @@
           </q-popup-proxy>
         </span>
       </div>
-      <q-separator class="q-mt-md" />
+      <q-separator class="q-mt-md" /> -->
     </q-card-section>
     <q-card-section>
       <div
@@ -147,7 +147,7 @@ export default defineComponent({
       });
     };
 
-    const readingDate = ref(date.formatDate(new Date(), "DD/MM/YYYY"));
+    // const readingDate = ref(date.formatDate(new Date(), "DD/MM/YYYY"));
 
     const inputFocus = ref(false);
     const readingItems = readingStore.getReadingsByMeterId(props.meter.id);
@@ -192,10 +192,10 @@ export default defineComponent({
           console.log(">>>> OK");
           callback();
         })
-        .onOk(() => {
-          console.log(">>>> second OK catcher");
-          callback();
-        })
+        // .onOk(() => {
+        //   console.log(">>>> second OK catcher");
+        //   callback();
+        // })
         .onCancel(() => {
           console.log(">>>> Cancel");
         })
@@ -206,11 +206,11 @@ export default defineComponent({
 
     const saveReading = (isSubmit = false) => {
       const doSave = (currentReadingValue, valueInString) => {
-        // const timeToSave = new Date().toISOString();
-        const timeToSave = new Date(
-          date.formatDate(`${readingDate.value}`, "DD/MM/YYYY")
-        ).toISOString();
-        // console.log("timeToSave", timeToSave);
+        const timeToSave = new Date().toISOString();
+        // const timeToSave = new Date(
+        //   date.extractDate(readingDate.value, "DD/MM/YYYY")
+        // ).toISOString();
+         
 
         if (props.isNew) {
           addReadingInMeter({
@@ -292,7 +292,7 @@ export default defineComponent({
       meterComopnentReadValue,
       showAlert,
       alertIfLessThen24Hours,
-      readingDate,
+      // readingDate,
     };
   },
   components: { MeterComponent },

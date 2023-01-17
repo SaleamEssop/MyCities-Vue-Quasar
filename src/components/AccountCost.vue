@@ -91,7 +91,7 @@
         </div>
         <template v-for="(cost, index) in calculationsForMeters" :key="index">
           <div>
-            <div class="row no-wrap">
+            <div v-show="cost.value !== 0" class="row no-wrap">
               <div v-show="cost.title === 'Electricity bill'" class="col">
                 {{ cost.title }}
               </div>
@@ -99,7 +99,7 @@
                 R {{ cost.value.toFixed(2) }}
               </div>
             </div>
-            <div>
+            <div v-show="cost.value !== 0">
               <q-btn
                 class="q-mt-sm"
                 v-show="cost.title === 'Electricity bill'"

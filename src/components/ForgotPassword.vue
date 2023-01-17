@@ -24,7 +24,7 @@
               class="q-px-md"
               label="Reset my password"
               color="primary"
-              @click="resetPassword"
+              @click="resetPassword()"
               unelevated
               text-color="black"
             />

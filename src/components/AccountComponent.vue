@@ -51,7 +51,7 @@
       <q-input
         color="black"
         type="text"
-        label="Optional Information"
+        label="Account description"
         v-model="selectedAccount.option"
       />
     </q-card-section>
