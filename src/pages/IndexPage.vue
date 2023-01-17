@@ -17,7 +17,6 @@
         <q-separator color="grey q-mt-xs" />
         <!-- <p>{{ name }}</p>
       <p>{{ email }}</p> -->
-
         <div class="ads_main">
           <div class="text-center">
             <q-btn-dropdown
@@ -244,28 +243,14 @@ const activeMenuItem = (name) => {
   });
   slide.value = data[0].ads[0]?.id;
   selectCategory.value = data[0]?.ads;
-  // if (_el["name"] === "Help") {
-  //   autoplay.value = false;
-  // } else {
-  //   autoplay.value = true;
-  // }
 };
 
 const getAdsWithCategory = computed(() => {
-  // getAds.value.map((_el) => {
-  //   console.log("NAme", _el.name === "Help" || _el.name === "Top");
-  //   if (_el.name === "Help") {
-  //     autoplay.value = false;
-  //   } else if (_el.name === "Top") {
-  //     autoplay.value = false;
-  //   }
-  // });
-
   if (selectCategory.value !== null) {
+    console.log("selectCategory.value", selectCategory.value);
     return selectCategory.value;
   } else {
     let defaultAds = getAds.value.filter((_el) => {
-      // autoplay.value = false;
       return _el["name"] === "Top";
     });
     defaultAds.findIndex(({ ads }) => {
