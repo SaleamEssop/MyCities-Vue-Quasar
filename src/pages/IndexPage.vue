@@ -169,6 +169,7 @@
 </template>
 <script setup>
 import { computed, onMounted, watch, ref } from "vue";
+
 // import { getAuth, onAuthStateChanged } from "firebase/auth";
 // import { onBeforeUpdate } from "vue";
 import { useQuasar } from "quasar";
@@ -223,12 +224,11 @@ const openAds = (link) => {
 // });
 
 const shareViaWebShare = () => {
+  // alert(navigator.share);
   if (navigator.share) {
     navigator
       .share({
-        title: "title.value",
-        text: "text.value",
-        url: "url.value",
+        url: "https://www.google.co.in/",
       })
       .then(() => console.log("Successful share"))
       .catch((error) => console.log("Error sharing", error));
@@ -247,7 +247,6 @@ const activeMenuItem = (name) => {
 
 const getAdsWithCategory = computed(() => {
   if (selectCategory.value !== null) {
-    console.log("selectCategory.value", selectCategory.value);
     return selectCategory.value;
   } else {
     let defaultAds = getAds.value.filter((_el) => {
