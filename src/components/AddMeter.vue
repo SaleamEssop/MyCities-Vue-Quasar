@@ -18,10 +18,10 @@
             <img :src="meterType.thumbnail" />
           </q-avatar>
           <q-item-label>{{ meterType.title }}</q-item-label>
-          <!-- {{ meterType }} -->
         </q-item-section>
       </q-item>
     </q-list>
+
     <q-card-section>
       <q-input
         color="black"
@@ -274,7 +274,14 @@ export default defineComponent({
       },
     });
 
+    // const currentDate = new Date();
+    // const upcomingDate = date.addToDate(currentDate, { days: 1 });
+    // const options = (currentDate) => {
+    //   return currentDate < date.formatDate(upcomingDate, "YYYY/MM/DD");
+    // };
+
     const meterStore = useMeterStore();
+
     const readingStore = useReadingStore();
 
     const meter = ref(
@@ -390,6 +397,9 @@ export default defineComponent({
       inputFocus,
       meterComopnentReadValue,
       showAlert,
+      // currentDate,
+      // options,
+      // upcomingDate,
     };
   },
   components: { MeterComponent },

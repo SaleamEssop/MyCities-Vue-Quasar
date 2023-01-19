@@ -60,7 +60,7 @@
               @click="moveTo('send_reading')"
             />
           </div> -->
-          <div class="text-center q-pt-sm">
+          <div class="text-center manuButnPadding">
             <img
               class="col-xs-6 col-sm-6 q-my-sm adsBtn enterMenu"
               src="../assets/enter.png"
@@ -91,8 +91,6 @@
         <q-separator color="grey" />
         <q-separator color="grey q-mt-xs" />
       </div>
-      <!-- {{ slide }} -->
-      <!-- {{ autoplay }} -->
 
       <div class="ads q-pt-md">
         <!-- q-pa-md -->
@@ -224,17 +222,24 @@ const openAds = (link) => {
 // });
 
 const shareViaWebShare = () => {
-  // alert(navigator.share);
   if (navigator.share) {
     navigator
       .share({
+        title: "LightsAndWaterApp",
         url: "https://www.google.co.in/",
       })
       .then(() => console.log("Successful share"))
       .catch((error) => console.log("Error sharing", error));
   } else {
-    console.log("Web Share API is not supported in your browser.");
+    let url = "https://www.google.co.in/";
+    let shareUrl =
+      "shareto://water.meter.power.meter/?title=" +
+      encodeURI("LightsAndWaterApp") +
+      "&msg=" +
+      encodeURI(url);
+    window.open(shareUrl);
   }
+  // shareto:water.meter.power.meter/?title=Hello%20World&msg=https://www.google.co.in/
 };
 
 const activeMenuItem = (name) => {
@@ -314,16 +319,9 @@ function moveTo(name) {
 }
 
 .imageHeight {
-  /* height: 320px !important;
-  width: 320px !important; */
   width: 100vw;
   height: 100%;
   min-height: 100vw;
-
-  /* margin: auto;
-  justify-content: center;
-  display: flex;
-  border-radius: 5px; */
 }
 .shadow-1 {
   box-shadow: none !important;
@@ -335,6 +333,17 @@ function moveTo(name) {
   width: 100%;
   height: 100%;
 }
+/* @media only screen and (min-width: 600px) {
+  .imageHeight {
+    width: 480px !important;
+    height: 480px !important;
+    min-height: fit-content;
+  }
+  .addImage {
+  height: 480px !important;
+  width: 480px !important;
+}
+} */
 .ads_main {
   display: flex;
   margin: auto;
@@ -359,5 +368,8 @@ function moveTo(name) {
   height: 32px;
   border: 1px solid #65666b;
   border-radius: 16px !important;
+}
+.manuButnPadding {
+  padding-top: 10px !important;
 }
 </style>

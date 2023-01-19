@@ -44,7 +44,7 @@
                 color="blue-8"
                 flat
                 label="Read our Term & Conditions"
-                style="padding-bottom: 12px; padding-left: 6px"
+                style="padding-left: 6px"
                 @click="readTerms()"
               >
               </q-btn>
@@ -96,7 +96,7 @@
                 color="blue-8"
                 flat
                 label="Read our Term & Conditions"
-                style="padding-bottom: 12px; padding-left: 6px"
+                style="padding-left: 6px"
                 @click="readTerms()"
               >
               </q-btn>
@@ -292,5 +292,6 @@ export default defineComponent({
 .readTerms {
   font-style: italic !important;
   padding: none !important;
+  margin-bottom: 8px !important;
 }
 </style>

@@ -19,7 +19,7 @@
                   ? usesPerDay?.toFixed(2)
                   : (usesPerDay * 1000.0)?.toFixed(2)
               }}
-              {{ unit }}
+              {{ unit }}    
             </div>
           </div>
           <div class="column col-5">

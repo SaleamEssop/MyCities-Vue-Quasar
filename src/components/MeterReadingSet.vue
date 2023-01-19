@@ -81,17 +81,9 @@
                 <q-item-section>Delete this meter</q-item-section>
               </q-item>
 
-              <!-- v-if="meter?.number" -->
-
-              <!-- {{Object.keys(meter).length}} -->
-              <!-- {{meter}} -->
-              <!-- {{meter.type.id}} -->
-
-              <!-- :disabled="meter?.number > 0 ? 'true' : 'false'"
-                :clickable="meter?.number > 0 ? 'fasle' : 'true'" -->
-
               <q-item
                 @click="modelMeterForNewEdit = true"
+                :disable="meterLength === 2 ? true : false"
                 clickable
                 v-close-popup
               >
@@ -262,7 +254,7 @@ export default defineComponent({
 
     const modelMeterForNewEdit = ref(false);
     const modelCostForMeter = ref(false);
-
+    const meterLength = computed(() => meterStore.meters.length);
     const selectedAccount = ref(
       accountStore.getAccountById(props.meter.account.id)
     );
@@ -389,6 +381,7 @@ export default defineComponent({
       modelMeterForNewEdit,
       selectedAccount,
       deleteMeter,
+      meterLength,
     };
   },
   components: { MeterComponent, MeterComponentWithInput, AddMeter, MeterCost },
