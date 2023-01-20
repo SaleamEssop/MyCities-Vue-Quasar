@@ -3,8 +3,8 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-    <q-footer class="text-center">
-      <q-img src="~assets/footer.png" style="width: 50%; object-fit: contain" />
+    <q-footer class="text-center footerMain">
+      <q-img src="~assets/footer.png" class="footerImage" />
     </q-footer>
   </q-layout>
 </template>
@@ -18,3 +18,13 @@ export default defineComponent({
   setup() {},
 });
 </script>
+<style scoped>
+/* .footerMain {
+  height: 40px;
+} */
+.footerImage {
+  width: 50%;
+  object-fit: contain;
+  /* height: 40px; */
+}
+</style>

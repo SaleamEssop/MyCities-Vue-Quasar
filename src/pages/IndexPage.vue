@@ -8,15 +8,10 @@
     ></q-btn>
     <div class="container">
       <div class="header">
-        <img
-          class="q-pa-lg"
-          src="~assets/lightsandwaterapp.png"
-          style="width: 100%; max-height: 300px; object-fit: contain"
-        />
-        <q-separator color="grey" />
-        <q-separator color="grey q-mt-xs" />
-        <!-- <p>{{ name }}</p>
-      <p>{{ email }}</p> -->
+        <img class="q-px-lg" src="~assets/ethekwiniMunicipal.png" />
+
+        <!-- <q-separator color="grey" />
+        <q-separator color="grey q-mt-xs" /> -->
         <div class="ads_main">
           <div class="text-center">
             <q-btn-dropdown
@@ -39,41 +34,26 @@
               </q-list>
             </q-btn-dropdown>
           </div>
-          <div class="text-center q-pt-xs">
+          <div class="text-center">
             <q-btn
               @click="alarm = true"
-              round
+              flat
+              size="lg"
               icon="notifications"
               class="col-xs-6 col-sm-6 q-my-sm adsBtn"
             >
-              <q-badge floating color="red" rounded>
+              <q-badge v-if="getAlarm.length" floating color="red" rounded>
                 {{ getAlarm.length }}
               </q-badge>
             </q-btn>
-            <!-- @click="activeMenuItem('Help')" -->
-          </div>
-          <!-- <div class="text-center q-pt-xs">
-            <q-btn
-              round
-              class="col-xs-6 col-sm-6 q-my-sm adsBtn"
-              src="account_circle"
-              @click="moveTo('send_reading')"
-            />
-          </div> -->
-          <div class="text-center manuButnPadding">
-            <img
-              class="col-xs-6 col-sm-6 q-my-sm adsBtn enterMenu"
-              src="../assets/enter.png"
-              alt="enter-menu"
-              @click="moveTo('send_reading')"
-            />
           </div>
 
-          <div class="text-center q-pt-xs">
+          <div class="text-center">
             <q-btn
-              round
               class="col-xs-6 col-sm-6 q-my-sm adsBtn"
               icon="share"
+              flat
+              size="lg"
               @click="shareViaWebShare()"
             />
           </div>
@@ -87,12 +67,79 @@
             />
           </div>
         </div>
-
-        <q-separator color="grey" />
+        <!-- <div class="q-px-md"> -->
+        <q-separator color="grey " />
         <q-separator color="grey q-mt-xs" />
+        <!-- </div> -->
+        <!-- <q-separator color="grey q-mt-xs" /> -->
+      </div>
+      <!-- second menu section -->
+      <div class="row">
+        <div class="text-center q-my-sm q-px-sm">
+          <img
+            class="col-xs-6 col-sm-6 q-my-sm enterMenu"
+            src="~assets/lightsandwater.png"
+            alt="enter-menu"
+            @click="moveTo('send_reading')"
+          />
+        </div>
+
+        <q-separator vertical inset />
+        <div class="text-center q-pt-xs">
+          <q-btn
+            class="col-xs-6 col-sm-6 q-my-sm"
+            no-caps
+            flat
+            label="News"
+            @click="activeMenuItem('News')"
+          />
+        </div>
+        <q-separator vertical inset />
+
+        <div class="text-center q-pt-xs">
+          <q-btn-dropdown
+            no-caps
+            label="Faults"
+            class="col-xs-6 col-sm-6 q-my-sm"
+            flat
+          >
+            <q-list>
+              <q-item
+                clickable
+                v-close-popup
+                @click="openChatOnWhatsApp('767912449')"
+              >
+                <q-item-section>
+                  <q-item-label>Electricity Faults</q-item-label>
+                </q-item-section>
+              </q-item>
+
+              <q-item
+                clickable
+                v-close-popup
+                @click="openChatOnWhatsApp('731483477')"
+              >
+                <q-item-section>
+                  <q-item-label>Water Faults</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
+        </div>
+        <q-separator vertical inset />
+        <div class="text-center q-pt-xs">
+          <q-btn
+            class="col-xs-6 col-sm-6 q-my-sm"
+            no-caps
+            flat
+            label="WhatsApp"
+            @click="whatsapp = true"
+          />
+        </div>
+        <q-separator vertical inset />
       </div>
 
-      <div class="ads q-pt-md">
+      <div class="ads">
         <!-- q-pa-md -->
         <div class=" ">
           <div>
@@ -131,6 +178,7 @@
       </div>
     </div>
   </q-page>
+  <!-- Notification Dialog -->
   <q-dialog v-model="alarm" persistent>
     <q-card class="modalborder">
       <q-card-section>
@@ -164,6 +212,39 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
+  <!-- Add Custom NUmber Dialog -->
+  <q-dialog v-model="whatsapp" persistent>
+    <q-card class="modalborder">
+      <q-card-section>
+        <div>
+          <div class="text-h6 text-center">
+            Enter the number you want to Whatsapp
+          </div>
+          <div class="q-mt-lg">
+            <q-input
+              color="black"
+              class=" "
+              type="number"
+              v-model="phoneNumber"
+              :input-style="{ fontSize: '20px' }"
+              label="Enter Number"
+            />
+          </div>
+        </div>
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn
+          dense
+          label="Open WhatsApp"
+          @click="openChatOnWhatsApp(phoneNumber)"
+          no-caps
+          v-close-popup
+        />
+        <q-btn dense label="Close" no-caps v-close-popup />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 <script setup>
 import { computed, onMounted, watch, ref } from "vue";
@@ -180,8 +261,9 @@ const router = useRouter();
 const userStore = useUserStore();
 const adStore = useAdStore();
 const alarm = ref(false);
+const whatsapp = ref(false);
 const message = ref(false);
-// const markAsRead = ref(false);
+const phoneNumber = ref("");
 
 const alaramStore = useGetAlarmsStore();
 const getAlarm = computed(() => alaramStore.getAlarms);
@@ -195,6 +277,11 @@ const name = ref("");
 const selectCategory = ref(null);
 
 const getAds = computed(() => adStore.getAds);
+
+const openChatOnWhatsApp = (number) => {
+  window.open(`https://api.whatsapp.com/send?phone=+27${number}&text=Hello`);
+  phoneNumber.value = "";
+};
 
 const markAsRead = (id) => {
   let alarm = getAlarm.value.findIndex(({ id }) => {
@@ -311,11 +398,19 @@ function moveTo(name) {
 }
 
 .header {
+  padding-top: 36px !important;
+}
+/* style="width: 100%; max-height: 300px; object-fit: contain " */
+.header img {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  margin-left: -15px;
 }
 
 .ads {
   /* flex-grow: 0.5; */
-  overflow: auto;
+  /* overflow: auto; */
 }
 
 .imageHeight {
@@ -333,17 +428,18 @@ function moveTo(name) {
   width: 100%;
   height: 100%;
 }
-/* @media only screen and (min-width: 600px) {
+@media only screen and (min-width: 600px) {
   .imageHeight {
     width: 480px !important;
     height: 480px !important;
     min-height: fit-content;
+    margin: auto;
   }
   .addImage {
-  height: 480px !important;
-  width: 480px !important;
+    height: 480px !important;
+    width: 480px !important;
+  }
 }
-} */
 .ads_main {
   display: flex;
   margin: auto;
@@ -364,12 +460,28 @@ function moveTo(name) {
 }
 
 .enterMenu {
-  width: 80px;
-  height: 32px;
-  border: 1px solid #65666b;
-  border-radius: 16px !important;
+  width: 150px;
+  height: 25px;
 }
 .manuButnPadding {
   padding-top: 10px !important;
+}
+.q-separator--vertical-inset {
+  background-color: #4d7cc4b3 !important;
+  width: 2px;
+  margin-top: 20px;
+  height: 20px;
+}
+
+.q-item {
+  min-height: auto !important;
+  /* height: 40px; */
+}
+
+.q-badge--rounded {
+  position: absolute;
+  top: 3px;
+  right: 13px;
+  cursor: inherit;
 }
 </style>

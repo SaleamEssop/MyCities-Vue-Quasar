@@ -3,7 +3,7 @@
   <!-- <div class="col-8">
       <q-img src="https://placeimg.com/500/300/nature" :ratio="1" />
     </div> -->
-  <div class="responsive">
+  <div class="responsive shadow-6">
     <router-view />
   </div>
   <!-- </div> -->
@@ -18,13 +18,13 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-// @media only screen and (min-width: 600px) {
-//   .responsive {
-//      width: 480px !important;
-//      margin: auto;
-//      justify-content: center;
-//      display: flex;
-//      border: 1px solid gray;
-//   }
-// }
+@media only screen and (min-width: 600px) {
+  .responsive {
+    width: 480px !important;
+    margin: auto;
+    justify-content: center;
+    display: flex;
+    // border: 1px solid gray;
+  }
+}
 </style>
