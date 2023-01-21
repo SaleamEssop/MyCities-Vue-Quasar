@@ -9,9 +9,10 @@
     <div class="container">
       <div class="header">
         <img class="q-px-lg" src="~assets/ethekwiniMunicipal.png" />
-
         <!-- <q-separator color="grey" />
         <q-separator color="grey q-mt-xs" /> -->
+        <q-separator color="grey q-mt-xs" size="2px" />
+
         <div class="ads_main">
           <div class="text-center">
             <q-btn-dropdown
@@ -67,15 +68,13 @@
             />
           </div>
         </div>
-        <!-- <div class="q-px-md"> -->
+
         <q-separator color="grey " />
         <q-separator color="grey q-mt-xs" />
-        <!-- </div> -->
-        <!-- <q-separator color="grey q-mt-xs" /> -->
       </div>
       <!-- second menu section -->
-      <div class="row">
-        <div class="text-center q-my-sm q-px-sm">
+      <div class="row menuContain">
+        <div class="text-center q-my-sm q-px-sm menuItem">
           <img
             class="col-xs-6 col-sm-6 q-my-sm enterMenu"
             src="~assets/lightsandwater.png"
@@ -85,7 +84,7 @@
         </div>
 
         <q-separator vertical inset />
-        <div class="text-center q-pt-xs">
+        <div class="text-center q-pt-xs menuItem">
           <q-btn
             class="col-xs-6 col-sm-6 q-my-sm"
             no-caps
@@ -96,7 +95,7 @@
         </div>
         <q-separator vertical inset />
 
-        <div class="text-center q-pt-xs">
+        <div class="text-center q-pt-xs menuItem">
           <q-btn-dropdown
             no-caps
             label="Faults"
@@ -127,7 +126,7 @@
           </q-btn-dropdown>
         </div>
         <q-separator vertical inset />
-        <div class="text-center q-pt-xs">
+        <div class="text-center q-pt-xs menuItem">
           <q-btn
             class="col-xs-6 col-sm-6 q-my-sm"
             no-caps
@@ -138,6 +137,7 @@
         </div>
         <q-separator vertical inset />
       </div>
+      <!-- <q-separator color="grey q-mb-lg" size="2px" /> -->
 
       <div class="ads">
         <!-- q-pa-md -->
@@ -223,25 +223,24 @@
           <div class="q-mt-lg">
             <q-input
               color="black"
-              class=" "
+              class="q-mx-lg"
               type="number"
               v-model="phoneNumber"
-              :input-style="{ fontSize: '20px' }"
-              label="Enter Number"
+              :input-style="{ fontSize: '24px', textAlign: 'center' }"
             />
           </div>
         </div>
       </q-card-section>
 
       <q-card-actions align="right">
+        <q-btn flat label="Close" no-caps v-close-popup />
         <q-btn
-          dense
+          flat
           label="Open WhatsApp"
           @click="openChatOnWhatsApp(phoneNumber)"
           no-caps
           v-close-popup
         />
-        <q-btn dense label="Close" no-caps v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -335,6 +334,17 @@ const activeMenuItem = (name) => {
   });
   slide.value = data[0].ads[0]?.id;
   selectCategory.value = data[0]?.ads;
+};
+
+const formatPhoneNumber = (phoneNumberString) => {
+  // alert();
+  var cleaned = ("" + phoneNumberString).replace(/\D/g, "");
+  var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+  // if (match) {
+  console.log("match", match);
+  return "(" + match?.[1] + ") " + match?.[2] + "-" + match?.[3];
+  // }
+  // return null;
 };
 
 const getAdsWithCategory = computed(() => {
@@ -483,5 +493,11 @@ function moveTo(name) {
   top: 3px;
   right: 13px;
   cursor: inherit;
+}
+
+.menuContain {
+  width: 100% !important;
+  flex-wrap: nowrap !important;
+  overflow-x: scroll !important;
 }
 </style>

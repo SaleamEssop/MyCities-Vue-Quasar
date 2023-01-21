@@ -171,7 +171,7 @@ If not available, simply enter the current date and meter reading and update it 
                         (meter.type.id == 2 ? 6 : 8) ||
                       event.keyCode == 46
                     ) {
-                      event.preventDefault();
+                      event.preventDefault();   
                     } else {
                     }
                   }

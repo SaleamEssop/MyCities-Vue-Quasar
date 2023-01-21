@@ -2,6 +2,7 @@
   <q-card>
     <q-card-section>
       <div
+        v-if="isNew"
         class="q-my-sm"
         text-color="negative"
         style="color: red; font-weight: bold"
@@ -16,7 +17,6 @@
 
       <div class="text-subtitle2">
         Last saved reading : {{ lastReadingItem?.value }}
-        <!-- Last saved reading : {{ lastReadingItem?.valueInString / 100000 * 10000 }} -->
       </div>
 
       <!-- Edit Readings with Date -->
@@ -151,7 +151,6 @@ export default defineComponent({
 
     const inputFocus = ref(false);
     const readingItems = readingStore.getReadingsByMeterId(props.meter.id);
-    // console.log("readingItems", readingItems);
 
     const currentReading = ref("");
     const currentReadingItem = ref();
@@ -210,8 +209,6 @@ export default defineComponent({
         // const timeToSave = new Date(
         //   date.extractDate(readingDate.value, "DD/MM/YYYY")
         // ).toISOString();
-         
-
         if (props.isNew) {
           addReadingInMeter({
             meter_id: props.meter.id,
@@ -251,16 +248,17 @@ export default defineComponent({
 
         emit("save");
       };
-
-      if (lastReadingItem.value.time + 24 * 60 * 60 * 1000 > Date.now()) {
-        let time = durbanReading.timeDiffCalc(
-          lastReadingItem.value.time + 24 * 60 * 60 * 1000,
-          Date.now()
-        );
-        showAlert(
-          `Your last entry was less than 24 hours ago. Please wait ${time} before you read again.`
-        );
-        return;
+      if (props.isNew) {
+        if (lastReadingItem.value.time + 24 * 60 * 60 * 1000 > Date.now()) {
+          let time = durbanReading.timeDiffCalc(
+            lastReadingItem.value.time + 24 * 60 * 60 * 1000,
+            Date.now()
+          );
+          showAlert(
+            `Your last entry was less than 24 hours ago. Please wait ${time} before you read again.`
+          );
+          return;
+        }
       }
       const valueInString = meterComopnentReadValue.value.getValueInString();
       const currentReadingValue =
