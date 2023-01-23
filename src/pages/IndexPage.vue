@@ -102,29 +102,84 @@
             class="col-xs-6 col-sm-6 q-my-sm"
             flat
           >
-            <q-list>
-              <q-item
-                clickable
-                v-close-popup
-                @click="openChatOnWhatsApp('767912449')"
+            <div style="width: 180px">
+              <q-expansion-item
+                label="Electricity Faults"
+                :content-inset-level="0.3"
+                group="accordion"
               >
-                <q-item-section>
-                  <q-item-label>Electricity Faults</q-item-label>
-                </q-item-section>
-              </q-item>
+                <q-list>
+                  <q-item
+                    clickable
+                    v-close-popup
+                    @click="
+                      openMailOnFaults('electricity.faults@durban.gov.za')
+                    "
+                  >
+                    <q-item-section>
+                      <q-item-label>Email</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item
+                    clickable
+                    v-close-popup
+                    @click="openChatOnWhatsApp('767912449')"
+                  >
+                    <q-item-section>
+                      <q-item-label>WhatsApp</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item
+                    clickable
+                    v-close-popup
+                    @click="openDialCall('080 311 1111')"
+                  >
+                    <q-item-section>
+                      <q-item-label>Call</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </q-expansion-item>
 
-              <q-item
-                clickable
-                v-close-popup
-                @click="openChatOnWhatsApp('731483477')"
+              <q-expansion-item
+                group="accordion"
+                label="Water Faults"
+                :content-inset-level="0.3"
               >
-                <q-item-section>
-                  <q-item-label>Water Faults</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
+                <q-list>
+                  <q-item
+                    clickable
+                    v-close-popup
+                    @click="openMailOnFaults('eservices@durban.gov.za')"
+                  >
+                    <q-item-section>
+                      <q-item-label>Email</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item
+                    clickable
+                    v-close-popup
+                    @click="openChatOnWhatsApp('731483477')"
+                  >
+                    <q-item-section>
+                      <q-item-label>WhatsApp</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item
+                    clickable
+                    v-close-popup
+                    @click="openDialCall('080 1313013')"
+                  >
+                    <q-item-section>
+                      <q-item-label>Call</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </q-expansion-item>
+            </div>
           </q-btn-dropdown>
         </div>
+
         <q-separator vertical inset />
         <div class="text-center q-pt-xs menuItem">
           <q-btn
@@ -135,7 +190,7 @@
             @click="whatsapp = true"
           />
         </div>
-        <q-separator vertical inset />
+        <!-- <q-separator vertical inset /> -->
       </div>
       <!-- <q-separator color="grey q-mb-lg" size="2px" /> -->
 
@@ -280,6 +335,16 @@ const getAds = computed(() => adStore.getAds);
 const openChatOnWhatsApp = (number) => {
   window.open(`https://api.whatsapp.com/send?phone=+27${number}&text=Hello`);
   phoneNumber.value = "";
+};
+
+const openMailOnFaults = (mail) => {
+  let emailUrl = "mailto:" + encodeURI(mail);
+  window.open(emailUrl, "_blank");
+};
+
+const openDialCall = (number) => {
+  let dialUrl = "tel:" + "+27" + encodeURI(number);
+  window.open(dialUrl, "_blank");
 };
 
 const markAsRead = (id) => {
@@ -484,8 +549,8 @@ function moveTo(name) {
 }
 
 .q-item {
-  min-height: auto !important;
-  /* height: 40px; */
+  height: 40px !important;
+  min-height: 40px !important;
 }
 
 .q-badge--rounded {

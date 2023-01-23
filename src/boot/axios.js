@@ -139,6 +139,11 @@ const getAlarms = async () => {
   return await api.get("/v1/get-alarms");
 };
 
+// Forgot password verification
+const forgotPasswordVerification = async (email) => {
+  return await api.post("/v1/forgot-password/email-verification", email);
+};
+
 const waterThumb =
   "https://media.istockphoto.com/vectors/water-faucet-icon-vector-vector-id604383296?k=20&m=604383296&s=612x612&w=0&h=rAPcq11vU1posV21tn1d6Tu6NeNIC0sGUwJ6gPZ8oW0=";
 const electThumb =
@@ -220,5 +225,6 @@ export {
   deleteMainMeter,
   defaultCost,
   SERVER_URL,
-  getAlarms
+  getAlarms,
+  forgotPasswordVerification,
 };
