@@ -97,7 +97,7 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ["Notify", "Cookies", "LocalStorage", "Dialog"],
+      plugins: ["Notify", "Cookies", "LocalStorage", "Dialog", "Loading"],
       directives: ["Ripple"],
     },
 

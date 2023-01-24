@@ -8,10 +8,11 @@
     ></q-btn>
     <div class="container">
       <div class="header">
-        <img class="q-px-lg" src="~assets/ethekwiniMunicipal.png" />
+        <img class="q-px-lg" src="~assets/myMunicipality.png" />
+        <div class="regionTitle">Ethekwini Region</div>
         <!-- <q-separator color="grey" />
         <q-separator color="grey q-mt-xs" /> -->
-        <q-separator color="grey q-mt-xs" size="2px" />
+        <q-separator color="grey q-mt-sm" size="2px" />
 
         <div class="ads_main">
           <div class="text-center">
@@ -480,7 +481,7 @@ function moveTo(name) {
   width: 100%;
   max-height: 300px;
   object-fit: contain;
-  margin-left: -15px;
+  /* margin-left: -15px; */
 }
 
 .ads {
@@ -564,5 +565,11 @@ function moveTo(name) {
   width: 100% !important;
   flex-wrap: nowrap !important;
   overflow-x: scroll !important;
+}
+.regionTitle {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 300;
+  margin-top: -8px;
 }
 </style>

@@ -150,7 +150,7 @@
       </div> -->
     </div>
 
-    <q-dialog v-model="resetPwdDialog" :full-width="true">
+    <q-dialog v-model="resetPwdDialog" :full-width="true" persistent>
       <ForgotPassword />
     </q-dialog>
   </div>

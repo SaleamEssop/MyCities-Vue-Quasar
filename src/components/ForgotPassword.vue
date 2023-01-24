@@ -4,7 +4,14 @@
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6">Reset Password</div>
         <q-space />
-        <q-btn icon="close" flat round dense v-close-popup />
+        <q-btn
+          icon="close"
+          flat
+          round
+          dense
+          @click="closeModal"
+          v-close-popup="closed"
+        />
       </q-card-section>
 
       <q-card-section class="q-pt-md">
@@ -12,23 +19,40 @@
           <q-input
             type="email"
             v-model="form.email"
+            :input-style="{ fontSize: '18px' }"
             label="Enter your email"
             lazy-rules
             :rules="[
               (val) => (val && val.length > 0) || 'Please type your email',
             ]"
           />
+
           <q-input
-            v-show="verifyCode"
-            type="number"
-            v-model="form.code"
-            label="Enter your verification Code"
+            v-show="isResetPassword"
+            class="q-mb-md"
+            label="Enter New Password"
             lazy-rules
+            v-model="form.newPassword"
+            :type="isPwd ? 'password' : 'text'"
+            :input-style="{ fontSize: '18px' }"
             :rules="[
-              (val) =>
-                (val && val.length > 0) ||
-                'Please Enter your Verification Code',
+              (val) => (val && val.length > 0) || 'Please type your password',
             ]"
+          >
+            <template v-slot:append>
+              <q-icon
+                :name="isPwd ? 'visibility_off' : 'visibility'"
+                @click="isPwd = !isPwd"
+                class="cursor-pointer"
+              ></q-icon>
+            </template>
+          </q-input>
+
+          <OtpVerification
+            class="q-mt-md q-mb-lg"
+            v-show="verifyCode"
+            :digit-count="5"
+            @update:otp="form.code = $event"
           />
         </q-form>
         <q-card-actions align="right">
@@ -45,72 +69,103 @@
         </q-card-actions>
       </q-card-section>
     </q-card>
-    <div class="otp-input-wrapper">
-      <input type="text" maxlength="4" pattern="[0-9]*" autocomplete="off" />
-      <svg viewBox="0 0 240 1" xmlns="http://www.w3.org/2000/svg">
-        <line
-          x1="0"
-          y1="0"
-          x2="240"
-          y2="0"
-          stroke="#3e3e3e"
-          stroke-width="2"
-          stroke-dasharray="44,22"
-        />
-      </svg>
-    </div>
   </div>
 </template>
 
 <script>
 import { defineComponent, reactive, ref } from "vue";
-// import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { useQuasar } from "quasar";
-import { forgotPasswordVerification } from "src/boot/axios";
+import {
+  forgotPasswordVerification,
+  forgotPasswordVerificationCode,
+  resetNewPassword,
+} from "src/boot/axios";
+import OtpVerification from "./OtpVerification.vue";
 
 export default defineComponent({
   name: "ForgotPassword",
+  components: { OtpVerification },
   setup() {
     const $q = useQuasar();
-    const form = reactive({ email: "", code: null });
+    const form = reactive({ email: "", code: null, newPassword: "" });
     const verifyCode = ref(false);
+    const isResetPassword = ref(false);
+    const isPwd = ref(true);
+    const closed = ref(false);
+
     const resetPassword = () => {
-      if (verifyCode.value === false) {
+      $q.loading.show();
+      if (verifyCode.value === false && isResetPassword.value === false) {
         forgotPasswordVerification({ email: form.email })
           .then(({ status, code, msg }) => {
             if (status) {
+              $q.loading.hide();
+              verifyCode.value = true;
               $q.notify({
-                message: "Check you email and follow the instructions there. ",
+                message:
+                  "Check your email and Enter the Verification code here.",
               });
             } else {
               throw { code, msg };
             }
           })
           .catch((status) => {
-            $q.notify({ message: status.msg });
+            $q.loading.hide();
             verifyCode.value = true;
-            console.log("verifyCode", verifyCode.value);
+            $q.notify({ message: status.msg });
           });
       } else if (verifyCode.value === true) {
-        alert();
+        forgotPasswordVerificationCode({
+          code: form.code,
+          email: form.email,
+        })
+          .then(({ status, code, msg }) => {
+            if (status) {
+              console.log("log", status);
+            } else {
+              throw { code, msg };
+            }
+          })
+          .catch((status) => {
+            verifyCode.value = false;
+            isResetPassword.value = true;
+            $q.loading.hide();
+            // closed.value = true;
+            $q.notify({ message: status.msg });
+          });
+      } else if (isResetPassword.value === true && verifyCode.value === false) {
+        resetNewPassword({ email: form.email, password: form.newPassword })
+          .then(({ status, code, msg }) => {
+            closeModal();
+            if (status) {
+              $q.loading.hide();
+              $q.notify({
+                message:
+                  "Password has been Reset, login here with new Password",
+              });
+            } else {
+              throw { code, msg };
+            }
+          })
+          .catch((status) => {
+            $q.loading.hide();
+            $q.notify({ message: status.msg });
+          });
       }
     };
+    const closeModal = () => {
+      closed.value = true;
+      // alert(closed.value);
+    };
 
-    // const resetPassword = () => {
-    //   const auth = getAuth();
-    //   sendPasswordResetEmail(auth, form.email)
-    //     .then(() => {
-    //       form.email = "";
-    //       $q.notify({
-    //         message: "Check you email and follow the instructions there. ",
-    //       });
-    //     })
-    //     .catch((error) => console.log(error));
-    // };
     return {
       form,
       resetPassword,
       verifyCode,
+      isPwd,
+      isResetPassword,
+      closed,
+      closeModal,
     };
   },
 });

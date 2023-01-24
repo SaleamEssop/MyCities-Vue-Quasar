@@ -144,6 +144,16 @@ const forgotPasswordVerification = async (email) => {
   return await api.post("/v1/forgot-password/email-verification", email);
 };
 
+// Forgot password verification code
+const forgotPasswordVerificationCode = async (payload) => {
+  return await api.post("/v1/forgot-password/verify-code", payload);
+};
+
+// reset new password 
+const resetNewPassword = async (payload) => {
+  return await api.post("/v1/forgot-password/reset-password", payload);
+};
+
 const waterThumb =
   "https://media.istockphoto.com/vectors/water-faucet-icon-vector-vector-id604383296?k=20&m=604383296&s=612x612&w=0&h=rAPcq11vU1posV21tn1d6Tu6NeNIC0sGUwJ6gPZ8oW0=";
 const electThumb =
@@ -227,4 +237,6 @@ export {
   SERVER_URL,
   getAlarms,
   forgotPasswordVerification,
+  forgotPasswordVerificationCode,
+  resetNewPassword
 };
