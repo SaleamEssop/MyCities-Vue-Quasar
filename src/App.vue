@@ -4,10 +4,10 @@
       <q-img src="https://placeimg.com/500/300/nature" :ratio="1" />
     </div> -->
 
-  <div v-if="onLine" class="responsive shadow-6">
+  <div class="responsive shadow-6">
     <router-view />
   </div>
-  <div v-else>
+  <!-- <div v-else>
     <q-dialog v-model="alertMessage" persistent>
       <q-card class="modalborder">
         <q-card-section>
@@ -22,7 +22,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-  </div>
+  </div> -->
   <!-- </div> -->
 </template>
 
@@ -31,17 +31,17 @@ import { defineComponent, ref, computed } from "vue";
 
 export default defineComponent({
   name: "App",
-  setup() {
-    const alertMessage = ref(true);
-    const onLine = computed(() => {
-      return navigator.onLine;
-    });
+  // setup() {
+  //   const alertMessage = ref(true);
+  //   const onLine = computed(() => {
+  //     return navigator.onLine;
+  //   });
 
-    return {
-      onLine,
-      alertMessage,
-    };
-  },
+  //   return {
+  //     onLine,
+  //     alertMessage,
+  //   };
+  // },
 });
 </script>
 

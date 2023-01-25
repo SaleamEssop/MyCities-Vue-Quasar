@@ -28,6 +28,16 @@
           />
 
           <q-input
+            class="text-center q-mt-md q-mb-lg"
+            v-show="verifyCode"
+            borderless
+            v-model="form.code"
+            :input-style="{ fontSize: '30px', textAlign: 'center' }"
+            mask="#   #   #   #   #"
+            fill-mask
+          ></q-input>
+
+          <q-input
             v-show="isResetPassword"
             class="q-mb-md"
             label="Enter New Password"
@@ -48,12 +58,12 @@
             </template>
           </q-input>
 
-          <OtpVerification
+          <!-- <OtpVerification
             class="q-mt-md q-mb-lg"
             v-show="verifyCode"
             :digit-count="5"
             @update:otp="form.code = $event"
-          />
+          /> -->
         </q-form>
         <q-card-actions align="right">
           <div class="row q-mt-xs">
@@ -80,11 +90,11 @@ import {
   forgotPasswordVerificationCode,
   resetNewPassword,
 } from "src/boot/axios";
-import OtpVerification from "./OtpVerification.vue";
+// import OtpVerification from "./OtpVerification.vue";
 
 export default defineComponent({
   name: "ForgotPassword",
-  components: { OtpVerification },
+  // components: { OtpVerification },
   setup() {
     const $q = useQuasar();
     const form = reactive({ email: "", code: null, newPassword: "" });
@@ -121,14 +131,17 @@ export default defineComponent({
         })
           .then(({ status, code, msg }) => {
             if (status) {
-              console.log("log", status);
+              verifyCode.value = false;
+              isResetPassword.value = true;
+              $q.loading.hide();
+              $q.notify({ message: msg });
             } else {
               throw { code, msg };
             }
           })
           .catch((status) => {
-            verifyCode.value = false;
-            isResetPassword.value = true;
+            // verifyCode.value = false;
+            // isResetPassword.value = true;
             $q.loading.hide();
             // closed.value = true;
             $q.notify({ message: status.msg });

@@ -236,6 +236,11 @@ export default defineComponent({
             }
           })
           .catch((error) => {
+            // if (error.toJSON().message === "Network Error") {
+            //   $q.notify({
+            //     message: "You do not seem to have an internet connection.",
+            //   });
+            // }
             $q.notify({ message: getErrorMsg(error) });
             console.log(error);
           });

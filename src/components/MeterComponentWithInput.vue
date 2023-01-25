@@ -151,6 +151,7 @@ export default defineComponent({
 
     const inputFocus = ref(false);
     const readingItems = readingStore.getReadingsByMeterId(props.meter.id);
+    const lastEditTime = ref(readingItems[0].time);
 
     const currentReading = ref("");
     const currentReadingItem = ref();
@@ -227,9 +228,10 @@ export default defineComponent({
             }
           });
         } else {
+          let lasteditDate = date.formatDate(new Date(lastEditTime.value).toISOString());
           updateReadingInMeter({
             meter_id: props.meter.id,
-            meter_reading_date: timeToSave,
+            meter_reading_date: lasteditDate,
             meter_reading: valueInString,
             meter_reading_id: currentReadingItem.value.id,
           }).then(({ status, data }) => {
@@ -238,7 +240,7 @@ export default defineComponent({
                 id: currentReadingItem.value.id,
                 value: currentReadingValue,
                 valueInString: valueInString,
-                time: new Date(timeToSave).getTime(),
+                time: new Date(lasteditDate).getTime(),
                 isSubmit: isSubmit,
                 meter: { id: props.meter.id },
               });
@@ -290,6 +292,7 @@ export default defineComponent({
       meterComopnentReadValue,
       showAlert,
       alertIfLessThen24Hours,
+      lastEditTime,
       // readingDate,
     };
   },

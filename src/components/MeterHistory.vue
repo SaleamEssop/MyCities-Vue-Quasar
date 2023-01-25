@@ -53,7 +53,7 @@ export default defineComponent({
   },
   setup(props) {
     const readingStore = useReadingStore();
-    console.log("ReadingStore", readingStore.readings);
+    // console.log("ReadingStore", readingStore.readings);
     var readings = readingStore.getReadingsByMeterId(props.meter.id);
     return { readings, columns, date };
   },

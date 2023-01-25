@@ -20,7 +20,6 @@
               flat
               class="col-xs-6 col-sm-6 q-my-sm adsBtn"
               icon="menu"
-              size="lg"
             >
               <q-list v-for="ad in getAds" :key="ad.id">
                 <q-item clickable v-close-popup @click="onItemClick">
@@ -40,7 +39,6 @@
             <q-btn
               @click="alarm = true"
               flat
-              size="lg"
               icon="notifications"
               class="col-xs-6 col-sm-6 q-my-sm adsBtn"
             >
@@ -55,7 +53,6 @@
               class="col-xs-6 col-sm-6 q-my-sm adsBtn"
               icon="share"
               flat
-              size="lg"
               @click="shareViaWebShare()"
             />
           </div>
@@ -64,14 +61,13 @@
               class="col-xs-6 col-sm-6 q-my-sm adsBtn"
               icon="help"
               flat
-              size="lg"
               @click="activeMenuItem('Help')"
             />
           </div>
         </div>
 
-        <q-separator color="grey " />
-        <q-separator color="grey q-mt-xs" />
+        <q-separator color="grey" size="8px" />
+        <!-- <q-separator color="grey q-mt-xs" /> -->
       </div>
       <!-- second menu section -->
       <div class="row menuContain">
@@ -527,6 +523,7 @@ function moveTo(name) {
 }
 .adsBtn {
   color: #65666b;
+  font-size: 18px !important;
 }
 
 .markAsread {

@@ -8,12 +8,13 @@
       :key="el + ind"
       v-model="digits[ind]"
       :autofocus="ind === 0"
-      step="1"
+      :step="1"
       maxlength="1"
       @keydown="handleKeyDown($event, ind)"
     />
-    <!-- :placeholder="ind + 1" -->
+    <!-- @keydown="handleKeyDown($event, ind)" -->
 
+    <!-- :placeholder="ind + 1" -->
   </div>
 </template>
 
@@ -31,21 +32,21 @@ const props = defineProps({
 const otpCont = ref(null);
 const emit = defineEmits(["update:otp"]);
 
-const isDigitsFull = function () {
+const isDigitsFull = () => {
   for (const elem of digits) {
     if (elem == null || elem == undefined) {
       return false;
     }
   }
-
   return true;
 };
 
-const handleKeyDown = function (event, index) {
+const handleKeyDown = (event, index) => {
+  // event.key >= 0 && event.key <= 9
   if (
-    event.key !== "Tab" &&
     event.key !== "ArrowRight" &&
-    event.key !== "ArrowLeft"
+    event.key !== "ArrowLeft" &&
+    event.key !== "Tab"
   ) {
     event.preventDefault();
   }
@@ -56,16 +57,17 @@ const handleKeyDown = function (event, index) {
     if (index != 0) {
       otpCont.value.children[index - 1].focus();
     }
-
     return;
   }
 
-  if (new RegExp("^([0-9])$").test(event.key)) {
+  // if (new RegExp("^([0-9])$").test(event.key)) {
+    if(event.key >= 0 && event.key <= 9){
     digits[index] = event.key;
 
     if (index != props.digitCount - 1) {
       otpCont.value.children[index + 1].focus();
     }
+    return;
   }
   if (isDigitsFull()) {
     emit("update:otp", digits.join(""));
@@ -102,7 +104,6 @@ if (props.default && props.default.length === props.digitCount) {
   /* outline: 3px solid black; */
   border-bottom: 3px solid black;
   outline: none !important;
-
 }
 
 .bounce {
