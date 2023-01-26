@@ -73,7 +73,7 @@
       <div class="row menuContain">
         <div class="text-center q-my-sm q-px-sm menuItem">
           <img
-            class="col-xs-6 col-sm-6 q-my-sm enterMenu"
+            class="col-xs-6 col-sm-6 q-my-sm enterMenu cursor-pointer"
             src="~assets/lightsandwater.png"
             alt="enter-menu"
             @click="moveTo('send_reading')"
@@ -500,18 +500,7 @@ function moveTo(name) {
   width: 100%;
   height: 100%;
 }
-@media only screen and (min-width: 600px) {
-  .imageHeight {
-    width: 480px !important;
-    height: 480px !important;
-    min-height: fit-content;
-    margin: auto;
-  }
-  .addImage {
-    height: 480px !important;
-    width: 480px !important;
-  }
-}
+
 .ads_main {
   display: flex;
   margin: auto;
@@ -562,11 +551,25 @@ function moveTo(name) {
   width: 100% !important;
   flex-wrap: nowrap !important;
   overflow-x: scroll !important;
+  overflow-y: hidden;
 }
 .regionTitle {
   text-align: center;
   font-size: 18px;
   font-weight: 300;
   margin-top: -8px;
+}
+
+@media only screen and (min-width: 600px) {
+  .imageHeight {
+    width: 480px !important;
+    height: 480px !important;
+    min-height: fit-content;
+    margin: auto;
+  }
+  .addImage {
+    height: 480px !important;
+    width: 480px !important;
+  }
 }
 </style>

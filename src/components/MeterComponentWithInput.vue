@@ -228,7 +228,9 @@ export default defineComponent({
             }
           });
         } else {
-          let lasteditDate = date.formatDate(new Date(lastEditTime.value).toISOString());
+          let lasteditDate = date.formatDate(
+            new Date(lastEditTime.value).toISOString()
+          );
           updateReadingInMeter({
             meter_id: props.meter.id,
             meter_reading_date: lasteditDate,
@@ -270,7 +272,7 @@ export default defineComponent({
         !currentReadingValue ||
         currentReadingValue <= lastReadingItem.value.value
       ) {
-        const maximum = props.meter.type.id == 2 ? 99999.9 : 9999999.9;
+        const maximum = props.meter.type.id == 2 ? 99999.9 : 9999.9999;
         confirm(
           `This meter will rollover from ${lastReadingItem.value.valueInString} to ${valueInString}. Please confirm.`,
           () => {

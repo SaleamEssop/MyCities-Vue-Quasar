@@ -81,9 +81,9 @@
                 <q-item-section>Delete this meter</q-item-section>
               </q-item>
 
+              <!-- :disable="meterLength === 2 ? true : false" -->
               <q-item
                 @click="modelMeterForNewEdit = true"
-                :disable="meterLength === 2 ? true : false"
                 clickable
                 v-close-popup
               >

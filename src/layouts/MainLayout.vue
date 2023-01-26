@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header elevated class="containerWidth">
       <q-toolbar>
         <q-btn
           flat
@@ -102,3 +102,14 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+@media only screen and (min-width: 600px) {
+  .containerWidth {
+    width: 480px !important;
+    margin: auto;
+    justify-content: center;
+    display: flex;
+  }
+}
+</style>

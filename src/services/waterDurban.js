@@ -82,9 +82,15 @@ export default class {
     };
   };
 
-  calculateUnitForMonth = ({ firstReading, lastReading }) => {
-    const consumeUnits = lastReading.value - firstReading.value;
-    const consumeTime = lastReading.time - firstReading.time;
+  calculateUnitForMonth = ({ isLastReadings, id }) => {
+    const { lastReading, firstReading } = isLastReadings;
+    if (firstReading.value > lastReading.value) {
+      let maxValue = id === 2 ? 99999.9 : 9999.9999;
+      var consumeUnits = maxValue + lastReading.value - firstReading.value;
+    } else {
+      var consumeUnits = lastReading.value - firstReading.value;
+    }
+    var consumeTime = lastReading.time - firstReading.time;
     return (consumeUnits / consumeTime || 0) * 1000 * 60 * 60 * 24;
   };
 

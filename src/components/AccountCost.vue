@@ -254,9 +254,11 @@ export default defineComponent({
           readings,
           readingPeriod.value
         );
-        // console.log("returnLastReadings", returnLastReadings);
-        const usesPerDay =
-          durbanReading.calculateUnitForMonth(returnLastReadings);
+
+        const usesPerDay = durbanReading.calculateUnitForMonth({
+          isLastReadings: returnLastReadings,
+          id: meter.type.id,
+        });
         const projectionCost = durbanReading.getCost(usesPerDay, meter);
 
         projectionCost.projection.forEach((_el) => {

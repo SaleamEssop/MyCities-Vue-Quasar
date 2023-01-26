@@ -3,10 +3,10 @@
   <!-- <div class="col-8">
       <q-img src="https://placeimg.com/500/300/nature" :ratio="1" />
     </div> -->
-
-  <div class="responsive shadow-6">
+  <div class="backgroundImage">
     <router-view />
   </div>
+
   <!-- <div v-else>
     <q-dialog v-model="alertMessage" persistent>
       <q-card class="modalborder">
@@ -47,12 +47,9 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @media only screen and (min-width: 600px) {
-  .responsive {
-    width: 480px !important;
-    margin: auto;
-    justify-content: center;
-    display: flex;
-    // border: 1px solid gray;
+  .backgroundImage {
+    background-image: url("../src/assets/bg.webp");
+    z-index: -1;
   }
 }
 </style>

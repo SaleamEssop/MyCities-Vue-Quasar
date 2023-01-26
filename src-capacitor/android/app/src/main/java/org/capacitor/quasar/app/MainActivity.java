@@ -69,9 +69,9 @@ public class MainActivity extends BridgeActivity {
     builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialogCustom);
     /*final View customLayout = getLayoutInflater().inflate(R.layout.custom_alert_dialog, null);
     builder.setView(customLayout);*/
-    builder.setMessage("No internet detected. Please close and open again when you are connected to the internet.");
-    builder.setTitle("No Internet Connection");
-    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+    builder.setMessage("This app will close when you press “Okay” You can reopen the app when you have an internet connection.");
+    builder.setTitle("No internet detected.");
+    builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialogInterface, int i) {
         if (alertDialog.isShowing()) {

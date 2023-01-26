@@ -2,7 +2,7 @@
   <q-card>
     <q-card-section class="bg-primary">
       Estimated Cost {{ meter.number ? `(${meter.number})` : "" }}
-      {{ returnLastReadings.period }}
+      {{ isLastReadings.period }}
     </q-card-section>
     <q-card-section>
       <div>
@@ -19,7 +19,7 @@
                   ? usesPerDay?.toFixed(2)
                   : (usesPerDay * 1000.0)?.toFixed(2)
               }}
-              {{ unit }}    
+              {{ unit }}
             </div>
           </div>
           <div class="column col-5">
@@ -87,7 +87,7 @@
             <div class="col">
               {{ newVATOnMeterBill?.title }}
             </div>
-            
+
             <div v-show="newVATOnMeterBill?.value" class="col-auto">
               R {{ newVATOnMeterBill.value?.toFixed(2) }}
             </div>
@@ -155,9 +155,13 @@ export default defineComponent({
     const usesPerDay = ref(0);
 
     var readings = readingStore.getReadingsByMeterId(props?.meter?.id);
-    const returnLastReadings =
-      durbanReading.getSubmitedAndLastReading(readings);
-    usesPerDay.value = durbanReading.calculateUnitForMonth(returnLastReadings);
+
+    const isLastReadings = durbanReading.getSubmitedAndLastReading(readings);
+
+    usesPerDay.value = durbanReading.calculateUnitForMonth({
+      isLastReadings: isLastReadings,
+      id: props?.meter?.type.id,
+    });
 
     const unit = computed(() => (props?.meter?.type?.id == 2 ? "kWh" : "L"));
 
@@ -300,11 +304,11 @@ export default defineComponent({
 
     const lastReadingDisplayFormat = computed(() => {
       const timeDisplay = date.formatDate(
-        new Date(returnLastReadings.lastReading.time),
+        new Date(isLastReadings.lastReading.time),
         "DD MMMM YYYY"
       );
       const seprated = props.meter.type.id == 2 ? 5 : 4;
-      const value = returnLastReadings.lastReading.valueInString.insert(
+      const value = isLastReadings.lastReading.valueInString.insert(
         seprated,
         "."
       );
@@ -316,13 +320,15 @@ export default defineComponent({
       usesPerDay,
       unit,
       projectionCost,
-      returnLastReadings,
+      // returnLastReadings,
       submitBill,
       lastReadingDisplayFormat,
       waterLevyCostByServer,
       totalProjectionCost,
       percentageCharges,
       newVATOnMeterBill,
+      // isRollOver,
+      isLastReadings,
     };
   },
 });
