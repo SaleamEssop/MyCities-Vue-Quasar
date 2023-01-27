@@ -436,11 +436,12 @@ export default defineComponent({
       body += `${meter.type.title} Meter:\t${meter.number}\n`;
       body += `${valueInString}\n`;
 
+
       body += `\n\n`;
       //});
 
-      body += `Powered by The LightsAndWaterApp\n`;
-      body += `Visit www.lightsandwater.co.za for information on how we can help you save on electricity and water with cutting edge technologies.`;
+      body += `Powered by The MyCityApp.\n`;
+      body += `Visit www.mycityapp.co.za for information on how we can help you save on electricity and water with cutting edge technologies.`;
 
       let urlString =
         "mailto:" +

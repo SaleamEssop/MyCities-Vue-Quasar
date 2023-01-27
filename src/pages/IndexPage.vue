@@ -8,7 +8,7 @@
     ></q-btn>
     <div class="container">
       <div class="header">
-        <img class="q-px-lg" src="~assets/myMunicipality.png" />
+        <img class="q-px-lg" src="~assets/MyCity.png" />
         <div class="regionTitle">Ethekwini Region</div>
         <!-- <q-separator color="grey" />
         <q-separator color="grey q-mt-xs" /> -->
@@ -203,10 +203,11 @@
               :autoplay="autoplay"
               @mouseenter="autoplay = false"
               @mouseleave="autoplay = true"
-              transition-prev="slide-right"
-              transition-next="slide-left"
+              transition-prev="slide-down"
+              transition-next="slide-up"
               class="text-white adsShadow shadow-1 rounded-borders imageHeight"
               height="2rem"
+              vertical
             >
               <q-carousel-slide
                 v-for="ad in getAdsWithCategory"
@@ -274,9 +275,11 @@
           </div>
           <div class="q-mt-lg">
             <q-input
+              inputmode="numeric"
               color="black"
               class="q-mx-lg"
-              type="number"
+              mask="### ### ####"
+              fill-mask
               v-model="phoneNumber"
               :input-style="{ fontSize: '24px', textAlign: 'center' }"
             />
@@ -373,16 +376,17 @@ const shareViaWebShare = () => {
   if (navigator.share) {
     navigator
       .share({
-        title: "LightsAndWaterApp",
-        url: "https://www.google.co.in/",
+        title: "MyCityApp",
+        url: "https://play.google.com/store/apps/details?id=com.light.water.app",
       })
       .then(() => console.log("Successful share"))
       .catch((error) => console.log("Error sharing", error));
   } else {
-    let url = "https://www.google.co.in/";
+    let url =
+      "https://play.google.com/store/apps/details?id=com.light.water.app";
     let shareUrl =
       "shareto://water.meter.power.meter/?title=" +
-      encodeURI("LightsAndWaterApp") +
+      encodeURI("MyCityApp") +
       "&msg=" +
       encodeURI(url);
     window.open(shareUrl);
@@ -475,7 +479,7 @@ function moveTo(name) {
 /* style="width: 100%; max-height: 300px; object-fit: contain " */
 .header img {
   width: 100%;
-  max-height: 300px;
+  max-height: 100px;
   object-fit: contain;
   /* margin-left: -15px; */
 }

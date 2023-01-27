@@ -29,7 +29,8 @@
               color="negative"
               text-color="white"
             >
-              R{{ (projectionCost["total"] / 30.0).toFixed(2) }}
+              <!-- R{{ (projectionCost["total"] / 30.0).toFixed(2) }} -->
+              R{{ (totalProjectionCost / 30.0).toFixed(2) }}
             </div>
           </div>
         </div>
@@ -286,9 +287,8 @@ export default defineComponent({
         body += `\n\n`;
       });
 
-      body += `Powered by The LightsAndWaterApp\n`;
-      body += `Visit www.lightsandwater.co.za for information on how we can help you save on electricity and water with cutting edge technologies.`;
-
+      body += `Powered by The MyCityApp.\n`;
+      body += `Visit www.mycityapp.co.za for information on how we can help you save on electricity and water with cutting edge technologies.`;
       let urlString =
         "mailto:" +
         encodeURI(email) +

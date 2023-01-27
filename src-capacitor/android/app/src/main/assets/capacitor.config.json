@@ -1,10 +1,7 @@
 {
-  "appId": "org.capacitor.quasar.app",
-  "appName": "LightsAndWater",
+  "appId": "com.light.water.app",
+  "appName": "MyCity",
   "bundledWebRuntime": false,
   "npmClient": "yarn",
-  "webDir": "www",
-  "server": {
-    "url": "http://192.168.29.230:8080"
-  }
+  "webDir": "www"
 }

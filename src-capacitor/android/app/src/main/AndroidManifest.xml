@@ -12,7 +12,7 @@
     android:usesCleartextTraffic="true">
 
     <activity
-      android:name="org.capacitor.quasar.app.MainActivity"
+      android:name=".MainActivity"
       android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"
       android:label="@string/title_activity_main"
       android:launchMode="singleTask"
@@ -52,7 +52,8 @@
       </intent-filter>
     </activity>
 
-    <receiver android:name=".NetworkChangeReceiver">
+    <receiver android:name=".NetworkChangeReceiver"
+      >
       <intent-filter>
         <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
       </intent-filter>

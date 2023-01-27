@@ -145,8 +145,8 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: `LightsAndWater`,
-        short_name: `LightsAndWater`,
+        name: `MyCity`,
+        short_name: `MyCity`,
         description: `A Quasar Project`,
         display: "standalone",
         orientation: "portrait",

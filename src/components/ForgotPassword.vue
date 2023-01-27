@@ -121,7 +121,7 @@ export default defineComponent({
           })
           .catch((status) => {
             $q.loading.hide();
-            verifyCode.value = true;
+            // verifyCode.value = true;
             $q.notify({ message: status.msg });
           });
       } else if (verifyCode.value === true) {

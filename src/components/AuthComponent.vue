@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class=" ">
     <div class="full-width col">
       <div class="full-width q-pa-lg">
         <div class="full-width">

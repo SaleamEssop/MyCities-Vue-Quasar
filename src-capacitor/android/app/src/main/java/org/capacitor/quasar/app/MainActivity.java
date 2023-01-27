@@ -37,6 +37,7 @@ public class MainActivity extends BridgeActivity {
         } else {
           if (!alertDialog.isShowing()) {
             alertDialog.show();
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
           }
         }
       }
