@@ -18,7 +18,7 @@
           <div class="text-center">
             <q-btn-dropdown
               flat
-              class="col-xs-6 col-sm-6 q-my-sm adsBtn"
+              class="col-xs-6 col-sm-6 q-my-xs adsBtn"
               icon="menu"
             >
               <q-list v-for="ad in getAds" :key="ad.id">
@@ -40,7 +40,7 @@
               @click="alarm = true"
               flat
               icon="notifications"
-              class="col-xs-6 col-sm-6 q-my-sm adsBtn"
+              class="col-xs-6 col-sm-6 q-my-xs adsBtn"
             >
               <q-badge v-if="getAlarm.length" floating color="red" rounded>
                 {{ getAlarm.length }}
@@ -50,7 +50,7 @@
 
           <div class="text-center">
             <q-btn
-              class="col-xs-6 col-sm-6 q-my-sm adsBtn"
+              class="col-xs-6 col-sm-6 q-my-xs adsBtn"
               icon="share"
               flat
               @click="shareViaWebShare()"
@@ -58,7 +58,7 @@
           </div>
           <div class="text-center">
             <q-btn
-              class="col-xs-6 col-sm-6 q-my-sm adsBtn"
+              class="col-xs-6 col-sm-6 q-my-xs adsBtn"
               icon="help"
               flat
               @click="activeMenuItem('Help')"
@@ -70,131 +70,134 @@
         <!-- <q-separator color="grey q-mt-xs" /> -->
       </div>
       <!-- second menu section -->
-      <div class="row menuContain">
-        <div class="text-center q-my-sm q-px-sm menuItem">
-          <img
-            class="col-xs-6 col-sm-6 q-my-sm enterMenu cursor-pointer"
-            src="~assets/lightsandwater.png"
-            alt="enter-menu"
-            @click="moveTo('send_reading')"
-          />
+      <div>
+        <div class="row menuContain">
+          <div class="text-center q-my-sm q-px-sm menuItem">
+            <img
+              class="col-xs-6 col-sm-6 q-my-sm enterMenu cursor-pointer"
+              src="~assets/lightsandwater.png"
+              alt="enter-menu"
+              @click="moveTo('send_reading')"
+            />
+          </div>
+
+          <q-separator vertical inset />
+          <div class="text-center q-pt-xs menuItem">
+            <q-btn
+              class="col-xs-6 col-sm-6 q-my-sm"
+              no-caps
+              flat
+              label="News"
+              @click="activeMenuItem('News')"
+            />
+          </div>
+          <q-separator vertical inset />
+
+          <div class="text-center q-pt-xs menuItem">
+            <q-btn-dropdown
+              no-caps
+              label="Faults"
+              class="col-xs-6 col-sm-6 q-my-sm"
+              flat
+            >
+              <div style="width: 180px">
+                <q-expansion-item
+                  label="Electricity Faults"
+                  :content-inset-level="0.3"
+                  group="accordion"
+                >
+                  <q-list>
+                    <q-item
+                      clickable
+                      v-close-popup
+                      @click="
+                        openMailOnFaults('electricity.faults@durban.gov.za')
+                      "
+                    >
+                      <q-item-section>
+                        <q-item-label>Email</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                    <q-item
+                      clickable
+                      v-close-popup
+                      @click="openChatOnWhatsApp('767912449')"
+                    >
+                      <q-item-section>
+                        <q-item-label>WhatsApp</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                    <q-item
+                      clickable
+                      v-close-popup
+                      @click="openDialCall('080 311 1111')"
+                    >
+                      <q-item-section>
+                        <q-item-label>Call</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-expansion-item>
+
+                <q-expansion-item
+                  group="accordion"
+                  label="Water Faults"
+                  :content-inset-level="0.3"
+                >
+                  <q-list>
+                    <q-item
+                      clickable
+                      v-close-popup
+                      @click="openMailOnFaults('eservices@durban.gov.za')"
+                    >
+                      <q-item-section>
+                        <q-item-label>Email</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                    <q-item
+                      clickable
+                      v-close-popup
+                      @click="openChatOnWhatsApp('731483477')"
+                    >
+                      <q-item-section>
+                        <q-item-label>WhatsApp</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                    <q-item
+                      clickable
+                      v-close-popup
+                      @click="openDialCall('080 1313013')"
+                    >
+                      <q-item-section>
+                        <q-item-label>Call</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-expansion-item>
+              </div>
+            </q-btn-dropdown>
+          </div>
+
+          <q-separator vertical inset />
+          <div class="text-center q-pt-xs menuItem">
+            <q-btn
+              class="col-xs-6 col-sm-6 q-my-sm"
+              no-caps
+              flat
+              label="WhatsApp"
+              @click="whatsapp = true"
+            />
+          </div>
         </div>
 
-        <q-separator vertical inset />
-        <div class="text-center q-pt-xs menuItem">
-          <q-btn
-            class="col-xs-6 col-sm-6 q-my-sm"
-            no-caps
-            flat
-            label="News"
-            @click="activeMenuItem('News')"
-          />
-        </div>
-        <q-separator vertical inset />
-
-        <div class="text-center q-pt-xs menuItem">
-          <q-btn-dropdown
-            no-caps
-            label="Faults"
-            class="col-xs-6 col-sm-6 q-my-sm"
-            flat
-          >
-            <div style="width: 180px">
-              <q-expansion-item
-                label="Electricity Faults"
-                :content-inset-level="0.3"
-                group="accordion"
-              >
-                <q-list>
-                  <q-item
-                    clickable
-                    v-close-popup
-                    @click="
-                      openMailOnFaults('electricity.faults@durban.gov.za')
-                    "
-                  >
-                    <q-item-section>
-                      <q-item-label>Email</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                  <q-item
-                    clickable
-                    v-close-popup
-                    @click="openChatOnWhatsApp('767912449')"
-                  >
-                    <q-item-section>
-                      <q-item-label>WhatsApp</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                  <q-item
-                    clickable
-                    v-close-popup
-                    @click="openDialCall('080 311 1111')"
-                  >
-                    <q-item-section>
-                      <q-item-label>Call</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </q-expansion-item>
-
-              <q-expansion-item
-                group="accordion"
-                label="Water Faults"
-                :content-inset-level="0.3"
-              >
-                <q-list>
-                  <q-item
-                    clickable
-                    v-close-popup
-                    @click="openMailOnFaults('eservices@durban.gov.za')"
-                  >
-                    <q-item-section>
-                      <q-item-label>Email</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                  <q-item
-                    clickable
-                    v-close-popup
-                    @click="openChatOnWhatsApp('731483477')"
-                  >
-                    <q-item-section>
-                      <q-item-label>WhatsApp</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                  <q-item
-                    clickable
-                    v-close-popup
-                    @click="openDialCall('080 1313013')"
-                  >
-                    <q-item-section>
-                      <q-item-label>Call</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </q-expansion-item>
-            </div>
-          </q-btn-dropdown>
-        </div>
-
-        <q-separator vertical inset />
-        <div class="text-center q-pt-xs menuItem">
-          <q-btn
-            class="col-xs-6 col-sm-6 q-my-sm"
-            no-caps
-            flat
-            label="WhatsApp"
-            @click="whatsapp = true"
-          />
-        </div>
         <!-- <q-separator vertical inset /> -->
       </div>
       <!-- <q-separator color="grey q-mb-lg" size="2px" /> -->
 
       <div class="ads">
         <!-- q-pa-md -->
-        <div class=" ">
-          <div>
+        <div>
+          <!-- <div>
             <q-carousel
               v-model="slide"
               swipeable
@@ -205,7 +208,7 @@
               @mouseleave="autoplay = true"
               transition-prev="slide-down"
               transition-next="slide-up"
-              class="text-white adsShadow shadow-1 rounded-borders imageHeight"
+              class="text-white shadow-1 rounded-borders imageHeight"
               height="2rem"
               vertical
             >
@@ -218,14 +221,29 @@
                 role="link"
                 @click="openAds(ad.url)"
               >
-                <!-- @click="window.open(`${ad.url}`, '_blank').focus()" -->
-
                 <div v-show="ad.price > 0" class="add_description">
                   <div class="text-h6">{{ ad.name }}</div>
                   <div class="text-h6 text-bold">Price {{ ad.price }}</div>
                 </div>
               </q-carousel-slide>
             </q-carousel>
+          </div> -->
+
+          <div v-for="ad in getAdsWithCategory" :key="ad.id">
+            <img
+              :src="ad.image"
+              alt="add-image"
+              class="addImage"
+              @click="openAds(ad.url)"
+            />
+
+            <div class="add_description_scroll">
+              <div v-show="ad.price > 0" class="ads_price text-h6">
+                R {{ ad.price }}
+              </div>
+              <div class="text-subtitle1">{{ ad.name }}</div>
+            </div>
+            <q-separator color="grey-4" size="10px" />
           </div>
         </div>
       </div>
@@ -368,10 +386,6 @@ const openAds = (link) => {
   }
 };
 
-// const webShareApiSupported = computed(() => {
-//   return navigator.share;
-// });
-
 const shareViaWebShare = () => {
   if (navigator.share) {
     navigator
@@ -468,25 +482,29 @@ function moveTo(name) {
 
 <style scoped>
 .container {
-  height: 100vh;
+  max-height: 97vh;
   display: flex;
   flex-direction: column;
+  /* height: calc(100vh - 100%);
+  min-height: calc(100vh - 100px); */
 }
 
 .header {
-  padding-top: 36px !important;
+  padding-top: 12px !important;
 }
-/* style="width: 100%; max-height: 300px; object-fit: contain " */
 .header img {
   width: 100%;
   max-height: 100px;
+  margin-top: -10px;
   object-fit: contain;
   /* margin-left: -15px; */
 }
 
 .ads {
-  /* flex-grow: 0.5; */
-  /* overflow: auto; */
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-width: 480px;
+  margin-top: -8px;
 }
 
 .imageHeight {
@@ -499,8 +517,6 @@ function moveTo(name) {
 }
 
 .addImage {
-  /* height: 320px !important;
-  width: 320px !important; */
   width: 100%;
   height: 100%;
 }
@@ -528,6 +544,7 @@ function moveTo(name) {
 .enterMenu {
   width: 150px;
   height: 25px;
+  /* padding-top: 1px; */
 }
 .manuButnPadding {
   padding-top: 10px !important;
@@ -555,7 +572,7 @@ function moveTo(name) {
   width: 100% !important;
   flex-wrap: nowrap !important;
   overflow-x: scroll !important;
-  overflow-y: hidden;
+  margin-top: -6px;
 }
 .regionTitle {
   text-align: center;
@@ -564,7 +581,21 @@ function moveTo(name) {
   margin-top: -8px;
 }
 
-@media only screen and (min-width: 600px) {
+.add_description_scroll {
+  background: #fafafa;
+  padding: 8px 16px;
+  /* margin-bottom: 16px; */
+  margin-top: -6px;
+}
+
+.ads_price {
+  background: #e7e7e7;
+  border-radius: 5px;
+  padding: 4px 12px;
+  width: fit-content;
+  margin-bottom: 8px;
+}
+@media only screen and (min-width: 480px) {
   .imageHeight {
     width: 480px !important;
     height: 480px !important;

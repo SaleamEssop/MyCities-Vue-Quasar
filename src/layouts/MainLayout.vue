@@ -104,7 +104,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 480px) {
   .containerWidth {
     width: 480px !important;
     margin: auto;

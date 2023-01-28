@@ -46,7 +46,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 480px) {
   .backgroundImage {
     background-image: url("../src/assets/bg.webp");
     z-index: -1;
