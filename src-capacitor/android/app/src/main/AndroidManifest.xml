@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   package="org.capacitor.quasar.app">
 
   <application
@@ -14,6 +15,7 @@
     <activity
       android:name=".MainActivity"
       android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"
+      android:exported="true"
       android:label="@string/title_activity_main"
       android:launchMode="singleTask"
       android:screenOrientation="portrait"
@@ -52,8 +54,10 @@
       </intent-filter>
     </activity>
 
-    <receiver android:name=".NetworkChangeReceiver"
-      >
+    <receiver
+      android:name=".NetworkChangeReceiver"
+      android:exported="false"
+      tools:ignore="Instantiatable">
       <intent-filter>
         <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
       </intent-filter>
@@ -66,7 +70,7 @@
       android:grantUriPermissions="true">
       <meta-data
         android:name="android.support.FILE_PROVIDER_PATHS"
-        android:resource="@xml/file_paths"></meta-data>
+        android:resource="@xml/file_paths" />
     </provider>
   </application>
 

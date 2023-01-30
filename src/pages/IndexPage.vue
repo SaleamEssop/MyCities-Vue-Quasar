@@ -8,7 +8,7 @@
     ></q-btn>
     <div class="container">
       <div class="header">
-        <img class="q-px-lg" src="~assets/MyCity.png" />
+        <img class="q-px-lg titleIcon" src="~assets/MyCity.png" />
         <div class="regionTitle">Ethekwini Region</div>
         <!-- <q-separator color="grey" />
         <q-separator color="grey q-mt-xs" /> -->
@@ -54,6 +54,22 @@
               icon="share"
               flat
               @click="shareViaWebShare()"
+            />
+          </div>
+          <div class="text-center">
+            <q-btn
+              class="col-xs-6 col-sm-6 q-my-xs adsBtn"
+              icon="facebook"
+              flat
+              @click="openFacebook()"
+            />
+          </div>
+          <div class="text-center">
+            <q-btn
+              class="col-xs-6 col-sm-6 q-my-xs adsBtn"
+              icon="smart_display"
+              flat
+              @click="openYoutube()"
             />
           </div>
           <div class="text-center">
@@ -360,6 +376,14 @@ const openChatOnWhatsApp = (number) => {
   phoneNumber.value = "";
 };
 
+const openFacebook = () => {
+  window.open("https://www.facebook.com/groups/982841062697878");
+};
+
+const openYoutube = () => {
+  window.open("https://www.youtube.com/@mycity3924");
+};
+
 const openMailOnFaults = (mail) => {
   let emailUrl = "mailto:" + encodeURI(mail);
   window.open(emailUrl, "_blank");
@@ -380,8 +404,8 @@ const markAsRead = (id) => {
 };
 
 const openAds = (link) => {
-  if (link == "www") {
-    return;
+  if (link === "www") {
+    return alert();
   } else {
     if (!link.match(/^https?:\/\//i)) {
       link = "http://" + link;
@@ -446,14 +470,6 @@ const getAdsWithCategory = computed(() => {
   }
 });
 
-// const auth = getAuth();
-// if we want to get the user details, this is how its done
-// onAuthStateChanged(auth, (user) => {
-//   if (user) {
-//     email.value = user.email;
-//     name.value = user.displayName;
-//   }
-// });
 const logout = () => {
   // getAuth().signOut();
   userStore.signOut();
@@ -497,7 +513,7 @@ function moveTo(name) {
 .header {
   padding-top: 12px !important;
 }
-.header img {
+.titleIcon {
   width: 100%;
   max-height: 100px;
   margin-top: -10px;
@@ -531,6 +547,8 @@ function moveTo(name) {
   display: flex;
   margin: auto;
   justify-content: space-between;
+  width: 100%;
+  overflow-x: auto;
 }
 
 .q-item-type:hover {

@@ -28,8 +28,8 @@
           />
 
           <q-input
-            class="text-center q-mt-md q-mb-lg"
             v-show="verifyCode"
+            class="text-center q-mt-md q-mb-lg"
             borderless
             v-model="form.code"
             :input-style="{ fontSize: '30px', textAlign: 'center' }"
@@ -72,6 +72,7 @@
               label="Reset my password"
               color="primary"
               @click="resetPassword()"
+              v-close-popup="closed"
               unelevated
               text-color="black"
             />
@@ -121,12 +122,14 @@ export default defineComponent({
           })
           .catch((status) => {
             $q.loading.hide();
+
             // verifyCode.value = true;
             $q.notify({ message: status.msg });
           });
       } else if (verifyCode.value === true) {
+        let otpCode = form.code.replaceAll(" ", "");
         forgotPasswordVerificationCode({
-          code: form.code,
+          code: otpCode,
           email: form.email,
         })
           .then(({ status, code, msg }) => {
@@ -147,10 +150,11 @@ export default defineComponent({
             $q.notify({ message: status.msg });
           });
       } else if (isResetPassword.value === true && verifyCode.value === false) {
+        closed.value = true;
         resetNewPassword({ email: form.email, password: form.newPassword })
           .then(({ status, code, msg }) => {
-            closeModal();
             if (status) {
+              closed.value = true;
               $q.loading.hide();
               $q.notify({
                 message:
@@ -166,10 +170,10 @@ export default defineComponent({
           });
       }
     };
-    const closeModal = () => {
+
+    function closeModal() {
       closed.value = true;
-      // alert(closed.value);
-    };
+    }
 
     return {
       form,
