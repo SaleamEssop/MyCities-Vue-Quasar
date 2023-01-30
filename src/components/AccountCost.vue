@@ -441,7 +441,7 @@ export default defineComponent({
       //});
 
       body += `Powered by The MyCityApp.\n`;
-      body += `Visit www.mycityapp.co.za for information on how we can help you save on electricity and water with cutting edge technologies.`;
+      body += `Visit www.mycities.co.za for information on how we can help you save on electricity and water with cutting edge technologies.`;
 
       let urlString =
         "mailto:" +

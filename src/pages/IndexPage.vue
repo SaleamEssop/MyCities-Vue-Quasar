@@ -236,14 +236,19 @@
               class="addImage"
               @click="openAds(ad.url)"
             />
-
-            <div class="add_description_scroll">
+            <!-- add_description_scroll -->
+            <div
+              v-show="ad.price > 0 || ad.name !== 'null'"
+              class="add_description_scroll"
+            >
               <div v-show="ad.price > 0" class="ads_price text-h6">
                 R {{ ad.price }}
               </div>
-              <div class="text-subtitle1">{{ ad.name }}</div>
+              <div v-show="ad.name !== 'null'" class="text-subtitle1">
+                {{ ad.name }}
+              </div>
             </div>
-            <q-separator color="grey-4" size="10px" />
+            <q-separator color="grey-4" size="10px" class="bottomLine" />
           </div>
         </div>
       </div>
@@ -252,7 +257,7 @@
   <!-- Notification Dialog -->
   <q-dialog v-model="alarm" persistent>
     <q-card class="modalborder">
-      <q-card-section>
+      <q-card-section style="min-width: 290px">
         <div v-if="getAlarm.length">
           <div class="text-h6 text-center">Get Latest Notification</div>
           <div class="q-mt-lg">
@@ -519,6 +524,7 @@ function moveTo(name) {
 .addImage {
   width: 100%;
   height: 100%;
+  /* height: auto; */
 }
 
 .ads_main {
@@ -595,6 +601,10 @@ function moveTo(name) {
   width: fit-content;
   margin-bottom: 8px;
 }
+
+.bottomLine {
+  margin-top: -6px;
+}
 @media only screen and (min-width: 480px) {
   .imageHeight {
     width: 480px !important;
@@ -603,7 +613,7 @@ function moveTo(name) {
     margin: auto;
   }
   .addImage {
-    height: 480px !important;
+    /* height: 480px !important; */
     width: 480px !important;
   }
 }
