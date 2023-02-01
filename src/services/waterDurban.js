@@ -95,6 +95,7 @@ export default class {
   };
 
   getWaterMeterCost = (perDayUses) => {
+    // console.log("Current Month Days", new Date());
     const totalDaysInMonth = 30;
     const monthlyUses = totalDaysInMonth * perDayUses;
     //rates for kLiter

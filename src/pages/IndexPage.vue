@@ -6,6 +6,7 @@
       round
       @click="logout"
     ></q-btn>
+
     <div class="container">
       <div class="header">
         <img class="q-px-lg titleIcon" src="~assets/MyCity.png" />
@@ -93,7 +94,9 @@
               class="col-xs-6 col-sm-6 q-my-sm enterMenu cursor-pointer"
               src="~assets/lightsandwater.png"
               alt="enter-menu"
-              @click="moveTo('send_reading')"
+              @click="
+                activeMenuItem('LightsAndWater'), (lightAndWaterDialog = true)
+              "
             />
           </div>
 
@@ -338,6 +341,55 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
+
+  <q-dialog v-model="lightAndWaterDialog" :maximized="maximizedToggle">
+    <q-card>
+      <!-- persistent
+      transition-show="slide-left"
+      transition-hide="slide-down" -->
+      <!-- <q-bar>
+        <q-space />
+        <q-btn dense flat icon="close" v-close-popup>
+          <q-tooltip class="bg-white text-primary">Close</q-tooltip>
+        </q-btn>
+      </q-bar> -->
+      <div class="ads dialogAds">
+        <div>
+          <div v-for="ad in getAdsWithCategory" :key="ad.id">
+            <img
+              :src="ad.image"
+              alt="add-image"
+              class="addImage"
+              @click="openAds(ad.url)"
+            />
+            <!-- add_description_scroll -->
+            <div
+              v-show="ad.price > 0 || ad.name !== 'null'"
+              class="add_description_scroll"
+            >
+              <div v-show="ad.price > 0" class="ads_price text-h6">
+                R {{ ad.price }}
+              </div>
+              <div v-show="ad.name !== 'null'" class="text-subtitle1">
+                {{ ad.name }}
+              </div>
+            </div>
+            <q-separator color="grey-4" size="10px" class="bottomLine" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row justify-center items-center" style="height: 10vh">
+        <q-btn
+          no-caps
+          color="primary"
+          class="text-black fit-content"
+          label="Enter LightsAndWater Manager"
+          @click="moveTo('send_reading')"
+        />
+      </div>
+    </q-card>
+  </q-dialog>
 </template>
 <script setup>
 import { computed, onMounted, watch, ref } from "vue";
@@ -349,13 +401,14 @@ import { useRouter } from "vue-router";
 import { useUserStore } from "src/stores/user";
 import { useAdStore } from "src/stores/ads";
 import { useGetAlarmsStore } from "src/stores/alarm";
-
 const router = useRouter();
 const userStore = useUserStore();
 const adStore = useAdStore();
 const alarm = ref(false);
 const whatsapp = ref(false);
 const message = ref(false);
+const lightAndWaterDialog = ref(false);
+const maximizedToggle = ref(true);
 const phoneNumber = ref("");
 
 const alaramStore = useGetAlarmsStore();
@@ -370,6 +423,13 @@ const name = ref("");
 const selectCategory = ref(null);
 
 const getAds = computed(() => adStore.getAds);
+
+// onMounted(() => {
+//   navigator.geolocation.getCurrentPosition((position) => {
+//     var latitude = position.coords.latitude;
+//     var longitude = position.coords.longitude;
+//   });
+// });
 
 const openChatOnWhatsApp = (number) => {
   window.open(`https://api.whatsapp.com/send?phone=+27${number}&text=Hello`);
@@ -405,11 +465,10 @@ const markAsRead = (id) => {
 
 const openAds = (link) => {
   if (link === "www") {
-    return alert();
+    return;
   } else {
     if (!link.match(/^https?:\/\//i)) {
       link = "http://" + link;
-      console.log("links", link);
     }
     return window.open(link, "_blank");
   }
@@ -502,6 +561,9 @@ function moveTo(name) {
 </script>
 
 <style scoped>
+.q-dialog__inner--maximized > div {
+  max-width: 480px !important;
+}
 .container {
   max-height: 97vh;
   display: flex;
@@ -634,5 +696,9 @@ function moveTo(name) {
     /* height: 480px !important; */
     width: 480px !important;
   }
+}
+.dialogAds {
+  height: 90vh;
+  overflow-y: scroll;
 }
 </style>
