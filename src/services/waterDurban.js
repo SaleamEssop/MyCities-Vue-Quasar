@@ -135,6 +135,11 @@ export default class {
         amountPerUnit: 1.48,
         amount: 0,
       },
+      {
+        title: "Sewage Disposal Charge",
+        amountPerUnit: 1.48,
+        amount: 0,
+      },
     ];
 
     const percentageCharges = [{ title: "VAT", onTotalAmount: 0.15 }];
@@ -187,21 +192,34 @@ export default class {
         out: { title: "Water Out", value: 0, reading: 0 },
       }
     );
-
+       
     const projection = [];
 
     Object.keys(sumOfReadingCharges).forEach((key) => {
+      // console.log("sumOfReadingCharges", sumOfReadingCharges);
       projection.push(sumOfReadingCharges[key]);
     });
 
     extraCharges.forEach((charge) => {
+      // console.log("chrge", charge.title);
       projection.push({
         title: charge.title,
         value:
-          charge.amountPerUnit * sumOfReadingCharges["in"]["reading"] ||
-          charge.amount,
+          charge.amountPerUnit *
+            (charge.title === "Sewage Disposal Charge"
+              ? sumOfReadingCharges["out"]["reading"]
+              : sumOfReadingCharges["in"]["reading"]) || charge.amount,
       });
     });
+
+    // getWaterReadings = () => {
+    //   Object.keys(sumOfReadingCharges).forEach((key) => {
+    //     projection.push(sumOfReadingCharges[key]);
+    //     return getWaterReadings;
+    //   });
+    // };
+
+    // getWaterReadings = () => {};
 
     // const sumOfTotalBill = projection.reduce((acc, _project) => {
     //   // console.log("projection", projection);

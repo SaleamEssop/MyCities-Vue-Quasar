@@ -4,7 +4,9 @@
       <!-- <q-btn flat icon="Prev" /> -->
       <q-icon
         name="chevron_left"
+        style="margin-top: -5px"
         size="lg"
+        class="cursor-pointer"
         @click="previousMonth(readingPeriod)"
       />
       <span class="q-gutter-sm">
@@ -12,10 +14,13 @@
         {{ readingPeriod }}
       </span>
       <q-icon
+        style="margin-top: -5px"
         name="chevron_right"
         size="lg"
+        class="cursor-pointer"
         @click="nextMonth(readingPeriod)"
       />
+      <div class="text-body1">Current Data:- {{ currentDate }}</div>
       <!--  for {{ readingPeriod }} -->
       <!-- {{ account.number ? `(${account.number})` : "" }} -->
       <!-- <q-btn flat icon="Next" /> -->
@@ -47,26 +52,35 @@
     <q-card-section>
       <!-- Water Bill -->
       <q-card-section class="titleofcost">
-        <div class="text-subtitle2">Water</div>
+        <div class="text-subtitle2">Water Meters</div>
       </q-card-section>
-      <div class="q-my-lg">
-        <div v-if="getMeterNumber.length" class="text-subtitle2 q-mb-sm">
-          Meter: {{ getMeterNumber[0] }}
-        </div>
+
+      <div class="q-mb-md q-mt-sm">
         <template v-for="(cost, index) in calculationsForMeters" :key="index">
-          <div class=" ">
+          <div
+            v-show="cost.meter.type.id === 1 && cost.title === 'Water in'"
+            class="text-subtitle2 q-mb-sm"
+          >
+            Meter: {{ cost.meter.number }}
+          </div>
+          <div class="">
             <div class="row no-wrap">
               <div v-show="cost.title !== 'Electricity bill'" class="col">
                 {{ cost.title }}
               </div>
+              <div
+                v-show="cost.totalReadingOfMonth !== null"
+                class="text-blue-7 q-mr-md col"
+              >
+                {{ cost.totalReadingOfMonth?.toFixed(2) }} KL
+              </div>
               <div v-show="cost.title !== 'Electricity bill'" class="col-auto">
                 R {{ cost.value.toFixed(2) }}
-                <!-- {{ cost.meter ? "Total :-" : "" }} -->
               </div>
             </div>
-            <div class="q-mt-sm">
+            <div class="q-mt-sm q-mb-sm">
               <q-btn
-                v-show="cost.title === 'Infrastructure Surcharge'"
+                v-show="cost.title === 'Sewage Disposal Charge'"
                 color="blue-2"
                 rounded
                 unelevated
@@ -85,16 +99,26 @@
         <div class="text-subtitle2">Electricity Meters</div>
       </q-card-section>
 
-      <div class="q-my-lg">
-        <div v-if="getMeterNumber.length" class="text-subtitle2 q-mb-sm">
-          Meter: {{ getMeterNumber[1] }}
-        </div>
+      <div class="q-my-md">
         <template v-for="(cost, index) in calculationsForMeters" :key="index">
-          <div>
+          <div
+            v-show="cost.meter.type.id === 2 && cost.value !== 0"
+            class="text-subtitle2 q-mb-sm"
+          >
+            Meter: {{ cost.meter.number }}
+          </div>
+          <div class="">
             <div v-show="cost.value !== 0" class="row no-wrap">
               <div v-show="cost.title === 'Electricity bill'" class="col">
                 {{ cost.title }}
               </div>
+              <div
+                v-show="cost.title === 'Electricity bill'"
+                class="col text-blue-7 q-mr-md"
+              >
+                {{ (cost.value / 2.2425).toFixed(1) }} kWh
+              </div>
+
               <div v-show="cost.title === 'Electricity bill'" class="col-auto">
                 R {{ cost.value.toFixed(2) }}
               </div>
@@ -228,6 +252,17 @@ export default defineComponent({
     const durbanReading = new waterDurban();
 
     const readingPeriod = ref(date.formatDate(new Date(), "MMM YYYY"));
+    const currentDate = ref(date.formatDate(new Date(), "DD MMMM YYYY"));
+
+    // const currentMonthReadings = ref(null);
+
+    // var readings = readingStore.getReadingsByMeterId(meters[0].id);
+
+    // const isLastReadings = durbanReading.getSubmitedAndLastReading(readings);
+
+    // currentMonthReadings.value = durbanReading.calculateUnitForMonth({
+    //   isLastReadings: isLastReadings,
+    // });
 
     const previousMonth = (_month) => {
       const getPreviousMonth = date.subtractFromDate(_month, {
@@ -259,12 +294,16 @@ export default defineComponent({
           isLastReadings: returnLastReadings,
           id: meter.type.id,
         });
+
+        // currentMonthReadings.value = usesPerDay * 30;
+        // console.log("Water", durbanReading);
         const projectionCost = durbanReading.getCost(usesPerDay, meter);
 
         projectionCost.projection.forEach((_el) => {
           meterReadings.push({
             title: _el.title,
             value: _el.value,
+            totalReadingOfMonth: _el.reading || null,
             meter: meter,
           });
         });
@@ -286,17 +325,20 @@ export default defineComponent({
 
     // console.log("get readings", readingStore.readings);
 
-    const getMeterNumber = computed(() => {
-      const meterName = meters.map((_el) => {
-        return _el.number;
-      });
-      // const meterName = meters.forEach((value) => {
-      //   console.log("All thinfs", value);
-      // });
-      return meterName;
-    });
     const calculationsForAccount = computed(() => {
       const readingForAccount = new Array();
+
+      // meters.map((_el) => {
+      //   let waterMeters = new Array();
+      //   if (_el?.type.title === "Water") {
+      //     waterMeters.push({
+      //       id: _el?.id,
+      //       title: _el?.type.title,
+      //     });
+      //   }
+      //   console.log("title", waterMeters);
+      // });
+
       (props.account.defaultFixedCost || []).forEach((defaultCost) => {
         if (defaultCost.is_active) {
           readingForAccount.push({
@@ -367,20 +409,39 @@ export default defineComponent({
       return total;
     });
 
-    function alert({ title, message }) {
+    // function alert({ title, message }) {
+    //   $q.dialog({
+    //     title: "Confirm",
+    //     dark: false,
+    //     title: title,
+    //     message: `${msg}`,
+    //     // message: message,
+    //   })
+    //     .onOk(() => {
+    //       callback();
+    //       // console.log('>>>> OK, received', data)
+    //     })
+    //     .onCancel(() => {
+    //       // console.log('>>>> Cancel')
+    //     })
+    //     .onDismiss(() => {
+    //       // console.log('I am triggered on both OK and Cancel')
+    //     });
+    // }
+
+    function confirm(msg, callback) {
       $q.dialog({
-        dark: false,
-        title: title,
-        message: message,
+        title: "Confirm",
+        message: `${msg}`,
+        cancel: true,
+        persistent: true,
       })
-        .onOk((data) => {
-          // console.log('>>>> OK, received', data)
+        .onOk(() => {
+          // console.log(">>>> OK");
+          callback();
         })
         .onCancel(() => {
-          // console.log('>>>> Cancel')
-        })
-        .onDismiss(() => {
-          // console.log('I am triggered on both OK and Cancel')
+          // console.log(">>>> Cancel");
         });
     }
 
@@ -436,7 +497,6 @@ export default defineComponent({
       body += `${meter.type.title} Meter:\t${meter.number}\n`;
       body += `${valueInString}\n`;
 
-
       body += `\n\n`;
       //});
 
@@ -453,7 +513,18 @@ export default defineComponent({
       console.log(body);
       //        https://mail.google.com/mail/?view=cm&fs=1&to=someone@example.com&cc=someone@ola.example&bcc=someone.else@example.com&su=SUBJECT&body=BODY
 
-      window.open(urlString, "_blank");
+      // var = date.formatDate(new Date(), "DD")
+      const monthDate = date.formatDate(new Date(), "DD");
+      if (monthDate >= 25 && monthDate <= 23) {
+        window.open(urlString, "_blank");
+      } else {
+        confirm(
+          `You are outside the meter reading submission dates. Are you sure you want to email the reading for this meter?`,
+          () => {
+            window.open(urlString, "_blank");
+          }
+        );
+      }
     };
 
     return {
@@ -462,13 +533,15 @@ export default defineComponent({
       totalFullBill,
       readingPeriod,
       submitFullBill,
-      alert,
+      // alert,
       totalVAT,
       additionalAllCost,
       VATonAdditionalCost,
-      getMeterNumber,
       previousMonth,
       nextMonth,
+      currentDate,
+      // currentMonthReadings,
+      // isLastReadings,
     };
   },
 });

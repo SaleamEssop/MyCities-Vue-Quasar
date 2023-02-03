@@ -23,7 +23,12 @@
               icon="menu"
             >
               <q-list v-for="ad in getAds" :key="ad.id">
-                <q-item clickable v-close-popup @click="onItemClick">
+                <q-item
+                  v-show="ad.name !== 'LightsAndWater'"
+                  clickable
+                  v-close-popup
+                  @click="onItemClick"
+                >
                   <q-item-section>
                     <q-item-label
                       v-model="name"
@@ -342,49 +347,58 @@
     </q-card>
   </q-dialog>
 
-  <q-dialog v-model="lightAndWaterDialog" :maximized="maximizedToggle">
+  <q-dialog
+    v-model="lightAndWaterDialog"
+    persistent
+    :maximized="maximizedToggle"
+  >
     <q-card>
-      <!-- persistent
-      transition-show="slide-left"
-      transition-hide="slide-down" -->
-      <!-- <q-bar>
-        <q-space />
-        <q-btn dense flat icon="close" v-close-popup>
-          <q-tooltip class="bg-white text-primary">Close</q-tooltip>
-        </q-btn>
-      </q-bar> -->
       <div class="ads dialogAds">
-        <div>
-          <div v-for="ad in getAdsWithCategory" :key="ad.id">
-            <img
-              :src="ad.image"
-              alt="add-image"
-              class="addImage"
-              @click="openAds(ad.url)"
-            />
-            <!-- add_description_scroll -->
-            <div
-              v-show="ad.price > 0 || ad.name !== 'null'"
-              class="add_description_scroll"
-            >
-              <div v-show="ad.price > 0" class="ads_price text-h6">
-                R {{ ad.price }}
-              </div>
-              <div v-show="ad.name !== 'null'" class="text-subtitle1">
-                {{ ad.name }}
-              </div>
+        <div v-for="ad in getAdsWithCategory" :key="ad.id">
+          <img
+            :src="ad.image"
+            alt="add-image"
+            class="addImage"
+            @click="openAds(ad.url)"
+          />
+          <!-- add_description_scroll -->
+          <div
+            v-show="ad.price > 0 || ad.name !== 'null'"
+            class="add_description_scroll"
+          >
+            <div v-show="ad.price > 0" class="ads_price text-h6">
+              R {{ ad.price }}
             </div>
-            <q-separator color="grey-4" size="10px" class="bottomLine" />
+            <div v-show="ad.name !== 'null'" class="text-subtitle1">
+              {{ ad.name }}
+            </div>
           </div>
+          <q-separator
+            v-show="getAdsWithCategory.length"
+            color="grey-4"
+            size="10px"
+            class="bottomLine"
+          />
         </div>
       </div>
-
-      <div class="row justify-center items-center" style="height: 10vh">
+      <div class="btnLightAndWater">
         <q-btn
           no-caps
           color="primary"
+          rounded
+          v-close-popup
           class="text-black fit-content"
-          label="Enter LightsAndWater Manager"
+          label="Home"
+          @click="activeMenuItem('Top')"
+          icon="arrow_back"
+        />
+        <q-btn
+          icon-right="arrow_forward"
+          no-caps
+          color="primary"
+          rounded
+          class="text-black fit-content"
+          label="My Manager"
           @click="moveTo('send_reading')"
         />
       </div>
@@ -685,6 +699,15 @@ function moveTo(name) {
 .bottomLine {
   margin-top: -6px;
 }
+.btnLightAndWater {
+  display: flex;
+  justify-content: space-evenly;
+  /* background: #00000029; */
+  position: absolute;
+  width: 100%;
+  top: 90%;
+}
+
 @media only screen and (min-width: 480px) {
   .imageHeight {
     width: 480px !important;
@@ -698,7 +721,7 @@ function moveTo(name) {
   }
 }
 .dialogAds {
-  height: 90vh;
+  height: 100vh;
   overflow-y: scroll;
 }
 </style>

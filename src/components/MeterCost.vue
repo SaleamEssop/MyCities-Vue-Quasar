@@ -9,6 +9,7 @@
         <div class="row flex justify-between items-center">
           <div class="column col-5">
             <b class="text-center">Daily Usage</b>
+
             <div
               class="medium-rcorners text-h6 text-center"
               color="negative"

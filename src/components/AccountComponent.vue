@@ -365,7 +365,7 @@ export default defineComponent({
           const default_cost = accountValue.defaultCosts
             // .filter((cost) => cost.isApplicable)
             .map((cost) => {
-              console.log("cost.isApplicable", cost.isApplicable);
+              // console.log("cost.isApplicable", cost.isApplicable);
               return {
                 name: cost.title,
                 value: cost.value,
@@ -428,7 +428,7 @@ export default defineComponent({
             };
           })
           .filter((cost) => cost !== null);
-        console.log("default_cost", default_cost);
+        // console.log("default_cost", default_cost);
         updateAccount({
           site_id: site.value.id,
           account_name: accountValue.title,
@@ -437,7 +437,7 @@ export default defineComponent({
           default_fixed_cost: default_cost,
           account_id: accountValue.id,
         }).then(({ status, code, msg, data }) => {
-          console.log("Updated data", data.default_fixed_costs);
+          // console.log("Updated data", data.default_fixed_costs);
           if (status) {
             accountStore.update({
               id: data.id,
@@ -537,13 +537,13 @@ export default defineComponent({
             newValue.magicKey
           );
           if (address.length == 1) {
-            console.log("address", address[0]);
+            // console.log("address", address[0]);
             let { data } = await findEmailFromLocation({
               x: address[0].latLng.lat,
               y: address[0].latLng.lng,
             });
             const spatialData = data;
-            console.log(spatialData);
+            // console.log(spatialData);
             address[0]["email"] =
               spatialData["features"][0]["attributes"]["MREMAIL"];
             site.value = address[0];
