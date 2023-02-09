@@ -1,5 +1,9 @@
 <template>
   <q-card>
+    <div v-if="imageSrc" class="captureImage">
+      <q-img :src="imageSrc" class="captureImage" />
+    </div>
+
     <q-card-section>
       <div
         v-if="isNew"
@@ -100,6 +104,18 @@
       </div>
     </q-card-section>
     <q-card-actions align="right">
+      <!-- <q-btn
+        color="primary"
+        icon="camera"
+        text-color="black"
+        @click="captureImage(), mkdir()"
+      /> -->
+      <q-btn
+        @click="takePhoto()"
+        color="primary"
+        icon="camera"
+        text-color="black"
+      />
       <q-btn color="primary" text-color="black" @click="$emit('close')"
         >Cancel</q-btn
       >
@@ -119,6 +135,15 @@ import { useQuasar } from "quasar";
 import waterDurban from "/src/services/waterDurban.js";
 
 import { addReadingInMeter, updateReadingInMeter } from "src/boot/axios";
+import {
+  Plugins,
+  CameraResultType,
+  CameraSource,
+  CameraDirection,
+  FilesystemDirectory,
+} from "@capacitor/core";
+
+const { Camera, Filesystem } = Plugins;
 
 export default defineComponent({
   name: "MeterComponentWithInput",
@@ -146,8 +171,86 @@ export default defineComponent({
         ],
       });
     };
+    const imageSrc = ref("");
 
-    // const readingDate = ref(date.formatDate(new Date(), "DD/MM/YYYY"));
+    async function captureImage() {
+      const image = await Camera.getPhoto({
+        saveToGallery: true,
+        quality: 100,
+        // allowEditing: true,
+        source: CameraSource.Prompt,
+        resultType: CameraResultType.Uri,
+        direction: CameraDirection.Rear,
+      });
+      var imageUrl = image.webPath;
+      imageSrc.value = imageUrl;
+    }
+
+    async function mkdir() {
+      try {
+        let ret = await Filesystem.mkdir({
+          path: "MyCityApp",
+          directory: FilesystemDirectory.Documents,
+          recursive: true, // like mkdir -p
+        });
+      } catch (e) {
+        console.error("Unable to make directory", e);
+      }
+    }
+    // async function readdir() {
+    //   try {
+    //     let ret = await Filesystem.readdir({
+    //       path: "MyCityApp",
+    //       directory: FilesystemDirectory.Documents,
+    //       recursive: true, // like mkdir -p
+    //     });
+    //   } catch (e) {
+    //     mkdir();
+    //     console.error("Unable to make directory", e);
+    //   }
+    // }
+
+    const convertBlobToBase64 = (blob) =>
+      new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = reject;
+        reader.onload = () => {
+          resolve(reader.result);
+        };
+        reader.readAsDataURL(blob);
+      });
+
+    const savePicture = async (photo, fileName) => {
+      let base64Data = "";
+      const response = await fetch(photo.webPath);
+      const blob = await response.blob();
+      base64Data = await convertBlobToBase64(blob);
+      // readdir();
+      mkdir();
+      const savedFile = await Filesystem.writeFile({
+        path: "MyCityApp/" + fileName,
+        data: base64Data,
+        directory: FilesystemDirectory.Documents,
+      });
+      return {
+        filepath: fileName,
+        webviewPath: photo.webPath,
+      };
+    };
+    const photos = ref([]);
+    const takePhoto = async () => {
+      const photo = await Camera.getPhoto({
+        resultType: CameraResultType.Uri,
+        source: CameraSource.Camera,
+        quality: 100,
+      });
+      var imageUrl = photo.webPath;
+      imageSrc.value = imageUrl;
+      const fileName =
+        date.formatDate(Date.now(), "YYYY_MM_DD_HH_mm_ss") + ".jpeg";
+      const savedFileImage = await savePicture(photo, fileName);
+      photos.value = [savedFileImage, ...photos.value];
+    };
 
     const inputFocus = ref(false);
     const readingItems = readingStore.getReadingsByMeterId(props.meter.id);
@@ -270,7 +373,7 @@ export default defineComponent({
 
       if (
         !currentReadingValue ||
-        currentReadingValue <= lastReadingItem.value.value
+        currentReadingValue < lastReadingItem.value.value
       ) {
         const maximum = props.meter.type.id == 2 ? 99999.9 : 9999.9999;
         confirm(
@@ -295,7 +398,13 @@ export default defineComponent({
       showAlert,
       alertIfLessThen24Hours,
       lastEditTime,
-      // readingDate,
+      imageSrc,
+      captureImage,
+      mkdir,
+      convertBlobToBase64,
+      savePicture,
+      takePhoto,
+      readdir,
     };
   },
   components: { MeterComponent },
@@ -312,5 +421,9 @@ export default defineComponent({
   border: 2px solid grey;
   border-radius: 15px;
   padding: 5px;
+}
+.captureImage {
+  max-height: 300px;
+  max-width: 400px;
 }
 </style>

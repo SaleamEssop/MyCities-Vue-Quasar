@@ -192,7 +192,7 @@ export default class {
         out: { title: "Water Out", value: 0, reading: 0 },
       }
     );
-       
+
     const projection = [];
 
     Object.keys(sumOfReadingCharges).forEach((key) => {

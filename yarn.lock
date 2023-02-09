@@ -1429,6 +1429,11 @@
   "resolved" "https://registry.npmjs.org/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz"
   "version" "1.2.1"
 
+"@ionic/pwa-elements@^3.1.1":
+  "integrity" "sha512-BoEX1pSrKn5dP4VQwaf8DweAmT4ynmpW+9f6oj/W1xLe54bmuXcUY07ziuZX1DLu50xHSYcO5qJ/dbYC/w6wgA=="
+  "resolved" "https://registry.npmjs.org/@ionic/pwa-elements/-/pwa-elements-3.1.1.tgz"
+  "version" "3.1.1"
+
 "@jridgewell/gen-mapping@^0.1.0":
   "integrity" "sha512-sQXCasFk+U8lWYEe66WxRDOE9PjVz4vSM51fTu3Hw+ClTpUSQb718772vH3pyS5pShp6lvQM7SxgIDXXXmOX7w=="
   "resolved" "https://registry.npmjs.org/@jridgewell/gen-mapping/-/gen-mapping-0.1.1.tgz"
