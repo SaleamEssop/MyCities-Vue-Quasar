@@ -7,6 +7,26 @@
       @click="logout"
     ></q-btn>
 
+    <!-- <q-btn-dropdown
+      round
+      icon="settings_power"
+      style="position: absolute; right: 10px; top: 10px"
+    >
+      <q-list>
+        <q-item clickable v-close-popup @click="onItemClick">
+          <q-item-section>
+            <q-item-label>1.0.1</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item clickable v-close-popup @click="onItemClick">
+          <q-item-section>
+            <q-item-label>logout</q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-btn-dropdown> -->
+
     <div class="container">
       <div class="header">
         <img class="q-px-lg titleIcon" src="~assets/MyCity.png" />

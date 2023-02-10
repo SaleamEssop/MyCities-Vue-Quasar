@@ -1,5 +1,5 @@
 <template>
-  <q-card>
+  <q-card id="cardId_12">
     <div v-if="imageSrc" class="captureImage">
       <q-img :src="imageSrc" class="captureImage" />
     </div>
@@ -104,22 +104,28 @@
       </div>
     </q-card-section>
     <q-card-actions align="right">
-      <!-- <q-btn
-        color="primary"
-        icon="camera"
-        text-color="black"
-        @click="captureImage(), mkdir()"
-      /> -->
       <q-btn
+        icon="image"
+        color="primary"
+        text-color="black"
+        @click="captureImage()"
+      />
+      <!-- <q-btn
+      icon="camera"
         @click="takePhoto()"
         color="primary"
-        icon="camera"
+        label="doc"
         text-color="black"
-      />
+      /> -->
+      <!-- <q-btn color="primary" @click="capture()"> Take Photo </q-btn> -->
       <q-btn color="primary" text-color="black" @click="$emit('close')"
         >Cancel</q-btn
       >
-      <q-btn color="primary" text-color="black" @click="saveReading(false)"
+
+      <q-btn
+        color="primary"
+        text-color="black"
+        @click="saveReading(false), screenCapture()"
         >Save</q-btn
       >
     </q-card-actions>
@@ -139,9 +145,11 @@ import {
   Plugins,
   CameraResultType,
   CameraSource,
-  CameraDirection,
   FilesystemDirectory,
+  CameraDirection,
 } from "@capacitor/core";
+// import { capture } from "src/utils/getScreenShot";
+import domtoimage from "dom-to-image-more";
 
 const { Camera, Filesystem } = Plugins;
 
@@ -186,17 +194,57 @@ export default defineComponent({
       imageSrc.value = imageUrl;
     }
 
-    async function mkdir() {
-      try {
-        let ret = await Filesystem.mkdir({
-          path: "MyCityApp",
-          directory: FilesystemDirectory.Documents,
-          recursive: true, // like mkdir -p
+    const screenShot = ref();
+
+    function screenCapture() {
+      var node = document.getElementById("cardId_12");
+      domtoimage
+        .toPng(node)
+        .then(function (dataUrl) {
+          var img = new Image();
+          img.src = dataUrl;
+          screenShot.value = img.src;
+          console.log("imge", img.src);
+          //   document.body.appendChild(img);
+        })
+        .catch(function (error) {
+          console.error("oops, something went wrong!", error);
         });
-      } catch (e) {
-        console.error("Unable to make directory", e);
-      }
     }
+
+    async function savescreenShot() {
+      // Convert photo to base64 format, required by Filesystem API to save
+      const base64Data = screenShot.value;
+      console.log("base64Data", base64Data);
+      // Write the file to the data directory
+      const fileName = new Date().getTime() + ".jpeg";
+      const savedFile = await Filesystem.writeFile({
+        path: fileName,
+        data: base64Data,
+        directory: Directory.Documents,
+      });
+
+      // Use webPath to display the new image instead of base64 since it's
+      // already loaded into memory
+      return {
+        filepath: fileName,
+        webviewPath: photo.webPath,
+      };
+    }
+
+    // save image with Folder
+
+    // async function mkdir() {
+    //   try {
+    //     let ret = await Filesystem.mkdir({
+    //       path: "MyCityApp",
+    //       directory: FilesystemDirectory.Documents,
+    //       recursive: true, // like mkdir -p
+    //     });
+    //   } catch (e) {
+    //     console.error("Unable to make directory", e);
+    //   }
+    // }
     // async function readdir() {
     //   try {
     //     let ret = await Filesystem.readdir({
@@ -210,47 +258,48 @@ export default defineComponent({
     //   }
     // }
 
-    const convertBlobToBase64 = (blob) =>
-      new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onerror = reject;
-        reader.onload = () => {
-          resolve(reader.result);
-        };
-        reader.readAsDataURL(blob);
-      });
+    // const convertBlobToBase64 = (blob) =>
+    //   new Promise((resolve, reject) => {
+    //     const reader = new FileReader();
+    //     reader.onerror = reject;
+    //     reader.onload = () => {
+    //       resolve(reader.result);
+    //     };
+    //     reader.readAsDataURL(blob);
+    //   });
 
-    const savePicture = async (photo, fileName) => {
-      let base64Data = "";
-      const response = await fetch(photo.webPath);
-      const blob = await response.blob();
-      base64Data = await convertBlobToBase64(blob);
-      // readdir();
-      mkdir();
-      const savedFile = await Filesystem.writeFile({
-        path: "MyCityApp/" + fileName,
-        data: base64Data,
-        directory: FilesystemDirectory.Documents,
-      });
-      return {
-        filepath: fileName,
-        webviewPath: photo.webPath,
-      };
-    };
-    const photos = ref([]);
-    const takePhoto = async () => {
-      const photo = await Camera.getPhoto({
-        resultType: CameraResultType.Uri,
-        source: CameraSource.Camera,
-        quality: 100,
-      });
-      var imageUrl = photo.webPath;
-      imageSrc.value = imageUrl;
-      const fileName =
-        date.formatDate(Date.now(), "YYYY_MM_DD_HH_mm_ss") + ".jpeg";
-      const savedFileImage = await savePicture(photo, fileName);
-      photos.value = [savedFileImage, ...photos.value];
-    };
+    // const savePicture = async (photo, fileName) => {
+    //   let base64Data = "";
+    //   const response = await fetch(photo.webPath);
+    //   const blob = await response.blob();
+    //   base64Data = await convertBlobToBase64(blob);
+    //   // mkdir();
+    //   const savedFile = await Filesystem.writeFile({
+    //     // path: "MyCityApp/" + fileName,
+    //     path: fileName,
+    //     data: base64Data,
+    //     directory: FilesystemDirectory.Documents,
+    //   });
+    //   return {
+    //     filepath: fileName,
+    //     webviewPath: photo.webPath,
+    //   };
+    // };
+
+    // const photos = ref([]);
+    // const takePhoto = async () => {
+    //   const photo = await Camera.getPhoto({
+    //     resultType: CameraResultType.Uri,
+    //     source: CameraSource.Prompt,
+    //     quality: 100,
+    //   });
+    //   var imageUrl = photo.webPath;
+    //   imageSrc.value = imageUrl;
+    //   const fileName =
+    //     date.formatDate(Date.now(), "YYYY_MM_DD_HH_mm_ss") + ".jpeg";
+    //   const savedFileImage = await savePicture(photo, fileName);
+    //   photos.value = [savedFileImage, ...photos.value];
+    // };
 
     const inputFocus = ref(false);
     const readingItems = readingStore.getReadingsByMeterId(props.meter.id);
@@ -400,11 +449,13 @@ export default defineComponent({
       lastEditTime,
       imageSrc,
       captureImage,
-      mkdir,
-      convertBlobToBase64,
-      savePicture,
-      takePhoto,
-      readdir,
+      screenCapture,
+      // mkdir,
+      // convertBlobToBase64,
+      // savePicture,
+      // takePhoto,
+      // // readdir,
+      screenShot,
     };
   },
   components: { MeterComponent },
