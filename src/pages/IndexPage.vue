@@ -260,6 +260,14 @@
               class="addImage"
               @click="openAds(ad.url)"
             />
+
+            <!-- <q-img
+              :src="ad.image"
+              spinner-color="black"
+              alt="add-image"
+              class="addImage"
+              @click="openAds(ad.url)"
+            /> -->
             <!-- add_description_scroll -->
             <div
               v-show="ad.price > 0 || ad.name !== 'null'"
@@ -407,7 +415,7 @@
 
   <!-- logout Dialog -->
   <q-dialog v-model="sureLogout" persistent>
-    <q-card style="min-width:280px">
+    <q-card style="min-width: 280px">
       <q-card-section>
         <div class="text-h6">Logout</div>
         <div class="q-mt-sm">Are you sure you want to Logout?</div>

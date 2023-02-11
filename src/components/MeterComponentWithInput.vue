@@ -465,14 +465,30 @@ export default defineComponent({
       ) {
         const maximum = props.meter.type.id == 2 ? 99999.9 : 9999.9999;
         confirm(
-          `This meter will rollover from ${lastReadingItem.value.valueInString} to ${valueInString}. Please confirm.`,
+          `You  have entered a value lower than  the previous reading. Your usage is ${lastReadingItem.value.valueInString} to ${valueInString}.  Do you want to apply a rollover?.`,
           () => {
-            doSave(currentReadingValue, valueInString);
+            // doSave(currentReadingValue, valueInString);
+            if (lastReadingItem.value.valueInString - valueInString > 100000) {
+              confirm(
+                "You have entered a value which exceeds a usage of 100 000 or More. Shall we accept this reading?",
+                () => {
+                  doSave(currentReadingValue, valueInString);
+                }
+              );
+            }
           }
         );
-        // showAlert("Current reading must be greater than the last reading");
-      } else {
-        doSave(currentReadingValue, valueInString);
+      } else if (currentReadingValue > lastReadingItem.value.value) {
+        if (valueInString - lastReadingItem.value.valueInString > 100000) {
+          confirm(
+            "You have entered a value which exceeds a usage of 100 000 or More. Shall we accept this reading?",
+            () => {
+              doSave(currentReadingValue, valueInString);
+            }
+          );
+        } else {
+          doSave(currentReadingValue, valueInString);
+        }
       }
     };
 
