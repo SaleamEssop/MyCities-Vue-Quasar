@@ -450,7 +450,7 @@ export default defineComponent({
       const subject = `Account: ${props.account.id}`;
       let body = ``;
 
-      body += `Meter reading:${readingPeriod.value}\n`;
+      body += `Meter reading:  ${readingPeriod.value}\n`;
 
       String.prototype.insert = function (index, string) {
         if (index > 0) {
@@ -482,7 +482,7 @@ export default defineComponent({
 
       let valueInString = ""; //(lastReadingTime.value / 100.0 || "") + unit;
 
-      valueInString = `Last Reading:\t${
+      valueInString = `Current Reading:${
         meter.type.id == 2
           ? lastReadingTime.value
           : lastReadingTime.value.toFixed(2)
@@ -493,8 +493,8 @@ export default defineComponent({
       //valueInString = (usesPerDay * 30).toFixed(2) + " " + unit;
 
       body += `Account Number: ${props.account.number}\n`;
-      body += `Account Holder: \t${props.account.title}\n`;
-      body += `${meter.type.title} Meter:\t${meter.number}\n`;
+      body += `Account Holder: ${props.account.title}\n`;
+      body += `${meter.type.title} Meter:${meter.number}\n`;
       body += `${valueInString}\n`;
 
       body += `\n\n`;

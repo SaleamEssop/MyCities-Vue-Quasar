@@ -1,9 +1,9 @@
 <template>
   <q-card id="cardId_12">
-    <div v-if="imageSrc" class="captureImage">
+    <div v-if="imageSrc" class=" ">
       <q-img :src="imageSrc" class="captureImage" />
+      <q-separator color="grey" size="4px" />
     </div>
-
     <q-card-section>
       <div
         v-if="isNew"
@@ -13,15 +13,19 @@
       >
         {{ alertIfLessThen24Hours }}
       </div>
-      <div class="text-subtitle2">Title : {{ meter?.title }}</div>
+      <div class="text-subtitle2">Account Number : {{ account?.number }}</div>
+      <div class="text-subtitle2">Name on Account : {{ account?.title }}</div>
+      <div class="text-subtitle2">Date : {{ currentDate }}</div>
+
+      <div class="text-subtitle2">Meter Description : {{ meter?.title }}</div>
 
       <div class="text-subtitle2">
         Meter Number : {{ meter ? meter?.number : "" }}
       </div>
 
-      <div class="text-subtitle2">
+      <!-- <div class="text-subtitle2">
         Last saved reading : {{ lastReadingItem?.value }}
-      </div>
+      </div> -->
 
       <!-- Edit Readings with Date -->
 
@@ -56,7 +60,7 @@
       </div>
       <q-separator class="q-mt-md" /> -->
     </q-card-section>
-    <q-card-section>
+    <q-card-section style="margin-top: -10px">
       <div
         class="relative"
         :class="inputFocus ? 'stroke-focus' : 'stroke-simple'"
@@ -110,31 +114,37 @@
         text-color="black"
         @click="captureImage()"
       />
-      <!-- <q-btn
-      icon="camera"
-        @click="takePhoto()"
-        color="primary"
-        label="doc"
-        text-color="black"
-      /> -->
-      <!-- <q-btn color="primary" @click="capture()"> Take Photo </q-btn> -->
       <q-btn color="primary" text-color="black" @click="$emit('close')"
         >Cancel</q-btn
       >
-
-      <q-btn
-        color="primary"
-        text-color="black"
-        @click="saveReading(false), screenCapture()"
+      <q-btn color="primary" text-color="black" @click="screenShotCapture()"
         >Save</q-btn
       >
     </q-card-actions>
+    <q-separator color="grey" size="10px" />
+
+    <q-card-section>
+      <div class="text-subtitle1" style="margin-top: -10px">Powered by the</div>
+      <div>
+        <img class="q-px-lg myCityIcon" src="~assets/logo_small.png" />
+      </div>
+      <div
+        @click="openWeb()"
+        style="text-decoration: underline"
+        class="text-body1 text-center"
+      >
+        www.mycities.co.za
+      </div>
+    </q-card-section>
+    <q-separator color="grey" size="4px" />
   </q-card>
 </template>
 <script>
 import { computed, defineComponent, ref } from "vue";
 import MeterComponent from "./MeterComponent.vue";
 import { useReadingStore } from "/src/stores/reading";
+import { useAccountStore } from "/src/stores/account";
+
 import { date } from "quasar";
 import { useQuasar } from "quasar";
 
@@ -148,7 +158,6 @@ import {
   FilesystemDirectory,
   CameraDirection,
 } from "@capacitor/core";
-// import { capture } from "src/utils/getScreenShot";
 import domtoimage from "dom-to-image-more";
 
 const { Camera, Filesystem } = Plugins;
@@ -162,6 +171,10 @@ export default defineComponent({
   setup(props, { emit }) {
     const meterComopnentReadValue = ref();
     const readingStore = useReadingStore();
+    const accountStore = useAccountStore();
+    const account = accountStore.getAccountById(props.meter.account.id);
+    const currentDate = ref(date.formatDate(Date.now(), "DD-MM-YYYY"));
+
     const $q = useQuasar();
     const showAlert = (msg) => {
       $q.notify({
@@ -179,11 +192,13 @@ export default defineComponent({
         ],
       });
     };
+    const openWeb = () => {
+      window.open("http://mycities.co.za/", "_blank");
+    };
     const imageSrc = ref("");
-
-    async function captureImage() {
+    const captureImage = async () => {
       const image = await Camera.getPhoto({
-        saveToGallery: true,
+        // saveToGallery: true,
         quality: 100,
         // allowEditing: true,
         source: CameraSource.Prompt,
@@ -192,45 +207,69 @@ export default defineComponent({
       });
       var imageUrl = image.webPath;
       imageSrc.value = imageUrl;
+    };
+
+    // const screenShot = ref();
+
+    async function mkdir() {
+      try {
+        let ret = await Filesystem.mkdir({
+          path: "MyCityApp",
+          directory: FilesystemDirectory.Documents,
+          recursive: true, // like mkdir -p
+        });
+      } catch (e) {
+        console.error("Unable to make directory", e);
+      }
     }
 
-    const screenShot = ref();
-
-    function screenCapture() {
+    const screenShotCapture = () => {
+      $q.loading.show();
       var node = document.getElementById("cardId_12");
       domtoimage
         .toPng(node)
         .then(function (dataUrl) {
           var img = new Image();
           img.src = dataUrl;
-          screenShot.value = img.src;
-          console.log("imge", img.src);
-          //   document.body.appendChild(img);
+          const base64Data = img.src;
+          const fileName =
+            date.formatDate(Date.now(), "YYYY_MM_DD_HH_mm_ss") + ".jpeg";
+          mkdir();
+          const savedFile = Filesystem.writeFile({
+            path: "MyCityApp/" + fileName,
+            // path: fileName,
+            data: base64Data,
+            directory: FilesystemDirectory.Documents,
+          });
+          saveReading(false);
+          $q.notify({ message: "Saved:-FileManager/Documents/MyCityApp/.." });
+          $q.loading.hide();
         })
         .catch(function (error) {
           console.error("oops, something went wrong!", error);
         });
-    }
+    };
 
-    async function savescreenShot() {
-      // Convert photo to base64 format, required by Filesystem API to save
-      const base64Data = screenShot.value;
-      console.log("base64Data", base64Data);
-      // Write the file to the data directory
-      const fileName = new Date().getTime() + ".jpeg";
-      const savedFile = await Filesystem.writeFile({
-        path: fileName,
-        data: base64Data,
-        directory: Directory.Documents,
-      });
+    // async function savescreenShot() {
+    //   // Convert photo to base64 format, required by Filesystem API to save
+    //   const base64Data = screenShot.value;
+    //   console.log("base64Data", base64Data);
+    //   // Write the file to the data directory
+    //   const fileName =
+    //     date.formatDate(Date.now(), "YYYY_MM_DD_HH_mm_ss") + ".jpeg";
+    //   const savedFile = await Filesystem.writeFile({
+    //     path: fileName,
+    //     data: base64Data,
+    //     directory: FilesystemDirectory.Documents,
+    //   });
 
-      // Use webPath to display the new image instead of base64 since it's
-      // already loaded into memory
-      return {
-        filepath: fileName,
-        webviewPath: photo.webPath,
-      };
-    }
+    //   // Use webPath to display the new image instead of base64 since it's
+    //   // already loaded into memory
+    //   // return {
+    //   //   filepath: fileName,
+    //   //   // webviewPath: photo.webPath,
+    //   // };
+    // }
 
     // save image with Folder
 
@@ -438,6 +477,7 @@ export default defineComponent({
     };
 
     return {
+      account,
       inputFocus,
       currentReading,
       currentReadingItem,
@@ -448,14 +488,16 @@ export default defineComponent({
       alertIfLessThen24Hours,
       lastEditTime,
       imageSrc,
+      currentDate,
       captureImage,
-      screenCapture,
-      // mkdir,
+      screenShotCapture,
+      openWeb,
+      mkdir,
       // convertBlobToBase64,
       // savePicture,
       // takePhoto,
-      // // readdir,
-      screenShot,
+      // readdir,
+      // savescreenShot,
     };
   },
   components: { MeterComponent },
@@ -474,7 +516,14 @@ export default defineComponent({
   padding: 5px;
 }
 .captureImage {
-  max-height: 300px;
+  max-height: 250px;
   max-width: 400px;
+}
+
+.myCityIcon {
+  width: 100%;
+  height: 50px;
+  object-fit: contain;
+  margin-top: -10px;
 }
 </style>

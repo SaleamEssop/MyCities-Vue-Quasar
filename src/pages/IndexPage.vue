@@ -4,28 +4,8 @@
       icon="settings_power"
       style="position: absolute; right: 10px; top: 10px"
       round
-      @click="logout"
+      @click="sureLogout = true"
     ></q-btn>
-
-    <!-- <q-btn-dropdown
-      round
-      icon="settings_power"
-      style="position: absolute; right: 10px; top: 10px"
-    >
-      <q-list>
-        <q-item clickable v-close-popup @click="onItemClick">
-          <q-item-section>
-            <q-item-label>1.0.1</q-item-label>
-          </q-item-section>
-        </q-item>
-
-        <q-item clickable v-close-popup @click="onItemClick">
-          <q-item-section>
-            <q-item-label>logout</q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
-    </q-btn-dropdown> -->
 
     <div class="container">
       <div class="header">
@@ -366,7 +346,7 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
-
+  <!-- lightsWater Ads Category -->
   <q-dialog
     v-model="lightAndWaterDialog"
     persistent
@@ -409,7 +389,7 @@
           v-close-popup
           class="text-black fit-content"
           label="Home"
-          @click="activeMenuItem('Top')"
+          @click="activeMenuItem('Home')"
           icon="arrow_back"
         />
         <q-btn
@@ -422,6 +402,20 @@
           @click="moveTo('send_reading')"
         />
       </div>
+    </q-card>
+  </q-dialog>
+
+  <!-- logout Dialog -->
+  <q-dialog v-model="sureLogout" persistent>
+    <q-card style="min-width:280px">
+      <q-card-section>
+        <div class="text-h6">Logout</div>
+        <div class="q-mt-sm">Are you sure you want to Logout?</div>
+      </q-card-section>
+      <q-card-actions align="right">
+        <q-btn label="Cancel" dense no-caps v-close-popup />
+        <q-btn label="Logout" dense no-caps @click="logout" v-close-popup />
+      </q-card-actions>
     </q-card>
   </q-dialog>
 </template>
@@ -441,6 +435,7 @@ const adStore = useAdStore();
 const alarm = ref(false);
 const whatsapp = ref(false);
 const message = ref(false);
+const sureLogout = ref(false);
 const lightAndWaterDialog = ref(false);
 const maximizedToggle = ref(true);
 const phoneNumber = ref("");
@@ -554,7 +549,7 @@ const getAdsWithCategory = computed(() => {
     return selectCategory.value;
   } else {
     let defaultAds = getAds.value.filter((_el) => {
-      return _el["name"] === "Top";
+      return _el["name"] === "Home";
     });
     defaultAds.findIndex(({ ads }) => {
       slide.value = ads[0]?.id;

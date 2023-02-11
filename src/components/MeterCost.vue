@@ -267,7 +267,7 @@ export default defineComponent({
 
         let valueInString = ""; //(lastReadingTime.value / 100.0 || "") + unit;
 
-        valueInString = `Last Reading:\t${
+        valueInString = `Current Reading:${
           meter.type.id == 2
             ? lastReadingTime.value
             : lastReadingTime.value.toFixed(2)
