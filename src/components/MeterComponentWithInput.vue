@@ -23,9 +23,9 @@
         Meter Number : {{ meter ? meter?.number : "" }}
       </div>
 
-      <!-- <div class="text-subtitle2">
-        Last saved reading : {{ lastReadingItem?.value }}
-      </div> -->
+      <div class="text-subtitle2">
+        Current reading : {{ lastReadingItem?.value }}
+      </div>
 
       <!-- Edit Readings with Date -->
 
@@ -117,7 +117,8 @@
       <q-btn color="primary" text-color="black" @click="$emit('close')"
         >Cancel</q-btn
       >
-      <q-btn color="primary" text-color="black" @click="screenShotCapture()"
+      <!-- screenShotCapture(); -->
+      <q-btn color="primary" text-color="black" @click="saveReading(false)"
         >Save</q-btn
       >
     </q-card-actions>
@@ -232,6 +233,7 @@ export default defineComponent({
           var img = new Image();
           img.src = dataUrl;
           const base64Data = img.src;
+          // alert(base64Data);
           const fileName =
             date.formatDate(Date.now(), "YYYY_MM_DD_HH_mm_ss") + ".jpeg";
           mkdir();
@@ -241,7 +243,7 @@ export default defineComponent({
             data: base64Data,
             directory: FilesystemDirectory.Documents,
           });
-          saveReading(false);
+          // saveReading(false);
           $q.notify({ message: "Saved:-FileManager/Documents/MyCityApp/.." });
           $q.loading.hide();
         })
@@ -418,6 +420,7 @@ export default defineComponent({
               });
             }
           });
+          screenShotCapture();
         } else {
           let lasteditDate = date.formatDate(
             new Date(lastEditTime.value).toISOString()
@@ -439,8 +442,8 @@ export default defineComponent({
               });
             }
           });
+          screenShotCapture();
         }
-
         emit("save");
       };
       if (props.isNew) {
@@ -475,6 +478,8 @@ export default defineComponent({
                   doSave(currentReadingValue, valueInString);
                 }
               );
+            } else {
+              doSave(currentReadingValue, valueInString);
             }
           }
         );

@@ -224,6 +224,7 @@ export default defineComponent({
 
     const signInExistingUser = (email, password) => {
       if (agreeToTCs.value) {
+        $q.loading.show();
         userLogin({ email, password })
           .then(async ({ status, code, msg, data, token }) => {
             if (status) {
@@ -234,6 +235,7 @@ export default defineComponent({
             } else {
               throw { code, msg };
             }
+            $q.loading.hide();
           })
           .catch((error) => {
             // if (error.toJSON().message === "Network Error") {
@@ -251,6 +253,8 @@ export default defineComponent({
     const createUser = (formData) => {
       if (formData.password === formData.confirmPassword) {
         if (agreeToTCs.value) {
+          $q.loading.show();
+
           userSignUp(formData)
             .then(({ status, code, msg }) => {
               if (status) {
@@ -260,6 +264,7 @@ export default defineComponent({
               } else {
                 throw { code, msg };
               }
+              $q.loading.hide();
             })
             .catch((error) => {
               $q.notify({ message: getErrorMsg(error) });

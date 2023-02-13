@@ -86,7 +86,7 @@
                 rounded
                 color="primary"
                 text-color="black"
-                @click="selectAccount(account)"
+                @click="selectAccount(account), Loading()"
                 v-if="account == accountStore.selectedAccount"
                 icon="check"
                 >Select</q-btn
@@ -96,7 +96,7 @@
                 color="primary"
                 text-color="black"
                 v-else
-                @click="selectAccount(account)"
+                @click="selectAccount(account), Loading()"
                 >Select</q-btn
               >
               <q-btn flat size="lg" icon="more_horiz" text-color="primary">
@@ -193,6 +193,7 @@
           <q-item-section class="font-size larger">Meters</q-item-section>
         </template>
         <!-- {{ accountStore.allAccounts }} -->
+
         <template
           v-for="meter in getMeters(accountStore.selectedAccount?.id)"
           :key="meter.id"
@@ -295,7 +296,14 @@
   </q-dialog>
 </template>
 <script setup>
-import { ref, onBeforeMount, onMounted, onBeforeUnmount, watch } from "vue";
+import {
+  ref,
+  onBeforeMount,
+  onMounted,
+  onBeforeUnmount,
+  watch,
+  computed,
+} from "vue";
 import { useRouter } from "vue-router";
 
 import { useSiteStore } from "/src/stores/site";
@@ -330,6 +338,17 @@ const getMeters = (accountId) => {
   return meterStore.getByAccuntId(accountId);
 };
 
+const Loading = () => {
+  if (getMeters(accountStore.selectedAccount?.id).length > 0) {
+    $q.loading.hide();
+  } else {
+    $q.loading.show();
+    setTimeout(() => {
+      $q.loading.hide();
+    }, 1000);
+  }
+};
+
 const isExpandSite = ref(true);
 const isExpandAccount = ref(true);
 const isExpandMeter = ref(true);
@@ -343,13 +362,11 @@ const selectSite = (_site) => {
   siteStore.selectedSite = _site;
   accountStore.selectedAccount = null;
   meterStore.selectedMeter = null;
-
   isExpandAccount.value = true;
 };
 const selectAccount = (_account) => {
   accountStore.selectedAccount = _account;
   meterStore.selectedMeter = null;
-
   isExpandMeter.value = true;
   fetchAndSaveMeterOnAccount(_account.id);
 };

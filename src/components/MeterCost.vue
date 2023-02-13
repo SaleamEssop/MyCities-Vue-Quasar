@@ -130,6 +130,8 @@ import { date } from "quasar";
 import { useReadingStore } from "/src/stores/reading";
 import { useSiteStore } from "/src/stores/site";
 import { useAccountStore } from "/src/stores/account";
+import { useQuasar } from "quasar";
+
 
 import waterDurban from "/src/services/waterDurban.js";
 
@@ -148,6 +150,8 @@ export default defineComponent({
     const account = accountStore.getAccountById(props.meter.account.id);
 
     const meters = [props.meter];
+    const $q = useQuasar();
+
 
     const site = siteStore.getSiteById(account.site.id);
 
@@ -239,6 +243,22 @@ export default defineComponent({
       return VAT;
     });
 
+    function confirm(msg, callback) {
+      $q.dialog({
+        title: "Confirm",
+        message: `${msg}`,
+        cancel: true,
+        persistent: true,
+      })
+        .onOk(() => {
+          // console.log(">>>> OK");
+          callback();
+        })
+        .onCancel(() => {
+          // console.log(">>>> Cancel");
+        });
+    }
+
     const submitBill = () => {
       const meter = props.meter;
       const email = meter.type.id == 2 ? site.email : "eservices@durban.gov.za";
@@ -300,7 +320,18 @@ export default defineComponent({
       console.log(body);
       //        https://mail.google.com/mail/?view=cm&fs=1&to=someone@example.com&cc=someone@ola.example&bcc=someone.else@example.com&su=SUBJECT&body=BODY
 
-      window.open(urlString, "_blank");
+      // window.open(urlString, "_blank");
+      const monthDate = date.formatDate(new Date(), "DD");
+      if (monthDate >= 25 && monthDate <= 23) {
+        window.open(urlString, "_blank");
+      } else {
+        confirm(
+          `You are outside the meter reading submission dates. Are you sure you want to email the reading for this meter?`,
+          () => {
+            window.open(urlString, "_blank");
+          }
+        );
+      }
     };
 
     const lastReadingDisplayFormat = computed(() => {

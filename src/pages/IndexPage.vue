@@ -417,12 +417,14 @@
   <q-dialog v-model="sureLogout" persistent>
     <q-card style="min-width: 280px">
       <q-card-section>
-        <div class="text-h6">Logout</div>
+        <span class="text-h6">Logout</span>
+        <!-- <q-avatar icon="question_mark" /> -->
+        <!-- <div icon="question" class="text-h6">Logout</div> -->
         <div class="q-mt-sm">Are you sure you want to Logout?</div>
       </q-card-section>
       <q-card-actions align="right">
         <q-btn label="Cancel" dense no-caps v-close-popup />
-        <q-btn label="Logout" dense no-caps @click="logout" v-close-popup />
+        <q-btn label="Logout" dense no-caps @click="logout" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -568,13 +570,18 @@ const getAdsWithCategory = computed(() => {
 
 const logout = () => {
   // getAuth().signOut();
-  userStore.signOut();
-  router
-    .push("/auth/login")
-    .then(() => {
-      $q.notify({ message: "Signed out" });
-    })
-    .catch((error) => console.log("error", error));
+  $q.loading.show();
+  setTimeout(() => {
+    $q.loading.hide();
+    userStore.signOut();
+    router
+      .push("/auth/login")
+      .then(() => {
+        $q.notify({ message: "Signed out" });
+      })
+      .catch((error) => console.log("error", error));
+    timer = void 0;
+  }, 1000);
 };
 const totalItems = ref([
   {

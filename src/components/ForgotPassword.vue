@@ -150,7 +150,7 @@ export default defineComponent({
             $q.notify({ message: status.msg });
           });
       } else if (isResetPassword.value === true && verifyCode.value === false) {
-        closed.value = true;
+        // closed.value = true;
         resetNewPassword({ email: form.email, password: form.newPassword })
           .then(({ status, code, msg }) => {
             if (status) {
@@ -168,6 +168,7 @@ export default defineComponent({
             $q.loading.hide();
             $q.notify({ message: status.msg });
           });
+        closed.value = true;
       }
     };
 
