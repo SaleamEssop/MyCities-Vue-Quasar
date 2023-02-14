@@ -10,6 +10,7 @@ var groupBy = function (xs, key) {
 
 export default class {
   getSubmitedAndLastReading = (readings, monthYear) => {
+    // console.log("monthYear", monthYear);
     const formatForPeriod = "MMM YYYY";
     const getBothSideReading = (readings, month) => {
       let data =
@@ -83,11 +84,12 @@ export default class {
   };
 
   calculateUnitForMonth = ({ isLastReadings, id }) => {
+    // console.log("isLastReadings", isLastReadings);
     const { lastReading, firstReading } = isLastReadings;
     if (firstReading.value > lastReading.value) {
       let maxValue = id === 2 ? 99999.9 : 9999.9999;
       var consumeUnits = maxValue + lastReading.value - firstReading.value;
-    } else {
+      } else {
       var consumeUnits = lastReading.value - firstReading.value;
     }
     var consumeTime = lastReading.time - firstReading.time;

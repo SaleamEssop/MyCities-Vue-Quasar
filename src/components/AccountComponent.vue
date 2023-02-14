@@ -117,7 +117,74 @@
           v-model.number="defaultCost.value"
           type="number"
           :disable="!defaultCost.isApplicable"
-          :readonly="defaultCost.title === 'Rates' ? false : true"
+        />
+        <!-- :readonly="
+            defaultCost.title === 'Rates' ||
+            defaultCost.title === 'Refuse Collection'
+              ? false
+              : true
+          " -->
+        <q-input
+          v-else
+          placeholder="R0.00"
+          v-model.number="defaultCost.value"
+          type="number"
+          :disable="!defaultCost.isApplicable"
+        />
+        <!-- :readonly="
+            defaultCost.fixed_cost.title === 'Rates' ||
+            defaultCost.fixed_cost.title === 'Refuse Collection'
+              ? false
+              : true
+          " -->
+      </q-card-section>
+    </template>
+    <!-- For edit Account New Charges -->
+    <!-- <template
+      v-for="(defaultCost, index) in getNewAddedDefaultCosts"
+      :key="index"
+    >
+      <q-separator />
+      <q-card-section>
+        <div class="flex justify-between items-center">
+          <div v-if="defaultCost" class="text-h7">
+            {{ defaultCost.title }}
+          </div>
+          <q-toggle v-model="defaultCost.isApplicable" />
+        </div>
+        <q-input
+          placeholder="R0.00"
+          v-model.number="defaultCost.value"
+          type="number"
+          :disable="!defaultCost.isApplicable"
+        />
+      </q-card-section>
+    </template> -->
+
+    <!-- <template
+      v-for="(defaultCost, index) in isNew
+        ? selectedAccount.defaultCosts
+        : selectedAccount.defaultFixedCost"
+      :key="index"
+    >
+      <q-separator />
+
+      <q-card-section>
+        <div class="flex justify-between items-center">
+          <div v-if="defaultCost" class="text-h7">
+            {{ isNew ? defaultCost.title : defaultCost.fixed_cost.title }}
+         
+          </div>
+          <q-toggle v-model="defaultCost.isApplicable" />
+       
+        </div>
+        <q-input
+          v-if="isNew"
+          placeholder="R0.00"
+          v-model.number="defaultCost.value"
+          type="number"
+          :disable="!defaultCost.isApplicable"
+          :readonly="defaultCost.title === 'Rates' || 'Refuse Collection' ? false : true"
         />
         <q-input
           v-else
@@ -128,7 +195,7 @@
           :readonly="defaultCost.fixed_cost.title === 'Rates' ? false : true"
         />
       </q-card-section>
-    </template>
+    </template> -->
 
     <q-separator />
     <q-space />
@@ -264,6 +331,18 @@ export default defineComponent({
       selectedAccount.value = initialState.selectedAccount;
     };
 
+    const getNewAddedDefaultCosts = computed(() => {
+      let newCost = new Array();
+      let addAccountCost = selectedAccount.value.defaultCosts;
+      let editAccountCost = selectedAccount.value.defaultFixedCost;
+      newCost = addAccountCost.filter(
+        (obj) =>
+          !editAccountCost.some(({ fixed_cost_id }) => obj.id === fixed_cost_id)
+      );
+      // console.log("Array3", addAccountCost);
+      return newCost;
+    });
+
     // const addFixedCostField = () => {
     //   selectedAccount.value.fixedCosts.push({
     //     id: Date.now(),
@@ -365,7 +444,6 @@ export default defineComponent({
           const default_cost = accountValue.defaultCosts
             // .filter((cost) => cost.isApplicable)
             .map((cost) => {
-              // console.log("cost.isApplicable", cost.isApplicable);
               return {
                 name: cost.title,
                 value: cost.value,
@@ -374,14 +452,11 @@ export default defineComponent({
               };
             })
             .filter((cost) => cost !== null);
-          // const fixed_cost = accountValue.fixedCosts;
-
           addSiteAndAccount({
             site_id: site.value.id,
             account_name: accountValue.title,
             account_number: accountValue.number,
             optional_information: accountValue.option,
-            // fixed_cost: fixed_cost,
             default_fixed_cost: default_cost,
           }).then(({ status, code, msg, data }) => {
             if (status) {
@@ -404,14 +479,9 @@ export default defineComponent({
             }
           });
         }
-        // selectedAccount.value.site["id"] = site.value.id;
-        // accountStore.addAccount(selectedAccount.value);
       } else {
         const accountValue = selectedAccount.value;
-        // console.log("selectAccount", accountValue);
-        // const default_cost = selectedAccount.value.defaultFixedCost
         const default_cost = accountValue.defaultFixedCost
-          // .filter((cost) => cost.isApplicable )
           .map((cost) => {
             let id = cost.id;
             const accountCost = accountValue.defaultFixedCost.find(
@@ -428,7 +498,24 @@ export default defineComponent({
             };
           })
           .filter((cost) => cost !== null);
-        // console.log("default_cost", default_cost);
+        //   console.log("getNewAddedDefaultCosts.value", getNewAddedDefaultCosts.value);
+        // const newDefaultCost = getNewAddedDefaultCosts.value
+        //   .map((cost) => {
+        //     let id = cost.id;
+        //     const accountCost = accountValue.defaultFixedCost.find(
+        //       (_cost) => _cost.fixed_cost.id === cost.id
+        //     );
+        //     if (accountCost) {
+        //       id = accountCost.id;
+        //     }
+        //     return {
+        //       name: cost.title,
+        //       value: cost.value,
+        //       is_active: cost.isApplicable ? 1 : 0,
+        //       id: id,
+        //     };
+        //   })
+        //   .filter((cost) => cost !== null);
         updateAccount({
           site_id: site.value.id,
           account_name: accountValue.title,
@@ -437,7 +524,6 @@ export default defineComponent({
           default_fixed_cost: default_cost,
           account_id: accountValue.id,
         }).then(({ status, code, msg, data }) => {
-          // console.log("Updated data", data.default_fixed_costs);
           if (status) {
             accountStore.update({
               id: data.id,
@@ -458,7 +544,6 @@ export default defineComponent({
           }
         });
       }
-
       // emit("update:account", selectedAccount.value);
       emit("save");
     };
@@ -587,6 +672,7 @@ export default defineComponent({
       watchSite,
       isNew,
       alert,
+      getNewAddedDefaultCosts,
     };
   },
 });

@@ -20,7 +20,8 @@
         class="cursor-pointer"
         @click="nextMonth(readingPeriod)"
       />
-      <div class="text-body1">Current Data:- {{ currentDate }}</div>
+      <div class="text-subtitle1 rounded-borders">{{ currentBillPeriod }}</div>
+      <div class="text-subtitle2">Current Date:- {{ currentDate }}</div>
       <!--  for {{ readingPeriod }} -->
       <!-- {{ account.number ? `(${account.number})` : "" }} -->
       <!-- <q-btn flat icon="Next" /> -->
@@ -281,6 +282,29 @@ export default defineComponent({
       }
     };
 
+    const currentBillPeriod = computed(() => {
+      let currentbillDate = null;
+      const getPreviousMonth = date.subtractFromDate(readingPeriod.value, {
+        days: 7,
+      });
+      currentbillDate = date.formatDate(getPreviousMonth, "DD MMMM");
+      const formattedString = date.formatDate(currentbillDate, "DD");
+      if (formattedString == 24) {
+        const getPreviousMonth = date.subtractFromDate(readingPeriod.value, {
+          days: 6,
+        });
+        currentbillDate = date.formatDate(getPreviousMonth, "DD MMMM");
+      }
+      const getNextMonth = date.addToDate(readingPeriod.value, {
+        days: 24,
+      });
+      currentbillDate =
+        `${currentbillDate}` +
+        " to " +
+        date.formatDate(getNextMonth, "DD MMMM");
+      return currentbillDate;
+    });
+
     const calculationsForMeters = computed(() => {
       const meterReadings = new Array();
       meters.forEach((meter) => {
@@ -294,11 +318,9 @@ export default defineComponent({
           isLastReadings: returnLastReadings,
           id: meter.type.id,
         });
-
         // currentMonthReadings.value = usesPerDay * 30;
         // console.log("Water", durbanReading);
         const projectionCost = durbanReading.getCost(usesPerDay, meter);
-
         projectionCost.projection.forEach((_el) => {
           meterReadings.push({
             title: _el.title,
@@ -540,6 +562,7 @@ export default defineComponent({
       previousMonth,
       nextMonth,
       currentDate,
+      currentBillPeriod,
       // currentMonthReadings,
       // isLastReadings,
     };
