@@ -9,10 +9,10 @@ var groupBy = function (xs, key) {
 };
 
 export default class {
-  getSubmitedAndLastReading = (readings, monthYear) => {
-    // console.log("monthYear", monthYear);
+  getSubmitedAndLastReading = (readings, monthYear, billingDate) => {
     const formatForPeriod = "MMM YYYY";
     const getBothSideReading = (readings, month) => {
+      // console.log("month", month);
       let data =
         groupBy(
           (readings || []).map((item) => {
@@ -35,11 +35,17 @@ export default class {
     let returnableLastReading = {};
     let returnableFirstReading = {};
 
-    let currentMonthDate = monthYear
-      ? date.extractDate(monthYear, formatForPeriod)
-      : new Date();
+    // let currentMonthDate = monthYear
+    //   ? date.extractDate(monthYear, formatForPeriod)
+    //   : new Date();
+
+    // let currentMonthDate = date.addToDate(monthYear, { days: billingDate - 1 });
+    let currentMonthDate = date.addToDate(monthYear, { days: billingDate - 1 });
+    // let convertIntoMilis = date.formatDate(currentMonthDate, "x");
+    // console.log("currentMonthDate", convertIntoMilis);
 
     const period = date.formatDate(currentMonthDate, formatForPeriod);
+
 
     let i = 24; //check at maximum 24 months
     do {
@@ -47,6 +53,7 @@ export default class {
         date.subtractFromDate(currentMonthDate, { months: 24 - i }),
         formatForPeriod
       );
+      // console.log("month", month);
       const { firstReading, lastReading } = getBothSideReading(readings, month);
       if (
         Object.keys(returnableLastReading).length === 0 &&
@@ -89,7 +96,7 @@ export default class {
     if (firstReading.value > lastReading.value) {
       let maxValue = id === 2 ? 99999.9 : 9999.9999;
       var consumeUnits = maxValue + lastReading.value - firstReading.value;
-      } else {
+    } else {
       var consumeUnits = lastReading.value - firstReading.value;
     }
     var consumeTime = lastReading.time - firstReading.time;

@@ -29,11 +29,12 @@
 
       <!-- Edit Readings with Date -->
 
-      <!-- <div class="row justify-center q-mt-lg">
+      <div class="row justify-center q-mt-lg">
         <q-badge class="bg-grey-4" text-color="black">
           <span class="text-body1">Reading date: {{ readingDate }}</span>
         </q-badge>
       </div>
+
       <div class="q-pt-md justify-center flex">
         <span class="round-cheap text-center"
           >Edit date
@@ -47,7 +48,7 @@
               <div class="row items-center justify-end q-gutter-sm">
                 <q-btn label="Cancel" color="primary" flat v-close-popup />
                 <q-btn
-                  label="OK"
+                  label="Save Date"
                   color="primary"
                   flat
                   @click="save"
@@ -58,7 +59,7 @@
           </q-popup-proxy>
         </span>
       </div>
-      <q-separator class="q-mt-md" /> -->
+      <q-separator class="q-mt-md" />
     </q-card-section>
     <q-card-section style="margin-top: -10px">
       <div
@@ -193,6 +194,9 @@ export default defineComponent({
         ],
       });
     };
+
+    const readingDate = ref(date.formatDate(new Date(), "DD/MM/YYYY"));
+
     const openWeb = () => {
       window.open("http://mycities.co.za/", "_blank");
     };
@@ -399,10 +403,10 @@ export default defineComponent({
 
     const saveReading = (isSubmit = false) => {
       const doSave = (currentReadingValue, valueInString) => {
-        const timeToSave = new Date().toISOString();
-        // const timeToSave = new Date(
-        //   date.extractDate(readingDate.value, "DD/MM/YYYY")
-        // ).toISOString();
+        // const timeToSave = new Date().toISOString();
+        const timeToSave = new Date(
+          date.extractDate(readingDate.value, "DD/MM/YYYY")
+        ).toISOString();
         if (props.isNew) {
           addReadingInMeter({
             meter_id: props.meter.id,
@@ -514,6 +518,7 @@ export default defineComponent({
       screenShotCapture,
       openWeb,
       mkdir,
+      readingDate,
       // convertBlobToBase64,
       // savePicture,
       // takePhoto,

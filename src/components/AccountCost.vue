@@ -150,10 +150,24 @@
           v-for="(cost, index) in calculationsForAccount"
           :key="index"
         >
-          <div v-show="cost.title !== 'Rates'" class="col">
+          <div
+            v-show="
+              cost.title !== 'Rates' &&
+              cost.title !== 'Enter Your Billing Date' &&
+              cost.title !== 'Rates Rebate'
+            "
+            class="col"
+          >
             {{ cost.title }}
           </div>
-          <div v-show="cost.title !== 'Rates'" class="col-auto">
+          <div
+            v-show="
+              cost.title !== 'Rates' &&
+              cost.title !== 'Enter Your Billing Date' &&
+              cost.title !== 'Rates Rebate'
+            "
+            class="col-auto"
+          >
             R {{ cost.value.toFixed(2) }}
           </div>
         </div>
@@ -186,11 +200,23 @@
           v-for="(cost, index) in calculationsForAccount"
           :key="index"
         >
-          <div v-show="cost.title === 'Rates'" class="col">
+          <div
+            v-show="cost.title === 'Rates' || cost.title === 'Rates Rebate'"
+            class="col"
+          >
             {{ cost.title }}
           </div>
-          <div v-show="cost.title === 'Rates'" class="col-auto">
-            R {{ cost.value.toFixed(2) }}
+          <div
+            v-show="cost.title === 'Rates' || cost.title === 'Rates Rebate'"
+            class="col-auto"
+          >
+            R
+            {{
+              cost.title === "Rates Rebate"
+                ? -cost.value.toFixed(2)
+                : cost.value.toFixed(2)
+            }}
+            <!-- // R {{ cost.value.toFixed(2) }} -->
           </div>
         </div>
       </div>
@@ -231,7 +257,6 @@ import { useReadingStore } from "/src/stores/reading";
 import { useSiteStore } from "/src/stores/site";
 
 import waterDurban from "/src/services/waterDurban.js";
-import { LogLevel } from "@firebase/logger";
 import { useQuasar } from "quasar";
 import { useUserStore } from "src/stores/user";
 
@@ -248,11 +273,19 @@ export default defineComponent({
     const $q = useQuasar();
 
     const meters = meterStore.getByAccuntId(props.account.id);
+
     const site = siteStore.getSiteById(props.account.site.id);
 
     const durbanReading = new waterDurban();
 
-    const readingPeriod = ref(date.formatDate(new Date(), "MMM YYYY"));
+    const currentreadingPeriod = ref(date.formatDate(new Date(), "MMM YYYY"));
+    let formatMonth = date.addToDate(currentreadingPeriod.value, {
+      months: 1,
+    });
+
+    const readingPeriod = ref(date.formatDate(formatMonth, "MMM YYYY"));
+
+    // const readingPeriod = ref(date.formatDate(new Date(), "MMM YYYY"));
     const currentDate = ref(date.formatDate(new Date(), "DD MMMM YYYY"));
 
     // const currentMonthReadings = ref(null);
@@ -273,35 +306,45 @@ export default defineComponent({
     };
 
     const nextMonth = (_month) => {
-      let currentMonth = date.formatDate(new Date(), "MMM YYYY");
-      if (_month !== currentMonth) {
-        const getNextMonth = date.addToDate(_month, {
-          months: 1,
-        });
-        readingPeriod.value = date.formatDate(getNextMonth, "MMM YYYY");
-      }
+      // let nextOneMonth = date.addToDate(_month, {
+      //   months: 1,
+      // });
+      // let nextMonth = date.formatDate(nextOneMonth, "MMM YYYY");
+      // let currentMonth = date.formatDate(new Date(), "MMM YYYY");
+      // if (_month !== currentMonth) {
+      const getNextMonth = date.addToDate(_month, {
+        months: 1,
+      });
+      readingPeriod.value = date.formatDate(getNextMonth, "MMM YYYY");
+      // }
     };
 
     const currentBillPeriod = computed(() => {
       let currentbillDate = null;
-      const getPreviousMonth = date.subtractFromDate(readingPeriod.value, {
-        days: 7,
+      // const getPreviousMonth = date.subtractFromDate(readingPeriod.value, {
+      //   days: 7,
+      // });
+      // currentbillDate = date.formatDate(getPreviousMonth, "DD MMMM");
+      // const formattedString = date.formatDate(currentbillDate, "DD");
+      // if (formattedString == 24) {
+      //   const getPreviousMonth = date.subtractFromDate(readingPeriod.value, {
+      //     days: 6,
+      //   });
+      //   currentbillDate = date.formatDate(getPreviousMonth, "DD MMMM");
+      // }
+      // const getNextMonth = date.addToDate(readingPeriod.value, {
+      //   days: 24,
+      // });
+
+      let getCurrentMonth = date.addToDate(readingPeriod.value, {
+        days: billingCycle.value - 1,
       });
-      currentbillDate = date.formatDate(getPreviousMonth, "DD MMMM");
-      const formattedString = date.formatDate(currentbillDate, "DD");
-      if (formattedString == 24) {
-        const getPreviousMonth = date.subtractFromDate(readingPeriod.value, {
-          days: 6,
-        });
-        currentbillDate = date.formatDate(getPreviousMonth, "DD MMMM");
-      }
-      const getNextMonth = date.addToDate(readingPeriod.value, {
-        days: 24,
+      let currentMonth = date.formatDate(getCurrentMonth, "DD MMMM");
+      let getPreviousMonth = date.subtractFromDate(currentMonth, {
+        month: 1,
       });
-      currentbillDate =
-        `${currentbillDate}` +
-        " to " +
-        date.formatDate(getNextMonth, "DD MMMM");
+      let previousMonth = date.formatDate(getPreviousMonth, "DD MMMM");
+      currentbillDate = `${previousMonth}` + " to " + `${currentMonth}`;
       return currentbillDate;
     });
 
@@ -311,8 +354,10 @@ export default defineComponent({
         var readings = readingStore.getReadingsByMeterId(meter.id);
         const returnLastReadings = durbanReading.getSubmitedAndLastReading(
           readings,
-          readingPeriod.value
+          readingPeriod.value,
+          billingCycle.value
         );
+        // readingPeriod.value
 
         const usesPerDay = durbanReading.calculateUnitForMonth({
           isLastReadings: returnLastReadings,
@@ -372,6 +417,17 @@ export default defineComponent({
       return readingForAccount;
     });
 
+    const billingCycle = computed(() => {
+      let date = null;
+      calculationsForAccount.value.forEach(({ title, value }) => {
+        if (title === "Enter Your Billing Date") {
+          date = value;
+        }
+      });
+      return date;
+    });
+    // console.log("billingCycle", billingCycle.value);
+
     const totalVAT = computed(() => {
       let total = 0;
       calculationsForMeters.value.forEach(({ value }) => {
@@ -381,7 +437,11 @@ export default defineComponent({
       //   total = total + value;
       // });
       calculationsForAccount.value.forEach(({ title, value }) => {
-        if (title !== "Rates") {
+        if (
+          title !== "Rates" &&
+          title !== "Enter Your Billing Date" &&
+          title !== "Rates Rebate"
+        ) {
           total = total + value;
         }
       });
@@ -410,6 +470,12 @@ export default defineComponent({
         if (title === "Rates") {
           subTotal = subTotal - value;
         }
+        if (title === "Enter Your Billing Date") {
+          subTotal = subTotal - value;
+        }
+        if (title === "Rates Rebate") {
+          subTotal = subTotal - value;
+        }
       });
       return subTotal;
     });
@@ -424,7 +490,15 @@ export default defineComponent({
       calculationsForMeters.value.forEach(({ value }) => {
         total = total + value;
       });
-      calculationsForAccount.value.forEach(({ value }) => {
+      calculationsForAccount.value.forEach(({ title, value }) => {
+        if (title === "Rates Rebate") {
+          total = total - value * 2;
+          // console.log("value", total);
+        }
+        if (title === "Enter Your Billing Date") {
+          billingCycle.value = value;
+          total = total - value;
+        }
         total = total + value;
       });
       total = total + totalVAT.value;
@@ -492,6 +566,7 @@ export default defineComponent({
         readings,
         readingPeriod.value
       );
+
       const lastReadingTime = returnLastReadings.lastReading;
       // const usesPerDay = durbanReading.calculateUnitForMonth(returnLastReadings);
 
@@ -565,6 +640,8 @@ export default defineComponent({
       currentBillPeriod,
       // currentMonthReadings,
       // isLastReadings,
+      billingCycle,
+      currentreadingPeriod,
     };
   },
 });

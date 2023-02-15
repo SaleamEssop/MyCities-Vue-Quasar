@@ -79,7 +79,7 @@
     </q-card-actions> -->
     <!-- Default cost from server -->
     <q-card-section class="bg-primary">
-      <div class="text-subtitle2">Additional Charges</div>
+      <div class="text-subtitle2">Additional Data</div>
       <!-- <q-btn
         fab
         color="white"
@@ -113,7 +113,11 @@
         </div>
         <q-input
           v-if="isNew"
-          placeholder="R0.00"
+          :placeholder="
+            defaultCost.title === 'Enter Your Billing Date'
+              ? 'Enter Only Dates'
+              : 'R0.00'
+          "
           v-model.number="defaultCost.value"
           type="number"
           :disable="!defaultCost.isApplicable"
@@ -126,7 +130,11 @@
           " -->
         <q-input
           v-else
-          placeholder="R0.00"
+          :placeholder="
+            defaultCost.fixed_cost.title === 'Enter Your Billing Date'
+              ? 'Enter Only Dates'
+              : 'R0.00'
+          "
           v-model.number="defaultCost.value"
           type="number"
           :disable="!defaultCost.isApplicable"
@@ -140,7 +148,10 @@
       </q-card-section>
     </template>
     <!-- For edit Account New Charges -->
-    <!-- <template
+    <!-- <q-card-section class="bg-primary">
+      <div class="text-subtitle2">New Additional Charges</div>
+    </q-card-section>
+    <template
       v-for="(defaultCost, index) in getNewAddedDefaultCosts"
       :key="index"
     >
@@ -161,6 +172,7 @@
       </q-card-section>
     </template> -->
 
+    <!-- old Charges UI -->
     <!-- <template
       v-for="(defaultCost, index) in isNew
         ? selectedAccount.defaultCosts
@@ -286,7 +298,11 @@ export default defineComponent({
     };
     initialState["selectedAccount"]["defaultCosts"] =
       defaultCostStore.getDefaultCost.map((_cost) => {
-        _cost["isApplicable"] = true;
+        if (_cost.title === "Rates Rebate") {
+          _cost["isApplicable"] = false;
+        } else {
+          _cost["isApplicable"] = true;
+        }
         return _cost;
       });
 
@@ -498,21 +514,13 @@ export default defineComponent({
             };
           })
           .filter((cost) => cost !== null);
-        //   console.log("getNewAddedDefaultCosts.value", getNewAddedDefaultCosts.value);
-        // const newDefaultCost = getNewAddedDefaultCosts.value
+        // const new_default_cost = getNewAddedDefaultCosts.value
         //   .map((cost) => {
-        //     let id = cost.id;
-        //     const accountCost = accountValue.defaultFixedCost.find(
-        //       (_cost) => _cost.fixed_cost.id === cost.id
-        //     );
-        //     if (accountCost) {
-        //       id = accountCost.id;
-        //     }
         //     return {
         //       name: cost.title,
         //       value: cost.value,
+        //       id: cost.id,
         //       is_active: cost.isApplicable ? 1 : 0,
-        //       id: id,
         //     };
         //   })
         //   .filter((cost) => cost !== null);
@@ -543,6 +551,24 @@ export default defineComponent({
             });
           }
         });
+        // addSiteAndAccount({
+        //   site_id: site.value.id,
+        //   account_name: accountValue.title,
+        //   account_number: accountValue.number,
+        //   optional_information: accountValue.option,
+        //   default_fixed_cost: new_default_cost,
+        // }).then(({ status, code, msg, data }) => {
+        //   if (status) {
+        //     accountStore.addAccount({
+        //       id: data.id,
+        //       defaultFixedCost: data.default_fixed_costs,
+        //       number: accountValue.number,
+        //       option: accountValue.option,
+        //       site: { id: data.site_id },
+        //       title: accountValue.title,
+        //     });
+        //   }
+        // });
       }
       // emit("update:account", selectedAccount.value);
       emit("save");

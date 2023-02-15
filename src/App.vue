@@ -31,6 +31,13 @@ import { defineComponent, ref, computed } from "vue";
 
 export default defineComponent({
   name: "App",
+
+  setup() {
+    return {
+      
+    };
+  },
+
   // setup() {
   //   const alertMessage = ref(true);
   //   const onLine = computed(() => {

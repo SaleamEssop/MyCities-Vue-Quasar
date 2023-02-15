@@ -439,6 +439,8 @@ import { useRouter } from "vue-router";
 import { useUserStore } from "src/stores/user";
 import { useAdStore } from "src/stores/ads";
 import { useGetAlarmsStore } from "src/stores/alarm";
+import { useAccountStore } from "/src/stores/account";
+
 const router = useRouter();
 const userStore = useUserStore();
 const adStore = useAdStore();
@@ -449,6 +451,11 @@ const sureLogout = ref(false);
 const lightAndWaterDialog = ref(false);
 const maximizedToggle = ref(true);
 const phoneNumber = ref("");
+const accountStore = useAccountStore();
+
+// let billingDate = accountStore.accounts[0].defaultFixedCost.map((_el) => {
+//   console.log("title", _el.value);
+// });
 
 const alaramStore = useGetAlarmsStore();
 const getAlarm = computed(() => alaramStore.getAlarms);
