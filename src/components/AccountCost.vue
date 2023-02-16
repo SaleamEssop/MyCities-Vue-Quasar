@@ -278,12 +278,13 @@ export default defineComponent({
 
     const durbanReading = new waterDurban();
 
+    // For next month
     const currentreadingPeriod = ref(date.formatDate(new Date(), "MMM YYYY"));
     let formatMonth = date.addToDate(currentreadingPeriod.value, {
       months: 1,
     });
 
-    const readingPeriod = ref(date.formatDate(formatMonth, "MMM YYYY"));
+    const readingPeriod = ref(date.formatDate(new Date(), "MMM YYYY"));
 
     // const readingPeriod = ref(date.formatDate(new Date(), "MMM YYYY"));
     const currentDate = ref(date.formatDate(new Date(), "DD MMMM YYYY"));
@@ -310,13 +311,13 @@ export default defineComponent({
       //   months: 1,
       // });
       // let nextMonth = date.formatDate(nextOneMonth, "MMM YYYY");
-      // let currentMonth = date.formatDate(new Date(), "MMM YYYY");
-      // if (_month !== currentMonth) {
+      let currentMonth = date.formatDate(new Date(), "MMM YYYY");
+      if (_month !== currentMonth) {
       const getNextMonth = date.addToDate(_month, {
         months: 1,
       });
       readingPeriod.value = date.formatDate(getNextMonth, "MMM YYYY");
-      // }
+      }
     };
 
     const currentBillPeriod = computed(() => {
@@ -357,6 +358,9 @@ export default defineComponent({
           readingPeriod.value,
           billingCycle.value
         );
+        // console.log("readings", readings);
+        // console.log("readingPeriod.value", readingPeriod.value);
+        // console.log("billingCycle.value", billingCycle.value);
         // readingPeriod.value
 
         const usesPerDay = durbanReading.calculateUnitForMonth({
@@ -426,7 +430,6 @@ export default defineComponent({
       });
       return date;
     });
-    // console.log("billingCycle", billingCycle.value);
 
     const totalVAT = computed(() => {
       let total = 0;

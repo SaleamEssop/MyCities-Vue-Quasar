@@ -11,27 +11,54 @@ var groupBy = function (xs, key) {
 export default class {
   getSubmitedAndLastReading = (readings, monthYear, billingDate) => {
     const formatForPeriod = "MMM YYYY";
-    const getBothSideReading = (readings, month) => {
-      // console.log("month", month);
-      let data =
-        groupBy(
-          (readings || []).map((item) => {
-            item["period"] = date.formatDate(
-              new Date(item.time),
-              formatForPeriod
-            );
-            return item;
-          }),
-          "period"
-        )[month] || [];
+    const getBothSideReading = (readings, month, convertIntoMilis) => {
+      // let data =
+      //   groupBy(
+      //     (readings || []).map((item) => {
+      //       item["period"] = date.formatDate(
+      //         new Date(item.time),
+      //         formatForPeriod
+      //       );
+      //       return item;
+      //     }),
+      //     "period"
+      //   )[month] || [];
+
+      let data = (readings || []).map((item) => {
+        if (
+          convertIntoMilis - 2629800000 <= item.time &&
+          item.time <= convertIntoMilis
+        ) {
+          return item;
+        }
+      });
+
+      data = data.filter(function (element) {
+        return element !== undefined;
+      });
 
       data = data.sort((a, b) => b.time - a.time);
 
+      // if (data.length == 1) {
+      //   var firstReadingOfMonth = new Array();
+      //   (readings || []).map((item) => {
+      //     if (
+      //       convertIntoMilis - 2629800000 > item.time &&
+      //       item.time > convertIntoMilis - 2629800000 * 2
+      //     ) {
+      //       console.log("item", item.value);
+
+      //       return (firstReadingOfMonth = item);
+      //     }
+      //   });
+      // }
+      // console.log("lastReadingOfMonth", firstReadingOfMonth);
+
       const lastReading = data[0] || {};
       const firstReading = data[data.length - 1] || {};
+
       return { firstReading, lastReading };
     };
-
     let returnableLastReading = {};
     let returnableFirstReading = {};
 
@@ -39,13 +66,10 @@ export default class {
     //   ? date.extractDate(monthYear, formatForPeriod)
     //   : new Date();
 
-    // let currentMonthDate = date.addToDate(monthYear, { days: billingDate - 1 });
     let currentMonthDate = date.addToDate(monthYear, { days: billingDate - 1 });
-    // let convertIntoMilis = date.formatDate(currentMonthDate, "x");
-    // console.log("currentMonthDate", convertIntoMilis);
+    let convertIntoMilis = date.formatDate(currentMonthDate, "x");
 
     const period = date.formatDate(currentMonthDate, formatForPeriod);
-
 
     let i = 24; //check at maximum 24 months
     do {
@@ -54,7 +78,11 @@ export default class {
         formatForPeriod
       );
       // console.log("month", month);
-      const { firstReading, lastReading } = getBothSideReading(readings, month);
+      const { firstReading, lastReading } = getBothSideReading(
+        readings,
+        month,
+        convertIntoMilis
+      );
       if (
         Object.keys(returnableLastReading).length === 0 &&
         Object.keys(lastReading).length > 0

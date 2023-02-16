@@ -132,7 +132,6 @@ import { useSiteStore } from "/src/stores/site";
 import { useAccountStore } from "/src/stores/account";
 import { useQuasar } from "quasar";
 
-
 import waterDurban from "/src/services/waterDurban.js";
 
 export default defineComponent({
@@ -151,7 +150,7 @@ export default defineComponent({
 
     const meters = [props.meter];
     const $q = useQuasar();
-
+    // const readingPeriod = ref(null)
 
     const site = siteStore.getSiteById(account.site.id);
 
@@ -162,7 +161,43 @@ export default defineComponent({
 
     var readings = readingStore.getReadingsByMeterId(props?.meter?.id);
 
-    const isLastReadings = durbanReading.getSubmitedAndLastReading(readings);
+    const waterLevyCostByServer = computed(() => {
+      const waterLevy = new Array();
+      (account.defaultFixedCost || []).forEach((defaultCost) => {
+        // if (defaultCost?.fixed_cost.title === "Enter Your Billing Date") {
+        //   billingCycle.value = defaultCost?.value;
+        // }
+        if (defaultCost?.fixed_cost.title === "Water Loss Levy") {
+          waterLevy.push({
+            title: defaultCost.fixed_cost.title,
+            value: defaultCost.value || 0,
+          });
+        }
+      });
+      return waterLevy;
+    });
+
+    const billingCycle = computed(() => {
+      let date = null;
+      (account.defaultFixedCost || []).forEach((defaultCost) => {
+        if (defaultCost?.fixed_cost.title === "Enter Your Billing Date") {
+          date = defaultCost?.value;
+        }
+      });
+      return date;
+    });
+
+    const readingPeriod = date.formatDate(new Date(), "MMM YYYY");
+
+    const isLastReadings = durbanReading.getSubmitedAndLastReading(
+      readings,
+      readingPeriod,
+      billingCycle.value
+    );
+
+    // console.log("readings", readings);
+    // console.log("readingPeriod", readingPeriod);
+    // console.log("billingCycle", billingCycle.value);
 
     usesPerDay.value = durbanReading.calculateUnitForMonth({
       isLastReadings: isLastReadings,
@@ -172,8 +207,6 @@ export default defineComponent({
     const unit = computed(() => (props?.meter?.type?.id == 2 ? "kWh" : "L"));
 
     // const projectionCost = getCost(usesPerDay.value, props?.meter);
-
-    const readingPeriod = date.formatDate(new Date(), "MMM YYYY");
 
     const percentageCharges = [{ title: "VAT", onTotalAmount: 0.15 }];
 
@@ -187,19 +220,6 @@ export default defineComponent({
     };
 
     // console.log("Projection", projectionCost);
-
-    const waterLevyCostByServer = computed(() => {
-      const waterLevy = new Array();
-      (account.defaultFixedCost || []).forEach((defaultCost) => {
-        if (defaultCost.fixed_cost.title === "Water Loss Levy") {
-          waterLevy.push({
-            title: defaultCost.fixed_cost.title,
-            value: defaultCost.value || 0,
-          });
-        }
-      });
-      return waterLevy;
-    });
 
     const projectionCost = getCost(usesPerDay.value, props?.meter);
 
@@ -273,7 +293,8 @@ export default defineComponent({
         var readings = readingStore.getReadingsByMeterId(meter.id);
         const returnLastReadings = durbanReading.getSubmitedAndLastReading(
           readings,
-          readingPeriod
+          readingPeriod,
+          billingCycle?.value
         );
         const lastReadingTime = returnLastReadings.lastReading;
         // const usesPerDay = durbanReading.calculateUnitForMonth(returnLastReadings);
@@ -361,6 +382,7 @@ export default defineComponent({
       newVATOnMeterBill,
       // isRollOver,
       isLastReadings,
+      billingCycle,
     };
   },
 });

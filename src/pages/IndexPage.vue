@@ -48,8 +48,9 @@
               icon="notifications"
               class="col-xs-6 col-sm-6 q-my-xs adsBtn"
             >
-              <q-badge v-if="getAlarm.length" floating color="red" rounded>
-                {{ getAlarm.length }}
+              <q-badge floating color="red" rounded>
+                <!-- {{ getAlarm.length }} -->
+                {{ billingDate ? getAlarm.length + 1 : getAlarm.length }}
               </q-badge>
             </q-btn>
           </div>
@@ -290,9 +291,14 @@
   <q-dialog v-model="alarm" persistent>
     <q-card class="modalborder">
       <q-card-section style="min-width: 290px">
-        <div v-if="getAlarm.length">
+        <div v-if="getAlarm.length || billingDate">
           <div class="text-h6 text-center">Get Latest Notification</div>
+
           <div class="q-mt-lg">
+            <div class="dueMessage" v-show="billingDate">
+              "Your scheduled meter reading is due. Please read and submit."
+            </div>
+            <q-separator color="grey" />
             <div class="" v-for="alarm in getAlarm" :key="alarm.id">
               <div class="row no-wrap">
                 <div class="col text-subtitle1 q-py-sm">
@@ -440,6 +446,7 @@ import { useUserStore } from "src/stores/user";
 import { useAdStore } from "src/stores/ads";
 import { useGetAlarmsStore } from "src/stores/alarm";
 import { useAccountStore } from "/src/stores/account";
+import { date } from "quasar";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -452,13 +459,41 @@ const lightAndWaterDialog = ref(false);
 const maximizedToggle = ref(true);
 const phoneNumber = ref("");
 const accountStore = useAccountStore();
-
-// let billingDate = accountStore.accounts[0].defaultFixedCost.map((_el) => {
-//   console.log("title", _el.value);
-// });
+// const dueDate = ref(false);
 
 const alaramStore = useGetAlarmsStore();
 const getAlarm = computed(() => alaramStore.getAlarms);
+
+const billingDate = computed(() => {
+  let dueDate = false;
+  accountStore.accounts[0]?.defaultFixedCost.map((_el) => {
+    if (_el.fixed_cost.title === "Enter Your Billing Date") {
+      const monthDate = date.formatDate(new Date(), "DD");
+      if (_el.value - 7 <= monthDate && monthDate <= _el.value - 5) {
+        dueDate = true;
+      }
+    }
+  });
+  return dueDate;
+});
+
+// const getAlarm = computed(() => {
+//   let alerm = null;
+//   alerm = alaramStore.getAlarms;
+//   accountStore.accounts[0].defaultFixedCost.map((_el) => {
+//     if (_el.fixed_cost.title === "Enter Your Billing Date") {
+//       const monthDate = date.formatDate(new Date(), "DD");
+//       if (_el.value - 7 <= monthDate && monthDate <= _el.value - 5) {
+//         alerm.push({
+//           id: 0,
+//           message:
+//             "Your scheduled meter reading is due. Please read and submit.",
+//         });
+//       }
+//     }
+//   });
+//   return alerm;
+// });
 
 const slide = ref(null);
 const autoplay = ref(true);
@@ -612,6 +647,12 @@ function moveTo(name) {
 </script>
 
 <style scoped>
+.dueMessage {
+  font-style: italic;
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 10px;
+}
 .q-dialog__inner--maximized > div {
   max-width: 480px !important;
 }
