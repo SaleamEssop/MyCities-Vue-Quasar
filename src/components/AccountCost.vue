@@ -311,13 +311,13 @@ export default defineComponent({
       //   months: 1,
       // });
       // let nextMonth = date.formatDate(nextOneMonth, "MMM YYYY");
-      let currentMonth = date.formatDate(new Date(), "MMM YYYY");
-      if (_month !== currentMonth) {
+      // let currentMonth = date.formatDate(new Date(), "MMM YYYY");
+      // if (_month !== currentMonth) {
       const getNextMonth = date.addToDate(_month, {
         months: 1,
       });
       readingPeriod.value = date.formatDate(getNextMonth, "MMM YYYY");
-      }
+      // }
     };
 
     const currentBillPeriod = computed(() => {
@@ -428,7 +428,7 @@ export default defineComponent({
           date = value;
         }
       });
-      return date;
+      return date || 24;
     });
 
     const totalVAT = computed(() => {
@@ -567,7 +567,8 @@ export default defineComponent({
       var readings = readingStore.getReadingsByMeterId(meter.id);
       const returnLastReadings = durbanReading.getSubmitedAndLastReading(
         readings,
-        readingPeriod.value
+        readingPeriod.value,
+        billingCycle.value
       );
 
       const lastReadingTime = returnLastReadings.lastReading;

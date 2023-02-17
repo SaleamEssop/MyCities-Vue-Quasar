@@ -184,8 +184,10 @@ export default defineComponent({
           date = defaultCost?.value;
         }
       });
-      return date;
+      return date || 24;
     });
+
+    console.log("billingCycle", billingCycle.value);
 
     const readingPeriod = date.formatDate(new Date(), "MMM YYYY");
 
@@ -227,7 +229,7 @@ export default defineComponent({
       let total = 0;
       waterLevyCostByServer.value.forEach(({ value }) => {
         if (projectionCost.projection.length === 0) {
-          total = total + value;
+          total = total + value || 0;
         }
         projectionCost.projection.forEach(({ title }) => {
           if (title !== "Electricity bill") {
@@ -294,7 +296,7 @@ export default defineComponent({
         const returnLastReadings = durbanReading.getSubmitedAndLastReading(
           readings,
           readingPeriod,
-          billingCycle?.value
+          billingCycle.value
         );
         const lastReadingTime = returnLastReadings.lastReading;
         // const usesPerDay = durbanReading.calculateUnitForMonth(returnLastReadings);

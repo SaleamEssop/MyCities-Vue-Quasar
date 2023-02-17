@@ -15,7 +15,7 @@
       </div>
       <div class="text-subtitle2">Account Number : {{ account?.number }}</div>
       <div class="text-subtitle2">Name on Account : {{ account?.title }}</div>
-      <div class="text-subtitle2">Date : {{ currentDate }}</div>
+      <div class="text-subtitle2">Current Date : {{ currentDate }}</div>
 
       <div class="text-subtitle2">Meter Description : {{ meter?.title }}</div>
 
@@ -26,16 +26,20 @@
       <div class="text-subtitle2">
         Current reading : {{ lastReadingItem?.value }}
       </div>
+      <div class="text-subtitle2">
+        Last reading :
+        {{ lastreadingDate }}
+      </div>
 
       <!-- Edit Readings with Date -->
 
-      <div class="row justify-center q-mt-lg">
+      <div v-show="isNew" class="row justify-center q-mt-lg">
         <q-badge class="bg-grey-4" text-color="black">
           <span class="text-body1">Reading date: {{ readingDate }}</span>
         </q-badge>
       </div>
 
-      <div class="q-pt-md justify-center flex">
+      <div v-show="isNew" class="q-pt-md justify-center flex">
         <span class="round-cheap text-center"
           >Edit date
           <q-popup-proxy
@@ -115,6 +119,12 @@
         text-color="black"
         @click="captureImage()"
       />
+      <q-btn
+        icon="download"
+        color="primary"
+        text-color="black"
+        @click="screenShotCapture()"
+      />
       <q-btn color="primary" text-color="black" @click="$emit('close')"
         >Cancel</q-btn
       >
@@ -175,7 +185,7 @@ export default defineComponent({
     const readingStore = useReadingStore();
     const accountStore = useAccountStore();
     const account = accountStore.getAccountById(props.meter.account.id);
-    const currentDate = ref(date.formatDate(Date.now(), "DD-MM-YYYY"));
+    const currentDate = ref(date.formatDate(Date.now(), "DD/MM/YYYY"));
 
     const $q = useQuasar();
     const showAlert = (msg) => {
@@ -253,6 +263,7 @@ export default defineComponent({
         })
         .catch(function (error) {
           console.error("oops, something went wrong!", error);
+          $q.loading.hide();
         });
     };
 
@@ -353,6 +364,9 @@ export default defineComponent({
     const currentReading = ref("");
     const currentReadingItem = ref();
     let lastReadingItem = ref(readingItems[0]);
+    const lastreadingDate = ref(
+      date.formatDate(new Date(lastReadingItem.value.time), "DD/MM/YYYY")
+    );
 
     if (!props.isNew) {
       if (lastReadingItem.value.isSubmit) {
@@ -424,7 +438,7 @@ export default defineComponent({
               });
             }
           });
-          screenShotCapture();
+          // screenShotCapture();
         } else {
           let lasteditDate = date.formatDate(
             new Date(lastEditTime.value).toISOString()
@@ -446,7 +460,7 @@ export default defineComponent({
               });
             }
           });
-          screenShotCapture();
+          // screenShotCapture();
         }
         emit("save");
       };
@@ -472,10 +486,14 @@ export default defineComponent({
       ) {
         const maximum = props.meter.type.id == 2 ? 99999.9 : 9999.9999;
         confirm(
-          `You  have entered a value lower than  the previous reading. Your usage is ${lastReadingItem.value.valueInString} to ${valueInString}.  Do you want to apply a rollover?.`,
+          `You have entered a value lower than  the previous reading. Your usage is ${lastReadingItem.value.valueInString} to ${valueInString}.  Do you want to apply a rollover?.`,
           () => {
             // doSave(currentReadingValue, valueInString);
-            if (lastReadingItem.value.valueInString - valueInString > 100000) {
+            if (
+              props.meter.type.id == 2
+                ? lastReadingItem.value.valueInString - valueInString > 100000
+                : lastReadingItem.value.valueInString - valueInString > 1000000
+            ) {
               confirm(
                 "You have entered a value which exceeds a usage of 100 000 or More. Shall we accept this reading?",
                 () => {
@@ -488,7 +506,11 @@ export default defineComponent({
           }
         );
       } else if (currentReadingValue > lastReadingItem.value.value) {
-        if (valueInString - lastReadingItem.value.valueInString > 100000) {
+        if (
+          props.meter.type.id == 2
+            ? valueInString - lastReadingItem.value.valueInString > 100000
+            : valueInString - lastReadingItem.value.valueInString > 1000000
+        ) {
           confirm(
             "You have entered a value which exceeds a usage of 100 000 or More. Shall we accept this reading?",
             () => {
@@ -498,6 +520,8 @@ export default defineComponent({
         } else {
           doSave(currentReadingValue, valueInString);
         }
+      } else {
+        doSave(currentReadingValue, valueInString);
       }
     };
 
@@ -519,6 +543,7 @@ export default defineComponent({
       openWeb,
       mkdir,
       readingDate,
+      lastreadingDate,
       // convertBlobToBase64,
       // savePicture,
       // takePhoto,

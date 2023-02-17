@@ -24,7 +24,8 @@ export default class {
       //     "period"
       //   )[month] || [];
 
-      let data = (readings || []).map((item) => {
+      // change data to getCurrentMonthReading
+      let getCurrentMonthReading = (readings || []).map((item) => {
         if (
           convertIntoMilis - 2629800000 <= item.time &&
           item.time <= convertIntoMilis
@@ -33,30 +34,43 @@ export default class {
         }
       });
 
-      data = data.filter(function (element) {
+      getCurrentMonthReading = getCurrentMonthReading.filter(function (
+        element
+      ) {
         return element !== undefined;
       });
 
-      data = data.sort((a, b) => b.time - a.time);
+      getCurrentMonthReading = getCurrentMonthReading.sort(
+        (a, b) => b.time - a.time
+      );
 
-      // if (data.length == 1) {
-      //   var firstReadingOfMonth = new Array();
-      //   (readings || []).map((item) => {
-      //     if (
-      //       convertIntoMilis - 2629800000 > item.time &&
-      //       item.time > convertIntoMilis - 2629800000 * 2
-      //     ) {
-      //       console.log("item", item.value);
+      var getLastMonthLastReading = (readings || []).map((item) => {
+        if (
+          convertIntoMilis - 2629800000 * 2 <= item.time &&
+          item.time <= convertIntoMilis - 2629800000
+        ) {
+          return item;
+        }
+      });
 
-      //       return (firstReadingOfMonth = item);
-      //     }
-      //   });
-      // }
-      // console.log("lastReadingOfMonth", firstReadingOfMonth);
+      getLastMonthLastReading = getLastMonthLastReading.filter(function (el) {
+        return el !== undefined;
+      });
 
-      const lastReading = data[0] || {};
-      const firstReading = data[data.length - 1] || {};
+      if (getCurrentMonthReading?.length == 1) {
+        var lastReading = getCurrentMonthReading[0] || {};
+        var firstReading = getLastMonthLastReading[0] || {};
+      } else {
+        var lastReading = getCurrentMonthReading[0] || {};
+        var firstReading =
+          getCurrentMonthReading[getCurrentMonthReading.length - 1] || {};
+      }
 
+      // const lastReading = getCurrentMonthReading[0] || {};
+      // const firstReading = getCurrentMonthReading[getCurrentMonthReading.length - 1] || {};
+
+      // console.log("firstReading", firstReading);
+      // console.log("lastReading", lastReading);
       return { firstReading, lastReading };
     };
     let returnableLastReading = {};
@@ -119,7 +133,6 @@ export default class {
   };
 
   calculateUnitForMonth = ({ isLastReadings, id }) => {
-    // console.log("isLastReadings", isLastReadings);
     const { lastReading, firstReading } = isLastReadings;
     if (firstReading.value > lastReading.value) {
       let maxValue = id === 2 ? 99999.9 : 9999.9999;
@@ -128,6 +141,10 @@ export default class {
       var consumeUnits = lastReading.value - firstReading.value;
     }
     var consumeTime = lastReading.time - firstReading.time;
+    console.log(
+      "consumeTime",
+      (consumeUnits / consumeTime || 0) * 1000 * 60 * 60 * 24
+    );
     return (consumeUnits / consumeTime || 0) * 1000 * 60 * 60 * 24;
   };
 

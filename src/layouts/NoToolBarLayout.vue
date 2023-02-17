@@ -7,9 +7,9 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-    <q-footer class="text-center footerMain containerWidth bg-primary">
+    <!-- <q-footer class="text-center footerMain containerWidth bg-primary">
       <q-img src="~assets/footer.png" class="footerImage" />
-    </q-footer>
+    </q-footer> -->
   </q-layout>
 </template>
 

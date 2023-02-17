@@ -95,7 +95,7 @@
       <!-- second menu section -->
       <div>
         <div class="row menuContain">
-          <div class="text-center q-my-sm q-px-sm menuItem">
+          <!-- <div class="text-center q-my-sm q-px-sm menuItem">
             <img
               class="col-xs-6 col-sm-6 q-my-sm enterMenu cursor-pointer"
               src="~assets/lightsandwater.png"
@@ -104,8 +104,18 @@
                 activeMenuItem('LightsAndWater'), (lightAndWaterDialog = true)
               "
             />
+          </div> -->
+          <div class="text-center q-pt-xs menuItem">
+            <q-btn
+              class="col-xs-6 col-sm-6 q-my-sm"
+              no-caps
+              flat
+              label="LightsandWater"
+              @click="
+                activeMenuItem('LightsAndWater'), (lightAndWaterDialog = true)
+              "
+            />
           </div>
-
           <q-separator vertical inset />
           <div class="text-center q-pt-xs menuItem">
             <q-btn
@@ -298,7 +308,7 @@
             <div class="dueMessage" v-show="billingDate">
               "Your scheduled meter reading is due. Please read and submit."
             </div>
-            <q-separator color="grey" />
+            <q-separator v-show="billingDate" color="grey" />
             <div class="" v-for="alarm in getAlarm" :key="alarm.id">
               <div class="row no-wrap">
                 <div class="col text-subtitle1 q-py-sm">
@@ -657,7 +667,8 @@ function moveTo(name) {
   max-width: 480px !important;
 }
 .container {
-  max-height: 97vh;
+  /* 97 if footer */
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
   /* height: calc(100vh - 100%);
@@ -669,7 +680,7 @@ function moveTo(name) {
 }
 .titleIcon {
   width: 100%;
-  max-height: 100px;
+  max-height: 70px;
   margin-top: -10px;
   object-fit: contain;
   /* margin-left: -15px; */
@@ -679,7 +690,7 @@ function moveTo(name) {
   overflow-y: auto;
   overflow-x: hidden;
   max-width: 480px;
-  margin-top: -8px;
+  margin-top: -6px;
 }
 
 .imageHeight {
