@@ -39,7 +39,7 @@
     </q-card-section>
 
     <q-card-section class="text-center">
-      <div class="flex justify-center items-center">
+      <div class="flex justify-between items-center">
         <span
           class="round-cheap"
           clickable
@@ -48,7 +48,7 @@
             modelForReadingSet_NewReading = true;
             modelForReadingSet = true;
           "
-          >Enter Latest Reading</span
+          >Enter Reading</span
         >
 
         <p class="q-mx-md"></p>

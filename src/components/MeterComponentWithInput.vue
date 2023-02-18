@@ -14,17 +14,16 @@
         {{ alertIfLessThen24Hours }}
       </div>
       <div class="text-subtitle2">Account Number : {{ account?.number }}</div>
+      <div class="text-subtitle2">
+        Meter Number : {{ meter ? meter?.number : "" }}
+      </div>
       <div class="text-subtitle2">Name on Account : {{ account?.title }}</div>
-      <div class="text-subtitle2">Current Date : {{ currentDate }}</div>
+      <!-- <div class="text-subtitle2">Current Date : {{ currentDate }}</div> -->
 
       <div class="text-subtitle2">Meter Description : {{ meter?.title }}</div>
 
       <div class="text-subtitle2">
-        Meter Number : {{ meter ? meter?.number : "" }}
-      </div>
-
-      <div class="text-subtitle2">
-        Current reading : {{ lastReadingItem?.value }}
+        Last reading : {{ lastReadingItem?.value }}
       </div>
       <div class="text-subtitle2">
         Last reading :
@@ -239,7 +238,7 @@ export default defineComponent({
     }
 
     const screenShotCapture = () => {
-      $q.loading.show();
+      // $q.loading.show();
       var node = document.getElementById("cardId_12");
       domtoimage
         .toPng(node)
@@ -247,7 +246,7 @@ export default defineComponent({
           var img = new Image();
           img.src = dataUrl;
           const base64Data = img.src;
-          // alert(base64Data);
+          alert(base64Data);
           const fileName =
             date.formatDate(Date.now(), "YYYY_MM_DD_HH_mm_ss") + ".jpeg";
           mkdir();
@@ -259,11 +258,11 @@ export default defineComponent({
           });
           // saveReading(false);
           $q.notify({ message: "Saved:-FileManager/Documents/MyCityApp/.." });
-          $q.loading.hide();
+          // $q.loading.hide();
         })
         .catch(function (error) {
           console.error("oops, something went wrong!", error);
-          $q.loading.hide();
+          // $q.loading.hide();
         });
     };
 
@@ -417,6 +416,7 @@ export default defineComponent({
 
     const saveReading = (isSubmit = false) => {
       const doSave = (currentReadingValue, valueInString) => {
+        // screenShotCapture();
         // const timeToSave = new Date().toISOString();
         const timeToSave = new Date(
           date.extractDate(readingDate.value, "DD/MM/YYYY")
@@ -428,6 +428,7 @@ export default defineComponent({
             meter_reading: valueInString,
           }).then(({ status, data }) => {
             if (status) {
+              console.log("isSubmit", isSubmit);
               readingStore.addReading({
                 id: data.id,
                 value: currentReadingValue,

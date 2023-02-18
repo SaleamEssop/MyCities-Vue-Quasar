@@ -44,6 +44,7 @@ export default class {
         (a, b) => b.time - a.time
       );
 
+      // get LastMonth Reading if current month have only 1 reading
       var getLastMonthLastReading = (readings || []).map((item) => {
         if (
           convertIntoMilis - 2629800000 * 2 <= item.time &&
@@ -57,7 +58,21 @@ export default class {
         return el !== undefined;
       });
 
-      if (getCurrentMonthReading?.length == 1) {
+      // Get Average of all readings is current have 0 readings
+      var getAverageOfReading = (readings || []).map((item) => {
+        {
+          return item;
+        }
+      });
+      getAverageOfReading = getAverageOfReading.filter(function (el) {
+        return el !== undefined;
+      });
+
+      if (!getCurrentMonthReading?.length) {
+        var lastReading = getAverageOfReading[0] || {};
+        var firstReading =
+          getAverageOfReading[getAverageOfReading.length - 1] || {};
+      } else if (getCurrentMonthReading?.length == 1) {
         var lastReading = getCurrentMonthReading[0] || {};
         var firstReading = getLastMonthLastReading[0] || {};
       } else {
@@ -141,10 +156,10 @@ export default class {
       var consumeUnits = lastReading.value - firstReading.value;
     }
     var consumeTime = lastReading.time - firstReading.time;
-    console.log(
-      "consumeTime",
-      (consumeUnits / consumeTime || 0) * 1000 * 60 * 60 * 24
-    );
+    // console.log(
+    //   "consumeTime",
+    //   (consumeUnits / consumeTime || 0) * 1000 * 60 * 60 * 24
+    // );
     return (consumeUnits / consumeTime || 0) * 1000 * 60 * 60 * 24;
   };
 
