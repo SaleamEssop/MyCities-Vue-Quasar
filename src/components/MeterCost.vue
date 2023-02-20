@@ -1,8 +1,12 @@
 <template>
   <q-card>
-    <q-card-section class="bg-primary">
-      Estimated Cost {{ meter.number ? `(${meter.number})` : "" }}
-      {{ isLastReadings.period }}
+    <q-card-section class="bg-primary row justify-center">
+      <div class="text-subtitle1">
+        Estimated Cost For Meter: {{ meter.number ? `(${meter.number})` : "" }}
+      </div>
+      <div class="text-subtitle1">
+        {{ currentBillPeriod }}
+      </div>
     </q-card-section>
     <q-card-section>
       <div>
@@ -164,9 +168,6 @@ export default defineComponent({
     const waterLevyCostByServer = computed(() => {
       const waterLevy = new Array();
       (account.defaultFixedCost || []).forEach((defaultCost) => {
-        // if (defaultCost?.fixed_cost.title === "Enter Your Billing Date") {
-        //   billingCycle.value = defaultCost?.value;
-        // }
         if (defaultCost?.fixed_cost.title === "Water Loss Levy") {
           waterLevy.push({
             title: defaultCost.fixed_cost.title,
@@ -187,13 +188,42 @@ export default defineComponent({
       return date || 24;
     });
 
-    console.log("billingCycle", billingCycle.value);
+    // For next month
+    const billingCycleMonth = computed(() => {
+      let readingPeriod = null;
+      const monthDate = date.formatDate(new Date(), "DD");
+      if (billingCycle.value <= monthDate) {
+        var currentreadingPeriod = date.formatDate(new Date(), "MMM YYYY");
+        let formatMonth = date.addToDate(currentreadingPeriod, {
+          month: 1,
+        });
+        readingPeriod = date.formatDate(formatMonth, "MMM YYYY");
+      } else {
+        readingPeriod = date.formatDate(new Date(), "MMM YYYY");
+      }
+      return readingPeriod;
+    });
 
-    const readingPeriod = date.formatDate(new Date(), "MMM YYYY");
+    // const readingPeriod = date.formatDate(new Date(), "MMM YYYY");
+
+    const currentBillPeriod = computed(() => {
+      let currentbillDate = null;
+
+      let getCurrentMonth = date.addToDate(billingCycleMonth.value, {
+        days: billingCycle.value - 1,
+      });
+      let currentMonth = date.formatDate(getCurrentMonth, "DD MMMM");
+      let getPreviousMonth = date.subtractFromDate(currentMonth, {
+        month: 1,
+      });
+      let previousMonth = date.formatDate(getPreviousMonth, "DD MMMM");
+      currentbillDate = `${previousMonth}` + " to " + `${currentMonth}`;
+      return currentbillDate;
+    });
 
     const isLastReadings = durbanReading.getSubmitedAndLastReading(
       readings,
-      readingPeriod,
+      billingCycleMonth.value,
       billingCycle.value
     );
 
@@ -295,7 +325,7 @@ export default defineComponent({
         var readings = readingStore.getReadingsByMeterId(meter.id);
         const returnLastReadings = durbanReading.getSubmitedAndLastReading(
           readings,
-          readingPeriod,
+          billingCycleMonth.value,
           billingCycle.value
         );
         const lastReadingTime = returnLastReadings.lastReading;
@@ -385,6 +415,9 @@ export default defineComponent({
       // isRollOver,
       isLastReadings,
       billingCycle,
+      billingCycleMonth,
+      currentBillPeriod,
+      // currentreadingPeriod,
     };
   },
 });

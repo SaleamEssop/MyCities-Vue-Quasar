@@ -416,7 +416,6 @@ export default defineComponent({
 
     const saveReading = (isSubmit = false) => {
       const doSave = (currentReadingValue, valueInString) => {
-        // screenShotCapture();
         // const timeToSave = new Date().toISOString();
         const timeToSave = new Date(
           date.extractDate(readingDate.value, "DD/MM/YYYY")
@@ -428,7 +427,6 @@ export default defineComponent({
             meter_reading: valueInString,
           }).then(({ status, data }) => {
             if (status) {
-              console.log("isSubmit", isSubmit);
               readingStore.addReading({
                 id: data.id,
                 value: currentReadingValue,
@@ -461,7 +459,7 @@ export default defineComponent({
               });
             }
           });
-          // screenShotCapture();
+          screenShotCapture();
         }
         emit("save");
       };

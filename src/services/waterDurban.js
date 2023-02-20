@@ -43,6 +43,7 @@ export default class {
       getCurrentMonthReading = getCurrentMonthReading.sort(
         (a, b) => b.time - a.time
       );
+      // console.log("getCurrentMonthReading", getCurrentMonthReading);
 
       // get LastMonth Reading if current month have only 1 reading
       var getLastMonthLastReading = (readings || []).map((item) => {
@@ -58,6 +59,8 @@ export default class {
         return el !== undefined;
       });
 
+      // console.log("getLastMonthLastReading",getLastMonthLastReading);
+
       // Get Average of all readings is current have 0 readings
       var getAverageOfReading = (readings || []).map((item) => {
         {
@@ -72,7 +75,7 @@ export default class {
         var lastReading = getAverageOfReading[0] || {};
         var firstReading =
           getAverageOfReading[getAverageOfReading.length - 1] || {};
-      } else if (getCurrentMonthReading?.length == 1) {
+      } else if (getCurrentMonthReading?.length === 1) {
         var lastReading = getCurrentMonthReading[0] || {};
         var firstReading = getLastMonthLastReading[0] || {};
       } else {
@@ -149,17 +152,18 @@ export default class {
 
   calculateUnitForMonth = ({ isLastReadings, id }) => {
     const { lastReading, firstReading } = isLastReadings;
-    if (firstReading.value > lastReading.value) {
+    if (
+      firstReading.value > lastReading.value &&
+      lastReading.time > firstReading.time
+    ) {
       let maxValue = id === 2 ? 99999.9 : 9999.9999;
       var consumeUnits = maxValue + lastReading.value - firstReading.value;
     } else {
       var consumeUnits = lastReading.value - firstReading.value;
     }
     var consumeTime = lastReading.time - firstReading.time;
-    // console.log(
-    //   "consumeTime",
-    //   (consumeUnits / consumeTime || 0) * 1000 * 60 * 60 * 24
-    // );
+    // console.log("consumeDays", consumeTime / (1000 * 60 * 60 * 24));
+    // console.log("consumeUnits", consumeUnits);
     return (consumeUnits / consumeTime || 0) * 1000 * 60 * 60 * 24;
   };
 

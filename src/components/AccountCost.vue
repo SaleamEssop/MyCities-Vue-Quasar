@@ -279,14 +279,64 @@ export default defineComponent({
     const durbanReading = new waterDurban();
 
     // For next month
-    const currentreadingPeriod = ref(date.formatDate(new Date(), "MMM YYYY"));
-    let formatMonth = date.addToDate(currentreadingPeriod.value, {
-      months: 1,
+    // const currentreadingPeriod = ref(date.formatDate(new Date(), "MMM YYYY"));
+    // let formatMonth = date.addToDate(currentreadingPeriod.value, {
+    //   months: 1,
+    // });
+
+    const calculationsForAccount = computed(() => {
+      const readingForAccount = new Array();
+
+      // meters.map((_el) => {
+      //   let waterMeters = new Array();
+      //   if (_el?.type.title === "Water") {
+      //     waterMeters.push({
+      //       id: _el?.id,
+      //       title: _el?.type.title,
+      //     });
+      //   }
+      //   console.log("title", waterMeters);
+      // });
+
+      (props.account.defaultFixedCost || []).forEach((defaultCost) => {
+        if (defaultCost.is_active) {
+          readingForAccount.push({
+            title: defaultCost.fixed_cost?.title,
+            value: defaultCost?.value || 0,
+          });
+        }
+      });
+      return readingForAccount;
     });
 
-    const readingPeriod = ref(date.formatDate(new Date(), "MMM YYYY"));
+    const billingCycle = computed(() => {
+      let date = null;
+      calculationsForAccount.value.forEach(({ title, value }) => {
+        if (title === "Enter Your Billing Date") {
+          date = value;
+        }
+      });
+      return date || 24;
+    });
 
+    const billingCycleMonth = computed(() => {
+      let readingPeriod = null;
+      const monthDate = date.formatDate(new Date(), "DD");
+      if (billingCycle.value <= monthDate) {
+        var currentreadingPeriod = date.formatDate(new Date(), "MMM YYYY");
+        let formatMonth = date.addToDate(currentreadingPeriod, {
+          month: 1,
+        });
+        readingPeriod = date.formatDate(formatMonth, "MMM YYYY");
+      } else {
+        readingPeriod = date.formatDate(new Date(), "MMM YYYY");
+      }
+      return readingPeriod;
+    });
+
+    const readingPeriod = ref(billingCycleMonth.value);
     // const readingPeriod = ref(date.formatDate(new Date(), "MMM YYYY"));
+
     const currentDate = ref(date.formatDate(new Date(), "DD MMMM YYYY"));
 
     // const currentMonthReadings = ref(null);
@@ -300,24 +350,32 @@ export default defineComponent({
     // });
 
     const previousMonth = (_month) => {
-      const getPreviousMonth = date.subtractFromDate(_month, {
-        months: 1,
+      let firstReadingOfMeter = new Array();
+      meters.forEach((meter) => {
+        var readings = readingStore.getReadingsByMeterId(meter.id);
+        return (firstReadingOfMeter = readings[readings.length - 1].time);
       });
-      readingPeriod.value = date.formatDate(getPreviousMonth, "MMM YYYY");
+      let firstReadingMonth = date.formatDate(firstReadingOfMeter, "MMM YYYY");
+      if (_month !== firstReadingMonth) {
+        const getPreviousMonth = date.subtractFromDate(_month, {
+          months: 1,
+        });
+        readingPeriod.value = date.formatDate(getPreviousMonth, "MMM YYYY");
+      }
     };
 
     const nextMonth = (_month) => {
-      // let nextOneMonth = date.addToDate(_month, {
-      //   months: 1,
-      // });
-      // let nextMonth = date.formatDate(nextOneMonth, "MMM YYYY");
-      // let currentMonth = date.formatDate(new Date(), "MMM YYYY");
-      // if (_month !== currentMonth) {
-      const getNextMonth = date.addToDate(_month, {
+      let nextOneMonth = date.addToDate(new Date(), {
         months: 1,
       });
-      readingPeriod.value = date.formatDate(getNextMonth, "MMM YYYY");
-      // }
+      let nextMonth = date.formatDate(nextOneMonth, "MMM YYYY");
+      // let currentMonth = date.formatDate(new Date(), "MMM YYYY");
+      if (_month !== nextMonth) {
+        const getNextMonth = date.addToDate(_month, {
+          months: 1,
+        });
+        readingPeriod.value = date.formatDate(getNextMonth, "MMM YYYY");
+      }
     };
 
     const currentBillPeriod = computed(() => {
@@ -358,7 +416,7 @@ export default defineComponent({
           readingPeriod.value,
           billingCycle.value
         );
-        // console.log("readings", readings);
+
         // console.log("readingPeriod.value", readingPeriod.value);
         // console.log("billingCycle.value", billingCycle.value);
         // readingPeriod.value
@@ -395,41 +453,6 @@ export default defineComponent({
     // });
 
     // console.log("get readings", readingStore.readings);
-
-    const calculationsForAccount = computed(() => {
-      const readingForAccount = new Array();
-
-      // meters.map((_el) => {
-      //   let waterMeters = new Array();
-      //   if (_el?.type.title === "Water") {
-      //     waterMeters.push({
-      //       id: _el?.id,
-      //       title: _el?.type.title,
-      //     });
-      //   }
-      //   console.log("title", waterMeters);
-      // });
-
-      (props.account.defaultFixedCost || []).forEach((defaultCost) => {
-        if (defaultCost.is_active) {
-          readingForAccount.push({
-            title: defaultCost.fixed_cost?.title,
-            value: defaultCost?.value || 0,
-          });
-        }
-      });
-      return readingForAccount;
-    });
-
-    const billingCycle = computed(() => {
-      let date = null;
-      calculationsForAccount.value.forEach(({ title, value }) => {
-        if (title === "Enter Your Billing Date") {
-          date = value;
-        }
-      });
-      return date || 24;
-    });
 
     const totalVAT = computed(() => {
       let total = 0;
@@ -645,7 +668,7 @@ export default defineComponent({
       // currentMonthReadings,
       // isLastReadings,
       billingCycle,
-      currentreadingPeriod,
+      // currentreadingPeriod,
     };
   },
 });
