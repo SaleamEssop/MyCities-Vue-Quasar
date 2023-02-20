@@ -1,10 +1,10 @@
 <template>
   <q-card>
-    <q-card-section class="bg-primary row justify-center">
+    <q-card-section class="bg-grey-2 row justify-center">
       <div class="text-subtitle1">
-        Estimated Cost For Meter: {{ meter.number ? `(${meter.number})` : "" }}
+        Estimated Cost for Meter: {{ meter.number ? `(${meter.number})` : "" }}
       </div>
-      <div class="text-subtitle1">
+      <div style="font-size: 18px">
         {{ currentBillPeriod }}
       </div>
     </q-card-section>
@@ -119,10 +119,10 @@
     </q-card-section>
 
     <q-card-actions align="evenly">
-      <q-btn color="primary" text-color="black" @click="submitBill"
+      <q-btn color="grey-2" text-color="black" @click="submitBill"
         >Email</q-btn
       >
-      <q-btn color="primary" text-color="black" @click="$emit('close')"
+      <q-btn color="grey-2" text-color="black" @click="$emit('close')"
         >Close</q-btn
       >
     </q-card-actions>
