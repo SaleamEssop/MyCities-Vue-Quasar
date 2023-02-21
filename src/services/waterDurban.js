@@ -25,10 +25,16 @@ export default class {
       //   )[month] || [];
 
       // change data to getCurrentMonthReading
+      // 28 days in ms 2419000000
+      // 30.41  days in ms 2629800000
+      // console.log("MS", convertIntoMilis);
+      let currentMonth = date.formatDate(new Date(month), "M");
       let getCurrentMonthReading = (readings || []).map((item) => {
         if (
-          convertIntoMilis - 2629800000 <= item.time &&
-          item.time <= convertIntoMilis
+          currentMonth === 3
+            ? convertIntoMilis - 2419000000
+            : convertIntoMilis - 2629800000 <= item.time &&
+              item.time <= convertIntoMilis
         ) {
           return item;
         }
@@ -55,8 +61,8 @@ export default class {
         }
       });
 
-      getLastMonthLastReading = getLastMonthLastReading.filter(function (el) {
-        return el !== undefined;
+      getLastMonthLastReading = getLastMonthLastReading.filter(function (_el) {
+        return _el !== undefined;
       });
 
       // console.log("getLastMonthLastReading",getLastMonthLastReading);

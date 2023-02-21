@@ -1,7 +1,7 @@
 <template>
   <q-card>
     <q-card-section class="bg-primary">
-      History Account ({{ account.title }})</q-card-section
+      History Account - {{ account.title }}</q-card-section
     >
     <template v-for="meter in meters" :key="meter.id">
       <q-card-section>

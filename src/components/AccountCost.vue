@@ -369,6 +369,7 @@ export default defineComponent({
         months: 1,
       });
       let nextMonth = date.formatDate(nextOneMonth, "MMM YYYY");
+
       // let currentMonth = date.formatDate(new Date(), "MMM YYYY");
       if (_month !== nextMonth) {
         const getNextMonth = date.addToDate(_month, {
@@ -380,20 +381,6 @@ export default defineComponent({
 
     const currentBillPeriod = computed(() => {
       let currentbillDate = null;
-      // const getPreviousMonth = date.subtractFromDate(readingPeriod.value, {
-      //   days: 7,
-      // });
-      // currentbillDate = date.formatDate(getPreviousMonth, "DD MMMM");
-      // const formattedString = date.formatDate(currentbillDate, "DD");
-      // if (formattedString == 24) {
-      //   const getPreviousMonth = date.subtractFromDate(readingPeriod.value, {
-      //     days: 6,
-      //   });
-      //   currentbillDate = date.formatDate(getPreviousMonth, "DD MMMM");
-      // }
-      // const getNextMonth = date.addToDate(readingPeriod.value, {
-      //   days: 24,
-      // });
 
       let getCurrentMonth = date.addToDate(readingPeriod.value, {
         days: billingCycle.value - 1,

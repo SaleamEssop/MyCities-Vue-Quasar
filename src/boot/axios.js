@@ -129,6 +129,15 @@ const deleteMainMeter = async (req) => {
   return await api.post("/v1/meter/delete", req);
 };
 
+// Delete Meter Readings
+const deleteMeterReadings = async (id) => {
+  const formData = new FormData();
+  if (id) {
+    formData.append("reading_id", id.reading_id);
+  }
+  return await api.post("/v1/meter/delete-readings", formData);
+};
+
 //Get default Cost From Server
 const defaultCost = async () => {
   return await api.get("/v1/default-cost/get");
@@ -149,7 +158,7 @@ const forgotPasswordVerificationCode = async (payload) => {
   return await api.post("/v1/forgot-password/verify-code", payload);
 };
 
-// reset new password 
+// reset new password
 const resetNewPassword = async (payload) => {
   return await api.post("/v1/forgot-password/reset-password", payload);
 };
@@ -238,5 +247,6 @@ export {
   getAlarms,
   forgotPasswordVerification,
   forgotPasswordVerificationCode,
-  resetNewPassword
+  resetNewPassword,
+  deleteMeterReadings,
 };

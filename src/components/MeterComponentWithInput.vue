@@ -414,6 +414,24 @@ export default defineComponent({
         });
     }
 
+    function alert(msg) {
+      $q.dialog({
+        title: "Alert",
+        message: `${msg}`,
+        persistent: true,
+        cancel: true,
+      })
+        .onOk(() => {
+          // console.log('OK')
+        })
+        .onCancel(() => {
+          // console.log('Cancel')
+        })
+        .onDismiss(() => {
+          // console.log('I am triggered on both OK and Cancel')
+        });
+    }
+
     const saveReading = (isSubmit = false) => {
       const doSave = (currentReadingValue, valueInString) => {
         // const timeToSave = new Date().toISOString();
@@ -459,7 +477,7 @@ export default defineComponent({
               });
             }
           });
-          screenShotCapture();
+          // screenShotCapture();
         }
         emit("save");
       };
@@ -475,52 +493,88 @@ export default defineComponent({
           return;
         }
       }
+
       const valueInString = meterComopnentReadValue.value.getValueInString();
       const currentReadingValue =
         valueInString / (props.meter.type.id == 2 ? 10.0 : 10000.0);
 
-      if (
-        !currentReadingValue ||
-        currentReadingValue < lastReadingItem.value.value
-      ) {
-        const maximum = props.meter.type.id == 2 ? 99999.9 : 9999.9999;
-        confirm(
-          `You have entered a value lower than  the previous reading. Your usage is ${lastReadingItem.value.valueInString} to ${valueInString}.  Do you want to apply a rollover?.`,
-          () => {
-            // doSave(currentReadingValue, valueInString);
-            if (
-              props.meter.type.id == 2
-                ? lastReadingItem.value.valueInString - valueInString > 100000
-                : lastReadingItem.value.valueInString - valueInString > 1000000
-            ) {
-              confirm(
-                "You have entered a value which exceeds a usage of 100 000 or More. Shall we accept this reading?",
-                () => {
-                  doSave(currentReadingValue, valueInString);
-                }
-              );
-            } else {
-              doSave(currentReadingValue, valueInString);
-            }
+      let getReadingDate = date.extractDate(readingDate.value, "DD/MM/YYYY");
+      let readingDateInToms = date.formatDate(getReadingDate, "x");
+      let currentDateInToms = date.formatDate(new Date(), "x");
+
+      if (currentDateInToms > readingDateInToms) {
+        var inputFirstReading = (readingItems || []).map((item) => {
+          if (readingDateInToms > item.time) {
+            return item;
           }
+        });
+        inputFirstReading = inputFirstReading.filter(function (element) {
+          return element !== undefined;
+        });
+        var inputLastReading = (readingItems || []).map((item) => {
+          if (readingDateInToms < item.time) {
+            return item;
+          }
+        });
+        inputLastReading = inputLastReading.filter(function (element) {
+          return element !== undefined;
+        });
+      }
+      console.log("inputFirstReading", inputFirstReading[0].value);
+      console.log("inputLastReading", inputLastReading[0].value);
+      console.log("currentReadingValue", currentReadingValue);
+
+      if (
+        inputFirstReading[0].value > currentReadingValue ||
+        inputLastReading[0].value < currentReadingValue
+      ) {
+        alert(
+          `Please enter a reading between ${inputFirstReading[0].valueInString} to ${inputLastReading[0].valueInString}.`
         );
-      } else if (currentReadingValue > lastReadingItem.value.value) {
+      } else {
         if (
-          props.meter.type.id == 2
-            ? valueInString - lastReadingItem.value.valueInString > 100000
-            : valueInString - lastReadingItem.value.valueInString > 1000000
+          !currentReadingValue ||
+          currentReadingValue < lastReadingItem.value.value
         ) {
+          const maximum = props.meter.type.id == 2 ? 99999.9 : 9999.9999;
           confirm(
-            "You have entered a value which exceeds a usage of 100 000 or More. Shall we accept this reading?",
+            `You have entered a value lower than  the previous reading. Your usage is ${lastReadingItem.value.valueInString} to ${valueInString}.  Do you want to apply a rollover?.`,
             () => {
-              doSave(currentReadingValue, valueInString);
+              if (
+                props.meter.type.id == 2
+                  ? lastReadingItem.value.valueInString - valueInString > 100000
+                  : lastReadingItem.value.valueInString - valueInString >
+                    1000000
+              ) {
+                confirm(
+                  "You have entered a value which exceeds a usage of 100 000 or More. Shall we accept this reading?",
+                  () => {
+                    doSave(currentReadingValue, valueInString);
+                  }
+                );
+              } else {
+                doSave(currentReadingValue, valueInString);
+              }
             }
           );
+        } else if (currentReadingValue > lastReadingItem.value.value) {
+          if (
+            props.meter.type.id == 2
+              ? valueInString - lastReadingItem.value.valueInString > 100000
+              : valueInString - lastReadingItem.value.valueInString > 1000000
+          ) {
+            confirm(
+              "You have entered a value which exceeds a usage of 100 000 or More. Shall we accept this reading?",
+              () => {
+                doSave(currentReadingValue, valueInString);
+              }
+            );
+          } else {
+            doSave(currentReadingValue, valueInString);
+          }
         } else {
           doSave(currentReadingValue, valueInString);
         }
-      } else {
-        doSave(currentReadingValue, valueInString);
       }
     };
 
@@ -543,6 +597,8 @@ export default defineComponent({
       mkdir,
       readingDate,
       lastreadingDate,
+      alert,
+
       // convertBlobToBase64,
       // savePicture,
       // takePhoto,

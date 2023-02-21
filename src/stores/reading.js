@@ -25,12 +25,21 @@ export const useReadingStore = defineStore("reading", {
       this.delete(_reading.time, _reading.meter.id);
       this.addReading(_reading);
     },
+    deleteReadings(_id) {
+      let readingIndex = this.readings.findIndex(({ id }) => {
+        return _id == id;
+      });
+      if (readingIndex > -1) {
+        this.readings.splice(readingIndex, 1);
+      }
+    },
     delete(timeToDelete, meterId) {
       const readingIndex = this.readings.findIndex(
         (item) => item.time == timeToDelete && item.meter.id === meterId
       );
       this.readings.splice(readingIndex, 1);
     },
+
     getReadingsByMeterId(meterId) {
       return this.readings
         .filter(({ meter }) => meter.id == meterId)
