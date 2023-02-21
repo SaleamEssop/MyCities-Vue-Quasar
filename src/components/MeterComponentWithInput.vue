@@ -51,7 +51,7 @@
               <div class="row items-center justify-end q-gutter-sm">
                 <q-btn label="Cancel" color="primary" flat v-close-popup />
                 <q-btn
-                  label="Save Date"
+                  label="Save  "
                   color="primary"
                   flat
                   @click="save"
@@ -414,7 +414,7 @@ export default defineComponent({
         });
     }
 
-    function alert(msg) {
+    function alertMsg(msg) {
       $q.dialog({
         title: "Alert",
         message: `${msg}`,
@@ -434,6 +434,7 @@ export default defineComponent({
 
     const saveReading = (isSubmit = false) => {
       const doSave = (currentReadingValue, valueInString) => {
+        // screenShotCapture();
         // const timeToSave = new Date().toISOString();
         const timeToSave = new Date(
           date.extractDate(readingDate.value, "DD/MM/YYYY")
@@ -520,25 +521,27 @@ export default defineComponent({
           return element !== undefined;
         });
       }
-      console.log("inputFirstReading", inputFirstReading[0].value);
-      console.log("inputLastReading", inputLastReading[0].value);
-      console.log("currentReadingValue", currentReadingValue);
+      // console.log("inputFirstReading", inputFirstReading[0]?.value);
+      // console.log("inputLastReading", inputLastReading[0]?.value);
+      // console.log("currentReadingValue", currentReadingValue);
 
       if (
-        inputFirstReading[0].value > currentReadingValue ||
-        inputLastReading[0].value < currentReadingValue
+        props.isNew &&
+        (inputFirstReading[0]?.value > currentReadingValue ||
+          inputLastReading[0]?.value < currentReadingValue)
       ) {
-        alert(
-          `Please enter a reading between ${inputFirstReading[0].valueInString} to ${inputLastReading[0].valueInString}.`
+        alertMsg(
+          `Please enter a reading between ${inputFirstReading[0]?.value} to ${inputLastReading[0]?.value}.`
         );
       } else {
         if (
-          !currentReadingValue ||
-          currentReadingValue < lastReadingItem.value.value
+          props.isNew &&
+          (!currentReadingValue ||
+            currentReadingValue < lastReadingItem.value.value)
         ) {
           const maximum = props.meter.type.id == 2 ? 99999.9 : 9999.9999;
           confirm(
-            `You have entered a value lower than  the previous reading. Your usage is ${lastReadingItem.value.valueInString} to ${valueInString}.  Do you want to apply a rollover?.`,
+            `You have entered a value lower than the previous reading. Your usage is ${lastReadingItem.value.valueInString} to ${valueInString}. Do you want to apply a rollover?.`,
             () => {
               if (
                 props.meter.type.id == 2
@@ -597,7 +600,6 @@ export default defineComponent({
       mkdir,
       readingDate,
       lastreadingDate,
-      alert,
 
       // convertBlobToBase64,
       // savePicture,

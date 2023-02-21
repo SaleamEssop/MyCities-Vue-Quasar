@@ -131,7 +131,7 @@
         <q-input
           v-else
           :placeholder="
-            defaultCost.fixed_cost.title === 'Enter Your Billing Date'
+            defaultCost.title === 'Enter Your Billing Date'
               ? 'Enter Only Dates'
               : 'R0.00'
           "
