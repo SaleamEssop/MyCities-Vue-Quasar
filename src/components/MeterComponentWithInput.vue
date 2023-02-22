@@ -2,69 +2,90 @@
   <q-card id="cardId_12">
     <div v-if="imageSrc" class=" ">
       <q-img :src="imageSrc" class="captureImage" />
-      <q-separator color="grey" size="4px" />
+      <q-separator color="grey" size="6px" />
     </div>
     <q-card-section>
       <div
         v-if="isNew"
-        class="q-my-sm"
+        class="q-mb-sm text-subtitle2"
         text-color="negative"
-        style="color: red; font-weight: bold"
+        style="color: red"
       >
         {{ alertIfLessThen24Hours }}
       </div>
-      <div class="text-subtitle2">Account Number : {{ account?.number }}</div>
-      <div class="text-subtitle2">
-        Meter Number : {{ meter ? meter?.number : "" }}
+      <div class="row text-subtitle2">
+        <div class="col-7">Account Number</div>
+        <div class="col-5">: {{ account?.number }}</div>
+        <div class="col-7">Meter Number</div>
+        <div class="col-5">: {{ meter ? meter?.number : "" }}</div>
+        <div class="col-7">Name on Account</div>
+        <div class="col-5">: {{ account?.title }}</div>
+        <div class="col-7">Last reading</div>
+        <div class="col-5">
+          : {{ lastReadingItem?.value }} {{ meter.type.id == 1 ? "kl" : "kW" }}
+        </div>
+        <div class="col-7">Last reading Date</div>
+        <div class="col-5">: {{ lastreadingDate }}</div>
       </div>
-      <div class="text-subtitle2">Name on Account : {{ account?.title }}</div>
-      <!-- <div class="text-subtitle2">Current Date : {{ currentDate }}</div> -->
+      <!-- old Description -->
+      <!-- <div class=" meterDescritpion ">
+        Account Number : <span class=" ">{{ account?.number }}</span>
+      </div>
+      <div class="text-subtitle2 meterDescritpion">
+        Meter Number : <span>{{ meter ? meter?.number : "" }}</span>
+      </div>
+      <div class="text-subtitle2 meterDescritpion">
+        Name on Account : <span>{{ account?.title }}</span>
+      </div>
+      <div class="text-subtitle2">Current Date : {{ currentDate }}</div>
 
       <div class="text-subtitle2">Meter Description : {{ meter?.title }}</div>
 
-      <div class="text-subtitle2">
-        Last reading : {{ lastReadingItem?.value }}
+      <div class="text-subtitle2 meterDescritpion">
+        Last reading : <span>{{ lastReadingItem?.value }}</span>
       </div>
-      <div class="text-subtitle2">
+      <div class="text-subtitle2 meterDescritpion">
         Last reading :
-        {{ lastreadingDate }}
-      </div>
+        <span>
+          {{ lastreadingDate }}
+        </span>
+      </div> -->
 
       <!-- Edit Readings with Date -->
-
-      <div v-show="isNew" class="row justify-center q-mt-lg">
-        <q-badge class="bg-grey-4" text-color="black">
-          <span class="text-body1">Reading date: {{ readingDate }}</span>
+      <div v-show="isNew" class="row selectDate">
+        <q-badge class="bg-white col-7" text-color="black">
+          <span class="text-body1"> Date: {{ readingDate }}</span>
         </q-badge>
-      </div>
 
-      <div v-show="isNew" class="q-pt-md justify-center flex">
-        <span class="round-cheap text-center"
-          >Edit date
-          <q-popup-proxy
-            @before-show="updateProxy"
-            cover
-            transition-show="scale"
-            transition-hide="scale"
-          >
-            <q-date v-model="readingDate" mask="DD/MM/YYYY">
-              <div class="row items-center justify-end q-gutter-sm">
-                <q-btn label="Cancel" color="primary" flat v-close-popup />
-                <q-btn
-                  label="Save  "
-                  color="primary"
-                  flat
-                  @click="save"
-                  v-close-popup
-                />
-              </div>
-            </q-date>
-          </q-popup-proxy>
-        </span>
+        <div v-show="isNew" class="q-pt-md justify-center col-5">
+          <span class="round-cheap text-center"
+            >Select date
+            <q-popup-proxy
+              @before-show="updateProxy"
+              cover
+              transition-show="scale"
+              transition-hide="scale"
+            >
+              <q-date v-model="readingDate" mask="DD/MM/YYYY">
+                <div class="row items-center justify-end q-gutter-sm">
+                  <q-btn label="Cancel" color="primary" flat v-close-popup />
+                  <q-btn
+                    label="Save  "
+                    color="primary"
+                    flat
+                    @click="save"
+                    v-close-popup
+                  />
+                </div>
+              </q-date>
+            </q-popup-proxy>
+          </span>
+        </div>
       </div>
-      <q-separator class="q-mt-md" />
+      <!-- <q-separator class="q-mt-md" /> -->
+      <!-- <q-separator color="grey" class="q-mt-md" size="4px" /> -->
     </q-card-section>
-    <q-card-section style="margin-top: -10px">
+    <q-card-section style="margin-top: -15px">
       <div
         class="relative"
         :class="inputFocus ? 'stroke-focus' : 'stroke-simple'"
@@ -111,7 +132,7 @@
         </div>
       </div>
     </q-card-section>
-    <q-card-actions align="right">
+    <q-card-actions align="center" style="margin-top: -10px">
       <q-btn
         icon="image"
         color="primary"
@@ -122,7 +143,7 @@
         icon="download"
         color="primary"
         text-color="black"
-        @click="screenShotCapture()"
+        @click="screenShotCapture('close')"
       />
       <q-btn color="primary" text-color="black" @click="$emit('close')"
         >Cancel</q-btn
@@ -131,6 +152,9 @@
       <q-btn color="primary" text-color="black" @click="saveReading(false)"
         >Save</q-btn
       >
+      <!-- <q-btn color="primary" text-color="black" @click="screenShotCapture()"
+        >Save</q-btn
+      > -->
     </q-card-actions>
     <q-separator color="grey" size="10px" />
 
@@ -204,7 +228,7 @@ export default defineComponent({
       });
     };
 
-    const readingDate = ref(date.formatDate(new Date(), "DD/MM/YYYY"));
+    const readingDate = ref(date.formatDate(new Date(), "DD-MMM-YYYY"));
 
     const openWeb = () => {
       window.open("http://mycities.co.za/", "_blank");
@@ -237,7 +261,7 @@ export default defineComponent({
       }
     }
 
-    const screenShotCapture = () => {
+    const screenShotCapture = (close) => {
       // $q.loading.show();
       var node = document.getElementById("cardId_12");
       domtoimage
@@ -246,6 +270,7 @@ export default defineComponent({
           var img = new Image();
           img.src = dataUrl;
           const base64Data = img.src;
+          // console.log("Base Date", base64Data);
           alert(base64Data);
           const fileName =
             date.formatDate(Date.now(), "YYYY_MM_DD_HH_mm_ss") + ".jpeg";
@@ -256,7 +281,9 @@ export default defineComponent({
             data: base64Data,
             directory: FilesystemDirectory.Documents,
           });
-          // saveReading(false);
+          // if (!close) {
+          //   saveReading(false);
+          // }
           $q.notify({ message: "Saved:-FileManager/Documents/MyCityApp/.." });
           // $q.loading.hide();
         })
@@ -364,7 +391,7 @@ export default defineComponent({
     const currentReadingItem = ref();
     let lastReadingItem = ref(readingItems[0]);
     const lastreadingDate = ref(
-      date.formatDate(new Date(lastReadingItem.value.time), "DD/MM/YYYY")
+      date.formatDate(new Date(lastReadingItem.value.time), "DD-MMM-YYYY")
     );
 
     if (!props.isNew) {
@@ -383,7 +410,7 @@ export default defineComponent({
           lastReadingItem.value.time + 24 * 60 * 60 * 1000,
           Date.now()
         );
-        return `Your last entry was less than 24 hours ago. Please wait ${time} before you read again.`;
+        return `Your last entry was less than 24 hours ago. Please wait ${time}.`;
       } else {
         return "";
       }
@@ -458,12 +485,12 @@ export default defineComponent({
           });
           // screenShotCapture();
         } else {
-          let lasteditDate = date.formatDate(
+          let lastEditDate = date.formatDate(
             new Date(lastEditTime.value).toISOString()
           );
           updateReadingInMeter({
             meter_id: props.meter.id,
-            meter_reading_date: lasteditDate,
+            meter_reading_date: lastEditDate,
             meter_reading: valueInString,
             meter_reading_id: currentReadingItem.value.id,
           }).then(({ status, data }) => {
@@ -472,18 +499,30 @@ export default defineComponent({
                 id: currentReadingItem.value.id,
                 value: currentReadingValue,
                 valueInString: valueInString,
-                time: new Date(lasteditDate).getTime(),
+                time: new Date(lastEditDate).getTime(),
                 isSubmit: isSubmit,
                 meter: { id: props.meter.id },
               });
             }
           });
-          // screenShotCapture();
         }
         emit("save");
       };
+
+      const valueInString = meterComopnentReadValue.value.getValueInString();
+      const currentReadingValue =
+        valueInString / (props.meter.type.id == 2 ? 10.0 : 10000.0);
+
+      let getReadingDate = date.extractDate(readingDate.value, "DD/MM/YYYY");
+      let readingDateInToms = date.formatDate(getReadingDate, "x");
+      let currentDateInToms = date.formatDate(new Date(), "x");
+
       if (props.isNew) {
-        if (lastReadingItem.value.time + 24 * 60 * 60 * 1000 > Date.now()) {
+        if (lastReadingItem.value.time > readingDateInToms) {
+        } else if (
+          lastReadingItem.value.time + 24 * 60 * 60 * 1000 >
+          readingDateInToms
+        ) {
           let time = durbanReading.timeDiffCalc(
             lastReadingItem.value.time + 24 * 60 * 60 * 1000,
             Date.now()
@@ -494,14 +533,6 @@ export default defineComponent({
           return;
         }
       }
-
-      const valueInString = meterComopnentReadValue.value.getValueInString();
-      const currentReadingValue =
-        valueInString / (props.meter.type.id == 2 ? 10.0 : 10000.0);
-
-      let getReadingDate = date.extractDate(readingDate.value, "DD/MM/YYYY");
-      let readingDateInToms = date.formatDate(getReadingDate, "x");
-      let currentDateInToms = date.formatDate(new Date(), "x");
 
       if (currentDateInToms > readingDateInToms) {
         var inputFirstReading = (readingItems || []).map((item) => {
@@ -521,23 +552,31 @@ export default defineComponent({
           return element !== undefined;
         });
       }
-      // console.log("inputFirstReading", inputFirstReading[0]?.value);
-      // console.log("inputLastReading", inputLastReading[0]?.value);
-      // console.log("currentReadingValue", currentReadingValue);
+
+      // props.isNew &&
+      //   (inputFirstReading[0]?.value > currentReadingValue ||
+      //     inputLastReading[inputLastReading.length - 1]?.value <
+      //       currentReadingValue)
 
       if (
-        props.isNew &&
-        (inputFirstReading[0]?.value > currentReadingValue ||
-          inputLastReading[0]?.value < currentReadingValue)
+        (lastReadingItem.value.time > readingDateInToms &&
+          inputFirstReading[0]?.value > currentReadingValue) ||
+        inputLastReading[inputLastReading.length - 1]?.value <
+          currentReadingValue
       ) {
         alertMsg(
-          `Please enter a reading between ${inputFirstReading[0]?.value} to ${inputLastReading[0]?.value}.`
+          `Please enter a reading between ${
+            inputFirstReading[0]?.value || "less"
+          } to ${
+            inputLastReading[inputLastReading.length - 1]?.value || "more"
+          }.`
         );
       } else {
         if (
           props.isNew &&
           (!currentReadingValue ||
-            currentReadingValue < lastReadingItem.value.value)
+            currentReadingValue < lastReadingItem.value.value) &&
+          lastReadingItem.value.time < readingDateInToms
         ) {
           const maximum = props.meter.type.id == 2 ? 99999.9 : 9999.9999;
           confirm(
@@ -613,6 +652,19 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.round-cheap {
+  border-radius: 20px;
+  padding: 2px 10px;
+  text-align: center;
+  border: 1px solid gray;
+}
+/* .meterDescritpion {
+  display: flex;
+  margin: auto;
+  justify-content: space-between;
+  padding: 0px 10px;
+} */
+
 .stroke-focus {
   border: 2px solid blue;
   border-radius: 15px;
@@ -624,10 +676,17 @@ export default defineComponent({
   padding: 5px;
 }
 .captureImage {
-  max-height: 250px;
+  max-height: 200px;
   max-width: 400px;
 }
 
+.selectDate {
+  justify-content: space-between;
+  align-items: baseline;
+}
+.q-badge {
+  padding: 0px !important;
+}
 .myCityIcon {
   width: 100%;
   height: 50px;

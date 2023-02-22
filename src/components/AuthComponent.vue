@@ -244,6 +244,7 @@ export default defineComponent({
             //   });
             // }
             $q.notify({ message: getErrorMsg(error) });
+            $q.loading.hide();
             console.log(error);
           });
       } else {
@@ -269,6 +270,7 @@ export default defineComponent({
             .catch((error) => {
               $q.notify({ message: getErrorMsg(error) });
               console.log(error);
+              $q.loading.hide();
             });
         } else {
           $q.notify("Please agree to the terms and conditions");

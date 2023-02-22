@@ -131,7 +131,7 @@
         <q-input
           v-else
           :placeholder="
-            defaultCost.title === 'Enter Your Billing Date'
+            defaultCost.fixed_cost.title === 'Enter Your Billing Date'
               ? 'Enter Only Dates'
               : 'R0.00'
           "
@@ -147,67 +147,6 @@
           " -->
       </q-card-section>
     </template>
-    <!-- For edit Account New Charges -->
-    <!-- <q-card-section class="bg-primary">
-      <div class="text-subtitle2">New Additional Charges</div>
-    </q-card-section>
-    <template
-      v-for="(defaultCost, index) in getNewAddedDefaultCosts"
-      :key="index"
-    >
-      <q-separator />
-      <q-card-section>
-        <div class="flex justify-between items-center">
-          <div v-if="defaultCost" class="text-h7">
-            {{ defaultCost.title }}
-          </div>
-          <q-toggle v-model="defaultCost.isApplicable" />
-        </div>
-        <q-input
-          placeholder="R0.00"
-          v-model.number="defaultCost.value"
-          type="number"
-          :disable="!defaultCost.isApplicable"
-        />
-      </q-card-section>
-    </template> -->
-
-    <!-- old Charges UI -->
-    <!-- <template
-      v-for="(defaultCost, index) in isNew
-        ? selectedAccount.defaultCosts
-        : selectedAccount.defaultFixedCost"
-      :key="index"
-    >
-      <q-separator />
-
-      <q-card-section>
-        <div class="flex justify-between items-center">
-          <div v-if="defaultCost" class="text-h7">
-            {{ isNew ? defaultCost.title : defaultCost.fixed_cost.title }}
-         
-          </div>
-          <q-toggle v-model="defaultCost.isApplicable" />
-       
-        </div>
-        <q-input
-          v-if="isNew"
-          placeholder="R0.00"
-          v-model.number="defaultCost.value"
-          type="number"
-          :disable="!defaultCost.isApplicable"
-          :readonly="defaultCost.title === 'Rates' || 'Refuse Collection' ? false : true"
-        />
-        <q-input
-          v-else
-          placeholder="R0.00"
-          v-model.number="defaultCost.value"
-          type="number"
-          :disable="!defaultCost.isApplicable"
-          :readonly="defaultCost.fixed_cost.title === 'Rates' ? false : true"
-        />
-      </q-card-section>
-    </template> -->
 
     <q-separator />
     <q-space />
@@ -346,18 +285,6 @@ export default defineComponent({
       site.value = initialState.site;
       selectedAccount.value = initialState.selectedAccount;
     };
-
-    const getNewAddedDefaultCosts = computed(() => {
-      let newCost = new Array();
-      let addAccountCost = selectedAccount.value.defaultCosts;
-      let editAccountCost = selectedAccount.value.defaultFixedCost;
-      newCost = addAccountCost.filter(
-        (obj) =>
-          !editAccountCost.some(({ fixed_cost_id }) => obj.id === fixed_cost_id)
-      );
-      // console.log("Array3", addAccountCost);
-      return newCost;
-    });
 
     // const addFixedCostField = () => {
     //   selectedAccount.value.fixedCosts.push({
@@ -514,16 +441,7 @@ export default defineComponent({
             };
           })
           .filter((cost) => cost !== null);
-        // const new_default_cost = getNewAddedDefaultCosts.value
-        //   .map((cost) => {
-        //     return {
-        //       name: cost.title,
-        //       value: cost.value,
-        //       id: cost.id,
-        //       is_active: cost.isApplicable ? 1 : 0,
-        //     };
-        //   })
-        //   .filter((cost) => cost !== null);
+
         updateAccount({
           site_id: site.value.id,
           account_name: accountValue.title,
@@ -698,7 +616,6 @@ export default defineComponent({
       watchSite,
       isNew,
       alert,
-      getNewAddedDefaultCosts,
     };
   },
 });

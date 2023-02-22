@@ -477,7 +477,7 @@ const getAlarm = computed(() => alaramStore.getAlarms);
 const billingDate = computed(() => {
   let dueDate = false;
   accountStore.accounts[0]?.defaultFixedCost.map((_el) => {
-    if (_el.fixed_cost.title === "Enter Your Billing Date") {
+    if (_el.fixed_cost?.title === "Enter Your Billing Date") {
       const monthDate = date.formatDate(new Date(), "DD");
       if (_el.value - 7 <= monthDate && monthDate <= _el.value - 5) {
         dueDate = true;

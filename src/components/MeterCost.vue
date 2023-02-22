@@ -28,6 +28,7 @@
               {{ unit }}
             </div>
           </div>
+
           <div class="column col-5">
             <b class="text-center">Daily Cost</b>
             <div
@@ -40,8 +41,8 @@
             </div>
           </div>
         </div>
-
-        <div class="q-mt-lg">
+        <q-separator class="q-my-md" color="grey" size="2px" />
+        <div>
           <div
             class="row no-wrap"
             v-for="(cost, index) in projectionCost['projection']"
@@ -112,6 +113,8 @@
             R {{ totalProjectionCost.toFixed(2) }}
           </div>
         </div>
+        <q-separator color="grey" class="q-my-xs" size="2px" />
+
         <div class="text-center text-h6 q-mt-md">
           <div>Date: {{ lastReadingDisplayFormat.timeDisplay }}</div>
           <div>Reading {{ lastReadingDisplayFormat.value }}</div>
