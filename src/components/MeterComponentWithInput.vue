@@ -603,7 +603,8 @@ export default defineComponent({
           } else {
             doSave(currentReadingValue, valueInString);
           }
-        } else {
+        } 
+        else {
           doSave(currentReadingValue, valueInString);
         }
       }

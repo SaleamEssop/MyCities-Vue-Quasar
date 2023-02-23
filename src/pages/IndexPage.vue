@@ -265,12 +265,15 @@
           </div> -->
 
           <div v-for="ad in getAdsWithCategory" :key="ad.id">
+            <div class="q-px-md" v-html="ad.description"></div>
+
             <img
               :src="ad.image"
               alt="add-image"
               class="addImage"
               @click="openAds(ad.url)"
-            />            
+            />
+
             <!-- <q-img
               :src="ad.image"
               spinner-color="black"
