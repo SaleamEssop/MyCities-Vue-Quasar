@@ -62,7 +62,7 @@ export default defineComponent({
         }
         lastPendingArray = newArr;
         return [...fillArray, ...newArr];
-      } else {  
+      } else {
         if (inputReading) {
           if (inputReading.includes(".")) {
             inputReading = inputReading.replace(".", "");

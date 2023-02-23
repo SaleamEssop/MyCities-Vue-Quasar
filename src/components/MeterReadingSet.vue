@@ -187,7 +187,7 @@
       @close="modelForReadingSet = false"
       @save="modelForReadingSet = false"
       :isNew="modelForReadingSet_NewReading"
-    />
+      />
   </q-dialog>
 
   <q-dialog

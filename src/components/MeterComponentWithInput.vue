@@ -5,6 +5,7 @@
       <q-separator color="grey" size="6px" />
     </div>
     <q-card-section>
+      <!-- v-if="isNew" -->
       <div
         v-if="isNew"
         class="q-mb-sm text-subtitle2"
@@ -13,6 +14,7 @@
       >
         {{ alertIfLessThen24Hours }}
       </div>
+
       <div class="row text-subtitle2">
         <div class="col-7">Account Number</div>
         <div class="col-5">: {{ account?.number }}</div>
@@ -22,34 +24,14 @@
         <div class="col-5">: {{ account?.title }}</div>
         <div class="col-7">Last reading</div>
         <div class="col-5">
-          : {{ lastReadingItem?.value }} {{ meter.type.id == 1 ? "kl" : "kW" }}
+          : {{ lastReadingItem?.value }}
+          {{ meter.type.id == 1 ? "kl" : "kW" }}
         </div>
         <div class="col-7">Last reading Date</div>
         <div class="col-5">: {{ lastreadingDate }}</div>
+        <!-- <div class="text-subtitle2">Current Date : {{ currentDate }}</div>
+        <div class="text-subtitle2">Meter Description : {{ meter?.title }}</div>   -->
       </div>
-      <!-- old Description -->
-      <!-- <div class=" meterDescritpion ">
-        Account Number : <span class=" ">{{ account?.number }}</span>
-      </div>
-      <div class="text-subtitle2 meterDescritpion">
-        Meter Number : <span>{{ meter ? meter?.number : "" }}</span>
-      </div>
-      <div class="text-subtitle2 meterDescritpion">
-        Name on Account : <span>{{ account?.title }}</span>
-      </div>
-      <div class="text-subtitle2">Current Date : {{ currentDate }}</div>
-
-      <div class="text-subtitle2">Meter Description : {{ meter?.title }}</div>
-
-      <div class="text-subtitle2 meterDescritpion">
-        Last reading : <span>{{ lastReadingItem?.value }}</span>
-      </div>
-      <div class="text-subtitle2 meterDescritpion">
-        Last reading :
-        <span>
-          {{ lastreadingDate }}
-        </span>
-      </div> -->
 
       <!-- Edit Readings with Date -->
       <div v-show="isNew" class="row selectDate">
@@ -66,11 +48,11 @@
               transition-show="scale"
               transition-hide="scale"
             >
-              <q-date v-model="readingDate" mask="DD/MM/YYYY">
+              <q-date v-model="readingDate" mask="DD-MMM-YYYY">
                 <div class="row items-center justify-end q-gutter-sm">
                   <q-btn label="Cancel" color="primary" flat v-close-popup />
                   <q-btn
-                    label="Save  "
+                    label="Select"
                     color="primary"
                     flat
                     @click="save"
@@ -118,6 +100,7 @@
           />
         </div>
         <div class="text-center">
+          <!-- :text="lastReading.valueInString" -->
           <MeterComponent
             :text="currentReading"
             ref="meterComopnentReadValue"
@@ -139,22 +122,22 @@
         text-color="black"
         @click="captureImage()"
       />
-      <q-btn
+      <!-- <q-btn
         icon="download"
         color="primary"
         text-color="black"
         @click="screenShotCapture('close')"
-      />
+      /> -->
       <q-btn color="primary" text-color="black" @click="$emit('close')"
         >Cancel</q-btn
       >
       <!-- screenShotCapture(); -->
-      <q-btn color="primary" text-color="black" @click="saveReading(false)"
-        >Save</q-btn
-      >
-      <!-- <q-btn color="primary" text-color="black" @click="screenShotCapture()"
+      <!-- <q-btn color="primary" text-color="black" @click="saveReading(false)"
         >Save</q-btn
       > -->
+      <q-btn color="primary" text-color="black" @click="screenShotCapture()"
+        >Save</q-btn
+      >
     </q-card-actions>
     <q-separator color="grey" size="10px" />
 
@@ -261,7 +244,7 @@ export default defineComponent({
       }
     }
 
-    const screenShotCapture = (close) => {
+    const screenShotCapture = () => {
       // $q.loading.show();
       var node = document.getElementById("cardId_12");
       domtoimage
@@ -271,7 +254,7 @@ export default defineComponent({
           img.src = dataUrl;
           const base64Data = img.src;
           // console.log("Base Date", base64Data);
-          alert(base64Data);
+          // alert(base64Data);
           const fileName =
             date.formatDate(Date.now(), "YYYY_MM_DD_HH_mm_ss") + ".jpeg";
           mkdir();
@@ -281,9 +264,7 @@ export default defineComponent({
             data: base64Data,
             directory: FilesystemDirectory.Documents,
           });
-          // if (!close) {
-          //   saveReading(false);
-          // }
+          saveReading(false);
           $q.notify({ message: "Saved:-FileManager/Documents/MyCityApp/.." });
           // $q.loading.hide();
         })
@@ -387,12 +368,12 @@ export default defineComponent({
     const readingItems = readingStore.getReadingsByMeterId(props.meter.id);
     const lastEditTime = ref(readingItems[0].time);
 
-    const currentReading = ref("");
     const currentReadingItem = ref();
     let lastReadingItem = ref(readingItems[0]);
     const lastreadingDate = ref(
       date.formatDate(new Date(lastReadingItem.value.time), "DD-MMM-YYYY")
     );
+    const currentReading = ref(lastReadingItem.value.valueInString);
 
     if (!props.isNew) {
       if (lastReadingItem.value.isSubmit) {
@@ -405,6 +386,11 @@ export default defineComponent({
     }
 
     const alertIfLessThen24Hours = computed(() => {
+      let getReadingDate = date.extractDate(readingDate.value, "DD-MMM-YYYY");
+      let readingDateInToms = date.formatDate(getReadingDate, "x");
+      if (lastReadingItem.value.time > readingDateInToms) {
+        return " ";
+      }
       if (lastReadingItem.value.time + 24 * 60 * 60 * 1000 > Date.now()) {
         let time = durbanReading.timeDiffCalc(
           lastReadingItem.value.time + 24 * 60 * 60 * 1000,
@@ -464,8 +450,9 @@ export default defineComponent({
         // screenShotCapture();
         // const timeToSave = new Date().toISOString();
         const timeToSave = new Date(
-          date.extractDate(readingDate.value, "DD/MM/YYYY")
+          date.extractDate(readingDate.value, "DD-MMM-YYYY")
         ).toISOString();
+
         if (props.isNew) {
           addReadingInMeter({
             meter_id: props.meter.id,
@@ -513,7 +500,7 @@ export default defineComponent({
       const currentReadingValue =
         valueInString / (props.meter.type.id == 2 ? 10.0 : 10000.0);
 
-      let getReadingDate = date.extractDate(readingDate.value, "DD/MM/YYYY");
+      let getReadingDate = date.extractDate(readingDate.value, "DD-MMM-YYYY");
       let readingDateInToms = date.formatDate(getReadingDate, "x");
       let currentDateInToms = date.formatDate(new Date(), "x");
 
@@ -561,8 +548,9 @@ export default defineComponent({
       if (
         (lastReadingItem.value.time > readingDateInToms &&
           inputFirstReading[0]?.value > currentReadingValue) ||
-        inputLastReading[inputLastReading.length - 1]?.value <
-          currentReadingValue
+        (inputLastReading[inputLastReading.length - 1]?.value <
+          currentReadingValue &&
+          lastReadingItem.value.time > readingDateInToms)
       ) {
         alertMsg(
           `Please enter a reading between ${
@@ -572,6 +560,7 @@ export default defineComponent({
           }.`
         );
       } else {
+        //
         if (
           props.isNew &&
           (!currentReadingValue ||

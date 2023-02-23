@@ -270,8 +270,7 @@
               alt="add-image"
               class="addImage"
               @click="openAds(ad.url)"
-            />
-
+            />            
             <!-- <q-img
               :src="ad.image"
               spinner-color="black"
