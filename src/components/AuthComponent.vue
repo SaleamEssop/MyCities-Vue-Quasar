@@ -1,5 +1,5 @@
 <template>
-  <div class=" ">
+  <div class="">
     <div class="full-width col">
       <div class="full-width q-pa-lg">
         <div class="full-width">
@@ -34,11 +34,17 @@
               </template>
             </q-input>
             <div v-if="isLogin">
-              <div class="row">
-                <q-checkbox v-model="agreeToTCs" label="Agree our T&Cs">
+              <div class="row q-mb-sm">
+                <q-checkbox v-model="agreeToTCs" label="Agree our T&Cs.">
                 </q-checkbox>
+                <span
+                  class="readTerms"
+                  @click="readTerms()"
+                  style="padding-left: 6px"
+                  >Read Here</span
+                >
               </div>
-              <q-btn
+              <!-- <q-btn
                 no-caps
                 class="readTerms"
                 color="blue-8"
@@ -47,7 +53,7 @@
                 style="padding-left: 6px"
                 @click="readTerms()"
               >
-              </q-btn>
+              </q-btn> -->
             </div>
 
             <div v-if="!isLogin">
@@ -86,11 +92,17 @@
                 :input-style="{ fontSize: '18px' }"
               />
 
-              <div class="row">
-                <q-checkbox v-model="agreeToTCs" label="Agree our T&Cs">
+              <div class="row q-mb-sm">
+                <q-checkbox v-model="agreeToTCs" label="Agree our T&Cs.">
                 </q-checkbox>
+                <span
+                  class="readTerms"
+                  @click="readTerms()"
+                  style="padding-left: 6px"
+                  >Read Here</span
+                >
               </div>
-              <q-btn
+              <!-- <q-btn
                 no-caps
                 class="readTerms"
                 color="blue-8"
@@ -99,7 +111,7 @@
                 style="padding-left: 6px"
                 @click="readTerms()"
               >
-              </q-btn>
+              </q-btn> -->
 
               <!-- <q-checkbox
                 class="q-pb-md"
@@ -107,7 +119,7 @@
                 label="Tick agree to our T&Cs"
               ></q-checkbox> -->
             </div>
-            <div class="row">
+            <div class="row column justify-center">
               <q-btn
                 type="submit"
                 color="primary"
@@ -120,7 +132,7 @@
                 flat
                 label="Forgot Password?"
                 color="grey-7"
-                class="q-px-none"
+                class="q-px-none q-mt-sm"
                 no-caps
                 v-if="tab !== 'register'"
                 @click="forgotPassword"
@@ -154,6 +166,8 @@
       <ForgotPassword />
     </q-dialog>
   </div>
+  
+
 </template>
 
 <script>
@@ -302,8 +316,13 @@ export default defineComponent({
 
 <style scoped>
 .readTerms {
-  font-style: italic !important;
+  /* font-style: italic !important;
   padding: none !important;
-  margin-bottom: 8px !important;
+  margin-bottom: 8px !important; */
+  align-items: center;
+  display: flex;
+  cursor: pointer;
+  color: #2672e5;
+  font-weight: 500;
 }
 </style>

@@ -83,15 +83,17 @@ export default class {
           getAverageOfReading[getAverageOfReading.length - 1] || {};
       } else if (getCurrentMonthReading?.length === 1) {
         var lastReading = getCurrentMonthReading[0] || {};
-        var firstReading = getLastMonthLastReading[0] || {};
+        if (getLastMonthLastReading.length !== 0) {
+          var firstReading = getLastMonthLastReading[0] || {};
+        } else {
+          var firstReading =
+            getAverageOfReading[getAverageOfReading.length - 1] || {};
+        }
       } else {
         var lastReading = getCurrentMonthReading[0] || {};
         var firstReading =
           getCurrentMonthReading[getCurrentMonthReading.length - 1] || {};
       }
-
-      // const lastReading = getCurrentMonthReading[0] || {};
-      // const firstReading = getCurrentMonthReading[getCurrentMonthReading.length - 1] || {};
 
       // console.log("firstReading", firstReading);
       // console.log("lastReading", lastReading);

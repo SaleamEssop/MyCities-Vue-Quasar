@@ -264,6 +264,7 @@ export default defineComponent({
             data: base64Data,
             directory: FilesystemDirectory.Documents,
           });
+          console.log("savedFile", savedFile);
           saveReading(false);
           $q.notify({ message: "Saved:-FileManager/Documents/MyCityApp/.." });
           // $q.loading.hide();
@@ -603,8 +604,7 @@ export default defineComponent({
           } else {
             doSave(currentReadingValue, valueInString);
           }
-        } 
-        else {
+        } else {
           doSave(currentReadingValue, valueInString);
         }
       }

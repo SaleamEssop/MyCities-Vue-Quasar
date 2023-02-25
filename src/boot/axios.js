@@ -17,8 +17,12 @@ const readingStore = useReadingStore();
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
+
+// const SERVER_URL = "";
 const SERVER_URL = "http://146.190.105.178";
+
 // const SERVER_URL = "http://192.168.29.88:8000";
+
 const api = axios.create({ baseURL: `${SERVER_URL}/api` });
 api.interceptors.request.use((config) => {
   config.headers["Authorization"] = `Bearer ${userStore.getToken}`;

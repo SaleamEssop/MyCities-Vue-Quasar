@@ -7,6 +7,9 @@
       @click="sureLogout = true"
     ></q-btn>
 
+    <!-- <q-btn @click="isVoiceOverEnabled()"> isVoiceOverEnabled</q-btn>
+    <q-btn @click="speak()">speak</q-btn> -->
+
     <div class="container">
       <div class="header">
         <img class="q-px-lg titleIcon" src="~assets/MyCity.png" />
@@ -459,7 +462,28 @@ import { useAdStore } from "src/stores/ads";
 import { useGetAlarmsStore } from "src/stores/alarm";
 import { useAccountStore } from "/src/stores/account";
 import { date } from "quasar";
+// import { Plugins } from "@capacitor/core";
+// const { Accessibility, Modals } = Plugins;
 
+// Accessibility.addListener("accessibilityScreenReaderStateChange", (state) => {
+//   console.log("Accessibility", state.value);
+// });
+
+// const isVoiceOverEnabled = async () => {
+//   var vo = await Accessibility.isScreenReaderEnabled();
+//   // console.log("Value", vo.value);
+//   alert("Voice over enabled? " + vo);
+// };
+
+// // async speak() {
+// const speak = async () => {
+//   var value = await Modals.prompt({
+//     title: "Value to speak",
+//     message: "Enter the value to speak",
+//   });
+//   // console.log("value", value);
+//   Accessibility.speak({ value: value.value });
+// };
 const router = useRouter();
 const userStore = useUserStore();
 const adStore = useAdStore();

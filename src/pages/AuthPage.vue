@@ -1,6 +1,7 @@
 <template>
-  <q-page class="flex q-pa-md justify-center items-center">
-    <q-card style="width: 100%; max-width: 450px" class="no-shadow">
+  <q-page class="flex column q-pa-md justify-center items-center">
+    <img src="~assets/MyCity.png" alt="" />
+    <q-card class="login-card" style="width: 100%; max-width: 450px">
       <q-tabs
         v-model="tab"
         dense
@@ -46,3 +47,18 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+img {
+  height: auto;
+  width: 250px;
+  margin-bottom: 20px;
+  max-width: 450px;
+}
+
+@media only screen and (max-width: 480px) {
+  .login-card {
+    box-shadow: none !important;
+  }
+}
+</style>
