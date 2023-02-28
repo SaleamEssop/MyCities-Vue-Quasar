@@ -13,6 +13,12 @@ const routes = [
         meta: { title: "Home", meta: { requiresAuth: true } },
       },
       {
+        path: "/data_set",
+        component: () => import("components/DataSet.vue"),
+        name: "data-set",
+        meta: { title: "Data", meta: { requiresAuth: true } },
+      },
+      {
         path: "/send_reading/",
         component: () => import("layouts/MainLayout.vue"),
         children: [

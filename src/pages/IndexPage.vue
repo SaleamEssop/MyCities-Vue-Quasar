@@ -120,6 +120,19 @@
             />
           </div>
           <q-separator vertical inset />
+          <div
+            v-show="userStore?.user?.id === 44"
+            class="text-center q-pt-xs menuItem"
+          >
+            <q-btn
+              class="col-xs-6 col-sm-6 q-my-sm"
+              no-caps
+              flat
+              label="DataSet"
+              @click="moveTo('data-set')"
+            />
+          </div>
+          <q-separator v-show="userStore?.user?.id === 44" vertical inset />
           <div class="text-center q-pt-xs menuItem">
             <q-btn
               class="col-xs-6 col-sm-6 q-my-sm"
@@ -461,6 +474,7 @@ import { useUserStore } from "src/stores/user";
 import { useAdStore } from "src/stores/ads";
 import { useGetAlarmsStore } from "src/stores/alarm";
 import { useAccountStore } from "/src/stores/account";
+
 import { date } from "quasar";
 // import { Plugins } from "@capacitor/core";
 // const { Accessibility, Modals } = Plugins;
@@ -648,9 +662,8 @@ const getAdsWithCategory = computed(() => {
 
 const logout = () => {
   // getAuth().signOut();
-  $q.loading.show();
+  // $q.loading.show();
   setTimeout(() => {
-    $q.loading.hide();
     userStore.signOut();
     router
       .push("/auth/login")
@@ -659,6 +672,7 @@ const logout = () => {
       })
       .catch((error) => console.log("error", error));
     timer = void 0;
+    // $q.loading.hide();
   }, 1000);
 };
 const totalItems = ref([
