@@ -14,10 +14,11 @@ const routes = [
       },
       {
         path: "/data_set",
-        component: () => import("components/DataSet.vue"),
+        component: () => import("pages/DatasetPage.vue"),
         name: "data-set",
         meta: { title: "Data", meta: { requiresAuth: true } },
       },
+   
       {
         path: "/send_reading/",
         component: () => import("layouts/MainLayout.vue"),
