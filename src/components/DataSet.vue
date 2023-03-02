@@ -209,17 +209,15 @@ export default defineComponent({
       let newValue = getDataSetStore.value.map((_el) => {
         _el.rows.map((_el) => {
           var formulaAns = 0;
-          console.log("_el.rowFormula", !_el.rowFormula);
-          if (!_el.rowFormula) {
+          if (_el.rowFormula) {
+            try {
+              formulaAns = Parser.evaluate(_el.rowFormula.toString());
+            } catch (error) {
+              formulaAns = 0;
+            }
           } else {
-            formulaAns = Parser.evaluate(_el.rowFormula.toString());
+            return formulaAns;
           }
-          // formulaAns = Parser.evaluate(_el.rowFormula.toString());
-          // if (_el.rowFormula.toString()) {
-          //   formulaAns = Parser.evaluate(_el.rowFormula.toString());
-          // } else {
-          //   formulaAns = 0;
-          // }
           return (_el.rowResult = formulaAns || 0);
         });
       });
