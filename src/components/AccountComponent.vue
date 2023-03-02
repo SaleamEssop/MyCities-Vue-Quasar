@@ -235,6 +235,7 @@ export default defineComponent({
       site: null,
       selectedAccount: JSON.parse(JSON.stringify(props.account || nullAccount)),
     };
+    
     initialState["selectedAccount"]["defaultCosts"] =
       defaultCostStore.getDefaultCost.map((_cost) => {
         if (_cost.title === "Rates Rebate") {

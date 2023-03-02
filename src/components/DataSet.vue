@@ -23,7 +23,7 @@
     />
   </q-card-actions>
 
-  <div class="q-mb-lg" v-for="data in getDataSetStore" :key="data.id">
+  <div class="q-mb-sm" v-for="data in getDataSetStore" :key="data.id">
     <div class="q-pa-md" style="max-width: 100%">
       <q-input
         outlined
@@ -107,7 +107,9 @@
             <div class="data-set q-mr-sm bg-purple-2 col-3">
               {{ row.name }}
             </div>
-            <div class="data-set q-mr-xs bg-purple-2 col-3">Y</div>
+            <div class="data-set q-mr-xs bg-purple-2 col-3 cursor-pointer">
+              Y
+            </div>
             <div clickable class="data-set col-3 cursor-pointer">
               <q-icon
                 size="sm"
@@ -117,7 +119,7 @@
             </div>
           </div>
         </div>
-        <div class="col-9">
+        <div v-if="calculateForRow" class="col-9">
           <div class="justify-around row">
             <div class="col-3">
               <q-input dense outlined v-model="row.rowDescription" />
@@ -148,7 +150,7 @@ export default defineComponent({
     const useDataStore = useDataSetStore();
     const $q = useQuasar();
     const getDataSetStore = computed(() => useDataStore.dataSetStore);
-
+    var Parser = require("expr-eval").Parser;
     const dataSets = ref([]);
     const addNewDataSet = () => {
       let alphabet = 65;
@@ -185,6 +187,7 @@ export default defineComponent({
       getDataSetStore.value.map((_el) => {
         if (_id === _el.id) {
           let rowName = `${_el.alphabet}` + `${_el.rows.length + 1}`;
+
           _el.rows.push({
             id: _el.rows.length + 1,
             name: rowName,
@@ -194,13 +197,35 @@ export default defineComponent({
             // rowDescription: rowName + `${_el.columnA}`,
             // rowFormula: rowName + `${_el.columnB}`,
             // rowResult: rowName + `${_el.columnX}`,
-            rowDescription: "",
-            rowFormula: "",
-            rowResult: "",
+            rowDescription: null,
+            rowFormula: null,
+            rowResult: null,
           });
         }
       });
     };
+
+    const calculateForRow = computed(() => {
+      let newValue = getDataSetStore.value.map((_el) => {
+        _el.rows.map((_el) => {
+          var formulaAns = 0;
+          console.log("_el.rowFormula", !_el.rowFormula);
+          if (!_el.rowFormula) {
+          } else {
+            formulaAns = Parser.evaluate(_el.rowFormula.toString());
+          }
+          // formulaAns = Parser.evaluate(_el.rowFormula.toString());
+          // if (_el.rowFormula.toString()) {
+          //   formulaAns = Parser.evaluate(_el.rowFormula.toString());
+          // } else {
+          //   formulaAns = 0;
+          // }
+          return (_el.rowResult = formulaAns || 0);
+        });
+      });
+      return newValue;
+    });
+
     const deleteDataSetStore = (id) => {
       $q.dialog({
         title: "Confirm",
@@ -211,6 +236,7 @@ export default defineComponent({
         useDataStore.deleteDataSet(id);
       });
     };
+
     const deleteRow = (rowId, DataSetId) => {
       $q.dialog({
         title: "Confirm",
@@ -222,6 +248,7 @@ export default defineComponent({
         useDataStore.deleteDataSetRow(rowId, DataSetId);
       });
     };
+
     return {
       addNewDataSet,
       dataSets,
@@ -229,6 +256,7 @@ export default defineComponent({
       deleteDataSetStore,
       addNewRow,
       deleteRow,
+      calculateForRow,
     };
   },
 });
