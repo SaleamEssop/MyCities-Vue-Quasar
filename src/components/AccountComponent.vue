@@ -4,71 +4,30 @@
       <div class="text-subtitle2">Necessary Details</div>
     </q-card-section>
     <q-card-section>
-      <q-select
-        color="black"
-        type="text"
-        label="Enter a location address"
-        use-input
-        input-debounce="0"
-        :options="siteOptions"
-        @filter="filterFn"
-        behavior="menu"
-        v-model="site"
-        option-label="address"
-        emit-value
-        map-options
-        v-if="isNew"
-      />
+
+      <q-select color="black" type="text" label="Enter a location address" use-input input-debounce="0"
+        :options="siteOptions" @filter="filterFn" behavior="menu" v-model="site" option-label="address" emit-value
+        map-options v-if="isNew" />
       <div v-else>
         {{ site?.address }}
       </div>
 
       <h6>Email {{ site?.email }}</h6>
 
-      <q-select
-        color="black"
-        v-model="regionmodel"
-        :options="regionOptions"
-        label="Enter Region"
-      />
+      <q-select color="black" v-model="regionmodel" :options="regionOptions" label="Enter Region" />
 
-      <q-select
-        color="black"
-        v-model="accountmodel"
-        :options="accountOptions"
-        label="Enter Account"
-      />
+      <q-select color="black" v-model="accountmodel" :options="accountOptions" label="Enter Account" />
 
-      <q-input
-        color="black"
-        type="text"
-        v-model="waterEmail"
-        label="Enter Water Email"
-      />
+      <q-input color="black" type="text" v-model="waterEmail" label="Enter Water Email" />
 
-      <q-input
-        color="black"
-        type="text"
-        v-model="electricityEmail"
-        label="Enter Electricity Email"
-      />
+      <q-input color="black" type="text" v-model="electricityEmail" label="Enter Electricity Email" />
 
-      <q-input
-        color="black"
-        type="text"
-        label="Enter name - As per bill"
-        v-if="isNew"
-        v-model.trim="selectedAccount.title"
-      />
+      <q-input color="black" type="text" label="Enter name - As per bill" v-if="isNew"
+        v-model.trim="selectedAccount.title" />
       <div v-else>Name : -{{ selectedAccount.title }}</div>
 
-      <q-input
-        color="black"
-        type="text"
-        label="Enter account number - As per bill"
-        v-if="isNew"
-        v-model="selectedAccount.number"
-      />
+      <q-input color="black" type="text" label="Enter account number - As per bill" v-if="isNew"
+        v-model="selectedAccount.number" />
       <div v-else>Account :- {{ selectedAccount.number }}</div>
     </q-card-section>
 
@@ -76,12 +35,7 @@
       <div class="text-subtitle2">Description under Account setup</div>
     </q-card-section>
     <q-card-section>
-      <q-input
-        color="black"
-        type="text"
-        label="Account description"
-        v-model="selectedAccount.option"
-      />
+      <q-input color="black" type="text" label="Account description" v-model="selectedAccount.option" />
     </q-card-section>
     <!-- <q-card-section class="bg-primary">
       <div class="text-subtitle2">Fixed Cost - according to bill</div>
@@ -122,12 +76,9 @@
     <!-- edit update -->
     <!-- v-for="(defaultCost, index) in isNew ? selectedAccount.defaultCosts  : selectedAccount.defaultFixedCost" -->
 
-    <template
-      v-for="(defaultCost, index) in isNew
-        ? selectedAccount.defaultCosts
-        : selectedAccount.defaultFixedCost"
-      :key="index"
-    >
+    <template v-for="(defaultCost, index) in isNew
+      ? selectedAccount.defaultCosts
+      : selectedAccount.defaultFixedCost" :key="index">
       <q-separator />
 
       <q-card-section>
@@ -139,34 +90,22 @@
           <q-toggle v-model="defaultCost.isApplicable" />
           <!-- :model-value="defaultCost.isApplicable" -->
         </div>
-        <q-input
-          v-if="isNew"
-          :placeholder="
-            defaultCost.title === 'Enter Your Billing Date'
-              ? 'Enter Only Dates'
-              : 'R0.00'
-          "
-          v-model.number="defaultCost.value"
-          type="number"
-          :disable="!defaultCost.isApplicable"
-        />
+        <q-input v-if="isNew" :placeholder="
+          defaultCost.title === 'Enter Your Billing Date'
+            ? 'Enter Only Dates'
+            : 'R0.00'
+        " v-model.number="defaultCost.value" type="number" :disable="!defaultCost.isApplicable" />
         <!-- :readonly="
             defaultCost.title === 'Rates' ||
             defaultCost.title === 'Refuse Collection'
               ? false
               : true
           " -->
-        <q-input
-          v-else
-          :placeholder="
-            defaultCost.fixed_cost.title === 'Enter Your Billing Date'
-              ? 'Enter Only Dates'
-              : 'R0.00'
-          "
-          v-model.number="defaultCost.value"
-          type="number"
-          :disable="!defaultCost.isApplicable"
-        />
+        <q-input v-else :placeholder="
+          defaultCost.fixed_cost.title === 'Enter Your Billing Date'
+            ? 'Enter Only Dates'
+            : 'R0.00'
+        " v-model.number="defaultCost.value" type="number" :disable="!defaultCost.isApplicable" />
         <!-- :readonly="
             defaultCost.fixed_cost.title === 'Rates' ||
             defaultCost.fixed_cost.title === 'Refuse Collection'
@@ -179,25 +118,11 @@
     <q-separator />
     <q-space />
     <q-card-actions align="center">
-      <q-btn
-        color="red"
-        v-if="!autoUpdate"
-        text-color="white"
-        class="q-my-none q-mx-none"
-        label="Cancel"
-        glossy
-        @click="$emit('close')"
-      />
+      <q-btn color="red" v-if="!autoUpdate" text-color="white" class="q-my-none q-mx-none" label="Cancel" glossy
+        @click="$emit('close')" />
 
-      <q-btn
-        color="primary"
-        text-color="black"
-        v-if="!autoUpdate"
-        class="q-my-none q-mx-noe"
-        label="Save"
-        glossy
-        @click="onSaveSelectAccount"
-      />
+      <q-btn color="primary" text-color="black" v-if="!autoUpdate" class="q-my-none q-mx-noe" label="Save" glossy
+        @click="onSaveSelectAccount" />
     </q-card-actions>
   </q-card>
 </template>
@@ -208,6 +133,7 @@ import { useAccountStore } from "/src/stores/account";
 import { useQuasar } from "quasar";
 import { useDefaultCostStore } from "src/stores/defaultCost";
 import { getProxyData } from "src/utils";
+import { getAllRegion, getAllAccount } from "boot/axios";
 
 import {
   locationApi,
@@ -216,8 +142,6 @@ import {
   findEmailFromLocation,
   addSiteAndAccount,
   updateAccount,
-  getAllAccount,
-  getAllRegion,
 } from "boot/axios";
 
 //import { updateAllData } from "boot/firebase";
@@ -229,7 +153,7 @@ const nullAccount = {
   option: null,
   site: { id: null, email: null },
   fixedCosts: [],
-  defaultCosts: [],
+  defaultCosts: []
   // fixedCosts: [
   //   {
   //     id: Date.now(),
@@ -256,7 +180,7 @@ export default defineComponent({
   name: "AccountComponent",
   props: {
     account: Object,
-    autoUpdate: { type: Boolean, default: false },
+    autoUpdate: { type: Boolean, default: false }
   },
   methods: {},
   emits: ["update:account"],
@@ -265,13 +189,18 @@ export default defineComponent({
       site: null,
       selectedAccount: JSON.parse(JSON.stringify(props.account || nullAccount)),
     };
-
-    const getAllAccountData = () => {
-      getAllAccount()
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
-    };
-
+    const accountOptions = [];
+    // get ALL Account Type Option
+    getAllAccount().then((res) => {
+      //return res.data;
+      res.data.forEach(item => {
+        accountOptions.push(item.type);
+      });
+      console.log(accountOptions);
+    }).catch((err) => {
+      console.log(err)
+    });
+    console.log(accountOptions);
     initialState["selectedAccount"]["defaultCosts"] =
       defaultCostStore.getDefaultCost.map((_cost) => {
         if (_cost.title === "Rates Rebate") {
@@ -580,7 +509,7 @@ export default defineComponent({
           };
         });
         return suggestions;
-      } catch (_) {}
+      } catch (_) { }
     };
 
     const finLatLngByMagicKey = async (singleLine, magicKey) => {
@@ -596,7 +525,7 @@ export default defineComponent({
           };
         });
         return address;
-      } catch (_) {}
+      } catch (_) { }
     };
 
     const watchSite = watch(site, async (newValue, oldValue) => {
@@ -649,7 +578,7 @@ export default defineComponent({
       selectedAccount,
       // addFixedCostField,
       onSaveSelectAccount,
-      getAllAccountData,
+      getAllAccount,
       siteOptions,
       filterFn,
       site,
@@ -661,7 +590,7 @@ export default defineComponent({
       regionmodel: ref(null),
       accountmodel: ref(null),
       regionOptions: ["Google", "Facebook", "Twitter", "Apple", "Oracle"],
-      accountOptions: ["Business", "Industrial"],
+      accountOptions: accountOptions,
       waterEmail: ref(""),
       electricityEmail: ref(""),
     };
