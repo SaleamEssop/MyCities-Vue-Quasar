@@ -25,6 +25,34 @@
 
       <h6>Email {{ site?.email }}</h6>
 
+      <q-select
+        color="black"
+        v-model="regionmodel"
+        :options="regionOptions"
+        label="Enter Region"
+      />
+
+      <q-select
+        color="black"
+        v-model="accountmodel"
+        :options="accountOptions"
+        label="Enter Account"
+      />
+
+      <q-input
+        color="black"
+        type="text"
+        v-model="waterEmail"
+        label="Enter Water Email"
+      />
+
+      <q-input
+        color="black"
+        type="text"
+        v-model="electricityEmail"
+        label="Enter Electricity Email"
+      />
+
       <q-input
         color="black"
         type="text"
@@ -188,6 +216,8 @@ import {
   findEmailFromLocation,
   addSiteAndAccount,
   updateAccount,
+  getAllAccount,
+  getAllRegion,
 } from "boot/axios";
 
 //import { updateAllData } from "boot/firebase";
@@ -235,7 +265,13 @@ export default defineComponent({
       site: null,
       selectedAccount: JSON.parse(JSON.stringify(props.account || nullAccount)),
     };
-    
+
+    const getAllAccountData = () => {
+      getAllAccount()
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
+    };
+
     initialState["selectedAccount"]["defaultCosts"] =
       defaultCostStore.getDefaultCost.map((_cost) => {
         if (_cost.title === "Rates Rebate") {
@@ -281,6 +317,9 @@ export default defineComponent({
     //   ? ref(JSON.parse(JSON.stringify(props.account)))
     //   : ref(nullAccount);
     const siteOptions = ref(siteStore.allSites);
+
+    // const waterEmail = ref("");
+    // const electricityEmail = ref("");
 
     let resetInstance = () => {
       site.value = initialState.site;
@@ -348,6 +387,7 @@ export default defineComponent({
               optional_information: accountValue.option,
               default_fixed_cost: default_cost,
             }).then(({ status, code, msg, data }) => {
+              console.log(data);
               if (status) {
                 siteStore.addSite({
                   id: data.site_id,
@@ -609,6 +649,7 @@ export default defineComponent({
       selectedAccount,
       // addFixedCostField,
       onSaveSelectAccount,
+      getAllAccountData,
       siteOptions,
       filterFn,
       site,
@@ -617,6 +658,12 @@ export default defineComponent({
       watchSite,
       isNew,
       alert,
+      regionmodel: ref(null),
+      accountmodel: ref(null),
+      regionOptions: ["Google", "Facebook", "Twitter", "Apple", "Oracle"],
+      accountOptions: ["Business", "Industrial"],
+      waterEmail: ref(""),
+      electricityEmail: ref(""),
     };
   },
 });

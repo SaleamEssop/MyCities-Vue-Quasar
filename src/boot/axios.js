@@ -19,7 +19,8 @@ const readingStore = useReadingStore();
 // for each client)
 
 // const SERVER_URL = "";
-const SERVER_URL = "http://146.190.105.178";
+// const SERVER_URL = "http://146.190.105.178";
+const SERVER_URL = "http://127.0.0.1:8000";
 
 // const SERVER_URL = "http://192.168.29.88:8000";
 
@@ -87,6 +88,14 @@ const addSiteAndAccount = async (req) => {
     user_id: userStore.getUser.id,
     ...req,
   });
+};
+
+const getAllRegion = async () => {
+  return await api.get("/v1/regions/get");
+};
+
+const getAllAccount = async () => {
+  return await api.get("/v1/accountType/get");
 };
 
 const updateAccount = async (req) => {
@@ -253,4 +262,6 @@ export {
   forgotPasswordVerificationCode,
   resetNewPassword,
   deleteMeterReadings,
+  getAllRegion,
+  getAllAccount,
 };
