@@ -97,6 +97,9 @@ const getAllRegion = async () => {
 const getAllAccount = async () => {
   return await api.get("/v1/accountType/get");
 };
+const regionsgetEmails = async (req) => {
+  return await api.get(`/v1/regions/getEmails/${req}`);
+};
 
 const updateAccount = async (req) => {
   return await api.post("/v1/account/update", {
@@ -264,4 +267,5 @@ export {
   deleteMeterReadings,
   getAllRegion,
   getAllAccount,
+  regionsgetEmails
 };

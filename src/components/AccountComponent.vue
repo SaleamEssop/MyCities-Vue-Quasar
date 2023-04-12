@@ -14,15 +14,15 @@
 
       <h6>Email {{ site?.email }}</h6>
 
-      <q-select color="black" v-model="regionmodel" :options="regionOptions" label="Enter Region" option-value="id"
-        option-label="name" />
+      <q-select color="black" v-model="regionmodel" @update:model-value="showChannel($event)" :options="regionOptions"
+        label="Enter Region" option-value="id" option-label="name" />
 
       <q-select color="black" v-model="accountmodel" :options="accountOptions" label="Enter Account" option-value="id"
         option-label="type" />
 
-      <q-input color="black" type="text" v-model="waterEmail" label="Enter Water Email" />
+      <q-input color="black" type="text" v-model="electricity_email" label="Enter Water Email" />
 
-      <q-input color="black" type="text" v-model="electricityEmail" label="Enter Electricity Email" />
+      <q-input color="black" type="text" v-model="electricity_email" label="Enter Electricity Email" />
 
       <q-input color="black" type="text" label="Enter name - As per bill" v-if="isNew"
         v-model.trim="selectedAccount.title" />
@@ -135,7 +135,7 @@ import { useAccountStore } from "/src/stores/account";
 import { useQuasar } from "quasar";
 import { useDefaultCostStore } from "src/stores/defaultCost";
 import { getProxyData } from "src/utils";
-import { getAllRegion, getAllAccount } from "boot/axios";
+import { getAllRegion, getAllAccount, regionsgetEmails } from "boot/axios";
 
 import {
   locationApi,
@@ -184,9 +184,18 @@ export default defineComponent({
     account: Object,
     autoUpdate: { type: Boolean, default: false }
   },
-  methods: {},
+
+  methods: {
+    showChannel(val) {
+      regionsgetEmails(val.id).then((res) => {
+        this.water_email = res.water_email;
+        this.ele_email = res.electricity_email;
+      });
+    }
+  },
   emits: ["update:account"],
   setup(props, { emit }) {
+
     const accountOptions = ref([])
     const regionsOptions = ref([])
 
@@ -600,7 +609,7 @@ export default defineComponent({
       regionOptions: regionsOptions,
       accountOptions: accountOptions,
       waterEmail: ref(""),
-      electricityEmail: ref(""),
+      electricityEmail: ref("")
     };
   },
 });
