@@ -14,9 +14,11 @@
 
       <h6>Email {{ site?.email }}</h6>
 
-      <q-select color="black" v-model="regionmodel" :options="regionOptions" label="Enter Region" />
+      <q-select color="black" v-model="regionmodel" :options="regionOptions" label="Enter Region" option-value="id"
+        option-label="name" />
 
-      <q-select color="black" v-model="accountmodel" :options="accountOptions" label="Enter Account" />
+      <q-select color="black" v-model="accountmodel" :options="accountOptions" label="Enter Account" option-value="id"
+        option-label="type" />
 
       <q-input color="black" type="text" v-model="waterEmail" label="Enter Water Email" />
 
@@ -185,22 +187,28 @@ export default defineComponent({
   methods: {},
   emits: ["update:account"],
   setup(props, { emit }) {
+    const accountOptions = ref([])
+    const regionsOptions = ref([])
+
     const initialState = {
       site: null,
       selectedAccount: JSON.parse(JSON.stringify(props.account || nullAccount)),
     };
-    const accountOptions = [];
-    // get ALL Account Type Option
-    getAllAccount().then((res) => {
-      //return res.data;
+
+    // get Account Type
+    let response = getAllAccount().then((res) => {
       res.data.forEach(item => {
-        accountOptions.push(item.type);
+        accountOptions.value = res.data;
       });
-      console.log(accountOptions);
-    }).catch((err) => {
-      console.log(err)
     });
-    console.log(accountOptions);
+
+    // get Regions Type
+    let region = getAllRegion().then((res) => {
+      res.data.forEach(item => {
+        regionsOptions.value = res.data;
+      });
+    });
+
     initialState["selectedAccount"]["defaultCosts"] =
       defaultCostStore.getDefaultCost.map((_cost) => {
         if (_cost.title === "Rates Rebate") {
@@ -589,7 +597,7 @@ export default defineComponent({
       alert,
       regionmodel: ref(null),
       accountmodel: ref(null),
-      regionOptions: ["Google", "Facebook", "Twitter", "Apple", "Oracle"],
+      regionOptions: regionsOptions,
       accountOptions: accountOptions,
       waterEmail: ref(""),
       electricityEmail: ref(""),
