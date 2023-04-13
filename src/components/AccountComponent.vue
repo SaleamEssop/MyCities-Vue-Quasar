@@ -14,16 +14,28 @@
 
       <h6>Email {{ site?.email }}</h6>
 
-      <q-select color="black" v-model="regionmodel" @update:model-value="showChannel($event)" :options="regionOptions"
-        label="Enter Region" option-value="id" option-label="name" />
+      <q-select color="black" v-model="regionmodel" v-if="isNew" @update:model-value="onchangeRegion($event)"
+        :options="regionOptions" label="Enter Region" option-value="id" option-label="name" />
+      <div v-else>
+        <q-select color="black" v-model="site.region_id" @update:model-value="onchangeRegion($event, site)"
+          :options="regionOptions" map-options label="Enter Region" option-value="id" option-label="name" />
+      </div>
 
-      <q-select color="black" v-model="accountmodel" :options="accountOptions" label="Enter Account" option-value="id"
-        option-label="type" />
+      <q-select color="black" v-model="accountmodel" v-if="isNew" :options="accountOptions" label="Enter Account"
+        option-value="id" option-label="type" />
+      <div v-else>
+        <q-select color="black" v-model="site.account_type_id" :options="accountOptions" label="Enter Account"
+          option-value="id" map-options option-label="type" />
+      </div>
+      <q-input color="black" type="text" v-model="water_email" v-if="isNew" label="Enter Water Email" />
+      <div v-else>
+        <q-input color="black" type="text" v-model="site.water_email" label="Enter Water Email" />
+      </div>
 
-      <q-input color="black" type="text" v-model="electricity_email" label="Enter Water Email" />
-
-      <q-input color="black" type="text" v-model="electricity_email" label="Enter Electricity Email" />
-
+      <q-input color="black" type="text" v-model="electricity_email" v-if="isNew" label="Enter Electricity Email" />
+      <div v-else>
+        <q-input color="black" type="text" v-model="site.electricity_email" label="Enter Electricity Email" />
+      </div>
       <q-input color="black" type="text" label="Enter name - As per bill" v-if="isNew"
         v-model.trim="selectedAccount.title" />
       <div v-else>Name : -{{ selectedAccount.title }}</div>
@@ -186,11 +198,20 @@ export default defineComponent({
   },
 
   methods: {
-    showChannel(val) {
-      regionsgetEmails(val.id).then((res) => {
-        this.water_email = res.water_email;
-        this.ele_email = res.electricity_email;
-      });
+    onchangeRegion(val, site) {
+      if (site.region_id.id) {
+        // for edit account
+        regionsgetEmails(site.region_id.id).then((res) => {
+          site.water_email = res.water_email;
+          site.electricity_email = res.water_email;
+        });
+      } else {
+        regionsgetEmails(val.id).then((res) => {
+          this.water_email = res.water_email;
+          this.electricity_email = res.electricity_email;
+        });
+      }
+
     }
   },
   emits: ["update:account"],
@@ -198,6 +219,10 @@ export default defineComponent({
 
     const accountOptions = ref([])
     const regionsOptions = ref([])
+    const regionmodel = ref([])
+    const accountmodel = ref([])
+    const water_email = ref()
+    const electricity_email = ref()
 
     const initialState = {
       site: null,
@@ -270,6 +295,7 @@ export default defineComponent({
     let resetInstance = () => {
       site.value = initialState.site;
       selectedAccount.value = initialState.selectedAccount;
+      //accountOptions.value = initialState.accountOptions;
     };
 
     // const addFixedCostField = () => {
@@ -284,6 +310,8 @@ export default defineComponent({
     // };
 
     const onSaveSelectAccount = async () => {
+
+
       if (site.value == null || site.value.email == null) {
         $q.notify({
           message:
@@ -291,6 +319,71 @@ export default defineComponent({
         });
         return;
       }
+      if (site.value.id) {
+        console.log(site.value.region_id);
+        // console.log(site.account_type_id);
+        //console.log(site.water_email.value);
+
+        if (site.value.region_id == null) {
+          $q.notify({
+            message:
+              "Please select regions",
+          });
+          return;
+        }
+        if (site.value.account_type_id == null) {
+          $q.notify({
+            message:
+              "Please select account type",
+          });
+          return;
+        }
+        if (site.value.water_email == null) {
+          $q.notify({
+            message:
+              "Please enter water email",
+          });
+          return;
+        }
+        if (site.value.electricity_email == null) {
+          $q.notify({
+            message:
+              "Please enter electricity email",
+          });
+          return;
+        }
+
+      } else {
+        if (regionmodel.value.id == null) {
+          $q.notify({
+            message:
+              "Please select regions",
+          });
+          return;
+        }
+        if (accountmodel.value.id == null) {
+          $q.notify({
+            message:
+              "Please select account type",
+          });
+          return;
+        }
+        if (water_email.value == null) {
+          $q.notify({
+            message:
+              "Please enter water email",
+          });
+          return;
+        }
+        if (electricity_email.value == null) {
+          $q.notify({
+            message:
+              "Please enter electricity email",
+          });
+          return;
+        }
+      }
+
       if (
         selectedAccount.value == null ||
         !(selectedAccount.value.title && selectedAccount.value.number)
@@ -332,8 +425,16 @@ export default defineComponent({
               account_number: accountValue.number,
               optional_information: accountValue.option,
               default_fixed_cost: default_cost,
+              region_id: regionmodel.value.id,
+              account_type_id: accountmodel.value.id,
+              water_email: water_email.value,
+              electricity_email: electricity_email.value
             }).then(({ status, code, msg, data }) => {
               console.log(data);
+              console.log(water_email.value);
+              console.log(electricity_email.value);
+              console.log(accountmodel.value.id);
+              console.log(regionmodel.value.id);
               if (status) {
                 siteStore.addSite({
                   id: data.site_id,
@@ -345,6 +446,10 @@ export default defineComponent({
                   },
                   title: data.title,
                   user_id: data.user_id,
+                  region_id: regionmodel.value.id,
+                  account_type_id: accountmodel.value.id,
+                  water_email: water_email.value,
+                  electricity_email: electricity_email.value
                 });
                 accountStore.addAccount({
                   id: data.id,
@@ -362,6 +467,10 @@ export default defineComponent({
                   option: accountValue.option,
                   site: { id: data.site_id },
                   title: accountValue.title,
+                  region_id: regionmodel.value.id,
+                  account_type_id: accountmodel.value.id,
+                  water_email: water_email.value,
+                  electricity_email: electricity_email.value
                 });
               }
             });
@@ -388,6 +497,10 @@ export default defineComponent({
             account_number: accountValue.number,
             optional_information: accountValue.option,
             default_fixed_cost: default_cost,
+            region_id: regionmodel.value.id,
+            account_type_id: accountmodel.value.id,
+            water_email: water_email.value,
+            electricity_email: electricity_email.value
           }).then(({ status, code, msg, data }) => {
             if (status) {
               accountStore.addAccount({
@@ -405,6 +518,10 @@ export default defineComponent({
                 option: accountValue.option,
                 site: { id: data.site_id },
                 title: accountValue.title,
+                region_id: regionmodel.value.id,
+                account_type_id: accountmodel.value.id,
+                water_email: water_email.value,
+                electricity_email: electricity_email.value
               });
             }
           });
@@ -436,6 +553,11 @@ export default defineComponent({
           optional_information: accountValue.option,
           default_fixed_cost: default_cost,
           account_id: accountValue.id,
+          region_id: site.value.region_id,
+          account_type_id: site.value.account_type_id,
+          water_email: site.value.water_email,
+          electricity_email: site.value.electricity_email
+
         }).then(({ status, code, msg, data }) => {
           if (status) {
             accountStore.update({
@@ -453,6 +575,10 @@ export default defineComponent({
               option: accountValue.option,
               site: { id: data.site_id },
               title: accountValue.title,
+              region_id: site.value.region_id,
+              account_type_id: site.value.account_type_id,
+              water_email: site.value.water_email,
+              electricity_email: site.value.electricity_email
             });
           }
         });
@@ -481,6 +607,7 @@ export default defineComponent({
 
     let searchTimeCallBack;
     const filterFn = (val, update) => {
+
       if (val === "") {
         update(() => {
           siteOptions.value = siteStore.allSites;
@@ -591,6 +718,7 @@ export default defineComponent({
         });
     }
 
+
     return {
       selectedAccount,
       // addFixedCostField,
@@ -604,12 +732,12 @@ export default defineComponent({
       watchSite,
       isNew,
       alert,
-      regionmodel: ref(null),
-      accountmodel: ref(null),
+      regionmodel,
+      accountmodel,
       regionOptions: regionsOptions,
       accountOptions: accountOptions,
-      waterEmail: ref(""),
-      electricityEmail: ref("")
+      water_email,
+      electricity_email
     };
   },
 });
