@@ -330,14 +330,16 @@ export default defineComponent({
         return;
       }
       if (site.value.id) {
-        if (selectedAccount.value.region_id && selectedAccount.value.region_id.id == null) {
+        //console.log(selectedAccount.value.region_id);
+        //console.log(selectedAccount.value.account_type_id);
+        if (selectedAccount.value.region_id == null) {
           $q.notify({
             message:
               "Please select regions",
           });
           return;
         }
-        if (selectedAccount.value.account_type_id && selectedAccount.value.account_type_id.id == null) {
+        if (selectedAccount.value.account_type_id == null) {
           $q.notify({
             message:
               "Please select account type",
@@ -578,8 +580,8 @@ export default defineComponent({
               option: accountValue.option,
               site: { id: data.site_id },
               title: accountValue.title,
-              region_id: selectedAccount.value.region_id.id,
-              account_type_id: selectedAccount.value.account_type_id.id,
+              region_id: selectedAccount.value.region_id,
+              account_type_id: selectedAccount.value.account_type_id,
               water_email: selectedAccount.value.water_email,
               electricity_email: selectedAccount.value.electricity_email
             });
