@@ -44,6 +44,10 @@ const updateAllData = () => {
               title: account.account_name,
               id: account.id,
               number: account.account_number,
+              region_id: account.region_id,
+              account_type_id: account.account_type_id,
+              water_email: account.water_email,
+              electricity_email: account.electricity_email,
               option: account.optional_information,
               site: { id: account.site_id },
               fixedCosts: account.fixed_costs.map((cost) => {

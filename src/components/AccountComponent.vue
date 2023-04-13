@@ -17,24 +17,25 @@
       <q-select color="black" v-model="regionmodel" v-if="isNew" @update:model-value="onchangeRegion($event)"
         :options="regionOptions" label="Enter Region" option-value="id" option-label="name" />
       <div v-else>
-        <q-select color="black" v-model="site.region_id" @update:model-value="onchangeRegion($event, site)"
-          :options="regionOptions" map-options label="Enter Region" option-value="id" option-label="name" />
+        <q-select color="black" v-model="selectedAccount.region_id"
+          @update:model-value="onchangeRegion($event, selectedAccount)" :options="regionOptions" map-options
+          label="Enter Region" option-value="id" option-label="name" />
       </div>
 
       <q-select color="black" v-model="accountmodel" v-if="isNew" :options="accountOptions" label="Enter Account"
         option-value="id" option-label="type" />
       <div v-else>
-        <q-select color="black" v-model="site.account_type_id" :options="accountOptions" label="Enter Account"
+        <q-select color="black" v-model="selectedAccount.account_type_id" :options="accountOptions" label="Enter Account"
           option-value="id" map-options option-label="type" />
       </div>
       <q-input color="black" type="text" v-model="water_email" v-if="isNew" label="Enter Water Email" />
       <div v-else>
-        <q-input color="black" type="text" v-model="site.water_email" label="Enter Water Email" />
+        <q-input color="black" type="text" v-model="selectedAccount.water_email" label="Enter Water Email" />
       </div>
 
       <q-input color="black" type="text" v-model="electricity_email" v-if="isNew" label="Enter Electricity Email" />
       <div v-else>
-        <q-input color="black" type="text" v-model="site.electricity_email" label="Enter Electricity Email" />
+        <q-input color="black" type="text" v-model="selectedAccount.electricity_email" label="Enter Electricity Email" />
       </div>
       <q-input color="black" type="text" label="Enter name - As per bill" v-if="isNew"
         v-model.trim="selectedAccount.title" />
@@ -198,12 +199,13 @@ export default defineComponent({
   },
 
   methods: {
-    onchangeRegion(val, site) {
-      if (site.region_id.id) {
+    onchangeRegion(val, selectedAccount) {
+      //console.log(site);
+      if (selectedAccount && selectedAccount.region_id) {
         // for edit account
-        regionsgetEmails(site.region_id.id).then((res) => {
-          site.water_email = res.water_email;
-          site.electricity_email = res.water_email;
+        regionsgetEmails(val.id).then((res) => {
+          selectedAccount.water_email = res.water_email;
+          selectedAccount.electricity_email = res.water_email;
         });
       } else {
         regionsgetEmails(val.id).then((res) => {
@@ -255,6 +257,7 @@ export default defineComponent({
 
     const siteStore = useSiteStore();
     const accountStore = useAccountStore();
+
     const $q = useQuasar();
     const selectedAccount = ref(initialState.selectedAccount);
 
@@ -270,6 +273,7 @@ export default defineComponent({
     const checkIdFromDB = accountStore.getAccountById(
       selectedAccount?.value?.id
     )?.id;
+    console.log(checkIdFromDB);
     const isNew = computed(
       () =>
         !(
@@ -282,6 +286,12 @@ export default defineComponent({
     const site = ref(
       isNew.value ? null : siteStore.getSiteById(selectedAccount.value.site.id)
     );
+
+    const ms = ref(
+      isNew.value ? null : accountStore.getAccountById(checkIdFromDB)
+    );
+    console.log(ms);
+
     // const selectedAccount = props.autoUpdate
     //   ? ref(props.account)
     //   : props.account
@@ -309,8 +319,8 @@ export default defineComponent({
     //   });
     // };
 
+    console.log(site);
     const onSaveSelectAccount = async () => {
-
 
       if (site.value == null || site.value.email == null) {
         $q.notify({
@@ -320,32 +330,28 @@ export default defineComponent({
         return;
       }
       if (site.value.id) {
-        console.log(site.value.region_id);
-        // console.log(site.account_type_id);
-        //console.log(site.water_email.value);
-
-        if (site.value.region_id == null) {
+        if (selectedAccount.value.region_id && selectedAccount.value.region_id.id == null) {
           $q.notify({
             message:
               "Please select regions",
           });
           return;
         }
-        if (site.value.account_type_id == null) {
+        if (selectedAccount.value.account_type_id && selectedAccount.value.account_type_id.id == null) {
           $q.notify({
             message:
               "Please select account type",
           });
           return;
         }
-        if (site.value.water_email == null) {
+        if (selectedAccount.value.water_email && selectedAccount.value.water_email == null) {
           $q.notify({
             message:
               "Please enter water email",
           });
           return;
         }
-        if (site.value.electricity_email == null) {
+        if (selectedAccount.value.electricity_email && selectedAccount.value.electricity_email == null) {
           $q.notify({
             message:
               "Please enter electricity email",
@@ -431,10 +437,7 @@ export default defineComponent({
               electricity_email: electricity_email.value
             }).then(({ status, code, msg, data }) => {
               console.log(data);
-              console.log(water_email.value);
-              console.log(electricity_email.value);
-              console.log(accountmodel.value.id);
-              console.log(regionmodel.value.id);
+
               if (status) {
                 siteStore.addSite({
                   id: data.site_id,
@@ -553,10 +556,10 @@ export default defineComponent({
           optional_information: accountValue.option,
           default_fixed_cost: default_cost,
           account_id: accountValue.id,
-          region_id: site.value.region_id,
-          account_type_id: site.value.account_type_id,
-          water_email: site.value.water_email,
-          electricity_email: site.value.electricity_email
+          region_id: selectedAccount.value.region_id.id,
+          account_type_id: selectedAccount.value.account_type_id.id,
+          water_email: selectedAccount.value.water_email,
+          electricity_email: selectedAccount.value.electricity_email
 
         }).then(({ status, code, msg, data }) => {
           if (status) {
@@ -575,10 +578,10 @@ export default defineComponent({
               option: accountValue.option,
               site: { id: data.site_id },
               title: accountValue.title,
-              region_id: site.value.region_id,
-              account_type_id: site.value.account_type_id,
-              water_email: site.value.water_email,
-              electricity_email: site.value.electricity_email
+              region_id: selectedAccount.value.region_id.id,
+              account_type_id: selectedAccount.value.account_type_id.id,
+              water_email: selectedAccount.value.water_email,
+              electricity_email: selectedAccount.value.electricity_email
             });
           }
         });
