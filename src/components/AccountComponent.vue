@@ -329,7 +329,9 @@ export default defineComponent({
         });
         return;
       }
-      if (site.value.id) {
+      if (!site.value.newSite) {
+        console.log("if");
+        console.log(site);
         //console.log(selectedAccount.value.region_id);
         //console.log(selectedAccount.value.account_type_id);
         if (selectedAccount.value.region_id == null) {
@@ -362,6 +364,8 @@ export default defineComponent({
         }
 
       } else {
+        console.log("else");
+        console.log(regionmodel);
         if (regionmodel.value.id == null) {
           $q.notify({
             message:
