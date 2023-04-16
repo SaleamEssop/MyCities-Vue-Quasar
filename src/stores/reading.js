@@ -13,14 +13,14 @@ const groupByKey = (list, key1, key2) =>
 export const useReadingStore = defineStore("reading", {
   state: () => ({
     readings: [],
-    cost:[]
+    cost: [],
   }),
 
   getters: {},
 
   actions: {
     getmetercost() {
-      return this.cost[0]['data'];
+      return this.cost;
     },
     metercost(_reading) {
       this.cost = [];
