@@ -168,7 +168,7 @@ export default defineComponent({
     const getCost = durbanReading.getCost;
 
     // push data in metercost
-    console.log("acc", account);
+    
 
     let response = getParticularMeterCost(
       props.meter.account.id,
@@ -179,15 +179,11 @@ export default defineComponent({
       });
     });
     let metercost = readingStore.getmetercost();
-    console.log(metercost);
+    
     let billingMeterCost;
     if (metercost && metercost[0]["data"]) {
       billingMeterCost = metercost[0]["data"];
     }
-    console.log("all billing obj", billingMeterCost);
-    console.log("projection", billingMeterCost["projection"]);
-    // const rawObject = accountOptions.value;
-    // console.log(accountOptions.value);
     const usesPerDay = ref(0);
 
     var readings = readingStore.getReadingsByMeterId(props?.meter?.id);
@@ -281,7 +277,6 @@ export default defineComponent({
     // console.log("Projection", projectionCost);
 
     const projectionCost = getCost(usesPerDay.value, props?.meter);
-    console.log(projectionCost);
 
     const totalProjectionCost = computed(() => {
       let total = 0;
