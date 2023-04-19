@@ -15,11 +15,7 @@
           <div class="column col-5">
             <b class="text-center">Daily Usage</b>
 
-            <div
-              class="medium-rcorners text-h6 text-center"
-              color="negative"
-              text-color="white"
-            >
+            <div class="medium-rcorners text-h6 text-center" color="negative" text-color="white">
               {{ billingMeterCost?.daily_usage }}
               <!-- {{
                 meter.type.id == 2
@@ -32,11 +28,7 @@
 
           <div class="column col-5">
             <b class="text-center">Daily Cost</b>
-            <div
-              class="medium-rcorners text-h6 text-center"
-              color="negative"
-              text-color="white"
-            >
+            <div class="medium-rcorners text-h6 text-center" color="negative" text-color="white">
               <!-- R{{ (projectionCost["total"] / 30.0).toFixed(2) }} -->
               <!-- R{{ (totalProjectionCost / 30.0).toFixed(2) }} -->
               R {{ billingMeterCost?.daily_cost }}
@@ -45,11 +37,7 @@
         </div>
         <q-separator class="q-my-md" color="grey" size="2px" />
         <div>
-          <div
-            class="row no-wrap"
-            v-for="(cost, index) in billingMeterCost['projection']"
-            :key="index"
-          >
+          <div class="row no-wrap" v-for="(cost, index) in billingMeterCost['projection']" :key="index">
             <div v-show="cost.title" class="col">
               {{ cost.title }}
             </div>
@@ -104,11 +92,7 @@
 
         <div class="column flex justify-between items-center no-wrap q-mt-md">
           <b>Monthly Projected cost</b>
-          <div
-            class="big-rcorners text-h4 text-center"
-            color="negative"
-            text-color="white"
-          >
+          <div class="big-rcorners text-h4 text-center" color="negative" text-color="white">
             <!-- R {{ projectionCost["total"].toFixed(2) }} -->
             <!-- R {{ totalProjectionCost.toFixed(2) }} -->
             R {{ billingMeterCost?.final_total }}
@@ -127,9 +111,7 @@
 
     <q-card-actions align="evenly">
       <q-btn color="grey-2" text-color="black" @click="submitBill">Email</q-btn>
-      <q-btn color="grey-2" text-color="black" @click="$emit('close')"
-        >Close</q-btn
-      >
+      <q-btn color="grey-2" text-color="black" @click="$emit('close')">Close</q-btn>
     </q-card-actions>
   </q-card>
 </template>
@@ -168,21 +150,20 @@ export default defineComponent({
     const getCost = durbanReading.getCost;
 
     // push data in metercost
-    
+
 
     let response = getParticularMeterCost(
       props.meter.account.id,
-      props?.meter?.id
     ).then((res) => {
       readingStore.metercost({
         data: res.data,
       });
     });
-    let metercost = readingStore.getmetercost();
-    
+    let metercost = readingStore.getmetercost(props?.meter?.id);
+
     let billingMeterCost;
-    if (metercost && metercost[0]["data"]) {
-      billingMeterCost = metercost[0]["data"];
+    if (metercost && metercost[0]) {
+      billingMeterCost = metercost[0];
     }
     const usesPerDay = ref(0);
 
@@ -363,14 +344,13 @@ export default defineComponent({
 
         let valueInString = ""; //(lastReadingTime.value / 100.0 || "") + unit;
 
-        valueInString = `Current Reading:${
-          meter.type.id == 2
-            ? lastReadingTime.value
-            : lastReadingTime.value.toFixed(2)
-        }\nDate:\t\t\t${date.formatDate(
-          new Date(lastReadingTime.time),
-          "DD MMMM YYYY"
-        )}\n`;
+        valueInString = `Current Reading:${meter.type.id == 2
+          ? lastReadingTime.value
+          : lastReadingTime.value.toFixed(2)
+          }\nDate:\t\t\t${date.formatDate(
+            new Date(lastReadingTime.time),
+            "DD MMMM YYYY"
+          )}\n`;
         //valueInString = (usesPerDay * 30).toFixed(2) + " " + unit;
 
         // body += `\n`;

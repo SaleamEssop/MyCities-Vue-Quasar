@@ -19,8 +19,19 @@ export const useReadingStore = defineStore("reading", {
   getters: {},
 
   actions: {
-    getmetercost() {
-      return this.cost;
+    getmetercost(meter_id) {
+      return this.filterByProperty(this.cost[0]['data'], meter_id)
+    },
+    filterByProperty(array, value) {
+      var filtered = [];
+      for (var i = 0; i < array.length; i++) {
+        var obj = array[i];
+        if (obj['meter_id'] == value) {
+          filtered.push(obj);
+        }
+      }
+      console.log(filtered)
+      return filtered;
     },
     metercost(_reading) {
       this.cost = [];
