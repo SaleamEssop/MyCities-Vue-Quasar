@@ -125,7 +125,6 @@ export default defineComponent({
     let billingMeterCost;
     if (metercost && metercost[0]) {
       billingMeterCost = metercost[0];
-      //console.log(billingMeterCost);
     }
     const usesPerDay = ref(0);
 

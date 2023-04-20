@@ -20,8 +20,12 @@ export const useReadingStore = defineStore("reading", {
 
   actions: {
     getmetercost(meter_id) {
-      //console.log(this.cost);
-      return this.filterByProperty(this.cost[0]['data'], meter_id)
+
+      if (meter_id != "fullbill") {
+        return this.filterByProperty(this.cost[0]['data'], meter_id)
+      } else {
+        return this.filterByPropertyFullbill(this.cost[0]['data'])
+      }
     },
     filterByProperty(array, value) {
       var filtered = [];
@@ -33,6 +37,19 @@ export const useReadingStore = defineStore("reading", {
         if (obj['status'] == false) {
           filtered.push(obj);
         }
+      }
+      console.log(filtered)
+      return filtered;
+    },
+    filterByPropertyFullbill(array, value) {
+      var filtered = [];
+      for (var i = 0; i < array.length; i++) {
+        var obj = array[i];
+
+        if (obj['status'] == false) {
+          continue
+        }
+        filtered.push(obj);
       }
       console.log(filtered)
       return filtered;
