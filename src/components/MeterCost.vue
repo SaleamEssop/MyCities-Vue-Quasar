@@ -1,116 +1,76 @@
 <template>
   <q-card>
-    <q-card-section class="bg-grey-2 row justify-center">
-      <div class="text-subtitle1">
-        Estimated Cost for Meter :- {{ billingMeterCost?.meter_number }}
-      </div>
+    <div v-if="billingMeterCost?.data?.length != 0">
+      <q-card-section class="bg-grey-2 row justify-center">
+        <div class="text-subtitle1">
+          Estimated Cost for Meter :- {{ billingMeterCost?.meter_number }}
+        </div>
 
-      <div style="font-size: 18px">
-        {{ currentBillPeriod }}
-      </div>
-    </q-card-section>
-    <q-card-section>
-      <div>
-        <div class="row flex justify-between items-center">
-          <div class="column col-5">
-            <b class="text-center">Daily Usage</b>
+        <div style="font-size: 18px">
+          {{ currentBillPeriod }}
+        </div>
+      </q-card-section>
+      <q-card-section>
+        <div>
+          <div class="row flex justify-between items-center">
+            <div class="column col-5">
+              <b class="text-center">Daily Usage</b>
 
-            <div class="medium-rcorners text-h6 text-center" color="negative" text-color="white">
-              {{ billingMeterCost?.daily_usage }}
-              <!-- {{
+              <div class="medium-rcorners text-h6 text-center" color="negative" text-color="white">
+                {{ billingMeterCost?.daily_usage }}
+                <!-- {{
                 meter.type.id == 2
                   ? usesPerDay?.toFixed(2)
                   : (usesPerDay * 1000.0)?.toFixed(2)
               }} -->
-              <!-- {{ unit }} -->
+                <!-- {{ unit }} -->
+              </div>
+            </div>
+
+            <div class="column col-5">
+              <b class="text-center">Daily Cost</b>
+              <div class="medium-rcorners text-h6 text-center" color="negative" text-color="white">
+                <!-- R{{ (projectionCost["total"] / 30.0).toFixed(2) }} -->
+                <!-- R{{ (totalProjectionCost / 30.0).toFixed(2) }} -->
+                R {{ billingMeterCost?.daily_cost }}
+              </div>
+            </div>
+          </div>
+          <q-separator class="q-my-md" color="grey" size="2px" />
+          <div>
+            <div class="row no-wrap" v-for="(cost, index) in billingMeterCost['projection']" :key="index">
+              <div v-show="cost.title" class="col">
+                {{ cost.title }}
+              </div>
+              <div v-show="cost.title" class="col-auto">R {{ cost.total }}</div>
             </div>
           </div>
 
-          <div class="column col-5">
-            <b class="text-center">Daily Cost</b>
-            <div class="medium-rcorners text-h6 text-center" color="negative" text-color="white">
-              <!-- R{{ (projectionCost["total"] / 30.0).toFixed(2) }} -->
-              <!-- R{{ (totalProjectionCost / 30.0).toFixed(2) }} -->
-              R {{ billingMeterCost?.daily_cost }}
+          <div class="column flex justify-between items-center no-wrap q-mt-md">
+            <b>Monthly Projected cost</b>
+            <div class="big-rcorners text-h4 text-center" color="negative" text-color="white">
+              <!-- R {{ projectionCost["total"].toFixed(2) }} -->
+              <!-- R {{ totalProjectionCost.toFixed(2) }} -->
+              R {{ billingMeterCost?.final_total }}
             </div>
           </div>
-        </div>
-        <q-separator class="q-my-md" color="grey" size="2px" />
-        <div>
-          <div class="row no-wrap" v-for="(cost, index) in billingMeterCost['projection']" :key="index">
-            <div v-show="cost.title" class="col">
-              {{ cost.title }}
-            </div>
-            <div v-show="cost.title" class="col-auto">R {{ cost.total }}</div>
-          </div>
-        </div>
+          <q-separator color="grey" class="q-my-xs" size="2px" />
 
-        <!-- <div
-          class="row no-wrap"
-          v-for="(cost, index) in waterLevyCostByServer"
-          :key="index"
-        >
-          <div
-            v-show="projectionCost.projection[0]?.title !== 'Electricity bill'"
-            class="col"
-          >
-            {{ cost.title }}
-          </div>
-          <div
-            v-show="projectionCost.projection[0]?.title !== 'Electricity bill'"
-            class="col-auto"
-          >
-            R {{ cost.value.toFixed(2) }}
-          </div>
-        </div> -->
-
-        <!-- <div class="">
-          <div
-            class="row no-wrap"
-            v-for="(cost, index) in projectionCost['projection']"
-            :key="index"
-          > old
-            <div v-show="cost.title === 'VAT'" class="col">
-              {{ cost.title }}
-            </div>
-            <div v-show="cost.title === 'VAT'" class="col-auto">
-              R {{ cost.value.toFixed(2) }}
-            </div>
-          </div>
-        </div> -->
-        <!-- <div class="q-mb-lg">
-          <div class="row no-wrap">
-            <div class="col">
-              {{ newVATOnMeterBill?.title }}
-            </div>
-
-            <div v-show="newVATOnMeterBill?.value" class="col-auto">
-              R {{ newVATOnMeterBill.value?.toFixed(2) }}
-            </div>
-          </div>
-        </div> -->
-
-        <div class="column flex justify-between items-center no-wrap q-mt-md">
-          <b>Monthly Projected cost</b>
-          <div class="big-rcorners text-h4 text-center" color="negative" text-color="white">
-            <!-- R {{ projectionCost["total"].toFixed(2) }} -->
-            <!-- R {{ totalProjectionCost.toFixed(2) }} -->
-            R {{ billingMeterCost?.final_total }}
-          </div>
-        </div>
-        <q-separator color="grey" class="q-my-xs" size="2px" />
-
-        <div class="text-center text-h6 q-mt-md">
-          <!-- <div>Date: {{ lastReadingDisplayFormat.timeDisplay }}</div>
+          <div class="text-center text-h6 q-mt-md">
+            <!-- <div>Date: {{ lastReadingDisplayFormat.timeDisplay }}</div>
           <div>Reading {{ lastReadingDisplayFormat.value }}</div> -->
-          <div>Date: {{ billingMeterCost?.endReadingDate }}</div>
-          <div>Reading {{ billingMeterCost?.endReading }}</div>
+            <div>Date: {{ billingMeterCost?.endReadingDate }}</div>
+            <div>Reading {{ billingMeterCost?.endReading }}</div>
+          </div>
         </div>
-      </div>
-    </q-card-section>
-
+      </q-card-section>
+    </div>
+    <div v-else>
+      {{ billingMeterCost?.msg }}
+    </div>
     <q-card-actions align="evenly">
-      <q-btn color="grey-2" text-color="black" @click="submitBill">Email</q-btn>
+      <q-btn color="grey-2" v-if="billingMeterCost?.data?.length != 0" text-color="black"
+        @click="submitBill">Email</q-btn>
       <q-btn color="grey-2" text-color="black" @click="$emit('close')">Close</q-btn>
     </q-card-actions>
   </q-card>
@@ -125,6 +85,7 @@ import { useQuasar } from "quasar";
 
 import waterDurban from "/src/services/waterDurban.js";
 import { getParticularMeterCost } from "boot/axios";
+
 
 export default defineComponent({
   name: "MeterCost",
@@ -164,6 +125,7 @@ export default defineComponent({
     let billingMeterCost;
     if (metercost && metercost[0]) {
       billingMeterCost = metercost[0];
+      //console.log(billingMeterCost);
     }
     const usesPerDay = ref(0);
 
