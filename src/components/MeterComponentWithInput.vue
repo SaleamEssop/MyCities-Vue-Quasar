@@ -6,12 +6,7 @@
     </div>
     <q-card-section>
       <!-- v-if="isNew" -->
-      <div
-        v-if="isNew"
-        class="q-mb-sm text-subtitle2"
-        text-color="negative"
-        style="color: red"
-      >
+      <div v-if="isNew" class="q-mb-sm text-subtitle2" text-color="negative" style="color: red">
         {{ alertIfLessThen24Hours }}
       </div>
 
@@ -40,24 +35,12 @@
         </q-badge>
 
         <div v-show="isNew" class="q-pt-md justify-center col-5">
-          <span class="round-cheap text-center"
-            >Select date
-            <q-popup-proxy
-              @before-show="updateProxy"
-              cover
-              transition-show="scale"
-              transition-hide="scale"
-            >
+          <span class="round-cheap text-center">Select date
+            <q-popup-proxy @before-show="updateProxy" cover transition-show="scale" transition-hide="scale">
               <q-date v-model="readingDate" mask="DD-MMM-YYYY">
                 <div class="row items-center justify-end q-gutter-sm">
                   <q-btn label="Cancel" color="primary" flat v-close-popup />
-                  <q-btn
-                    label="Select"
-                    color="primary"
-                    flat
-                    @click="save"
-                    v-close-popup
-                  />
+                  <q-btn label="Select" color="primary" flat @click="save" v-close-popup />
                 </div>
               </q-date>
             </q-popup-proxy>
@@ -68,76 +51,46 @@
       <!-- <q-separator color="grey" class="q-mt-md" size="4px" /> -->
     </q-card-section>
     <q-card-section style="margin-top: -15px">
-      <div
-        class="relative"
-        :class="inputFocus ? 'stroke-focus' : 'stroke-simple'"
-      >
+      <div class="relative" :class="inputFocus ? 'stroke-focus' : 'stroke-simple'">
         <div class="absolute" style="opacity: 0">
-          <q-input
-            type="number"
-            color="black"
-            :min="0"
-            outlined
-            @focus="inputFocus = true"
-            @blur="inputFocus = false"
-            :step="1"
-            autofocus
-            v-model="currentReading"
+          <q-input type="number" color="black" :min="0" outlined @focus="inputFocus = true" @blur="inputFocus = false"
+            :step="1" autofocus v-model="currentReading"
             oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-            :maxlength="meter.type.id == 2 ? 6 : 8"
-            @keypress="
-              (event) => {
+            :maxlength="meter.type.id == 2 ? 6 : 8" @keypress="(event) => {
                 if (
                   `${currentReading || ''}`.length >=
-                    (meter.type.id == 2 ? 6 : 8) ||
+                  (meter.type.id == 2 ? 6 : 8) ||
                   event.keyCode == 46
                 ) {
                   event.preventDefault();
                 } else {
                 }
               }
-            "
-          />
+              " />
         </div>
         <div class="text-center">
           <!-- :text="lastReading.valueInString" -->
-          <MeterComponent
-            :text="currentReading"
-            ref="meterComopnentReadValue"
-            :meterStyle="meter.type.id"
-            :readingType="
-              meter.type.id == 2
-                ? 'electricity-recorded-reading'
-                : 'water-recorded-reading'
-            "
-            :isInput="true"
-          />
+          <MeterComponent :text="currentReading" ref="meterComopnentReadValue" :meterStyle="meter.type.id" :readingType="meter.type.id == 2
+              ? 'electricity-recorded-reading'
+              : 'water-recorded-reading'
+            " :isInput="true" />
         </div>
       </div>
     </q-card-section>
     <q-card-actions align="center" style="margin-top: -10px">
-      <q-btn
-        icon="image"
-        color="primary"
-        text-color="black"
-        @click="captureImage()"
-      />
+      <q-btn icon="image" color="primary" text-color="black" @click="captureImage()" />
       <!-- <q-btn
         icon="download"
         color="primary"
         text-color="black"
         @click="screenShotCapture('close')"
       /> -->
-      <q-btn color="primary" text-color="black" @click="$emit('close')"
-        >Cancel</q-btn
-      >
+      <q-btn color="primary" text-color="black" @click="$emit('close')">Cancel</q-btn>
       <!-- screenShotCapture(); -->
       <!-- <q-btn color="primary" text-color="black" @click="saveReading(false)"
         >Save</q-btn
       > -->
-      <q-btn color="primary" text-color="black" @click="screenShotCapture()"
-        >Save</q-btn
-      >
+      <q-btn color="primary" text-color="black" @click="screenShotCapture()">Save</q-btn>
     </q-card-actions>
     <q-separator color="grey" size="10px" />
 
@@ -146,11 +99,7 @@
       <div>
         <img class="q-px-lg myCityIcon" src="~assets/logo_small.png" />
       </div>
-      <div
-        @click="openWeb()"
-        style="text-decoration: underline"
-        class="text-body1 text-center"
-      >
+      <div @click="openWeb()" style="text-decoration: underline" class="text-body1 text-center">
         www.mycities.co.za
       </div>
     </q-card-section>
@@ -546,68 +495,68 @@ export default defineComponent({
       //     inputLastReading[inputLastReading.length - 1]?.value <
       //       currentReadingValue)
 
+      // if (
+      //   (lastReadingItem.value.time > readingDateInToms &&
+      //     inputFirstReading[0]?.value > currentReadingValue) ||
+      //   (inputLastReading[inputLastReading.length - 1]?.value <
+      //     currentReadingValue &&
+      //     lastReadingItem.value.time > readingDateInToms)
+      // ) {
+      //   // alertMsg(
+      //   //   `Please enter a reading between ${
+      //   //     inputFirstReading[0]?.value || "less"
+      //   //   } to ${
+      //   //     inputLastReading[inputLastReading.length - 1]?.value || "more"
+      //   //   }.`
+      //   // );
+      // } else {
+      //
       if (
-        (lastReadingItem.value.time > readingDateInToms &&
-          inputFirstReading[0]?.value > currentReadingValue) ||
-        (inputLastReading[inputLastReading.length - 1]?.value <
-          currentReadingValue &&
-          lastReadingItem.value.time > readingDateInToms)
+        props.isNew &&
+        (!currentReadingValue ||
+          currentReadingValue < lastReadingItem.value.value) &&
+        lastReadingItem.value.time < readingDateInToms
       ) {
-        alertMsg(
-          `Please enter a reading between ${
-            inputFirstReading[0]?.value || "less"
-          } to ${
-            inputLastReading[inputLastReading.length - 1]?.value || "more"
-          }.`
+        const maximum = props.meter.type.id == 2 ? 99999.9 : 9999.9999;
+        confirm(
+          `You have entered a value lower than the previous reading. Your usage is ${lastReadingItem.value.valueInString} to ${valueInString}. Do you want to apply a rollover?.`,
+          () => {
+            if (
+              props.meter.type.id == 2
+                ? lastReadingItem.value.valueInString - valueInString > 100000
+                : lastReadingItem.value.valueInString - valueInString >
+                1000000
+            ) {
+              confirm(
+                "You have entered a value which exceeds a usage of 100 000 or More. Shall we accept this reading?",
+                () => {
+                  doSave(currentReadingValue, valueInString);
+                }
+              );
+            } else {
+              doSave(currentReadingValue, valueInString);
+            }
+          }
         );
-      } else {
-        //
+      } else if (currentReadingValue > lastReadingItem.value.value) {
         if (
-          props.isNew &&
-          (!currentReadingValue ||
-            currentReadingValue < lastReadingItem.value.value) &&
-          lastReadingItem.value.time < readingDateInToms
+          props.meter.type.id == 2
+            ? valueInString - lastReadingItem.value.valueInString > 100000
+            : valueInString - lastReadingItem.value.valueInString > 1000000
         ) {
-          const maximum = props.meter.type.id == 2 ? 99999.9 : 9999.9999;
           confirm(
-            `You have entered a value lower than the previous reading. Your usage is ${lastReadingItem.value.valueInString} to ${valueInString}. Do you want to apply a rollover?.`,
+            "You have entered a value which exceeds a usage of 100 000 or More. Shall we accept this reading?",
             () => {
-              if (
-                props.meter.type.id == 2
-                  ? lastReadingItem.value.valueInString - valueInString > 100000
-                  : lastReadingItem.value.valueInString - valueInString >
-                    1000000
-              ) {
-                confirm(
-                  "You have entered a value which exceeds a usage of 100 000 or More. Shall we accept this reading?",
-                  () => {
-                    doSave(currentReadingValue, valueInString);
-                  }
-                );
-              } else {
-                doSave(currentReadingValue, valueInString);
-              }
+              doSave(currentReadingValue, valueInString);
             }
           );
-        } else if (currentReadingValue > lastReadingItem.value.value) {
-          if (
-            props.meter.type.id == 2
-              ? valueInString - lastReadingItem.value.valueInString > 100000
-              : valueInString - lastReadingItem.value.valueInString > 1000000
-          ) {
-            confirm(
-              "You have entered a value which exceeds a usage of 100 000 or More. Shall we accept this reading?",
-              () => {
-                doSave(currentReadingValue, valueInString);
-              }
-            );
-          } else {
-            doSave(currentReadingValue, valueInString);
-          }
         } else {
           doSave(currentReadingValue, valueInString);
         }
+      } else {
+        doSave(currentReadingValue, valueInString);
       }
+
     };
 
     return {
@@ -648,6 +597,7 @@ export default defineComponent({
   text-align: center;
   border: 1px solid gray;
 }
+
 /* .meterDescritpion {
   display: flex;
   margin: auto;
@@ -660,11 +610,13 @@ export default defineComponent({
   border-radius: 15px;
   padding: 5px;
 }
+
 .stroke-simple {
   border: 2px solid grey;
   border-radius: 15px;
   padding: 5px;
 }
+
 .captureImage {
   max-height: 200px;
   max-width: 400px;
@@ -674,9 +626,11 @@ export default defineComponent({
   justify-content: space-between;
   align-items: baseline;
 }
+
 .q-badge {
   padding: 0px !important;
 }
+
 .myCityIcon {
   width: 100%;
   height: 50px;

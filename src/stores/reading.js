@@ -28,6 +28,7 @@ export const useReadingStore = defineStore("reading", {
       }
     },
     filterByProperty(array, value) {
+      //console.log(array.length);
       var filtered = [];
       for (var i = 0; i < array.length; i++) {
         var obj = array[i];
