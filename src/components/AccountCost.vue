@@ -38,7 +38,8 @@
     </div>
 
     <div class="text-h5 col-auto text-center">
-      R {{ totalFullBill.toFixed(2) }}
+      R {{ fullMetercost?.final_total?.grand_total }}
+      <!-- R {{ totalFullBill.toFixed(2) }} -->
     </div>
     <q-card-section>
       <!-- Water Bill -->
@@ -109,92 +110,63 @@
       </q-card-section>
 
       <div class="q-mb-md q-mt-sm">
-        <!-- <template> -->
-        <div class="text-subtitle2 q-mb-sm">Meter: 101</div>
-        <div class="">
-          <div class="row no-wrap">
-            <div class="col">Water in</div>
-            <div class="text-blue-7 q-mr-md col">80 KL</div>
-            <div class="col-auto">R 1980</div>
+        <template v-for="(waterCost, meter_number) in fullMetercost?.water" :key="meter_number">
+          <div class="text-subtitle2 q-mb-sm">Meter: {{ meter_number }}</div>
+          <div class="">
+            <template v-for="(cost, index) in waterCost?.projection" :key="index">
+              <div class="row no-wrap">
+                <div class="col">{{ cost.title }}</div>
+                <div class="text-blue-7 q-mr-md col" v-if="cost?.use">{{ cost.use }} KL</div>
+                <div class="col-auto">R {{ cost.total }}</div>
+              </div>
+            </template>
+            <div class="q-mt-sm q-mb-sm">
+              <q-btn color="blue-2" rounded unelevated text-color="black" size="sm"
+                @click="submitFullBillNew(waterCost)">Email
+                Now</q-btn>
+            </div>
           </div>
-          <div class="row no-wrap">
-            <div class="col">Water Out</div>
-            <div class="text-blue-7 q-mr-md col">69.20 KL(Temp)</div>
-            <div class="col-auto">R 348.8</div>
-          </div>
-          <div class="row no-wrap">
-            <div class="col">Infrastructure Surcharge</div>
-            <div class="text-blue-7 q-mr-md col"></div>
-            <div class="col-auto">R 118.4</div>
-          </div>
-          <div class="row no-wrap">
-            <div class="col">Sewage Disposal Charge</div>
-            <div class="text-blue-7 q-mr-md col">-</div>
-            <div class="col-auto">R 118.4</div>
-          </div>
-          <!-- <div class="q-mt-sm q-mb-sm">
-              <q-btn
-                v-show="cost.title === 'Sewage Disposal Charge'"
-                color="blue-2"
-                rounded
-                unelevated
-                text-color="black"
-                size="sm"
-                @click="submitFullBill(cost.meter)"
-                >Email Now</q-btn
-              >
-            </div> -->
-        </div>
-        <!-- </template> -->
+        </template>
       </div>
 
       <!-- Electricity Bill -->
-      <q-card-section class="titleofcost">
+      <q-card-section class="titleofcost" v-if="fullMetercost?.electricity?.length > 0">
         <div class="text-subtitle2">Electricity Meters</div>
       </q-card-section>
 
       <div class="q-my-md">
-        <!-- <template> -->
-        <div class="text-subtitle2 q-mb-sm">Meter:987</div>
-        <div class="">
-          <div class="row no-wrap">
-            <div class="col">Electricity bill</div>
-            <div class="col text-blue-7 q-mr-md">80 kWh</div>
-            <div class="col-auto">R 2440.00</div>
+        <template v-for="(electricityCost, meter_number) in fullMetercost?.electricity" :key="meter_number">
+          <div class="text-subtitle2 q-mb-sm">Meter: {{ meter_number }}</div>
+          <div class="">
+            <template v-for="(cost, index) in electricityCost?.projection" :key="index">
+              <div class="row no-wrap">
+                <div class="col">{{ cost.title }}</div>
+                <div class="col text-blue-7 q-mr-md" v-if="cost?.use">{{ cost.use }} kWh</div>
+                <div class="col-auto">R {{ cost.total }}</div>
+              </div>
+            </template>
+            <q-btn class="q-mt-sm" color="blue-2" rounded unelevated text-color="black" size="sm"
+              @click="submitFullBill(cost)">Email Now</q-btn>
           </div>
-          <!-- <div v-show="cost.value !== 0">
-              <q-btn
-                class="q-mt-sm"
-                v-show="cost.title === 'Electricity bill'"
-                color="blue-2"
-                rounded
-                unelevated
-                text-color="black"
-                size="sm"
-                @click="submitFullBill(cost.meter)"
-                >Email Now</q-btn
-              >
-            </div> -->
-        </div>
-        <!-- </template> -->
+        </template>
       </div>
       <!-- do not enter code below please check above-->
-      <q-card-section class="titleofcost">
+      <q-card-section class="titleofcost" v-if="fullMetercost?.additional?.length > 0">
         <div class="text-subtitle2">Additional Charges</div>
       </q-card-section>
       <div class="q-mt-lg">
-        <div class="row no-wrap" v-for="(cost, index) in calculationsForAccount" :key="index">
-          <div v-show="cost.title !== 'Rates' &&
-            cost.title !== 'Enter Your Billing Date' &&
-            cost.title !== 'Rates Rebate'
-            " class="col">
+        <div class="row no-wrap" v-for="(cost, index) in fullMetercost?.additional" :key="index">
+          <div class="col">
             {{ cost.title }}
           </div>
-          <div v-show="cost.title !== 'Rates' &&
+          <!-- <div v-show="cost.title !== 'Rates' &&
             cost.title !== 'Enter Your Billing Date' &&
             cost.title !== 'Rates Rebate'
             " class="col-auto">
-            R {{ cost.value.toFixed(2) }}
+            R {{ cost.total }}
+          </div> -->
+          <div class="col-auto">
+            R {{ cost.total }}
           </div>
         </div>
       </div>
@@ -202,38 +174,33 @@
       <div class="q-mt-sm">
         <div class="row no-wrap">
           <div class="col">SubTotal Of All Costs</div>
-          <div class="col-auto">R {{ additionalAllCost.toFixed(2) }}</div>
+          <div class="col-auto">R {{ fullMetercost?.final_total?.subtotal_of_all_cost }}</div>
         </div>
       </div>
 
       <div>
         <div class="row no-wrap">
           <div class="col">VAT</div>
-          <div class="col-auto">R {{ totalVAT.toFixed(2) }}</div>
+          <div class="col-auto">R {{ fullMetercost?.final_total?.vat }}</div>
         </div>
       </div>
 
       <div>
         <div class="row no-wrap">
           <div class="col">Total including VAT</div>
-          <div class="col-auto">R {{ VATonAdditionalCost.toFixed(2) }}</div>
+          <div class="col-auto">R {{ fullMetercost?.final_total?.total_including_vat }}</div>
         </div>
       </div>
-
-      <div class="">
-        <div class="row no-wrap" v-for="(cost, index) in calculationsForAccount" :key="index">
-          <div v-show="cost.title === 'Rates' || cost.title === 'Rates Rebate'" class="col">
-            {{ cost.title }}
-          </div>
-          <div v-show="cost.title === 'Rates' || cost.title === 'Rates Rebate'" class="col-auto">
-            R
-            {{
-              cost.title === "Rates Rebate"
-              ? -cost.value.toFixed(2)
-              : cost.value.toFixed(2)
-            }}
-            <!-- // R {{ cost.value.toFixed(2) }} -->
-          </div>
+      <div>
+        <div class="row no-wrap" v-if="fullMetercost?.final_total?.rates > 0">
+          <div class="col">Rates</div>
+          <div class="col-auto">R {{ fullMetercost?.final_total?.rates }}</div>
+        </div>
+      </div>
+      <div>
+        <div class="row no-wrap" v-if="fullMetercost?.final_total?.rebate > 0">
+          <div class="col">Rates Rebate</div>
+          <div class="col-auto">R -{{ fullMetercost?.final_total?.rebate }}</div>
         </div>
       </div>
     </q-card-section>
@@ -244,7 +211,7 @@
         <div class="row no-wrap">
           <div class="col">Total</div>
 
-          <div class="col-auto">R {{ totalFullBill.toFixed(2) }}</div>
+          <div class="col-auto">R {{ fullMetercost?.final_total?.grand_total }}</div>
         </div>
       </div>
       <q-item-label class="q-mt-md" caption>The amount is calculated based on your inputs and may differ slightly
@@ -286,15 +253,15 @@ export default defineComponent({
     const siteStore = useSiteStore();
 
     let response = getParticularMeterCost(props.account.id, 'fullbill').then((res) => {
-      readingStore.metercost({
+      readingStore.pushfullbillcost({
         data: res.data,
       });
     });
-    let fullMetercost = readingStore.getmetercost("fullbill");
-    // let billingMeterCost;
-    // if (metercost) {
-    //   billingMeterCost = metercost;
-    // }
+    let fullMetercost = readingStore.getfullbillcost();
+    // let fullMetercost;
+    if (fullMetercost) {
+      fullMetercost = fullMetercost[0]['data'];
+    }
     console.log("fullbilling", fullMetercost);
     // const userName = useUserStore();
     const $q = useQuasar();
@@ -345,7 +312,7 @@ export default defineComponent({
       });
       return date || 24;
     });
-
+    console.log(calculationsForAccount);
     const billingCycleMonth = computed(() => {
       let readingPeriod = null;
       const monthDate = date.formatDate(new Date(), "DD");
@@ -442,7 +409,10 @@ export default defineComponent({
         // currentMonthReadings.value = usesPerDay * 30;
         // console.log("Water", durbanReading);
         const projectionCost = durbanReading.getCost(usesPerDay, meter);
+        //console.log(projectionCost);
+        //  co
         projectionCost.projection.forEach((_el) => {
+          // console.log(_el);
           meterReadings.push({
             title: _el.title,
             value: _el.value,
@@ -454,7 +424,7 @@ export default defineComponent({
       return meterReadings;
     });
 
-    // console.log("calculationsForMeters", calculationsForMeters);
+    console.log("calculationsForMeters", calculationsForMeters);
 
     // const readingTime = computed(() => {
     //   const getMonth = new Array();
@@ -580,7 +550,52 @@ export default defineComponent({
           // console.log(">>>> Cancel");
         });
     }
+    const submitFullBillNew = (metercost) => {
+      console.log(metercost);
+      const email = metercost.type == 1 ? metercost.water_email : metercost.electricity_email;
+      const subject = `Account: ${props.account.id}`;
+      let body = ``;
 
+      body += `Meter reading:  ${readingPeriod.value}\n`;
+      let valueInString = "";
+      const unit = metercost.type == 2 ? "kWh" : "kl";
+      valueInString = metercost.usage + " " + unit;
+
+      body += `Account Number: ${props.account.number}\n`;
+      body += `Account Holder: ${props.account.title}\n`;
+      body += `Meter Title: ${metercost.meter_title}\n`;
+      body += `Meter: ${metercost.meter_number}\n`;
+      body += `Current Reading: ${valueInString}\n`;
+
+
+      body += `\n\n`;
+
+      body += `Powered by The MyCityApp.\n`;
+      body += `Visit www.mycities.co.za for information on how we can help you save on electricity and water with cutting edge technologies.`;
+
+      let urlString =
+        "mailto:" +
+        encodeURI(email) +
+        "?subject=" +
+        encodeURI(subject) +
+        "&body=" +
+        encodeURI(body);
+      console.log(body);
+      //        https://mail.google.com/mail/?view=cm&fs=1&to=someone@example.com&cc=someone@ola.example&bcc=someone.else@example.com&su=SUBJECT&body=BODY
+
+      // var = date.formatDate(new Date(), "DD")
+      const monthDate = date.formatDate(new Date(), "DD");
+      if (monthDate >= 25 && monthDate <= 23) {
+        window.open(urlString, "_blank");
+      } else {
+        confirm(
+          `You are outside the meter reading submission dates. Are you sure you want to email the reading for this meter?`,
+          () => {
+            window.open(urlString, "_blank");
+          }
+        );
+      }
+    };
     const submitFullBill = (meter) => {
       const email = meter.type.id == 2 ? site.email : "eservices@durban.gov.za";
       const subject = `Account: ${props.account.id}`;
@@ -663,8 +678,6 @@ export default defineComponent({
         );
       }
     };
-    console.log(calculationsForAccount);
-    console.log(calculationsForMeters);
     return {
       calculationsForMeters,
       calculationsForAccount,
@@ -684,6 +697,7 @@ export default defineComponent({
       billingCycle,
       // currentreadingPeriod,
       fullMetercost,
+      submitFullBillNew
     };
   },
 });

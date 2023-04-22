@@ -7,7 +7,8 @@
         </div>
 
         <div style="font-size: 18px">
-          {{ currentBillPeriod }}
+          {{ billingMeterCost?.firstReadingDate }} to {{ billingMeterCost?.endReadingDate }}
+          <!-- {{ currentBillPeriod }} -->
         </div>
       </q-card-section>
       <q-card-section>

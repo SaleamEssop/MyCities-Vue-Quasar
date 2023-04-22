@@ -14,18 +14,20 @@ export const useReadingStore = defineStore("reading", {
   state: () => ({
     readings: [],
     cost: [],
+    fullbill: [],
   }),
 
   getters: {},
 
   actions: {
+    // get meter cost
     getmetercost(meter_id) {
-
-      if (meter_id != "fullbill") {
-        return this.filterByProperty(this.cost[0]['data'], meter_id)
-      } else {
-        return this.filterByPropertyFullbill(this.cost[0]['data'])
-      }
+      return this.filterByProperty(this.cost[0]['data'], meter_id)
+    },
+    // push meter cost
+    metercost(_reading) {
+      this.cost = [];
+      this.cost.push(_reading);
     },
     filterByProperty(array, value) {
       //console.log(array.length);
@@ -42,22 +44,14 @@ export const useReadingStore = defineStore("reading", {
       console.log(filtered)
       return filtered;
     },
-    filterByPropertyFullbill(array, value) {
-      var filtered = [];
-      for (var i = 0; i < array.length; i++) {
-        var obj = array[i];
-
-        if (obj['status'] == false) {
-          continue
-        }
-        filtered.push(obj);
-      }
-      console.log(filtered)
-      return filtered;
+    // get full bill cost
+    getfullbillcost() {
+      return this.fullbill;
     },
-    metercost(_reading) {
-      this.cost = [];
-      this.cost.push(_reading);
+    // push full bill cost
+    pushfullbillcost(_reading) {
+      this.fullbill = [];
+      this.fullbill.push(_reading);
     },
     addReading(_reading) {
       this.readings.push(_reading);
