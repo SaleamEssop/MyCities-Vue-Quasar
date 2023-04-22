@@ -2,24 +2,14 @@
   <q-card class="mainBackground">
     <q-card-section class="text-h6 headline text-center">
       <!-- <q-btn flat icon="Prev" /> -->
-      <q-icon
-        name="chevron_left"
-        style="margin-top: -5px"
-        size="lg"
-        class="cursor-pointer"
-        @click="previousMonth(readingPeriod)"
-      />
+      <q-icon name="chevron_left" style="margin-top: -5px" size="lg" class="cursor-pointer"
+        @click="previousMonth(readingPeriod)" />
       <span class="q-gutter-sm">
         Projected bill for
         {{ readingPeriod }}
       </span>
-      <q-icon
-        style="margin-top: -5px"
-        name="chevron_right"
-        size="lg"
-        class="cursor-pointer"
-        @click="nextMonth(readingPeriod)"
-      />
+      <q-icon style="margin-top: -5px" name="chevron_right" size="lg" class="cursor-pointer"
+        @click="nextMonth(readingPeriod)" />
       <div class="text-subtitle1 rounded-borders">{{ currentBillPeriod }}</div>
       <div class="text-subtitle2">Current Date:- {{ currentDate }}</div>
       <!--  for {{ readingPeriod }} -->
@@ -59,10 +49,7 @@
 
         <div class="q-mb-md q-mt-sm">
           <template v-for="(cost, index) in calculationsForMeters" :key="index">
-            <div
-              v-show="cost.meter.type.id === 1 && cost.title === 'Water in'"
-              class="text-subtitle2 q-mb-sm"
-            >
+            <div v-show="cost.meter.type.id === 1 && cost.title === 'Water in'" class="text-subtitle2 q-mb-sm">
               Meter: {{ cost.meter.number }}
             </div>
             <div class="">
@@ -70,30 +57,16 @@
                 <div v-show="cost.title !== 'Electricity bill'" class="col">
                   {{ cost.title }}
                 </div>
-                <div
-                  v-show="cost.totalReadingOfMonth !== null"
-                  class="text-blue-7 q-mr-md col"
-                >
+                <div v-show="cost.totalReadingOfMonth !== null" class="text-blue-7 q-mr-md col">
                   {{ cost.totalReadingOfMonth?.toFixed(2) }} KL
                 </div>
-                <div
-                  v-show="cost.title !== 'Electricity bill'"
-                  class="col-auto"
-                >
+                <div v-show="cost.title !== 'Electricity bill'" class="col-auto">
                   R {{ cost.value.toFixed(2) }}
                 </div>
               </div>
               <div class="q-mt-sm q-mb-sm">
-                <q-btn
-                  v-show="cost.title === 'Sewage Disposal Charge'"
-                  color="blue-2"
-                  rounded
-                  unelevated
-                  text-color="black"
-                  size="sm"
-                  @click="submitFullBill(cost.meter)"
-                  >Email Now</q-btn
-                >
+                <q-btn v-show="cost.title === 'Sewage Disposal Charge'" color="blue-2" rounded unelevated
+                  text-color="black" size="sm" @click="submitFullBill(cost.meter)">Email Now</q-btn>
               </div>
             </div>
           </template>
@@ -106,10 +79,7 @@
 
         <div class="q-my-md">
           <template v-for="(cost, index) in calculationsForMeters" :key="index">
-            <div
-              v-show="cost.meter.type.id === 2 && cost.value !== 0"
-              class="text-subtitle2 q-mb-sm"
-            >
+            <div v-show="cost.meter.type.id === 2 && cost.value !== 0" class="text-subtitle2 q-mb-sm">
               Meter: {{ cost.meter.number }}
             </div>
             <div class="">
@@ -117,32 +87,17 @@
                 <div v-show="cost.title === 'Electricity bill'" class="col">
                   {{ cost.title }}
                 </div>
-                <div
-                  v-show="cost.title === 'Electricity bill'"
-                  class="col text-blue-7 q-mr-md"
-                >
+                <div v-show="cost.title === 'Electricity bill'" class="col text-blue-7 q-mr-md">
                   {{ (cost.value / 2.2425).toFixed(1) }} kWh
                 </div>
 
-                <div
-                  v-show="cost.title === 'Electricity bill'"
-                  class="col-auto"
-                >
+                <div v-show="cost.title === 'Electricity bill'" class="col-auto">
                   R {{ cost.value.toFixed(2) }}
                 </div>
               </div>
               <div v-show="cost.value !== 0">
-                <q-btn
-                  class="q-mt-sm"
-                  v-show="cost.title === 'Electricity bill'"
-                  color="blue-2"
-                  rounded
-                  unelevated
-                  text-color="black"
-                  size="sm"
-                  @click="submitFullBill(cost.meter)"
-                  >Email Now</q-btn
-                >
+                <q-btn class="q-mt-sm" v-show="cost.title === 'Electricity bill'" color="blue-2" rounded unelevated
+                  text-color="black" size="sm" @click="submitFullBill(cost.meter)">Email Now</q-btn>
               </div>
             </div>
           </template>
@@ -228,29 +183,17 @@
         <div class="text-subtitle2">Additional Charges</div>
       </q-card-section>
       <div class="q-mt-lg">
-        <div
-          class="row no-wrap"
-          v-for="(cost, index) in calculationsForAccount"
-          :key="index"
-        >
-          <div
-            v-show="
-              cost.title !== 'Rates' &&
-              cost.title !== 'Enter Your Billing Date' &&
-              cost.title !== 'Rates Rebate'
-            "
-            class="col"
-          >
+        <div class="row no-wrap" v-for="(cost, index) in calculationsForAccount" :key="index">
+          <div v-show="cost.title !== 'Rates' &&
+            cost.title !== 'Enter Your Billing Date' &&
+            cost.title !== 'Rates Rebate'
+            " class="col">
             {{ cost.title }}
           </div>
-          <div
-            v-show="
-              cost.title !== 'Rates' &&
-              cost.title !== 'Enter Your Billing Date' &&
-              cost.title !== 'Rates Rebate'
-            "
-            class="col-auto"
-          >
+          <div v-show="cost.title !== 'Rates' &&
+            cost.title !== 'Enter Your Billing Date' &&
+            cost.title !== 'Rates Rebate'
+            " class="col-auto">
             R {{ cost.value.toFixed(2) }}
           </div>
         </div>
@@ -278,26 +221,16 @@
       </div>
 
       <div class="">
-        <div
-          class="row no-wrap"
-          v-for="(cost, index) in calculationsForAccount"
-          :key="index"
-        >
-          <div
-            v-show="cost.title === 'Rates' || cost.title === 'Rates Rebate'"
-            class="col"
-          >
+        <div class="row no-wrap" v-for="(cost, index) in calculationsForAccount" :key="index">
+          <div v-show="cost.title === 'Rates' || cost.title === 'Rates Rebate'" class="col">
             {{ cost.title }}
           </div>
-          <div
-            v-show="cost.title === 'Rates' || cost.title === 'Rates Rebate'"
-            class="col-auto"
-          >
+          <div v-show="cost.title === 'Rates' || cost.title === 'Rates Rebate'" class="col-auto">
             R
             {{
               cost.title === "Rates Rebate"
-                ? -cost.value.toFixed(2)
-                : cost.value.toFixed(2)
+              ? -cost.value.toFixed(2)
+              : cost.value.toFixed(2)
             }}
             <!-- // R {{ cost.value.toFixed(2) }} -->
           </div>
@@ -314,10 +247,8 @@
           <div class="col-auto">R {{ totalFullBill.toFixed(2) }}</div>
         </div>
       </div>
-      <q-item-label class="q-mt-md" caption
-        >The amount is calculated based on your inputs and may differ slightly
-        from your actual municipal bill.</q-item-label
-      >
+      <q-item-label class="q-mt-md" caption>The amount is calculated based on your inputs and may differ slightly
+        from your actual municipal bill.</q-item-label>
     </q-card-section>
 
     <!-- <q-card-actions align="center">
@@ -354,7 +285,7 @@ export default defineComponent({
     const meterStore = useMeterStore();
     const siteStore = useSiteStore();
 
-    let response = getParticularMeterCost(props.account.id).then((res) => {
+    let response = getParticularMeterCost(props.account.id, 'fullbill').then((res) => {
       readingStore.metercost({
         data: res.data,
       });
@@ -689,14 +620,13 @@ export default defineComponent({
 
       let valueInString = ""; //(lastReadingTime.value / 100.0 || "") + unit;
 
-      valueInString = `Current Reading:${
-        meter.type.id == 2
-          ? lastReadingTime.value
-          : lastReadingTime.value.toFixed(2)
-      }\nDate:\t\t\t${date.formatDate(
-        new Date(lastReadingTime.time),
-        "DD MMMM YYYY"
-      )}\n`;
+      valueInString = `Current Reading:${meter.type.id == 2
+        ? lastReadingTime.value
+        : lastReadingTime.value.toFixed(2)
+        }\nDate:\t\t\t${date.formatDate(
+          new Date(lastReadingTime.time),
+          "DD MMMM YYYY"
+        )}\n`;
       //valueInString = (usesPerDay * 30).toFixed(2) + " " + unit;
 
       body += `Account Number: ${props.account.number}\n`;
@@ -733,7 +663,8 @@ export default defineComponent({
         );
       }
     };
-
+    console.log(calculationsForAccount);
+    console.log(calculationsForMeters);
     return {
       calculationsForMeters,
       calculationsForAccount,

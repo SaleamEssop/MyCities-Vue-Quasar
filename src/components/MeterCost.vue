@@ -115,6 +115,7 @@ export default defineComponent({
 
     let response = getParticularMeterCost(
       props.meter.account.id,
+      ''
     ).then((res) => {
       readingStore.metercost({
         data: res.data,
