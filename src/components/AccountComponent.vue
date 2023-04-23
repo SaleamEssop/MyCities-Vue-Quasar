@@ -92,8 +92,8 @@
     <!-- v-for="(defaultCost, index) in isNew ? selectedAccount.defaultCosts  : selectedAccount.defaultFixedCost" -->
 
     <template v-for="(defaultCost, index) in isNew
-      ? selectedAccount.defaultCosts
-      : selectedAccount.defaultFixedCost" :key="index">
+        ? selectedAccount.defaultCosts
+        : selectedAccount.defaultFixedCost" :key="index">
       <q-separator />
 
       <q-card-section>
@@ -105,22 +105,20 @@
           <q-toggle v-model="defaultCost.isApplicable" />
           <!-- :model-value="defaultCost.isApplicable" -->
         </div>
-        <q-input v-if="isNew" :placeholder="
-          defaultCost.title === 'Enter Your Billing Date'
+        <q-input v-if="isNew" :placeholder="defaultCost.title === 'Enter Your Billing Date'
             ? 'Enter Only Dates'
             : 'R0.00'
-        " v-model.number="defaultCost.value" type="number" :disable="!defaultCost.isApplicable" />
+          " v-model.number="defaultCost.value" type="number" :disable="!defaultCost.isApplicable" />
         <!-- :readonly="
             defaultCost.title === 'Rates' ||
             defaultCost.title === 'Refuse Collection'
               ? false
               : true
           " -->
-        <q-input v-else :placeholder="
-          defaultCost.fixed_cost.title === 'Enter Your Billing Date'
+        <q-input v-else :placeholder="defaultCost.fixed_cost.title === 'Enter Your Billing Date'
             ? 'Enter Only Dates'
             : 'R0.00'
-        " v-model.number="defaultCost.value" type="number" :disable="!defaultCost.isApplicable" />
+          " v-model.number="defaultCost.value" type="number" :disable="!defaultCost.isApplicable" />
         <!-- :readonly="
             defaultCost.fixed_cost.title === 'Rates' ||
             defaultCost.fixed_cost.title === 'Refuse Collection'
@@ -329,11 +327,26 @@ export default defineComponent({
         });
         return;
       }
-      if (!site.value.newSite) {
-        console.log("if");
-        console.log(site);
-        //console.log(selectedAccount.value.region_id);
-        //console.log(selectedAccount.value.account_type_id);
+      let account_type_id;
+      let region_id;
+
+      console.log("is_new_account", isNew.value);
+      if (!isNew.value) {
+        console.log('if');
+        if (selectedAccount?.value?.account_type_id?.id) {
+          account_type_id = selectedAccount.value.account_type_id?.id;
+        } else {
+          account_type_id = selectedAccount.value.account_type_id;
+        }
+        //region_id = selectedAccount.value.region_id;
+        if (selectedAccount?.value?.region_id?.id) {
+          region_id = selectedAccount.value.region_id?.id;
+        } else {
+          region_id = selectedAccount.value.region_id;
+        }
+        console.log("account", account_type_id);
+        console.log("region", region_id);
+        // console.log(region_id);
         if (selectedAccount.value.region_id == null) {
           $q.notify({
             message:
@@ -562,8 +575,8 @@ export default defineComponent({
           optional_information: accountValue.option,
           default_fixed_cost: default_cost,
           account_id: accountValue.id,
-          region_id: selectedAccount.value.region_id.id,
-          account_type_id: selectedAccount.value.account_type_id.id,
+          region_id: account_type_id,
+          account_type_id: region_id,
           water_email: selectedAccount.value.water_email,
           electricity_email: selectedAccount.value.electricity_email
 

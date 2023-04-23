@@ -1,4 +1,4 @@
-<template>
+<template >
   <q-card>
     <div v-if="billingMeterCost?.data?.length != 0">
       <q-card-section class="bg-grey-2 row justify-center">
@@ -38,7 +38,7 @@
             </div>
           </div>
           <q-separator class="q-my-md" color="grey" size="2px" />
-          <div>
+          <div v-if="billingMeterCost">
             <div class="row no-wrap" v-for="(cost, index) in billingMeterCost['projection']" :key="index">
               <div v-show="cost.title" class="col">
                 {{ cost.title }}
@@ -122,12 +122,23 @@ export default defineComponent({
         data: res.data,
       });
     });
+    const alert = function (msg) {
+      $q.notify({
+        type: 'negetive',
+        message: msg,
+        position: 'top-right',
+        timeout: 2000
+      })
+    }
     let metercost = readingStore.getmetercost(props?.meter?.id);
-
-    let billingMeterCost;
-    if (metercost && metercost[0]) {
+    console.log(metercost);
+    let billingMeterCost = [];
+    if ((metercost && metercost[0])) {
+      billingMeterCost = metercost[0];
+    } else {
       billingMeterCost = metercost[0];
     }
+
     const usesPerDay = ref(0);
 
     var readings = readingStore.getReadingsByMeterId(props?.meter?.id);
@@ -385,8 +396,103 @@ export default defineComponent({
       currentBillPeriod,
       metercost,
       billingMeterCost,
+      alert
       // currentreadingPeriod,
     };
   },
 });
 </script>
+<style scoped>
+body {
+  font-family: 'Varela Round', sans-serif;
+}
+
+.modal-confirm {
+  color: #636363;
+  width: 325px;
+}
+
+.modal-confirm .modal-content {
+  padding: 20px;
+  border-radius: 5px;
+  border: none;
+}
+
+.modal-confirm .modal-header {
+  border-bottom: none;
+  position: relative;
+}
+
+.modal-confirm h4 {
+  text-align: center;
+  font-size: 26px;
+  margin: 30px 0 -15px;
+}
+
+.modal-confirm .form-control,
+.modal-confirm .btn {
+  min-height: 40px;
+  border-radius: 3px;
+}
+
+.modal-confirm .close {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+}
+
+.modal-confirm .modal-footer {
+  border: none;
+  text-align: center;
+  border-radius: 5px;
+  font-size: 13px;
+}
+
+.modal-confirm .icon-box {
+  color: #fff;
+  position: absolute;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  top: -70px;
+  width: 95px;
+  height: 95px;
+  border-radius: 50%;
+  z-index: 9;
+  background: #ef513a;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.modal-confirm .icon-box i {
+  font-size: 56px;
+  position: relative;
+  top: 4px;
+}
+
+.modal-confirm.modal-dialog {
+  margin-top: 80px;
+}
+
+.modal-confirm .btn {
+  color: #fff;
+  border-radius: 4px;
+  background: #ef513a;
+  text-decoration: none;
+  transition: all 0.4s;
+  line-height: normal;
+  border: none;
+}
+
+.modal-confirm .btn:hover,
+.modal-confirm .btn:focus {
+  background: #da2c12;
+  outline: none;
+}
+
+.trigger-btn {
+  display: inline-block;
+  margin: 100px auto;
+}
+</style>

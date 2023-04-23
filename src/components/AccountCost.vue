@@ -130,7 +130,7 @@
       </div>
 
       <!-- Electricity Bill -->
-      <q-card-section class="titleofcost" v-if="fullMetercost?.electricity?.length > 0">
+      <q-card-section class="titleofcost">
         <div class="text-subtitle2">Electricity Meters</div>
       </q-card-section>
 
@@ -258,11 +258,19 @@ export default defineComponent({
       });
     });
     let fullMetercost = readingStore.getfullbillcost();
-    // let fullMetercost;
+    //console.log(getfullMetercost[0]['data'].status);
     if (fullMetercost) {
       fullMetercost = fullMetercost[0]['data'];
     }
-    console.log("fullbilling", fullMetercost);
+    console.log(fullMetercost);
+    // let fullMetercost = [];
+    // if ((getfullMetercost && getfullMetercost[0])) {
+    //   fullMetercost = getfullMetercost[0];
+    //   console.log(fullMetercost);
+    // } else {
+    //   fullMetercost = getfullMetercost[0];
+    // }
+    //console.log("fullbilling", fullMetercost.data.code);
     // const userName = useUserStore();
     const $q = useQuasar();
 

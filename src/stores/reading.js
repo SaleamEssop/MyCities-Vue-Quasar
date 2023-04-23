@@ -30,16 +30,21 @@ export const useReadingStore = defineStore("reading", {
       this.cost.push(_reading);
     },
     filterByProperty(array, value) {
-      //console.log(array.length);
+      console.log(array);
       var filtered = [];
-      for (var i = 0; i < array.length; i++) {
-        var obj = array[i];
-        if (obj['meter_id'] == value) {
-          filtered.push(obj);
+      if (array.length > 0) {
+        console.log("arr", array);
+        for (var i = 0; i < array.length; i++) {
+          var obj = array[i];
+          if (obj['meter_id'] == value) {
+            filtered.push(obj);
+          }
+          if (obj['status'] == false) {
+            filtered.push(obj);
+          }
         }
-        if (obj['status'] == false) {
-          filtered.push(obj);
-        }
+      } else {
+        filtered.push(array);
       }
       console.log(filtered)
       return filtered;
