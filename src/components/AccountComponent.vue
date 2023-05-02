@@ -76,14 +76,15 @@
       />
     </q-card-actions> -->
     <q-card-section class="bg-primary">
-      <div class="text-subtitle2">Bill Day and Read Day <q-toggle v-model="selectedAccount.bill_read_day_active" /></div>
+      <div class="text-subtitle2">Bill Day and Read Day</div>
 
 
     </q-card-section>
     <div class="q-card__section q-card__section--vert">
       <div class="text-h7">
         <q-input type="text" :placeholder="'Bill Day'" v-model.trim="selectedAccount.bill_day" />
-        <q-input type="text" :placeholder="'Read Day'" v-model.trim="selectedAccount.read_day" />
+        <q-input type="text" :placeholder="'Read Day'" v-model.trim="selectedAccount.read_day" /> <q-toggle
+          v-model="selectedAccount.bill_read_day_active" />
       </div>
     </div>
     <!-- Default cost from server -->
@@ -523,7 +524,10 @@ export default defineComponent({
               region_id: regionmodel.value.id,
               account_type_id: accountmodel.value.id,
               water_email: water_email.value,
-              electricity_email: electricity_email.value
+              electricity_email: electricity_email.value,
+              bill_day: accountValue.bill_day,
+              read_day: accountValue.read_day,
+              bill_read_day_active: accountValue.bill_read_day_active,
             }).then(({ status, code, msg, data }) => {
               console.log(data);
 
@@ -562,7 +566,10 @@ export default defineComponent({
                   region_id: regionmodel.value.id,
                   account_type_id: accountmodel.value.id,
                   water_email: water_email.value,
-                  electricity_email: electricity_email.value
+                  electricity_email: electricity_email.value,
+                  bill_day: accountValue.bill_day,
+                  read_day: accountValue.read_day,
+                  bill_read_day_active: accountValue.bill_read_day_active,
                 });
               }
             });
@@ -592,7 +599,10 @@ export default defineComponent({
             region_id: regionmodel.value.id,
             account_type_id: accountmodel.value.id,
             water_email: water_email.value,
-            electricity_email: electricity_email.value
+            electricity_email: electricity_email.value,
+            bill_day: accountValue.bill_day,
+            read_day: accountValue.read_day,
+            bill_read_day_active: accountValue.bill_read_day_active,
           }).then(({ status, code, msg, data }) => {
             if (status) {
               accountStore.addAccount({
@@ -613,7 +623,10 @@ export default defineComponent({
                 region_id: regionmodel.value.id,
                 account_type_id: accountmodel.value.id,
                 water_email: water_email.value,
-                electricity_email: electricity_email.value
+                electricity_email: electricity_email.value,
+                bill_day: accountValue.bill_day,
+                read_day: accountValue.read_day,
+                bill_read_day_active: accountValue.bill_read_day_active,
               });
             }
           });
@@ -674,7 +687,10 @@ export default defineComponent({
               region_id: selectedAccount.value.region_id,
               account_type_id: selectedAccount.value.account_type_id,
               water_email: selectedAccount.value.water_email,
-              electricity_email: selectedAccount.value.electricity_email
+              electricity_email: selectedAccount.value.electricity_email,
+              bill_day: accountValue.bill_day,
+              read_day: accountValue.read_day,
+              bill_read_day_active: accountValue.bill_read_day_active,
             });
           }
         });
