@@ -21,6 +21,7 @@ const readingStore = useReadingStore();
 // const SERVER_URL = "";
 // const SERVER_URL = "http://146.190.105.178";
 const SERVER_URL = "http://127.0.0.1:8000";
+//const SERVER_URL = "http://157.245.194.89";
 
 // const SERVER_URL = "http://192.168.29.88:8000";
 
@@ -99,6 +100,13 @@ const getAllAccount = async () => {
 };
 const regionsgetEmails = async (req) => {
   return await api.get(`/v1/regions/getEmails/${req}`);
+};
+const getAdditionalCost = async (accountId, regionId, accountTypeId) => {
+  return await api.get(`/v1/regions/getAdditionalCost?account_id=${accountId}&region_id=${regionId}&account_type_id=${accountTypeId}`);
+};
+
+const getBillday = async (accountId) => {
+  return await api.get(`/v1/regions/getBillday?account_id=${accountId}`);
 };
 
 const updateAccount = async (req) => {
@@ -271,5 +279,7 @@ export {
   getAllRegion,
   getAllAccount,
   regionsgetEmails,
-  getParticularMeterCost
+  getParticularMeterCost,
+  getAdditionalCost,
+  getBillday
 };

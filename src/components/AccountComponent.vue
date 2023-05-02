@@ -15,18 +15,19 @@
       <h6>Email {{ site?.email }}</h6>
 
       <q-select color="black" v-model="regionmodel" v-if="isNew" @update:model-value="onchangeRegion($event)"
-        :options="regionOptions" label="Enter Region" option-value="id" option-label="name" />
+        :options="regionOptions" label="Select Region" option-value="id" option-label="name" />
       <div v-else>
         <q-select color="black" v-model="selectedAccount.region_id"
-          @update:model-value="onchangeRegion($event, selectedAccount)" :options="regionOptions" map-options
-          label="Enter Region" option-value="id" option-label="name" />
+          @update:model-value="onchangeRegion($event, selectedAccount)" :options="regionOptions" emit-value map-options
+          label="Select Region" disable readonly option-value="id" option-label="name" />
       </div>
 
-      <q-select color="black" v-model="accountmodel" v-if="isNew" :options="accountOptions" label="Enter Account"
-        option-value="id" option-label="type" />
+      <q-select color="black" v-model="accountmodel" v-if="isNew" @update:model-value="onchangeAccountType($event)"
+        :options="accountOptions" label="Enter Account Type" option-value="id" option-label="type" />
       <div v-else>
-        <q-select color="black" v-model="selectedAccount.account_type_id" :options="accountOptions" label="Enter Account"
-          option-value="id" map-options option-label="type" />
+        <q-select color="black" @update:model-value="onchangeAccountType($event, selectedAccount)" emit-value
+          v-model="selectedAccount.account_type_id" :options="accountOptions" label="Enter Account Type" option-value="id"
+          map-options option-label="type" disable readonly />
       </div>
       <q-input color="black" type="text" v-model="water_email" v-if="isNew" label="Enter Water Email" />
       <div v-else>
@@ -74,9 +75,20 @@
         @click="addFixedCostField"
       />
     </q-card-actions> -->
-    <!-- Default cost from server -->
     <q-card-section class="bg-primary">
-      <div class="text-subtitle2">Additional Data</div>
+      <div class="text-subtitle2">Bill Day and Read Day <q-toggle v-model="selectedAccount.bill_read_day_active" /></div>
+
+
+    </q-card-section>
+    <div class="q-card__section q-card__section--vert">
+      <div class="text-h7">
+        <q-input type="text" :placeholder="'Bill Day'" v-model.trim="selectedAccount.bill_day" />
+        <q-input type="text" :placeholder="'Read Day'" v-model.trim="selectedAccount.read_day" />
+      </div>
+    </div>
+    <!-- Default cost from server -->
+    <q-card-section class="bg-primary" v-if="selectedAccount?.new_additional_cost">
+      <div class="text-subtitle2">Additional Cost</div>
       <!-- <q-btn
         fab
         color="white"
@@ -90,43 +102,57 @@
     <!-- v-for="(defaultCost, index) in selectedAccount.defaultCosts" -->
     <!-- edit update -->
     <!-- v-for="(defaultCost, index) in isNew ? selectedAccount.defaultCosts  : selectedAccount.defaultFixedCost" -->
+    <template v-for="(additional_cost, index) in  selectedAccount?.new_additional_cost" :key="index">
+      <q-separator />
+      <q-card-section>
+        <div class="flex justify-between items-center">
+          <div class="text-h7">
+            {{ additional_cost?.name }}
+            <!-- {{ isNew ? additional_cost?.name : defaultCost?.fixed_cost?.title }} -->
+            <!-- {{ defaultCost.title }} -->
+          </div>
+          <q-toggle v-model="additional_cost.isApplicable" />
+          <!-- :model-value="defaultCost.isApplicable" -->
+        </div>
+        <q-input type="number" :placeholder="'R0.00'" v-model.number="additional_cost.cost" />
 
-    <template v-for="(defaultCost, index) in isNew
-        ? selectedAccount.defaultCosts
-        : selectedAccount.defaultFixedCost" :key="index">
+        <!-- <q-input v-else :placeholder="defaultCost.fixed_cost.title === 'Enter Your Billing Date'
+            ? 'Enter Only Dates'
+            : 'R0.00'
+          " v-model.number="defaultCost.value" type="number" :disable="!defaultCost.isApplicable" /> -->
+
+      </q-card-section>
+    </template>
+    <!-- <template v-for="(  defaultCost, index  ) in 
+  
+  isNew
+      ? selectedAccount.defaultCosts
+      : selectedAccount.defaultFixedCost
+
+" :key="index">
       <q-separator />
 
       <q-card-section>
         <div class="flex justify-between items-center">
           <div v-if="defaultCost" class="text-h7">
-            {{ isNew ? defaultCost.title : defaultCost.fixed_cost.title }}
-            <!-- {{ defaultCost.title }} -->
+            {{ isNew ? defaultCost?.title : defaultCost?.fixed_cost?.title }}
+            
           </div>
           <q-toggle v-model="defaultCost.isApplicable" />
-          <!-- :model-value="defaultCost.isApplicable" -->
+          
         </div>
         <q-input v-if="isNew" :placeholder="defaultCost.title === 'Enter Your Billing Date'
             ? 'Enter Only Dates'
             : 'R0.00'
           " v-model.number="defaultCost.value" type="number" :disable="!defaultCost.isApplicable" />
-        <!-- :readonly="
-            defaultCost.title === 'Rates' ||
-            defaultCost.title === 'Refuse Collection'
-              ? false
-              : true
-          " -->
+        
         <q-input v-else :placeholder="defaultCost.fixed_cost.title === 'Enter Your Billing Date'
             ? 'Enter Only Dates'
             : 'R0.00'
           " v-model.number="defaultCost.value" type="number" :disable="!defaultCost.isApplicable" />
-        <!-- :readonly="
-            defaultCost.fixed_cost.title === 'Rates' ||
-            defaultCost.fixed_cost.title === 'Refuse Collection'
-              ? false
-              : true
-          " -->
+       
       </q-card-section>
-    </template>
+    </template> -->
 
     <q-separator />
     <q-space />
@@ -146,7 +172,7 @@ import { useAccountStore } from "/src/stores/account";
 import { useQuasar } from "quasar";
 import { useDefaultCostStore } from "src/stores/defaultCost";
 import { getProxyData } from "src/utils";
-import { getAllRegion, getAllAccount, regionsgetEmails } from "boot/axios";
+import { getAllRegion, getAllAccount, regionsgetEmails, getAdditionalCost, getBillday } from "boot/axios";
 
 import {
   locationApi,
@@ -156,6 +182,7 @@ import {
   addSiteAndAccount,
   updateAccount,
 } from "boot/axios";
+import { imageOverlay } from "leaflet";
 
 //import { updateAllData } from "boot/firebase";
 
@@ -187,6 +214,7 @@ const nullAccount = {
   // ],
 };
 const defaultCostStore = useDefaultCostStore();
+console.log('default_cost', defaultCostStore);
 // const getDefaultCost = computed(() => defaultCostStore.getDefaultCost);
 
 export default defineComponent({
@@ -199,6 +227,34 @@ export default defineComponent({
   methods: {
     onchangeRegion(val, selectedAccount) {
       //console.log(site);
+      if (selectedAccount && selectedAccount.region_id) {
+        // for edit account
+        regionsgetEmails(val.id).then((res) => {
+          selectedAccount.water_email = res.water_email;
+          selectedAccount.electricity_email = res.water_email;
+        });
+      } else {
+        regionsgetEmails(val.id).then((res) => {
+          this.water_email = res.water_email;
+          this.electricity_email = res.electricity_email;
+        });
+      }
+
+      if (selectedAccount?.new_additional_cost) {
+        if (selectedAccount.region_id && selectedAccount.account_type_id && selectedAccount.id) {
+          getAdditionalCost(selectedAccount.id, selectedAccount.region_id, selectedAccount.account_type_id).then((res) => {
+            selectedAccount.new_additional_cost = res;
+            //selectedAccount.electricity_email = res.water_email;
+          });
+        }
+      }
+      // get additional cost get based on region
+
+      console.log('additionalcost', selectedAccount.new_additional_cost);
+
+    },
+    onchangeAccountType(val, selectedAccount) {
+
       if (selectedAccount && selectedAccount.region_id) {
         // for edit account
         regionsgetEmails(val.id).then((res) => {
@@ -259,6 +315,24 @@ export default defineComponent({
     const $q = useQuasar();
     const selectedAccount = ref(initialState.selectedAccount);
 
+    if (selectedAccount.value.region_id && selectedAccount.value.account_type_id && selectedAccount.value.id) {
+      getAdditionalCost(selectedAccount.value.id, selectedAccount.value.region_id, selectedAccount.value.account_type_id).then((res) => {
+        //console.log('response_ms', res);
+        selectedAccount.value.new_additional_cost = res;
+        //selectedAccount.electricity_email = res.water_email;
+      });
+    }
+    if (selectedAccount.value.id) {
+      getBillday(selectedAccount.value.id).then((res) => {
+        console.log('response_ms', res);
+        selectedAccount.value.bill_day = res.bill_day;
+        selectedAccount.value.read_day = res.read_day;
+        selectedAccount.value.bill_read_day_active = res.bill_read_day_active;
+
+        //selectedAccount.electricity_email = res.water_email;
+      });
+    }
+
     selectedAccount.value.defaultFixedCost?.map((_cost) => {
       if (_cost.is_active === 1) {
         _cost["isApplicable"] = true;
@@ -267,6 +341,7 @@ export default defineComponent({
       }
       return _cost;
     });
+    console.log(selectedAccount);
 
     const checkIdFromDB = accountStore.getAccountById(
       selectedAccount?.value?.id
@@ -284,11 +359,6 @@ export default defineComponent({
     const site = ref(
       isNew.value ? null : siteStore.getSiteById(selectedAccount.value.site.id)
     );
-
-    const ms = ref(
-      isNew.value ? null : accountStore.getAccountById(checkIdFromDB)
-    );
-    console.log(ms);
 
     // const selectedAccount = props.autoUpdate
     //   ? ref(props.account)
@@ -571,12 +641,16 @@ export default defineComponent({
         updateAccount({
           site_id: site.value.id,
           account_name: accountValue.title,
+          bill_day: accountValue.bill_day,
+          read_day: accountValue.read_day,
+          bill_read_day_active: accountValue.bill_read_day_active,
           account_number: accountValue.number,
           optional_information: accountValue.option,
-          default_fixed_cost: default_cost,
+          default_fixed_cost: selectedAccount.value.new_additional_cost,
+          fixed_cost: selectedAccount.value.new_additional_cost,
           account_id: accountValue.id,
-          region_id: account_type_id,
-          account_type_id: region_id,
+          region_id: region_id,
+          account_type_id: account_type_id,
           water_email: selectedAccount.value.water_email,
           electricity_email: selectedAccount.value.electricity_email
 
@@ -759,7 +833,8 @@ export default defineComponent({
       regionOptions: regionsOptions,
       accountOptions: accountOptions,
       water_email,
-      electricity_email
+      electricity_email,
+      getAdditionalCost
     };
   },
 });

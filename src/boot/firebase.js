@@ -46,6 +46,9 @@ const updateAllData = () => {
               number: account.account_number,
               region_id: account.region_id,
               account_type_id: account.account_type_id,
+              bill_day: account.bill_day,
+              read_day: account.read_day,
+              bill_read_day_active: account.bill_read_day_active,
               water_email: account.water_email,
               electricity_email: account.electricity_email,
               option: account.optional_information,
@@ -134,7 +137,7 @@ export default boot(async ({ router, app }) => {
     }
   });
   // initializeApp(firebaseConfig);
-  
+
   // const auth = getAuth();
   // router.beforeEach((to, from, next) => {
   //   return new Promise((resolve, reject) => {
