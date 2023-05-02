@@ -82,9 +82,12 @@
     </q-card-section>
     <div class="q-card__section q-card__section--vert">
       <div class="text-h7">
-        <q-input type="text" :placeholder="'Bill Day'" v-model.trim="selectedAccount.bill_day" />
-        <q-input type="text" :placeholder="'Read Day'" v-model.trim="selectedAccount.read_day" /> <q-toggle
-          v-model="selectedAccount.bill_read_day_active" />
+        <q-input type="text" :placeholder="'Bill Day'" @blur="evt => onChanged(evt.target.value, selectedAccount)"
+          v-model.trim="selectedAccount.bill_day" />
+        <div class="flex justify-between">
+          <q-input type="text" :placeholder="'Read Day'" v-model.trim="selectedAccount.read_day" />
+          <q-toggle v-model="selectedAccount.bill_read_day_active" />
+        </div>
       </div>
     </div>
     <!-- Default cost from server -->
@@ -226,6 +229,15 @@ export default defineComponent({
   },
 
   methods: {
+    onChanged(val, selectedAccount) {
+      this.bill_read_date = val;
+      selectedAccount.read_day = val - 5;
+      console.log(selectedAccount);
+      if (!selectedAccount.site.id) {
+        selectedAccount.bill_read_day_active = false;
+      }
+      //console.log(selectedAccount);
+    },
     onchangeRegion(val, selectedAccount) {
       //console.log(site);
       if (selectedAccount && selectedAccount.region_id) {
@@ -655,7 +667,7 @@ export default defineComponent({
           site_id: site.value.id,
           account_name: accountValue.title,
           bill_day: accountValue.bill_day,
-          read_day: accountValue.read_day,
+          read_day: selectedAccount.value.read_day,
           bill_read_day_active: accountValue.bill_read_day_active,
           account_number: accountValue.number,
           optional_information: accountValue.option,
@@ -689,8 +701,7 @@ export default defineComponent({
               water_email: selectedAccount.value.water_email,
               electricity_email: selectedAccount.value.electricity_email,
               bill_day: accountValue.bill_day,
-              read_day: accountValue.read_day,
-              bill_read_day_active: accountValue.bill_read_day_active,
+              read_day: selectedAccount.value.read_day
             });
           }
         });
