@@ -231,7 +231,12 @@ export default defineComponent({
   methods: {
     onChanged(val, selectedAccount) {
       this.bill_read_date = val;
-      selectedAccount.read_day = val - 5;
+      if (val - 5 >= 0) {
+        selectedAccount.read_day = val - 5;
+      } else {
+        selectedAccount.read_day = 25;
+      }
+
       console.log(selectedAccount);
       if (!selectedAccount.site.id) {
         selectedAccount.bill_read_day_active = false;
