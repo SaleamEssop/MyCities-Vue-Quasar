@@ -341,6 +341,7 @@ export default defineComponent({
       });
     }
     if (selectedAccount.value.id) {
+      console.log(selectedAccount);
       getBillday(selectedAccount.value.id).then((res) => {
         console.log('response_ms', res);
         selectedAccount.value.bill_day = res.bill_day;
@@ -407,14 +408,14 @@ export default defineComponent({
 
     console.log(site);
     const onSaveSelectAccount = async () => {
-
-      if (site.value == null || site.value.email == null) {
-        $q.notify({
-          message:
-            "Invalid address. You need to select a valid location from the suggestions given by the app. Begin typing your address again.",
-        });
-        return;
-      }
+      console.log(site);
+      // if (site.value == null || site.value.email == null) {
+      //   $q.notify({
+      //     message:
+      //       "Invalid address. You need to select a valid location from the suggestions given by the app. Begin typing your address again.",
+      //   });
+      //   return;
+      // }
       let account_type_id;
       let region_id;
 
@@ -509,91 +510,91 @@ export default defineComponent({
 
       if (isNew.value) {
         if (site.value.newSite) {
-          if (site.value.latLng) {
-            //first will save site
-            //site.value.id = Date.now();
-            delete site.value["newSite"];
-            // siteStore.addSite(site.value);
-            //add site and account
-            const siteValue = site.value;
-            const accountValue = selectedAccount.value;
-            const default_cost = accountValue.defaultCosts
-              // .filter((cost) => cost.isApplicable)
-              .map((cost) => {
-                return {
-                  name: cost.title,
-                  id: cost.id,
-                  value: cost.value,
-                  is_active: cost.isApplicable ? 1 : 0,
-                };
-              })
-              .filter((cost) => cost !== null);
-            addSiteAndAccount({
-              address: siteValue.address,
-              email: siteValue.email,
-              lat: siteValue.latLng.lat,
-              lng: siteValue.latLng.lng,
-              title: siteValue.email,
-              account_name: accountValue.title,
-              account_number: accountValue.number,
-              optional_information: accountValue.option,
-              default_fixed_cost: default_cost,
-              region_id: regionmodel.value.id,
-              account_type_id: accountmodel.value.id,
-              water_email: water_email.value,
-              electricity_email: electricity_email.value,
-              bill_day: accountValue.bill_day,
-              read_day: accountValue.read_day,
-              bill_read_day_active: accountValue.bill_read_day_active,
-            }).then(({ status, code, msg, data }) => {
-              console.log(data);
+          //  if (site.value.latLng) {
+          //first will save site
+          //site.value.id = Date.now();
+          delete site.value["newSite"];
+          // siteStore.addSite(site.value);
+          //add site and account
+          const siteValue = site.value;
+          const accountValue = selectedAccount.value;
+          const default_cost = accountValue.defaultCosts
+            // .filter((cost) => cost.isApplicable)
+            .map((cost) => {
+              return {
+                name: cost.title,
+                id: cost.id,
+                value: cost.value,
+                is_active: cost.isApplicable ? 1 : 0,
+              };
+            })
+            .filter((cost) => cost !== null);
+          addSiteAndAccount({
+            address: siteValue.address,
+            email: siteValue.email,
+            //  lat: siteValue.latLng.lat,
+            // lng: siteValue.latLng.lng,
+            //  title: siteValue.email,
+            account_name: accountValue.title,
+            account_number: accountValue.number,
+            optional_information: accountValue.option,
+            default_fixed_cost: default_cost,
+            region_id: regionmodel.value.id,
+            account_type_id: accountmodel.value.id,
+            water_email: water_email.value,
+            electricity_email: electricity_email.value,
+            bill_day: accountValue.bill_day,
+            read_day: accountValue.read_day,
+            bill_read_day_active: accountValue.bill_read_day_active,
+          }).then(({ status, code, msg, data }) => {
+            console.log(data);
 
-              if (status) {
-                siteStore.addSite({
-                  id: data.site_id,
-                  address: siteValue.address,
-                  email: siteValue.email,
-                  latLng: {
-                    lat: siteValue.latLng.lat,
-                    lng: siteValue.latLng.lng,
-                  },
-                  title: data.title,
-                  user_id: data.user_id,
-                  region_id: regionmodel.value.id,
-                  account_type_id: accountmodel.value.id,
-                  water_email: water_email.value,
-                  electricity_email: electricity_email.value
-                });
-                accountStore.addAccount({
-                  id: data.id,
-                  defaultFixedCost: data.default_fixed_costs,
-                  // defaultCosts: data.default_fixed_costs.map((cost) => {
-                  //   return {
-                  //     title: cost.title,
-                  //     value: parseFloat(cost.value),
-                  //     isApplicable: cost.is_active ? 1 : 0,
-                  //     isFromUser: true,
-                  //     id: cost.id,
-                  //   };
-                  // }),
-                  number: accountValue.number,
-                  option: accountValue.option,
-                  site: { id: data.site_id },
-                  title: accountValue.title,
-                  region_id: regionmodel.value.id,
-                  account_type_id: accountmodel.value.id,
-                  water_email: water_email.value,
-                  electricity_email: electricity_email.value,
-                  bill_day: accountValue.bill_day,
-                  read_day: accountValue.read_day,
-                  bill_read_day_active: accountValue.bill_read_day_active,
-                });
-              }
-            });
-          } else {
-            alert({ message: "There is no site contact to developer" });
-            return;
-          }
+            if (status) {
+              siteStore.addSite({
+                id: data.site_id,
+                address: siteValue.address,
+                // email: siteValue.email,
+                // latLng: {
+                //   lat: siteValue.latLng.lat,
+                //   lng: siteValue.latLng.lng,
+                // },
+                title: data.title,
+                user_id: data.user_id,
+                region_id: regionmodel.value.id,
+                account_type_id: accountmodel.value.id,
+                water_email: water_email.value,
+                electricity_email: electricity_email.value
+              });
+              accountStore.addAccount({
+                id: data.id,
+                defaultFixedCost: data.default_fixed_costs,
+                // defaultCosts: data.default_fixed_costs.map((cost) => {
+                //   return {
+                //     title: cost.title,
+                //     value: parseFloat(cost.value),
+                //     isApplicable: cost.is_active ? 1 : 0,
+                //     isFromUser: true,
+                //     id: cost.id,
+                //   };
+                // }),
+                number: accountValue.number,
+                option: accountValue.option,
+                site: { id: data.site_id },
+                title: accountValue.title,
+                region_id: regionmodel.value.id,
+                account_type_id: accountmodel.value.id,
+                water_email: water_email.value,
+                electricity_email: electricity_email.value,
+                bill_day: accountValue.bill_day,
+                read_day: accountValue.read_day,
+                bill_read_day_active: accountValue.bill_read_day_active,
+              });
+            }
+          });
+          // } else {
+          //   alert({ message: "There is no site contact to developer" });
+          //   return;
+          // }
         } else {
           const accountValue = selectedAccount.value;
           const default_cost = accountValue.defaultCosts
@@ -801,12 +802,14 @@ export default defineComponent({
     };
 
     const watchSite = watch(site, async (newValue, oldValue) => {
+      console.log(newValue);
       if (newValue?.magicKey) {
         try {
           let address = await finLatLngByMagicKey(
             newValue.address,
             newValue.magicKey
           );
+          console.log(address);
           if (address.length == 1) {
             // console.log("address", address[0]);
             let { data } = await findEmailFromLocation({
@@ -814,7 +817,7 @@ export default defineComponent({
               y: address[0].latLng.lng,
             });
             const spatialData = data;
-            // console.log(spatialData);
+            console.log("email_data", spatialData);
             address[0]["email"] =
               spatialData["features"][0]["attributes"]["MREMAIL"];
             site.value = address[0];

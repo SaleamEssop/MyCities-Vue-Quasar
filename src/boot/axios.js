@@ -20,8 +20,8 @@ const readingStore = useReadingStore();
 
 // const SERVER_URL = "";
 // const SERVER_URL = "http://146.190.105.178";
-const SERVER_URL = "http://127.0.0.1:8000";
-//const SERVER_URL = "http://157.245.194.89";
+//const SERVER_URL = "http://127.0.0.1:8000";
+const SERVER_URL = "http://157.245.194.89";
 
 // const SERVER_URL = "http://192.168.29.88:8000";
 
@@ -41,17 +41,20 @@ const GEOCODE_API_TOKEN =
 
 const suggestLocation = async (text) => {
   return await locationApi.get(
-    `/arcgis/rest/services/World/GeocodeServer/suggest?f=pjson&token=${GEOCODE_API_TOKEN}&text=${text}`
+    `/arcgis/rest/services/World/GeocodeServer/suggest?f=pjson&countryCode=za&token=${GEOCODE_API_TOKEN}&text=${text}`
   );
 };
 
 const findAddressCandidates = async (singleLine, magicKey) => {
+  // console.log(singleLine);
   return await locationApi.get(
     `/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=pjson&token=${GEOCODE_API_TOKEN}&singleLine=${singleLine}&magicKey=${magicKey}&outSR=%7B%22wkid%22%3A102100%7D&countryCode=ZAF`
   );
+  //outSR=%7B%22wkid%22%3A102100%7D
 };
 
 const findEmailFromLocation = async (geometry) => {
+  //console.log(geometry);
   let request = {
     f: "json",
     returnGeometry: false,
