@@ -177,6 +177,7 @@ export default defineComponent({
       });
       var imageUrl = image.webPath;
       imageSrc.value = imageUrl;
+      $q.notify({ message: "Please ensure that the entered reading matches the meter image reading" });
     };
 
     // const screenShot = ref();
