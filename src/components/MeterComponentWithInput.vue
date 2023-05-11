@@ -6,7 +6,12 @@
     </div>
     <q-card-section>
       <!-- v-if="isNew" -->
-      <div v-if="isNew" class="q-mb-sm text-subtitle2" text-color="negative" style="color: red">
+      <div
+        v-if="isNew"
+        class="q-mb-sm text-subtitle2"
+        text-color="negative"
+        style="color: red"
+      >
         {{ alertIfLessThen24Hours }}
       </div>
 
@@ -35,12 +40,24 @@
         </q-badge>
 
         <div v-show="isNew" class="q-pt-md justify-center col-5">
-          <span class="round-cheap text-center">Select date
-            <q-popup-proxy @before-show="updateProxy" cover transition-show="scale" transition-hide="scale">
+          <span class="round-cheap text-center"
+            >Select date
+            <q-popup-proxy
+              @before-show="updateProxy"
+              cover
+              transition-show="scale"
+              transition-hide="scale"
+            >
               <q-date v-model="readingDate" mask="DD-MMM-YYYY">
                 <div class="row items-center justify-end q-gutter-sm">
                   <q-btn label="Cancel" color="primary" flat v-close-popup />
-                  <q-btn label="Select" color="primary" flat @click="save" v-close-popup />
+                  <q-btn
+                    label="Select"
+                    color="primary"
+                    flat
+                    @click="save"
+                    v-close-popup
+                  />
                 </div>
               </q-date>
             </q-popup-proxy>
@@ -51,46 +68,76 @@
       <!-- <q-separator color="grey" class="q-mt-md" size="4px" /> -->
     </q-card-section>
     <q-card-section style="margin-top: -15px">
-      <div class="relative" :class="inputFocus ? 'stroke-focus' : 'stroke-simple'">
+      <div
+        class="relative"
+        :class="inputFocus ? 'stroke-focus' : 'stroke-simple'"
+      >
         <div class="absolute" style="opacity: 0">
-          <q-input type="number" color="black" :min="0" outlined @focus="inputFocus = true" @blur="inputFocus = false"
-            :step="1" autofocus v-model="currentReading"
+          <q-input
+            type="number"
+            color="black"
+            :min="0"
+            outlined
+            @focus="inputFocus = true"
+            @blur="inputFocus = false"
+            :step="1"
+            autofocus
+            v-model="currentReading"
             oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-            :maxlength="meter.type.id == 2 ? 6 : 8" @keypress="(event) => {
+            :maxlength="meter.type.id == 2 ? 6 : 8"
+            @keypress="
+              (event) => {
                 if (
                   `${currentReading || ''}`.length >=
-                  (meter.type.id == 2 ? 6 : 8) ||
+                    (meter.type.id == 2 ? 6 : 8) ||
                   event.keyCode == 46
                 ) {
                   event.preventDefault();
                 } else {
                 }
               }
-              " />
+            "
+          />
         </div>
         <div class="text-center">
           <!-- :text="lastReading.valueInString" -->
-          <MeterComponent :text="currentReading" ref="meterComopnentReadValue" :meterStyle="meter.type.id" :readingType="meter.type.id == 2
-              ? 'electricity-recorded-reading'
-              : 'water-recorded-reading'
-            " :isInput="true" />
+          <MeterComponent
+            :text="currentReading"
+            ref="meterComopnentReadValue"
+            :meterStyle="meter.type.id"
+            :readingType="
+              meter.type.id == 2
+                ? 'electricity-recorded-reading'
+                : 'water-recorded-reading'
+            "
+            :isInput="true"
+          />
         </div>
       </div>
     </q-card-section>
     <q-card-actions align="center" style="margin-top: -10px">
-      <q-btn icon="image" color="primary" text-color="black" @click="captureImage()" />
+      <q-btn
+        icon="image"
+        color="primary"
+        text-color="black"
+        @click="captureImage()"
+      />
       <!-- <q-btn
         icon="download"
         color="primary"
         text-color="black"
         @click="screenShotCapture('close')"
       /> -->
-      <q-btn color="primary" text-color="black" @click="$emit('close')">Cancel</q-btn>
+      <q-btn color="primary" text-color="black" @click="$emit('close')"
+        >Cancel</q-btn
+      >
       <!-- screenShotCapture(); -->
       <!-- <q-btn color="primary" text-color="black" @click="saveReading(false)"
         >Save</q-btn
       > -->
-      <q-btn color="primary" text-color="black" @click="screenShotCapture()">Save</q-btn>
+      <q-btn color="primary" text-color="black" @click="screenShotCapture()"
+        >Save</q-btn
+      >
     </q-card-actions>
     <q-separator color="grey" size="10px" />
 
@@ -99,7 +146,11 @@
       <div>
         <img class="q-px-lg myCityIcon" src="~assets/logo_small.png" />
       </div>
-      <div @click="openWeb()" style="text-decoration: underline" class="text-body1 text-center">
+      <div
+        @click="openWeb()"
+        style="text-decoration: underline"
+        class="text-body1 text-center"
+      >
         www.mycities.co.za
       </div>
     </q-card-section>
@@ -177,7 +228,17 @@ export default defineComponent({
       });
       var imageUrl = image.webPath;
       imageSrc.value = imageUrl;
-      $q.notify({ message: "Please ensure that the entered reading matches the meter image reading" });
+      $q.notify({
+        position: "top",
+        actions: [
+          {
+            label: "Dismiss",
+            color: "white",
+          },
+        ],
+        message:
+          "Please ensure that the entered reading matches the meter image reading",
+      });
     };
 
     // const screenShot = ref();
@@ -525,8 +586,7 @@ export default defineComponent({
             if (
               props.meter.type.id == 2
                 ? lastReadingItem.value.valueInString - valueInString > 100000
-                : lastReadingItem.value.valueInString - valueInString >
-                1000000
+                : lastReadingItem.value.valueInString - valueInString > 1000000
             ) {
               confirm(
                 "You have entered a value which exceeds a usage of 100 000 or More. Shall we accept this reading?",
@@ -557,7 +617,6 @@ export default defineComponent({
       } else {
         doSave(currentReadingValue, valueInString);
       }
-
     };
 
     return {
