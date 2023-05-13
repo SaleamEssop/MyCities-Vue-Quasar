@@ -188,7 +188,7 @@ import {
 } from "boot/axios";
 import { imageOverlay } from "leaflet";
 
-//import { updateAllData } from "boot/firebase";
+import { updateAllData } from "boot/firebase";
 
 const nullAccount = {
   id: Date.now(),
@@ -732,6 +732,7 @@ export default defineComponent({
       }
       // emit("update:account", selectedAccount.value);
       emit("save");
+      await updateAllData();
     };
 
     let searchTimeCallBack;
