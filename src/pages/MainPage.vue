@@ -38,7 +38,7 @@
         </template>
 
         <template
-          v-for="account in                              getAccounts(siteStore.selectedSite.id)                             "
+          v-for="account in                               getAccounts(siteStore.selectedSite.id)                              "
           :key="account.id">
           <q-item>
             <q-item-section>
@@ -117,7 +117,7 @@
         <!-- {{ accountStore.allAccounts }} -->
 
         <template
-          v-for="                             meter                              in                              getMeters(accountStore.selectedAccount?.id)                             "
+          v-for="                              meter                               in                               getMeters(accountStore.selectedAccount?.id)                              "
           :key="meter.id">
           <q-item clickable v-ripple class="q-px-none">
             <q-item-section>
@@ -208,7 +208,6 @@ const allMeters = meterStore.allMeters;
 const getAccounts = (siteId) => {
   return accountStore.getAccountsById(siteId);
 };
-console.log("dd", getAccounts(siteStore.selectedSite.id));
 
 const getMeters = (accountId) => {
   return meterStore.getByAccuntId(accountId);
