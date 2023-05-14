@@ -230,14 +230,20 @@ export default defineComponent({
 
   methods: {
     onChanged(val, selectedAccount) {
-      this.bill_read_date = val;
+
+      if (val >= 1 && val <= 31) {
+        this.bill_read_date = val;
+      } else {
+        this.customalert('Please add date between 1 to 31.');
+        val = 1;
+        this.bill_read_date = val;
+        selectedAccount.bill_day = val;
+      }
       if (val - 5 >= 0) {
         selectedAccount.read_day = val - 5;
       } else {
         selectedAccount.read_day = 25;
       }
-
-      console.log(selectedAccount);
       if (!selectedAccount.site.id) {
         selectedAccount.bill_read_day_active = false;
       }
@@ -317,6 +323,14 @@ export default defineComponent({
       });
     });
 
+    function customalert(message) {
+      $q.dialog({
+        dark: false,
+        message: message,
+        ok: `Ok`,
+        color: 'positive',
+      })
+    }
     initialState["selectedAccount"]["defaultCosts"] =
       defaultCostStore.getDefaultCost.map((_cost) => {
         if (_cost.title === "Rates Rebate") {
@@ -870,7 +884,8 @@ export default defineComponent({
       accountOptions: accountOptions,
       water_email,
       electricity_email,
-      getAdditionalCost
+      getAdditionalCost,
+      customalert
     };
   },
 });
