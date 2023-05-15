@@ -21,6 +21,8 @@
             <q-btn rounded color="primary" text-color="black" v-if="site == siteStore.selectedSite"
               @click="selectSite(site)" icon="check">Select</q-btn>
             <q-btn rounded color="primary" text-color="black" v-else @click="selectSite(site)">Select</q-btn>
+            <q-btn style="margin-top:10px" rounded color="negative" text-color="black"
+              @click="deletesite(site)">Delete</q-btn>
           </q-item-section>
         </q-item>
       </q-expansion-item>
@@ -38,7 +40,7 @@
         </template>
 
         <template
-          v-for="account in                               getAccounts(siteStore.selectedSite.id)                              "
+          v-for="account in                                                                                                  getAccounts(siteStore.selectedSite.id)                                                                                                 "
           :key="account.id">
           <q-item>
             <q-item-section>
@@ -117,7 +119,7 @@
         <!-- {{ accountStore.allAccounts }} -->
 
         <template
-          v-for="                              meter                               in                               getMeters(accountStore.selectedAccount?.id)                              "
+          v-for="                                                                                                 meter                                                                                                  in                                                                                                  getMeters(accountStore.selectedAccount?.id)                                                                                                 "
           :key="meter.id">
           <q-item clickable v-ripple class="q-px-none">
             <q-item-section>
@@ -181,6 +183,7 @@ import {
 } from "vue";
 import { useRouter } from "vue-router";
 
+
 import { useSiteStore } from "/src/stores/site";
 import { useAccountStore } from "/src/stores/account";
 import { useMeterStore } from "/src/stores/meter";
@@ -191,7 +194,8 @@ import AccountComponent from "src/components/AccountComponent.vue";
 import AddMeter from "src/components/AddMeter.vue";
 import AccountCost from "src/components/AccountCost.vue";
 import AccountHistory from "src/components/AccountHistory.vue";
-import { fetchAndSaveMeterOnAccount, deleteMainAccount } from "src/boot/axios";
+import { fetchAndSaveMeterOnAccount, deleteMainAccount, deleteMainSiteAccount } from "src/boot/axios";
+import { updateAllData } from "boot/firebase";
 
 import { date, Dialog, useQuasar } from "quasar";
 
@@ -202,6 +206,7 @@ const userStore = useUserStore();
 const $q = useQuasar();
 
 const allSites = siteStore.allSites;
+console.log(allSites);
 //const allAccounts = accountStore.allAccounts;
 const allMeters = meterStore.allMeters;
 
@@ -246,6 +251,28 @@ const selectAccount = (_account) => {
   fetchAndSaveMeterOnAccount(_account.id);
 };
 // console.log("Select Account", accountStore.selectedAccount);
+const deletesite = async (_site) => {
+  //await updateAllData();
+  //let meters = meterStore.getByAccuntId(account.id);
+  $q.dialog({
+    title: "Confirm",
+    message:
+      "Are you sure you want to delete this location? All accounts,meters and history associated with this location will be deleted.",
+    cancel: true,
+    ok: `Confirm`,
+    persistent: true,
+  }).onOk(() => {
+    deleteMainSiteAccount({ location_id: _site.id }).then((status) => {
+      console.log(status);
+      if (status.code == 200) {
+        window.location.reload();
+        updateAllData();
+      }
+    });
+  });
+
+}
+
 
 const deleteAccount = (account) => {
   let meters = meterStore.getByAccuntId(account.id);

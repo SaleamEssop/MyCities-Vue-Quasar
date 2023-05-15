@@ -154,6 +154,10 @@ const deleteMainAccount = async (req) => {
   return await api.post("/v1/account/delete", req);
 };
 
+const deleteMainSiteAccount = async (req) => {
+  return await api.post("/v1/sites/delete", req);
+};
+
 // Delete Meter Account
 const deleteMainMeter = async (req) => {
   return await api.post("/v1/meter/delete", req);
@@ -284,5 +288,6 @@ export {
   regionsgetEmails,
   getParticularMeterCost,
   getAdditionalCost,
-  getBillday
+  getBillday,
+  deleteMainSiteAccount
 };

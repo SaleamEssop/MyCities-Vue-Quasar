@@ -234,7 +234,7 @@ export default defineComponent({
       if (val >= 1 && val <= 31) {
         this.bill_read_date = val;
       } else {
-        this.customalert('Please add date between 1 to 31.');
+        this.customalert('This value must be from 1 to 31 represeting the day on which you are billed.');
         val = 1;
         this.bill_read_date = val;
         selectedAccount.bill_day = val;
