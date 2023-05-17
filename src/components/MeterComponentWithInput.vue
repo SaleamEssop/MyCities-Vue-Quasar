@@ -111,6 +111,7 @@ import { computed, defineComponent, ref } from "vue";
 import MeterComponent from "./MeterComponent.vue";
 import { useReadingStore } from "/src/stores/reading";
 import { useAccountStore } from "/src/stores/account";
+import { useMeterStore } from "/src/stores/meter";
 
 import { date } from "quasar";
 import { useQuasar } from "quasar";
@@ -139,6 +140,7 @@ export default defineComponent({
     const meterComopnentReadValue = ref();
     const readingStore = useReadingStore();
     const accountStore = useAccountStore();
+    const meterStore = useMeterStore();
     const account = accountStore.getAccountById(props.meter.account.id);
     const currentDate = ref(date.formatDate(Date.now(), "DD/MM/YYYY"));
 
@@ -225,6 +227,7 @@ export default defineComponent({
           console.log("savedFile", savedFile);
           saveReading(false);
           $q.notify({ message: "Saved:-FileManager/Documents/MyCityApp/.." });
+          //const allMeters = meterStore.allMeters;
           // $q.loading.hide();
         })
         .catch(function (error) {
@@ -452,8 +455,10 @@ export default defineComponent({
             }
           });
         }
+
         emit("save");
-        window.location.reload();
+        console.log('need to reload page');
+
       };
 
       const valueInString = meterComopnentReadValue.value.getValueInString();
@@ -500,27 +505,6 @@ export default defineComponent({
         });
       }
 
-      // props.isNew &&
-      //   (inputFirstReading[0]?.value > currentReadingValue ||
-      //     inputLastReading[inputLastReading.length - 1]?.value <
-      //       currentReadingValue)
-
-      // if (
-      //   (lastReadingItem.value.time > readingDateInToms &&
-      //     inputFirstReading[0]?.value > currentReadingValue) ||
-      //   (inputLastReading[inputLastReading.length - 1]?.value <
-      //     currentReadingValue &&
-      //     lastReadingItem.value.time > readingDateInToms)
-      // ) {
-      //   // alertMsg(
-      //   //   `Please enter a reading between ${
-      //   //     inputFirstReading[0]?.value || "less"
-      //   //   } to ${
-      //   //     inputLastReading[inputLastReading.length - 1]?.value || "more"
-      //   //   }.`
-      //   // );
-      // } else {
-      //
       if (
         props.isNew &&
         (!currentReadingValue ||
@@ -565,6 +549,7 @@ export default defineComponent({
       } else {
         doSave(currentReadingValue, valueInString);
       }
+
     };
 
     return {

@@ -29,15 +29,32 @@
           v-model="selectedAccount.account_type_id" :options="accountOptions" label="Enter Account Type" option-value="id"
           map-options option-label="type" disable readonly />
       </div>
-      <q-input color="black" type="text" v-model="water_email" v-if="isNew" label="Enter Water Email" />
+
+      <div v-if="site?.ethekwini_water">
+        <q-input color="black" type="text" v-model="site.ethekwini_water" label="Enter Water Email" />
+      </div>
       <div v-else>
-        <q-input color="black" type="text" v-model="selectedAccount.water_email" label="Enter Water Email" />
+        <q-input color="black" type="text" v-model="water_email" v-if="isNew" label="Enter Water Email" />
+        <div v-else>
+          <q-input color="black" type="text" v-model="selectedAccount.water_email" label="Enter Water Email" />
+        </div>
       </div>
 
-      <q-input color="black" type="text" v-model="electricity_email" v-if="isNew" label="Enter Electricity Email" />
+      <div v-if="site?.ethekwini_electricity">
+        <q-input color="black" type="text" v-model="site.ethekwini_electricity" label="Enter Electricity Email" />
+      </div>
+      <div v-else>
+        <q-input color="black" type="text" v-model="electricity_email" v-if="isNew" label="Enter Electricity Email" />
+        <div v-else>
+          <q-input color="black" type="text" v-model="selectedAccount.electricity_email"
+            label="Enter Electricity Email" />
+        </div>
+      </div>
+
+      <!-- <q-input color="black" type="text" v-model="electricity_email" v-if="isNew" label="Enter Electricity Email" />
       <div v-else>
         <q-input color="black" type="text" v-model="selectedAccount.electricity_email" label="Enter Electricity Email" />
-      </div>
+      </div> -->
       <q-input color="black" type="text" label="Enter name - As per bill" v-if="isNew"
         v-model.trim="selectedAccount.title" />
       <div v-else>Name : -{{ selectedAccount.title }}</div>
@@ -435,7 +452,14 @@ export default defineComponent({
 
       console.log("is_new_account", isNew.value);
       if (!isNew.value) {
-        console.log('if');
+        console.log(site?.value?.ethekwini_electricity);
+        if (site?.value?.ethekwini_electricity) {
+          selectedAccount.value.electricity_email = site?.value?.ethekwini_electricity
+        }
+        if (site?.value?.ethekwini_water) {
+          selectedAccount.value.water_email = site?.value?.ethekwini_water
+        }
+
         if (selectedAccount?.value?.account_type_id?.id) {
           account_type_id = selectedAccount.value.account_type_id?.id;
         } else {
@@ -481,7 +505,14 @@ export default defineComponent({
 
       } else {
         console.log("else");
-        console.log(regionmodel);
+        if (site?.value?.ethekwini_electricity) {
+          electricity_email.value = site?.value?.ethekwini_electricity
+        }
+        if (site?.value?.ethekwini_water) {
+          water_email.value = site?.value?.ethekwini_water
+        }
+        console.log("new", water_email.value);
+        console.log("new", electricity_email.value);
         if (regionmodel.value.id == null) {
           $q.notify({
             message:
@@ -817,7 +848,7 @@ export default defineComponent({
     };
 
     const watchSite = watch(site, async (newValue, oldValue) => {
-      console.log(newValue);
+
       if (newValue?.magicKey) {
         try {
           let address = await finLatLngByMagicKey(
@@ -840,6 +871,7 @@ export default defineComponent({
               site.value.ethekwini_water = 'eservices@durban.gov.za';
               site.value.ethekwini_electricity = site.value.email;
             }
+            console.log("site", site);
           } else {
             alert("Choose address");
           }

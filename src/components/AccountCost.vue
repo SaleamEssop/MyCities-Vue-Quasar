@@ -559,8 +559,8 @@ export default defineComponent({
         });
     }
     const submitFullBillNew = (metercost) => {
-      console.log(metercost);
-      const email = metercost.type == 1 ? metercost.water_email : metercost.electricity_email;
+
+      const email = metercost.type == 1 ? props.account.water_email : props.account.electricity_email;
       const subject = `Account: ${props.account.id}`;
       let body = ``;
 
@@ -605,7 +605,11 @@ export default defineComponent({
       }
     };
     const submitFullBill = (meter) => {
-      const email = meter.type.id == 2 ? site.email : "eservices@durban.gov.za";
+      console.log('dolly')
+      const meters = props.meter;
+      console.log(props);
+      const email = meters.type.id == 1 ? props.account.water_email : props.account.electricity_email;
+      console.log(email);
       const subject = `Account: ${props.account.id}`;
       let body = ``;
 

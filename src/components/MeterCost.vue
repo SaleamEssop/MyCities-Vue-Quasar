@@ -274,8 +274,11 @@ export default defineComponent({
     }
 
     const submitBill = () => {
+
       const meter = props.meter;
-      const email = meter.type.id == 2 ? site.email : "eservices@durban.gov.za";
+      console.log('01', account);
+      //const email = meter.type.id == 2 ? site.email : "eservices@durban.gov.za";
+      const email = meter.type.id == 1 ? account.water_email : account.electricity_email;
       const subject = `Account: ${account.number}`;
       let body = ``;
       body += `Account Number: ${account.number}\n`;
