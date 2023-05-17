@@ -21,34 +21,34 @@ export const useReadingStore = defineStore("reading", {
 
   actions: {
     // get meter cost
-    getmetercost(meter_id) {
-      return this.filterByProperty(this.cost[0]['data'], meter_id)
-    },
-    // push meter cost
-    metercost(_reading) {
-      this.cost = [];
-      this.cost.push(_reading);
-    },
-    filterByProperty(array, value) {
-      console.log(array);
-      var filtered = [];
-      if (array.length > 0) {
-        console.log("arr", array);
-        for (var i = 0; i < array.length; i++) {
-          var obj = array[i];
-          if (obj['meter_id'] == value) {
-            filtered.push(obj);
-          }
-          if (obj['status'] == false) {
-            filtered.push(obj);
-          }
-        }
-      } else {
-        filtered.push(array);
-      }
-      console.log(filtered)
-      return filtered;
-    },
+    // getmetercost(meter_id) {
+    //   return this.filterByProperty(this.cost[0]['data'], meter_id)
+    // },
+    // // push meter cost
+    // metercost(_reading) {
+    //   this.cost = [];
+    //   this.cost.push(_reading);
+    // },
+    // filterByProperty(array, value) {
+    //   console.log(array);
+    //   var filtered = [];
+    //   if (array.length > 0) {
+    //     console.log("arr", array);
+    //     for (var i = 0; i < array.length; i++) {
+    //       var obj = array[i];
+    //       if (obj['meter_id'] == value) {
+    //         filtered.push(obj);
+    //       }
+    //       if (obj['status'] == false) {
+    //         filtered.push(obj);
+    //       }
+    //     }
+    //   } else {
+    //     filtered.push(array);
+    //   }
+    //   console.log(filtered)
+    //   return filtered;
+    // },
     // get full bill cost
     getfullbillcost() {
       return this.fullbill;

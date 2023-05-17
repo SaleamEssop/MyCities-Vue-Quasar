@@ -252,7 +252,7 @@ export default defineComponent({
     const meterStore = useMeterStore();
     const siteStore = useSiteStore();
 
-    let response = getParticularMeterCost(props.account.id, 'fullbill').then((res) => {
+    let response = getParticularMeterCost(props.account.id, '', 'fullbill').then((res) => {
       readingStore.pushfullbillcost({
         data: res.data,
       });

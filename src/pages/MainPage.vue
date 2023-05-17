@@ -21,8 +21,17 @@
             <q-btn rounded color="primary" text-color="black" v-if="site == siteStore.selectedSite"
               @click="selectSite(site)" icon="check">Select</q-btn>
             <q-btn rounded color="primary" text-color="black" v-else @click="selectSite(site)">Select</q-btn>
-            <q-btn style="margin-top:10px" rounded color="negative" text-color="black"
-              @click="deletesite(site)">Delete</q-btn>
+            <q-btn flat size="lg" icon="more_horiz" text-color="primary">
+              <q-menu anchor="center middle" self="center middle">
+                <q-list style="min-width: 100px;white-space: nowrap;">
+                  <q-item clickable @click="deletesite(site)">
+                    <q-item-section>Delete Location</q-item-section>
+                  </q-item>
+                </q-list>
+              </q-menu>
+            </q-btn>
+            <!-- <q-btn style="margin-top:10px" rounded color="negative" text-color="black"
+              @click="deletesite(site)">Delete</q-btn> -->
           </q-item-section>
         </q-item>
       </q-expansion-item>
@@ -40,7 +49,7 @@
         </template>
 
         <template
-          v-for="account in                                                                                                  getAccounts(siteStore.selectedSite.id)                                                                                                 "
+          v-for="account in                                                                                                    getAccounts(siteStore.selectedSite.id)                                                                                                   "
           :key="account.id">
           <q-item>
             <q-item-section>
@@ -119,7 +128,7 @@
         <!-- {{ accountStore.allAccounts }} -->
 
         <template
-          v-for="                                                                                                 meter                                                                                                  in                                                                                                  getMeters(accountStore.selectedAccount?.id)                                                                                                 "
+          v-for="                                                                                                   meter                                                                                                    in                                                                                                    getMeters(accountStore.selectedAccount?.id)                                                                                                   "
           :key="meter.id">
           <q-item clickable v-ripple class="q-px-none">
             <q-item-section>

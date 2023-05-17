@@ -453,6 +453,7 @@ export default defineComponent({
           });
         }
         emit("save");
+        window.location.reload();
       };
 
       const valueInString = meterComopnentReadValue.value.getValueInString();

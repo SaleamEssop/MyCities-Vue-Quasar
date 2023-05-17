@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { getCurrentInstance } from "vue";
+import { getParticularMeterCost } from "boot/axios";
 
 export const useMeterStore = defineStore("meter", {
   state: () => ({
@@ -14,6 +15,16 @@ export const useMeterStore = defineStore("meter", {
         const METER_TYPES =
           getCurrentInstance().appContext.config.globalProperties.$METER_TYPES;
         _meter.type = METER_TYPES.find((meter) => meter.id == _meter.type.id);
+
+        let response = getParticularMeterCost(
+          _meter.account.id,
+          _meter.id,
+          ''
+        ).then((res) => {
+          // console.log(res[0]);
+          _meter.calculation = res;
+          //readingStore.replace(res);
+        });
         return _meter;
       });
     },

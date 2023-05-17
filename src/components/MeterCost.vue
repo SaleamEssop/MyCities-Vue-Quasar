@@ -94,6 +94,7 @@ export default defineComponent({
     meter: Object,
     isNew: Boolean,
     account: Object,
+    meterCostData: Object
   },
   setup(props) {
     const readingStore = useReadingStore();
@@ -112,33 +113,16 @@ export default defineComponent({
     const getCost = durbanReading.getCost;
 
     // push data in metercost
-
-
-    let response = getParticularMeterCost(
-      props.meter.account.id,
-      ''
-    ).then((res) => {
-      readingStore.metercost({
-        data: res.data,
-      });
-    });
-    const alert = function (msg) {
-      $q.notify({
-        type: 'negetive',
-        message: msg,
-        position: 'top-right',
-        timeout: 2000
-      })
-    }
-    let metercost = readingStore.getmetercost(props?.meter?.id);
-    console.log(metercost);
+    var list = [];
     let billingMeterCost = [];
-    if ((metercost && metercost[0])) {
-      billingMeterCost = metercost[0];
+    props?.meter?.calculation?.map(function (value, key) {
+      list.push(value);
+    });
+    if ((list && list[0])) {
+      billingMeterCost = list[0];
     } else {
-      billingMeterCost = metercost[0];
+      billingMeterCost = list[0];
     }
-
     const usesPerDay = ref(0);
 
     var readings = readingStore.getReadingsByMeterId(props?.meter?.id);
@@ -394,7 +378,6 @@ export default defineComponent({
       billingCycle,
       billingCycleMonth,
       currentBillPeriod,
-      metercost,
       billingMeterCost,
       alert
       // currentreadingPeriod,
