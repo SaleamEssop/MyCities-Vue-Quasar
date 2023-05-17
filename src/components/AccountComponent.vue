@@ -836,6 +836,10 @@ export default defineComponent({
             address[0]["email"] =
               spatialData["features"][0]["attributes"]["MREMAIL"];
             site.value = address[0];
+            if (site.value.address.includes('EThekwini') || site.value.address.includes('eThekwini')) {
+              site.value.ethekwini_water = 'eservices@durban.gov.za';
+              site.value.ethekwini_electricity = site.value.email;
+            }
           } else {
             alert("Choose address");
           }
