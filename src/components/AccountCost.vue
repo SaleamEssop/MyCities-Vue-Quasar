@@ -43,7 +43,7 @@
     </div>
     <q-card-section>
       <!-- Water Bill -->
-      <div style="display: none">
+      <!-- <div style="display: none">
         <q-card-section class="titleofcost">
           <div class="text-subtitle2">Water Meters</div>
         </q-card-section>
@@ -73,37 +73,37 @@
           </template>
         </div>
 
-        <!-- Electricity Bill -->
-        <q-card-section class="titleofcost">
-          <div class="text-subtitle2">Electricity Meters</div>
-        </q-card-section>
+        
+      <q-card-section class="titleofcost">
+        <div class="text-subtitle2">Electricity Meters1</div>
+      </q-card-section>
 
-        <div class="q-my-md">
-          <template v-for="(cost, index) in calculationsForMeters" :key="index">
-            <div v-show="cost.meter.type.id === 2 && cost.value !== 0" class="text-subtitle2 q-mb-sm">
-              Meter: {{ cost.meter.number }}
-            </div>
-            <div class="">
-              <div v-show="cost.value !== 0" class="row no-wrap">
-                <div v-show="cost.title === 'Electricity bill'" class="col">
-                  {{ cost.title }}
-                </div>
-                <div v-show="cost.title === 'Electricity bill'" class="col text-blue-7 q-mr-md">
-                  {{ (cost.value / 2.2425).toFixed(1) }} kWh
-                </div>
-
-                <div v-show="cost.title === 'Electricity bill'" class="col-auto">
-                  R {{ cost.value.toFixed(2) }}
-                </div>
+      <div class="q-my-md">
+        <template v-for="(cost, index) in calculationsForMeters" :key="index">
+          <div v-show="cost.meter.type.id === 2 && cost.value !== 0" class="text-subtitle2 q-mb-sm">
+            Meter: {{ cost.meter.number }}
+          </div>
+          <div class="">
+            <div v-show="cost.value !== 0" class="row no-wrap">
+              <div v-show="cost.title === 'Electricity bill'" class="col">
+                {{ cost.title }}
               </div>
-              <div v-show="cost.value !== 0">
-                <q-btn class="q-mt-sm" v-show="cost.title === 'Electricity bill'" color="blue-2" rounded unelevated
-                  text-color="black" size="sm" @click="submitFullBill(cost.meter)">Email Now</q-btn>
+              <div v-show="cost.title === 'Electricity bill'" class="col text-blue-7 q-mr-md">
+                {{ (cost.value / 2.2425).toFixed(1) }} kWh
+              </div>
+
+              <div v-show="cost.title === 'Electricity bill'" class="col-auto">
+                R {{ cost.value.toFixed(2) }}
               </div>
             </div>
-          </template>
-        </div>
+            <div v-show="cost.value !== 0">
+              <q-btn class="q-mt-sm" v-show="cost.title === 'Electricity bill'" color="blue-2" rounded unelevated
+                text-color="black" size="sm" @click="submitFullBill(cost.meter)">Email Now</q-btn>
+            </div>
+          </div>
+        </template>
       </div>
+      </div> -->
       <!-- new code for electric and water billing-->
       <q-card-section class="titleofcost">
         <div class="text-subtitle2">Water Meters</div>
@@ -146,7 +146,7 @@
               </div>
             </template>
             <q-btn class="q-mt-sm" color="blue-2" rounded unelevated text-color="black" size="sm"
-              @click="submitFullBill(cost)">Email Now</q-btn>
+              @click="submitFullBillNew(electricityCost)">Email Now</q-btn>
           </div>
         </template>
       </div>
@@ -559,7 +559,7 @@ export default defineComponent({
         });
     }
     const submitFullBillNew = (metercost) => {
-
+      console.log(metercost);
       const email = metercost.type == 1 ? props.account.water_email : props.account.electricity_email;
       const subject = `Account: ${props.account.id}`;
       let body = ``;
@@ -606,6 +606,7 @@ export default defineComponent({
     };
     const submitFullBill = (meter) => {
       console.log('dolly')
+      console.log(meter);
       const meters = props.meter;
       console.log(props);
       const email = meters.type.id == 1 ? props.account.water_email : props.account.electricity_email;
