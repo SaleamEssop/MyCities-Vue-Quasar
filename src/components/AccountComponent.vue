@@ -22,12 +22,11 @@
           label="Select Region" disable readonly option-value="id" option-label="name" />
       </div>
 
-      <q-select color="black" v-model="accountmodel" v-if="isNew" @update:model-value="onchangeAccountType($event)"
-        :options="accountOptions" label="Enter Account Type" option-value="id" option-label="type" />
+      <q-select color="black" v-model="accountmodel" v-if="isNew" :options="accountOptions" label="Enter Account Type"
+        option-value="id" option-label="type" />
       <div v-else>
-        <q-select color="black" @update:model-value="onchangeAccountType($event, selectedAccount)" emit-value
-          v-model="selectedAccount.account_type_id" :options="accountOptions" label="Enter Account Type" option-value="id"
-          map-options option-label="type" disable readonly />
+        <q-select color="black" emit-value v-model="selectedAccount.account_type_id" :options="accountOptions"
+          label="Enter Account Type" option-value="id" map-options option-label="type" disable readonly />
       </div>
 
       <div v-if="site?.ethekwini_water">
@@ -878,6 +877,13 @@ export default defineComponent({
         } catch (E) {
           console.log(E);
         }
+      } else {
+        if (newValue.address.includes('EThekwini') || site.value.address.includes('eThekwini')) {
+          site.value.ethekwini_water = 'eservices@durban.gov.za';
+          site.value.ethekwini_electricity = site.value.email;
+        }
+        //newValue.address,
+        console.log("else", site);
       }
     });
 
