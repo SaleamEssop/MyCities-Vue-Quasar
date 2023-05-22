@@ -123,7 +123,7 @@
               <q-btn
                 type="submit"
                 color="primary"
-                text-color="black"
+                text-color="white"
                 :label="title"
                 unelevated
               />
@@ -166,7 +166,7 @@
       <ForgotPassword />
     </q-dialog>
   </div>
-  
+
 
 </template>
 

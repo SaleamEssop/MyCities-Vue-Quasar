@@ -429,7 +429,7 @@
           color="primary"
           rounded
           v-close-popup
-          class="text-black fit-content"
+          class="text-white fit-content"
           label="Home"
           @click="activeMenuItem('Home')"
           icon="arrow_back"
@@ -439,7 +439,7 @@
           no-caps
           color="primary"
           rounded
-          class="text-black fit-content"
+          class="text-white fit-content"
           label="My Manager"
           @click="moveTo('send_reading')"
         />

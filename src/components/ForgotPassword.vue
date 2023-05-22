@@ -74,7 +74,7 @@
               @click="resetPassword()"
               v-close-popup="closed"
               unelevated
-              text-color="black"
+              text-color="white"
             />
           </div>
         </q-card-actions>

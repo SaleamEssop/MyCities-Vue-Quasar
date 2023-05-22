@@ -1,6 +1,6 @@
 <template>
   <q-card>
-    <q-card-section class="bg-primary">
+    <q-card-section class="bg-primary text-white" text-color="white">
       History Account - {{ account.title }}</q-card-section
     >
     <template v-for="meter in meters" :key="meter.id">

@@ -1,52 +1,129 @@
 <template>
   <q-card>
     <q-card-section class="bg-primary">
-      <div class="text-subtitle2">Necessary Details</div>
+      <div class="text-subtitle2 text-white">Necessary Details</div>
     </q-card-section>
     <q-card-section>
-
-      <q-select color="black" type="text" label="Enter a location address" use-input input-debounce="0"
-        :options="siteOptions" @filter="filterFn" behavior="menu" v-model="site" option-label="address" emit-value
-        map-options v-if="isNew" />
+      <q-select
+        color="black"
+        type="text"
+        label="Enter a location address"
+        use-input
+        input-debounce="0"
+        :options="siteOptions"
+        @filter="filterFn"
+        behavior="menu"
+        v-model="site"
+        option-label="address"
+        emit-value
+        map-options
+        v-if="isNew"
+      />
       <div v-else>
         {{ site?.address }}
       </div>
 
       <h6>Email {{ site?.email }}</h6>
 
-      <q-select color="black" v-model="regionmodel" v-if="isNew" @update:model-value="onchangeRegion($event)"
-        :options="regionOptions" label="Select Region" option-value="id" option-label="name" />
+      <q-select
+        color="black"
+        v-model="regionmodel"
+        v-if="isNew"
+        @update:model-value="onchangeRegion($event)"
+        :options="regionOptions"
+        label="Select Region"
+        option-value="id"
+        option-label="name"
+      />
       <div v-else>
-        <q-select color="black" v-model="selectedAccount.region_id"
-          @update:model-value="onchangeRegion($event, selectedAccount)" :options="regionOptions" emit-value map-options
-          label="Select Region" disable readonly option-value="id" option-label="name" />
+        <q-select
+          color="black"
+          v-model="selectedAccount.region_id"
+          @update:model-value="onchangeRegion($event, selectedAccount)"
+          :options="regionOptions"
+          emit-value
+          map-options
+          label="Select Region"
+          disable
+          readonly
+          option-value="id"
+          option-label="name"
+        />
       </div>
 
-      <q-select color="black" v-model="accountmodel" v-if="isNew" :options="accountOptions" label="Enter Account Type"
-        option-value="id" option-label="type" />
+      <q-select
+        color="black"
+        v-model="accountmodel"
+        v-if="isNew"
+        :options="accountOptions"
+        label="Enter Account Type"
+        option-value="id"
+        option-label="type"
+      />
       <div v-else>
-        <q-select color="black" emit-value v-model="selectedAccount.account_type_id" :options="accountOptions"
-          label="Enter Account Type" option-value="id" map-options option-label="type" disable readonly />
+        <q-select
+          color="black"
+          emit-value
+          v-model="selectedAccount.account_type_id"
+          :options="accountOptions"
+          label="Enter Account Type"
+          option-value="id"
+          map-options
+          option-label="type"
+          disable
+          readonly
+        />
       </div>
 
       <div v-if="site?.ethekwini_water">
-        <q-input color="black" type="text" v-model="site.ethekwini_water" label="Enter Water Email" />
+        <q-input
+          color="black"
+          type="text"
+          v-model="site.ethekwini_water"
+          label="Enter Water Email"
+        />
       </div>
       <div v-else>
-        <q-input color="black" type="text" v-model="water_email" v-if="isNew" label="Enter Water Email" />
+        <q-input
+          color="black"
+          type="text"
+          v-model="water_email"
+          v-if="isNew"
+          label="Enter Water Email"
+        />
         <div v-else>
-          <q-input color="black" type="text" v-model="selectedAccount.water_email" label="Enter Water Email" />
+          <q-input
+            color="black"
+            type="text"
+            v-model="selectedAccount.water_email"
+            label="Enter Water Email"
+          />
         </div>
       </div>
 
       <div v-if="site?.ethekwini_electricity">
-        <q-input color="black" type="text" v-model="site.ethekwini_electricity" label="Enter Electricity Email" />
+        <q-input
+          color="black"
+          type="text"
+          v-model="site.ethekwini_electricity"
+          label="Enter Electricity Email"
+        />
       </div>
       <div v-else>
-        <q-input color="black" type="text" v-model="electricity_email" v-if="isNew" label="Enter Electricity Email" />
+        <q-input
+          color="black"
+          type="text"
+          v-model="electricity_email"
+          v-if="isNew"
+          label="Enter Electricity Email"
+        />
         <div v-else>
-          <q-input color="black" type="text" v-model="selectedAccount.electricity_email"
-            label="Enter Electricity Email" />
+          <q-input
+            color="black"
+            type="text"
+            v-model="selectedAccount.electricity_email"
+            label="Enter Electricity Email"
+          />
         </div>
       </div>
 
@@ -54,20 +131,37 @@
       <div v-else>
         <q-input color="black" type="text" v-model="selectedAccount.electricity_email" label="Enter Electricity Email" />
       </div> -->
-      <q-input color="black" type="text" label="Enter name - As per bill" v-if="isNew"
-        v-model.trim="selectedAccount.title" />
+      <q-input
+        color="black"
+        type="text"
+        label="Enter name - As per bill"
+        v-if="isNew"
+        v-model.trim="selectedAccount.title"
+      />
       <div v-else>Name : -{{ selectedAccount.title }}</div>
 
-      <q-input color="black" type="text" label="Enter account number - As per bill" v-if="isNew"
-        v-model="selectedAccount.number" />
+      <q-input
+        color="black"
+        type="text"
+        label="Enter account number - As per bill"
+        v-if="isNew"
+        v-model="selectedAccount.number"
+      />
       <div v-else>Account :- {{ selectedAccount.number }}</div>
     </q-card-section>
 
     <q-card-section class="bg-primary">
-      <div class="text-subtitle2">Description under Account setup</div>
+      <div class="text-subtitle2 text-white">
+        Description under Account setup
+      </div>
     </q-card-section>
     <q-card-section>
-      <q-input color="black" type="text" label="Account description" v-model="selectedAccount.option" />
+      <q-input
+        color="black"
+        type="text"
+        label="Account description"
+        v-model="selectedAccount.option"
+      />
     </q-card-section>
     <!-- <q-card-section class="bg-primary">
       <div class="text-subtitle2">Fixed Cost - according to bill</div>
@@ -92,23 +186,32 @@
       />
     </q-card-actions> -->
     <q-card-section class="bg-primary">
-      <div class="text-subtitle2">Bill Day and Read Day</div>
-
-
+      <div class="text-subtitle2 text-white">Bill Day and Read Day</div>
     </q-card-section>
     <div class="q-card__section q-card__section--vert">
       <div class="text-h7">
-        <q-input type="text" :placeholder="'Bill Day'" @blur="evt => onChanged(evt.target.value, selectedAccount)"
-          v-model.trim="selectedAccount.bill_day" />
+        <q-input
+          type="text"
+          :placeholder="'Bill Day'"
+          @blur="(evt) => onChanged(evt.target.value, selectedAccount)"
+          v-model.trim="selectedAccount.bill_day"
+        />
         <div class="flex justify-between">
-          <q-input type="text" :placeholder="'Read Day'" v-model.trim="selectedAccount.read_day" />
+          <q-input
+            type="text"
+            :placeholder="'Read Day'"
+            v-model.trim="selectedAccount.read_day"
+          />
           <q-toggle v-model="selectedAccount.bill_read_day_active" />
         </div>
       </div>
     </div>
     <!-- Default cost from server -->
-    <q-card-section class="bg-primary" v-if="selectedAccount?.new_additional_cost">
-      <div class="text-subtitle2">Additional Cost</div>
+    <q-card-section
+      class="bg-primary"
+      v-if="selectedAccount?.new_additional_cost"
+    >
+      <div class="text-subtitle2 text-white">Additional Cost</div>
       <!-- <q-btn
         fab
         color="white"
@@ -122,7 +225,10 @@
     <!-- v-for="(defaultCost, index) in selectedAccount.defaultCosts" -->
     <!-- edit update -->
     <!-- v-for="(defaultCost, index) in isNew ? selectedAccount.defaultCosts  : selectedAccount.defaultFixedCost" -->
-    <template v-for="(additional_cost, index) in  selectedAccount?.new_additional_cost" :key="index">
+    <template
+      v-for="(additional_cost, index) in selectedAccount?.new_additional_cost"
+      :key="index"
+    >
       <q-separator />
       <q-card-section>
         <div class="flex justify-between items-center">
@@ -134,17 +240,20 @@
           <q-toggle v-model="additional_cost.isApplicable" />
           <!-- :model-value="defaultCost.isApplicable" -->
         </div>
-        <q-input type="number" :placeholder="'R0.00'" v-model.number="additional_cost.cost" />
+        <q-input
+          type="number"
+          :placeholder="'R0.00'"
+          v-model.number="additional_cost.cost"
+        />
 
         <!-- <q-input v-else :placeholder="defaultCost.fixed_cost.title === 'Enter Your Billing Date'
             ? 'Enter Only Dates'
             : 'R0.00'
           " v-model.number="defaultCost.value" type="number" :disable="!defaultCost.isApplicable" /> -->
-
       </q-card-section>
     </template>
-    <!-- <template v-for="(  defaultCost, index  ) in 
-  
+    <!-- <template v-for="(  defaultCost, index  ) in
+
   isNew
       ? selectedAccount.defaultCosts
       : selectedAccount.defaultFixedCost
@@ -156,32 +265,46 @@
         <div class="flex justify-between items-center">
           <div v-if="defaultCost" class="text-h7">
             {{ isNew ? defaultCost?.title : defaultCost?.fixed_cost?.title }}
-            
+
           </div>
           <q-toggle v-model="defaultCost.isApplicable" />
-          
+
         </div>
         <q-input v-if="isNew" :placeholder="defaultCost.title === 'Enter Your Billing Date'
             ? 'Enter Only Dates'
             : 'R0.00'
           " v-model.number="defaultCost.value" type="number" :disable="!defaultCost.isApplicable" />
-        
+
         <q-input v-else :placeholder="defaultCost.fixed_cost.title === 'Enter Your Billing Date'
             ? 'Enter Only Dates'
             : 'R0.00'
           " v-model.number="defaultCost.value" type="number" :disable="!defaultCost.isApplicable" />
-       
+
       </q-card-section>
     </template> -->
 
     <q-separator />
     <q-space />
     <q-card-actions align="center">
-      <q-btn color="red" v-if="!autoUpdate" text-color="white" class="q-my-none q-mx-none" label="Cancel" glossy
-        @click="$emit('close')" />
+      <q-btn
+        color="red"
+        v-if="!autoUpdate"
+        text-color="white"
+        class="q-my-none q-mx-none"
+        label="Cancel"
+        glossy
+        @click="$emit('close')"
+      />
 
-      <q-btn color="primary" text-color="black" v-if="!autoUpdate" class="q-my-none q-mx-noe" label="Save" glossy
-        @click="onSaveSelectAccount" />
+      <q-btn
+        color="primary"
+        text-color="white"
+        v-if="!autoUpdate"
+        class="q-my-none q-mx-noe"
+        label="Save"
+        glossy
+        @click="onSaveSelectAccount"
+      />
     </q-card-actions>
   </q-card>
 </template>
@@ -192,7 +315,13 @@ import { useAccountStore } from "/src/stores/account";
 import { useQuasar } from "quasar";
 import { useDefaultCostStore } from "src/stores/defaultCost";
 import { getProxyData } from "src/utils";
-import { getAllRegion, getAllAccount, regionsgetEmails, getAdditionalCost, getBillday } from "boot/axios";
+import {
+  getAllRegion,
+  getAllAccount,
+  regionsgetEmails,
+  getAdditionalCost,
+  getBillday,
+} from "boot/axios";
 
 import {
   locationApi,
@@ -213,7 +342,7 @@ const nullAccount = {
   option: null,
   site: { id: null, email: null },
   fixedCosts: [],
-  defaultCosts: []
+  defaultCosts: [],
   // fixedCosts: [
   //   {
   //     id: Date.now(),
@@ -234,23 +363,24 @@ const nullAccount = {
   // ],
 };
 const defaultCostStore = useDefaultCostStore();
-console.log('default_cost', defaultCostStore);
+console.log("default_cost", defaultCostStore);
 // const getDefaultCost = computed(() => defaultCostStore.getDefaultCost);
 
 export default defineComponent({
   name: "AccountComponent",
   props: {
     account: Object,
-    autoUpdate: { type: Boolean, default: false }
+    autoUpdate: { type: Boolean, default: false },
   },
 
   methods: {
     onChanged(val, selectedAccount) {
-
       if (val >= 1 && val <= 31) {
         this.bill_read_date = val;
       } else {
-        this.customalert('This value must be from 1 to 31 represeting the day on which you are billed.');
+        this.customalert(
+          "This value must be from 1 to 31 represeting the day on which you are billed."
+        );
         val = 1;
         this.bill_read_date = val;
         selectedAccount.bill_day = val;
@@ -281,8 +411,16 @@ export default defineComponent({
       }
 
       if (selectedAccount?.new_additional_cost) {
-        if (selectedAccount.region_id && selectedAccount.account_type_id && selectedAccount.id) {
-          getAdditionalCost(selectedAccount.id, selectedAccount.region_id, selectedAccount.account_type_id).then((res) => {
+        if (
+          selectedAccount.region_id &&
+          selectedAccount.account_type_id &&
+          selectedAccount.id
+        ) {
+          getAdditionalCost(
+            selectedAccount.id,
+            selectedAccount.region_id,
+            selectedAccount.account_type_id
+          ).then((res) => {
             selectedAccount.new_additional_cost = res;
             //selectedAccount.electricity_email = res.water_email;
           });
@@ -290,11 +428,9 @@ export default defineComponent({
       }
       // get additional cost get based on region
 
-      console.log('additionalcost', selectedAccount.new_additional_cost);
-
+      console.log("additionalcost", selectedAccount.new_additional_cost);
     },
     onchangeAccountType(val, selectedAccount) {
-
       if (selectedAccount && selectedAccount.region_id) {
         // for edit account
         regionsgetEmails(val.id).then((res) => {
@@ -307,18 +443,16 @@ export default defineComponent({
           this.electricity_email = res.electricity_email;
         });
       }
-
-    }
+    },
   },
   emits: ["update:account"],
   setup(props, { emit }) {
-
-    const accountOptions = ref([])
-    const regionsOptions = ref([])
-    const regionmodel = ref([])
-    const accountmodel = ref([])
-    const water_email = ref()
-    const electricity_email = ref()
+    const accountOptions = ref([]);
+    const regionsOptions = ref([]);
+    const regionmodel = ref([]);
+    const accountmodel = ref([]);
+    const water_email = ref();
+    const electricity_email = ref();
 
     const initialState = {
       site: null,
@@ -327,14 +461,14 @@ export default defineComponent({
 
     // get Account Type
     let response = getAllAccount().then((res) => {
-      res.data.forEach(item => {
+      res.data.forEach((item) => {
         accountOptions.value = res.data;
       });
     });
 
     // get Regions Type
     let region = getAllRegion().then((res) => {
-      res.data.forEach(item => {
+      res.data.forEach((item) => {
         regionsOptions.value = res.data;
       });
     });
@@ -344,8 +478,8 @@ export default defineComponent({
         dark: false,
         message: message,
         ok: `Ok`,
-        color: 'positive',
-      })
+        color: "positive",
+      });
     }
     initialState["selectedAccount"]["defaultCosts"] =
       defaultCostStore.getDefaultCost.map((_cost) => {
@@ -363,8 +497,16 @@ export default defineComponent({
     const $q = useQuasar();
     const selectedAccount = ref(initialState.selectedAccount);
 
-    if (selectedAccount.value.region_id && selectedAccount.value.account_type_id && selectedAccount.value.id) {
-      getAdditionalCost(selectedAccount.value.id, selectedAccount.value.region_id, selectedAccount.value.account_type_id).then((res) => {
+    if (
+      selectedAccount.value.region_id &&
+      selectedAccount.value.account_type_id &&
+      selectedAccount.value.id
+    ) {
+      getAdditionalCost(
+        selectedAccount.value.id,
+        selectedAccount.value.region_id,
+        selectedAccount.value.account_type_id
+      ).then((res) => {
         //console.log('response_ms', res);
         selectedAccount.value.new_additional_cost = res;
         //selectedAccount.electricity_email = res.water_email;
@@ -373,7 +515,7 @@ export default defineComponent({
     if (selectedAccount.value.id) {
       console.log(selectedAccount);
       getBillday(selectedAccount.value.id).then((res) => {
-        console.log('response_ms', res);
+        console.log("response_ms", res);
         selectedAccount.value.bill_day = res.bill_day;
         selectedAccount.value.read_day = res.read_day;
         selectedAccount.value.bill_read_day_active = res.bill_read_day_active;
@@ -453,10 +595,11 @@ export default defineComponent({
       if (!isNew.value) {
         console.log(site?.value?.ethekwini_electricity);
         if (site?.value?.ethekwini_electricity) {
-          selectedAccount.value.electricity_email = site?.value?.ethekwini_electricity
+          selectedAccount.value.electricity_email =
+            site?.value?.ethekwini_electricity;
         }
         if (site?.value?.ethekwini_water) {
-          selectedAccount.value.water_email = site?.value?.ethekwini_water
+          selectedAccount.value.water_email = site?.value?.ethekwini_water;
         }
 
         if (selectedAccount?.value?.account_type_id?.id) {
@@ -475,68 +618,65 @@ export default defineComponent({
         // console.log(region_id);
         if (selectedAccount.value.region_id == null) {
           $q.notify({
-            message:
-              "Please select regions",
+            message: "Please select regions",
           });
           return;
         }
         if (selectedAccount.value.account_type_id == null) {
           $q.notify({
-            message:
-              "Please select account type",
+            message: "Please select account type",
           });
           return;
         }
-        if (selectedAccount.value.water_email && selectedAccount.value.water_email == null) {
+        if (
+          selectedAccount.value.water_email &&
+          selectedAccount.value.water_email == null
+        ) {
           $q.notify({
-            message:
-              "Please enter water email",
+            message: "Please enter water email",
           });
           return;
         }
-        if (selectedAccount.value.electricity_email && selectedAccount.value.electricity_email == null) {
+        if (
+          selectedAccount.value.electricity_email &&
+          selectedAccount.value.electricity_email == null
+        ) {
           $q.notify({
-            message:
-              "Please enter electricity email",
+            message: "Please enter electricity email",
           });
           return;
         }
-
       } else {
         console.log("else");
         if (site?.value?.ethekwini_electricity) {
-          electricity_email.value = site?.value?.ethekwini_electricity
+          electricity_email.value = site?.value?.ethekwini_electricity;
         }
         if (site?.value?.ethekwini_water) {
-          water_email.value = site?.value?.ethekwini_water
+          water_email.value = site?.value?.ethekwini_water;
         }
         console.log("new", water_email.value);
         console.log("new", electricity_email.value);
         if (regionmodel.value.id == null) {
           $q.notify({
-            message:
-              "Please select regions",
+            message: "Please select regions",
           });
           return;
         }
         if (accountmodel.value.id == null) {
           $q.notify({
-            message:
-              "Please select account type",
+            message: "Please select account type",
           });
           return;
         }
         if (water_email.value == null) {
           $q.notify({
-            message:
-              "Please enter water email",
+            message: "Please enter water email",
           });
           return;
         }
         if (electricity_email.value == null) {
           $q.notify({
-            message:
-              "Please enter electricity email",
+            message: "Please enter electricity email",
           });
           return;
         }
@@ -607,7 +747,7 @@ export default defineComponent({
                 region_id: regionmodel.value.id,
                 account_type_id: accountmodel.value.id,
                 water_email: water_email.value,
-                electricity_email: electricity_email.value
+                electricity_email: electricity_email.value,
               });
               accountStore.addAccount({
                 id: data.id,
@@ -727,8 +867,7 @@ export default defineComponent({
           region_id: region_id,
           account_type_id: account_type_id,
           water_email: selectedAccount.value.water_email,
-          electricity_email: selectedAccount.value.electricity_email
-
+          electricity_email: selectedAccount.value.electricity_email,
         }).then(({ status, code, msg, data }) => {
           if (status) {
             accountStore.update({
@@ -751,7 +890,7 @@ export default defineComponent({
               water_email: selectedAccount.value.water_email,
               electricity_email: selectedAccount.value.electricity_email,
               bill_day: accountValue.bill_day,
-              read_day: selectedAccount.value.read_day
+              read_day: selectedAccount.value.read_day,
             });
           }
         });
@@ -781,7 +920,6 @@ export default defineComponent({
 
     let searchTimeCallBack;
     const filterFn = (val, update) => {
-
       if (val === "") {
         update(() => {
           siteOptions.value = siteStore.allSites;
@@ -827,7 +965,7 @@ export default defineComponent({
           };
         });
         return suggestions;
-      } catch (_) { }
+      } catch (_) {}
     };
 
     const finLatLngByMagicKey = async (singleLine, magicKey) => {
@@ -843,11 +981,10 @@ export default defineComponent({
           };
         });
         return address;
-      } catch (_) { }
+      } catch (_) {}
     };
 
     const watchSite = watch(site, async (newValue, oldValue) => {
-
       if (newValue?.magicKey) {
         try {
           let address = await finLatLngByMagicKey(
@@ -866,8 +1003,11 @@ export default defineComponent({
             address[0]["email"] =
               spatialData["features"][0]["attributes"]["MREMAIL"];
             site.value = address[0];
-            if (site.value.address.includes('EThekwini') || site.value.address.includes('eThekwini')) {
-              site.value.ethekwini_water = 'eservices@durban.gov.za';
+            if (
+              site.value.address.includes("EThekwini") ||
+              site.value.address.includes("eThekwini")
+            ) {
+              site.value.ethekwini_water = "eservices@durban.gov.za";
               site.value.ethekwini_electricity = site.value.email;
             }
             console.log("site", site);
@@ -878,8 +1018,11 @@ export default defineComponent({
           console.log(E);
         }
       } else {
-        if (newValue.address.includes('EThekwini') || site.value.address.includes('eThekwini')) {
-          site.value.ethekwini_water = 'eservices@durban.gov.za';
+        if (
+          newValue.address.includes("EThekwini") ||
+          site.value.address.includes("eThekwini")
+        ) {
+          site.value.ethekwini_water = "eservices@durban.gov.za";
           site.value.ethekwini_electricity = site.value.email;
         }
         //newValue.address,
@@ -906,7 +1049,6 @@ export default defineComponent({
         });
     }
 
-
     return {
       selectedAccount,
       // addFixedCostField,
@@ -927,7 +1069,7 @@ export default defineComponent({
       water_email,
       electricity_email,
       getAdditionalCost,
-      customalert
+      customalert,
     };
   },
 });

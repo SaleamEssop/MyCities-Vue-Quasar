@@ -1,7 +1,7 @@
 <template>
   <q-card class="modelHeight">
     <q-card-section class="bg-primary">
-      <div class="text-subtitle2">Necessary Details</div>
+      <div class="text-subtitle2 text-white">Necessary Details</div>
     </q-card-section>
     <q-list>
       <q-item
@@ -171,7 +171,7 @@ If not available, simply enter the current date and meter reading and update it 
                         (meter.type.id == 2 ? 6 : 8) ||
                       event.keyCode == 46
                     ) {
-                      event.preventDefault();   
+                      event.preventDefault();
                     } else {
                     }
                   }
@@ -215,7 +215,7 @@ If not available, simply enter the current date and meter reading and update it 
 
       <q-btn
         color="primary"
-        text-color="black"
+        text-color="white"
         class="q-my-none q-mx-none"
         label="Save"
         glossy

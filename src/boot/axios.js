@@ -105,7 +105,9 @@ const regionsgetEmails = async (req) => {
   return await api.get(`/v1/regions/getEmails/${req}`);
 };
 const getAdditionalCost = async (accountId, regionId, accountTypeId) => {
-  return await api.get(`/v1/regions/getAdditionalCost?account_id=${accountId}&region_id=${regionId}&account_type_id=${accountTypeId}`);
+  return await api.get(
+    `/v1/regions/getAdditionalCost?account_id=${accountId}&region_id=${regionId}&account_type_id=${accountTypeId}`
+  );
 };
 
 const getBillday = async (accountId) => {
@@ -127,7 +129,9 @@ const getAllData = async () => {
   return await api.get(`/v1/all-data?user_id=${userStore.getUser?.id}`);
 };
 const getParticularMeterCost = async (accountId, meter_id, type) => {
-  return await api.get(`/v1/regions/getEastimateCost?account_id=${accountId}&meter_id=${meter_id}&type=${type}`);
+  return await api.get(
+    `/v1/regions/getEastimateCost?account_id=${accountId}&meter_id=${meter_id}&type=${type}`
+  );
 };
 
 const fetchMetersByAccountId = async (accountId) => {
@@ -289,5 +293,5 @@ export {
   getParticularMeterCost,
   getAdditionalCost,
   getBillday,
-  deleteMainSiteAccount
+  deleteMainSiteAccount,
 };

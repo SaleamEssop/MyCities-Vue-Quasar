@@ -7,10 +7,10 @@
           dense
           round
           icon="arrow_back"
-          text-color="black"
+          text-color="white"
           @click="$router.back()"
         />
-        <q-toolbar-title class="text-dark">{{
+        <q-toolbar-title class="text-white">{{
           route.meta.title
         }}</q-toolbar-title>
       </q-toolbar>

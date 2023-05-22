@@ -28,7 +28,7 @@
 }
 
 .round-cheap {
-  border: 2px solid #fdd600;
+  border: 2px solid $primary;
   border-radius: 20px;
   padding: 5px 10px;
   text-align: center;
@@ -76,3 +76,6 @@
   max-width: 380px !important;
 }
 
+.q-item__section--side > .q-icon {
+  color: #fff;
+}
