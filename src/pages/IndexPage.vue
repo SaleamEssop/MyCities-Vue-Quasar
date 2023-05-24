@@ -1,11 +1,7 @@
 <template>
   <q-page>
-    <q-btn
-      icon="settings_power"
-      style="position: absolute; right: 10px; top: 10px"
-      round
-      @click="sureLogout = true"
-    ></q-btn>
+    <q-btn icon="settings_power" style="position: absolute; right: 10px; top: 10px" round
+      @click="sureLogout = true"></q-btn>
 
     <!-- <q-btn @click="isVoiceOverEnabled()"> isVoiceOverEnabled</q-btn>
     <q-btn @click="speak()">speak</q-btn> -->
@@ -14,82 +10,51 @@
       <div class="header">
         <img class="q-px-lg titleIcon" src="~assets/MyCity.png" />
         <div class="regionTitle">Ethekwini Region</div>
+        <div class="text-center">
+          <q-btn @click="alarm = true" flat icon="notifications" class="col-xs-6 col-sm-6 q-my-xs adsBtn">
+            <q-badge floating color="red" rounded>
+              {{ billingDate ? getAlarm.length + 1 : getAlarm.length }}
+            </q-badge>
+          </q-btn>
+        </div>
         <!-- <q-separator color="grey" />
         <q-separator color="grey q-mt-xs" /> -->
         <q-separator color="grey q-mt-sm" size="2px" />
 
         <div class="ads_main">
           <div class="text-center">
-            <q-btn-dropdown
-              flat
-              class="col-xs-6 col-sm-6 q-my-xs adsBtn"
-              icon="menu"
-            >
+            <q-btn-dropdown flat class="col-xs-6 col-sm-6 q-my-xs adsBtn" icon="menu">
               <q-list v-for="ad in getAds" :key="ad.id">
-                <q-item
-                  v-show="ad.name !== 'LightsAndWater'"
-                  clickable
-                  v-close-popup
-                  @click="onItemClick"
-                >
+                <q-item v-show="ad.name !== 'LightsAndWater'" clickable v-close-popup @click="onItemClick">
                   <q-item-section>
-                    <q-item-label
-                      v-model="name"
-                      @click="activeMenuItem(ad.name)"
-                    >
-                      {{ ad.name }}</q-item-label
-                    >
+                    <q-item-label v-model="name" @click="activeMenuItem(ad.name)">
+                      {{ ad.name }}</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
             </q-btn-dropdown>
           </div>
-          <div class="text-center">
-            <q-btn
-              @click="alarm = true"
-              flat
-              icon="notifications"
-              class="col-xs-6 col-sm-6 q-my-xs adsBtn"
-            >
-              <q-badge floating color="red" rounded>
-                <!-- {{ getAlarm.length }} -->
-                {{ billingDate ? getAlarm.length + 1 : getAlarm.length }}
-              </q-badge>
-            </q-btn>
-          </div>
+
 
           <div class="text-center">
-            <q-btn
-              class="col-xs-6 col-sm-6 q-my-xs adsBtn"
-              icon="share"
-              flat
-              @click="shareViaWebShare()"
-            />
+            <q-btn class="col-xs-6 col-sm-6 q-my-sm" no-caps flat label="Light & Water" @click="activeMenuItem('LightsAndWater'), (lightAndWaterDialog = true)
+              " />
           </div>
           <div class="text-center">
-            <q-btn
+            <!-- <q-btn
               class="col-xs-6 col-sm-6 q-my-xs adsBtn"
               icon="facebook"
               flat
               @click="openFacebook()"
-            />
+            /> -->
+            <q-btn class="col-xs-6 col-sm-6 q-my-sm" no-caps flat label="FoodBasket" @click="openFoodbasket()" />
           </div>
-          <div class="text-center">
-            <q-btn
-              class="col-xs-6 col-sm-6 q-my-xs adsBtn"
-              icon="smart_display"
-              flat
-              @click="openYoutube()"
-            />
-          </div>
-          <div class="text-center">
-            <q-btn
-              class="col-xs-6 col-sm-6 q-my-xs adsBtn"
-              icon="help"
-              flat
-              @click="activeMenuItem('Help')"
-            />
-          </div>
+          <!-- <div class="text-center">
+            <q-btn class="col-xs-6 col-sm-6 q-my-xs adsBtn" icon="smart_display" flat @click="openYoutube()" />
+          </div> -->
+          <!-- <div class="text-center">
+            <q-btn class="col-xs-6 col-sm-6 q-my-xs adsBtn" icon="help" flat @click="activeMenuItem('Help')" />
+          </div> -->
         </div>
 
         <q-separator color="grey" size="8px" />
@@ -97,8 +62,8 @@
       </div>
       <!-- second menu section -->
       <div>
-        <div class="row menuContain">
-          <!-- <div class="text-center q-my-sm q-px-sm menuItem">
+        <!-- <div class="row menuContain">
+           <div class="text-center q-my-sm q-px-sm menuItem">
             <img
               class="col-xs-6 col-sm-6 q-my-sm enterMenu cursor-pointer"
               src="~assets/lightsandwater.png"
@@ -107,82 +72,38 @@
                 activeMenuItem('LightsAndWater'), (lightAndWaterDialog = true)
               "
             />
-          </div> -->
+          </div> 
           <div class="text-center q-pt-xs menuItem">
-            <q-btn
-              class="col-xs-6 col-sm-6 q-my-sm"
-              no-caps
-              flat
-              label="LightsandWater"
-              @click="
-                activeMenuItem('LightsAndWater'), (lightAndWaterDialog = true)
-              "
-            />
+            <q-btn class="col-xs-6 col-sm-6 q-my-sm" no-caps flat label="LightsandWater1" @click="activeMenuItem('LightsAndWater'), (lightAndWaterDialog = true)
+              " />
           </div>
           <q-separator vertical inset />
-          <div
-            v-show="userStore?.user?.id === 44"
-            class="text-center q-pt-xs menuItem"
-          >
-            <q-btn
-              class="col-xs-6 col-sm-6 q-my-sm"
-              no-caps
-              flat
-              label="DataSet"
-              @click="moveTo('data-set')"
-            />
+          <div v-show="userStore?.user?.id === 44" class="text-center q-pt-xs menuItem">
+            <q-btn class="col-xs-6 col-sm-6 q-my-sm" no-caps flat label="DataSet" @click="moveTo('data-set')" />
           </div>
           <q-separator v-show="userStore?.user?.id === 44" vertical inset />
           <div class="text-center q-pt-xs menuItem">
-            <q-btn
-              class="col-xs-6 col-sm-6 q-my-sm"
-              no-caps
-              flat
-              label="News"
-              @click="activeMenuItem('News')"
-            />
+            <q-btn class="col-xs-6 col-sm-6 q-my-sm" no-caps flat label="News" @click="activeMenuItem('News')" />
           </div>
           <q-separator vertical inset />
 
           <div class="text-center q-pt-xs menuItem">
-            <q-btn-dropdown
-              no-caps
-              label="Faults"
-              class="col-xs-6 col-sm-6 q-my-sm"
-              flat
-            >
+            <q-btn-dropdown no-caps label="Faults" class="col-xs-6 col-sm-6 q-my-sm" flat>
               <div style="width: 180px">
-                <q-expansion-item
-                  label="Electricity Faults"
-                  :content-inset-level="0.3"
-                  group="accordion"
-                >
+                <q-expansion-item label="Electricity Faults" :content-inset-level="0.3" group="accordion">
                   <q-list>
-                    <q-item
-                      clickable
-                      v-close-popup
-                      @click="
-                        openMailOnFaults('electricity.faults@durban.gov.za')
-                      "
-                    >
+                    <q-item clickable v-close-popup @click="openMailOnFaults('electricity.faults@durban.gov.za')
+                      ">
                       <q-item-section>
                         <q-item-label>Email</q-item-label>
                       </q-item-section>
                     </q-item>
-                    <q-item
-                      clickable
-                      v-close-popup
-                      @click="openChatOnWhatsApp('767912449')"
-                    >
+                    <q-item clickable v-close-popup @click="openChatOnWhatsApp('767912449')">
                       <q-item-section>
                         <q-item-label>WhatsApp</q-item-label>
                       </q-item-section>
                     </q-item>
-                    <q-item
-                      clickable
-                      v-close-popup
-                      @click="openDialCall('080 311 1111')"
-                    >
+                    <q-item clickable v-close-popup @click="openDialCall('080 311 1111')">
                       <q-item-section>
                         <q-item-label>Call</q-item-label>
                       </q-item-section>
@@ -190,35 +111,19 @@
                   </q-list>
                 </q-expansion-item>
 
-                <q-expansion-item
-                  group="accordion"
-                  label="Water Faults"
-                  :content-inset-level="0.3"
-                >
+                <q-expansion-item group="accordion" label="Water Faults" :content-inset-level="0.3">
                   <q-list>
-                    <q-item
-                      clickable
-                      v-close-popup
-                      @click="openMailOnFaults('eservices@durban.gov.za')"
-                    >
+                    <q-item clickable v-close-popup @click="openMailOnFaults('eservices@durban.gov.za')">
                       <q-item-section>
                         <q-item-label>Email</q-item-label>
                       </q-item-section>
                     </q-item>
-                    <q-item
-                      clickable
-                      v-close-popup
-                      @click="openChatOnWhatsApp('731483477')"
-                    >
+                    <q-item clickable v-close-popup @click="openChatOnWhatsApp('731483477')">
                       <q-item-section>
                         <q-item-label>WhatsApp</q-item-label>
                       </q-item-section>
                     </q-item>
-                    <q-item
-                      clickable
-                      v-close-popup
-                      @click="openDialCall('080 1313013')"
-                    >
+                    <q-item clickable v-close-popup @click="openDialCall('080 1313013')">
                       <q-item-section>
                         <q-item-label>Call</q-item-label>
                       </q-item-section>
@@ -231,15 +136,9 @@
 
           <q-separator vertical inset />
           <div class="text-center q-pt-xs menuItem">
-            <q-btn
-              class="col-xs-6 col-sm-6 q-my-sm"
-              no-caps
-              flat
-              label="WhatsApp"
-              @click="whatsapp = true"
-            />
+            <q-btn class="col-xs-6 col-sm-6 q-my-sm" no-caps flat label="WhatsApp" @click="whatsapp = true" />
           </div>
-        </div>
+        </div> -->
 
         <!-- <q-separator vertical inset /> -->
       </div>
@@ -283,12 +182,7 @@
           <div v-for="ad in getAdsWithCategory" :key="ad.id">
             <div class="q-px-md" v-html="ad.description"></div>
 
-            <img
-              :src="ad.image"
-              alt="add-image"
-              class="addImage"
-              @click="openAds(ad.url)"
-            />
+            <img :src="ad.image" alt="add-image" class="addImage" @click="openAds(ad.url)" />
 
             <!-- <q-img
               :src="ad.image"
@@ -298,10 +192,7 @@
               @click="openAds(ad.url)"
             /> -->
             <!-- add_description_scroll -->
-            <div
-              v-show="ad.price > 0 || ad.name !== 'null'"
-              class="add_description_scroll"
-            >
+            <div v-show="ad.price > 0 || ad.name !== 'null'" class="add_description_scroll">
               <div v-show="ad.price > 0" class="ads_price text-h6">
                 R {{ ad.price }}
               </div>
@@ -333,12 +224,7 @@
                   {{ alarm.message }}
                 </div>
                 <div class="col-auto markAsread q-pl-lg">
-                  <q-btn
-                    flat
-                    class="adsBtn"
-                    icon="close"
-                    @click="markAsRead(alarm.id)"
-                  ></q-btn>
+                  <q-btn flat class="adsBtn" icon="close" @click="markAsRead(alarm.id)"></q-btn>
                 </div>
               </div>
               <q-separator color="grey" />
@@ -363,51 +249,26 @@
             Enter the number you want to Whatsapp
           </div>
           <div class="q-mt-lg">
-            <q-input
-              inputmode="numeric"
-              color="black"
-              class="q-mx-lg"
-              mask="### ### ####"
-              fill-mask
-              v-model="phoneNumber"
-              :input-style="{ fontSize: '24px', textAlign: 'center' }"
-            />
+            <q-input inputmode="numeric" color="black" class="q-mx-lg" mask="### ### ####" fill-mask v-model="phoneNumber"
+              :input-style="{ fontSize: '24px', textAlign: 'center' }" />
           </div>
         </div>
       </q-card-section>
 
       <q-card-actions align="right">
         <q-btn flat label="Close" no-caps v-close-popup />
-        <q-btn
-          flat
-          label="Open WhatsApp"
-          @click="openChatOnWhatsApp(phoneNumber)"
-          no-caps
-          v-close-popup
-        />
+        <q-btn flat label="Open WhatsApp" @click="openChatOnWhatsApp(phoneNumber)" no-caps v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>
   <!-- lightsWater Ads Category -->
-  <q-dialog
-    v-model="lightAndWaterDialog"
-    persistent
-    :maximized="maximizedToggle"
-  >
+  <q-dialog v-model="lightAndWaterDialog" persistent :maximized="maximizedToggle">
     <q-card>
       <div class="ads dialogAds">
         <div v-for="ad in getAdsWithCategory" :key="ad.id">
-          <img
-            :src="ad.image"
-            alt="add-image"
-            class="addImage"
-            @click="openAds(ad.url)"
-          />
+          <img :src="ad.image" alt="add-image" class="addImage" @click="openAds(ad.url)" />
           <!-- add_description_scroll -->
-          <div
-            v-show="ad.price > 0 || ad.name !== 'null'"
-            class="add_description_scroll"
-          >
+          <div v-show="ad.price > 0 || ad.name !== 'null'" class="add_description_scroll">
             <div v-show="ad.price > 0" class="ads_price text-h6">
               R {{ ad.price }}
             </div>
@@ -415,34 +276,14 @@
               {{ ad.name }}
             </div>
           </div>
-          <q-separator
-            v-show="getAdsWithCategory.length"
-            color="grey-4"
-            size="10px"
-            class="bottomLine"
-          />
+          <q-separator v-show="getAdsWithCategory.length" color="grey-4" size="10px" class="bottomLine" />
         </div>
       </div>
       <div class="btnLightAndWater">
-        <q-btn
-          no-caps
-          color="primary"
-          rounded
-          v-close-popup
-          class="text-white fit-content"
-          label="Home"
-          @click="activeMenuItem('Home')"
-          icon="arrow_back"
-        />
-        <q-btn
-          icon-right="arrow_forward"
-          no-caps
-          color="primary"
-          rounded
-          class="text-white fit-content"
-          label="My Manager"
-          @click="moveTo('send_reading')"
-        />
+        <q-btn no-caps color="primary" rounded v-close-popup class="text-white fit-content" label="Home"
+          @click="activeMenuItem('Home')" icon="arrow_back" />
+        <q-btn icon-right="arrow_forward" no-caps color="primary" rounded class="text-white fit-content"
+          label="My Manager" @click="moveTo('send_reading')" />
       </div>
     </q-card>
   </q-dialog>
@@ -571,8 +412,8 @@ const openFacebook = () => {
   window.open("https://www.facebook.com/groups/982841062697878");
 };
 
-const openYoutube = () => {
-  window.open("https://www.youtube.com/@mycity3924");
+const openFoodbasket = () => {
+  window.open("http://167.172.65.248");
 };
 
 const openMailOnFaults = (mail) => {
@@ -703,9 +544,11 @@ function moveTo(name) {
   text-align: center;
   margin-bottom: 10px;
 }
-.q-dialog__inner--maximized > div {
+
+.q-dialog__inner--maximized>div {
   max-width: 480px !important;
 }
+
 .container {
   /* 97 if footer */
   max-height: 100vh;
@@ -718,6 +561,7 @@ function moveTo(name) {
 .header {
   padding-top: 12px !important;
 }
+
 .titleIcon {
   width: 100%;
   max-height: 70px;
@@ -738,6 +582,7 @@ function moveTo(name) {
   height: 100%;
   min-height: 100vw;
 }
+
 .shadow-1 {
   box-shadow: none !important;
 }
@@ -759,6 +604,7 @@ function moveTo(name) {
 .q-item-type:hover {
   background: #ededed;
 }
+
 .adsBtn {
   color: #65666b;
   font-size: 18px !important;
@@ -775,9 +621,11 @@ function moveTo(name) {
   height: 25px;
   /* padding-top: 1px; */
 }
+
 .manuButnPadding {
   padding-top: 10px !important;
 }
+
 .q-separator--vertical-inset {
   background-color: #4d7cc4b3 !important;
   width: 2px;
@@ -803,6 +651,7 @@ function moveTo(name) {
   overflow-x: scroll !important;
   margin-top: -6px;
 }
+
 .regionTitle {
   text-align: center;
   font-size: 18px;
@@ -828,6 +677,7 @@ function moveTo(name) {
 .bottomLine {
   margin-top: -6px;
 }
+
 .btnLightAndWater {
   display: flex;
   justify-content: space-evenly;
@@ -844,11 +694,13 @@ function moveTo(name) {
     min-height: fit-content;
     margin: auto;
   }
+
   .addImage {
     /* height: 480px !important; */
     width: 480px !important;
   }
 }
+
 .dialogAds {
   height: 100vh;
   overflow-y: scroll;

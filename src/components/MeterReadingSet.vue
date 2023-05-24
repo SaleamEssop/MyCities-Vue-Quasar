@@ -4,8 +4,17 @@
       <div class="flex justify-between items-center">
         <span class="text-bold text-h6 text-black">{{
           meter?.type.title
-        }}</span>
-        <span class="round-cheap">Meter {{ meter?.number }}</span>
+        }} Meter :- {{ meter?.number }}</span>
+        <!-- <span class="round-cheap">Meter {{ meter?.number }}</span> -->
+      </div>
+      <div class="flex justify-between items-center">
+
+        <span>Last reading, <b>{{ new
+          Date(lastReading.time).toLocaleString("en-GB")
+        }}</b></span>
+
+        <!-- {{ date.formatDate(new Date(lastReading.time), "DD/MM/YYYY") }} -->
+        <!-- <span class="round-cheap">Meter {{ meter?.number }}</span> -->
       </div>
     </q-card-section>
 
@@ -23,8 +32,8 @@
       </div> -->
       <div class="q-mt-md">
         <div class="flex justify-between items-center wrap">
-          <span>Last saved reading</span>
-          <b>{{ new Date(lastReading.time).toLocaleString("en-GB") }}</b>
+          <!-- <span>Last saved reading</span>
+          <b>{{ new Date(lastReading.time).toLocaleString("en-GB") }}</b> -->
         </div>
         <MeterComponent :text="lastReading.valueInString" :meterStyle="meter?.type?.id" :readingType="meter.type.id == 2
             ? 'electricity-recorded-reading'
@@ -35,18 +44,24 @@
 
     <q-card-section class="text-center">
       <div class="flex justify-between items-center">
-        <span class="round-cheap" clickable v-ripple
+        <!-- <span class="round-cheap" clickable v-ripple
           @click="modelForReadingSet_NewReading = true;
           modelForReadingSet = true;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ">Enter
-          Reading</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ">Enter
+          Reading</span> -->
 
         <p class="q-mx-md"></p>
 
-        <span class="round-cheap" clickable v-ripple @click=" getMeterCost(meter) ">Cost</span>
+        <!-- <span class="round-cheap" clickable v-ripple @click=" getMeterCost(meter) ">Cost</span> -->
         <q-btn flat size="lg" icon="more_horiz" text-color="primary">
           <q-menu anchor="center middle" self="center middle">
             <q-list style="min-width: 100px">
+              <q-item clickable v-close-popup v-ripple
+                @click="modelForReadingSet_NewReading = true;
+                modelForReadingSet = true;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ">
+                <q-item-section>Enter New Reading</q-item-section>
+              </q-item>
               <q-item clickable v-close-popup v-ripple @click="
                 modelForReadingSet_NewReading = false;
                 modelForReadingSet = true;
@@ -56,13 +71,16 @@
               <!-- <q-item clickable v-close-popup>
                 <q-item-section>Submit to Municipality</q-item-section>
               </q-item> -->
-              <q-item clickable v-close-popup @click=" deleteMeter(meter) ">
-                <q-item-section>Delete this meter</q-item-section>
-              </q-item>
 
+              <q-item @click=" getMeterCost(meter) " v-close-popup clickable v-ripple>
+                <q-item-section>Calculate Cost</q-item-section>
+              </q-item>
               <!-- :disable="meterLength === 2 ? true : false" -->
               <q-item @click=" modelMeterForNewEdit = true " clickable v-close-popup>
                 <q-item-section>Add a new meter</q-item-section>
+              </q-item>
+              <q-item clickable v-close-popup @click=" deleteMeter(meter) ">
+                <q-item-section>Delete Meter</q-item-section>
               </q-item>
             </q-list>
           </q-menu>
@@ -152,7 +170,7 @@ import MeterCost from "./MeterCost.vue";
 import { deleteMainMeter } from "src/boot/axios";
 import { getParticularMeterCost } from "boot/axios";
 import { updateAllData } from "src/boot/firebase";
-
+const { formatDate } = date
 const meterStore = useMeterStore();
 const readingStore = useReadingStore();
 const accountStore = useAccountStore();
