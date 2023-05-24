@@ -18,7 +18,7 @@ const routes = [
         name: "data-set",
         meta: { title: "Data", meta: { requiresAuth: true } },
       },
-   
+
       {
         path: "/send_reading/",
         component: () => import("layouts/MainLayout.vue"),
@@ -27,7 +27,7 @@ const routes = [
             path: "",
             component: () => import("pages/MainPage.vue"),
             name: "send_reading",
-            meta: { title: "Manage", meta: { requiresAuth: true } },
+            meta: { title: "Manage > Accounts", meta: { requiresAuth: true } },
           },
         ],
       },
