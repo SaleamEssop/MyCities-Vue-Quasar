@@ -1,7 +1,7 @@
 <template>
   <q-layout
     view="lHh Lpr lFf"
-    class="containerWidth shadow-6"
+    class="containerWidth shadow-6 new-container"
     style="height: 100vh"
   >
     <q-page-container>
@@ -39,6 +39,9 @@ export default defineComponent({
     justify-content: center;
     display: flex;
     background: white;
+  }
+  .containerWidth.new-container {
+    display: block;
   }
 }
 </style>

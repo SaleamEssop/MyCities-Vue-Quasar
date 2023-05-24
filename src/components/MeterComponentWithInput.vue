@@ -143,7 +143,7 @@
 
     <q-card-section>
       <div class="text-subtitle1" style="margin-top: -10px">Powered by the</div>
-      <div>
+      <div style="margin-top: 15px">
         <img class="q-px-lg myCityIcon" src="~assets/logo_small.png" />
       </div>
       <div
