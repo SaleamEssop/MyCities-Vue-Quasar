@@ -111,3 +111,12 @@
 .q-header + .q-page-container {
   padding-top: 50px !important;
 }
+
+.btn-light-green {
+  background-color: $color-light-green;
+  color: $dark;
+  margin-right: 15px;
+}
+.btn-light-green:before {
+  box-shadow: none;
+}

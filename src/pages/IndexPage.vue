@@ -1,21 +1,35 @@
 <template>
   <q-page>
-    <q-btn icon="settings_power" style="position: absolute; right: 10px; top: 10px" round
-      @click="sureLogout = true"></q-btn>
+    <!-- <q-btn
+      icon="settings_power"
+      style="position: absolute; right: 10px; top: 10px"
+      round
+      @click="sureLogout = true"
+    ></q-btn> -->
 
     <!-- <q-btn @click="isVoiceOverEnabled()"> isVoiceOverEnabled</q-btn>
     <q-btn @click="speak()">speak</q-btn> -->
 
     <div class="container">
       <div class="header">
-        <img class="q-px-lg titleIcon" src="~assets/MyCity.png" />
-        <div class="regionTitle">Ethekwini Region</div>
-        <div class="text-center">
-          <q-btn @click="alarm = true" flat icon="notifications" class="col-xs-6 col-sm-6 q-my-xs adsBtn">
-            <q-badge floating color="red" rounded>
-              {{ billingDate ? getAlarm.length + 1 : getAlarm.length }}
-            </q-badge>
-          </q-btn>
+        <div class="header-top-container d-flex align-items-center">
+          <div class="logo-container">
+            <img class="q-px-lg titleIcon" src="~assets/MyCity.png" />
+            <!-- <div class="regionTitle">Ethekwini Region</div> -->
+          </div>
+          <div class="text-center">
+            <q-btn
+              @click="alarm = true"
+              flat
+              icon="notifications"
+              class="col-xs-6 col-sm-6 q-my-xs adsBtn"
+            >
+              <q-badge floating color="red" rounded>
+                {{ billingDate ? getAlarm.length + 1 : getAlarm.length }}
+              </q-badge>
+            </q-btn>
+          </div>
+          <q-btn icon="settings_power" round @click="sureLogout = true"></q-btn>
         </div>
         <!-- <q-separator color="grey" />
         <q-separator color="grey q-mt-xs" /> -->
@@ -23,22 +37,41 @@
 
         <div class="ads_main">
           <div class="text-center">
-            <q-btn-dropdown flat class="col-xs-6 col-sm-6 q-my-xs adsBtn" icon="menu">
+            <q-btn-dropdown
+              flat
+              class="col-xs-6 col-sm-6 q-my-xs adsBtn"
+              icon="menu"
+            >
               <q-list v-for="ad in getAds" :key="ad.id">
-                <q-item v-show="ad.name !== 'LightsAndWater'" clickable v-close-popup @click="onItemClick">
+                <q-item
+                  v-show="ad.name !== 'LightsAndWater'"
+                  clickable
+                  v-close-popup
+                  @click="onItemClick"
+                >
                   <q-item-section>
-                    <q-item-label v-model="name" @click="activeMenuItem(ad.name)">
-                      {{ ad.name }}</q-item-label>
+                    <q-item-label
+                      v-model="name"
+                      @click="activeMenuItem(ad.name)"
+                    >
+                      {{ ad.name }}</q-item-label
+                    >
                   </q-item-section>
                 </q-item>
               </q-list>
             </q-btn-dropdown>
           </div>
 
-
           <div class="text-center">
-            <q-btn class="col-xs-6 col-sm-6 q-my-sm" no-caps flat label="Light & Water" @click="activeMenuItem('LightsAndWater'), (lightAndWaterDialog = true)
-              " />
+            <q-btn
+              class="col-xs-6 col-sm-6 q-my-sm btn-light-green"
+              rounded
+              no-caps
+              label="Light & Water"
+              @click="
+                activeMenuItem('LightsAndWater'), (lightAndWaterDialog = true)
+              "
+            />
           </div>
           <div class="text-center">
             <!-- <q-btn
@@ -47,7 +80,13 @@
               flat
               @click="openFacebook()"
             /> -->
-            <q-btn class="col-xs-6 col-sm-6 q-my-sm" no-caps flat label="FoodBasket" @click="openFoodbasket()" />
+            <q-btn
+              class="col-xs-6 col-sm-6 q-my-sm btn-light-green"
+              no-caps
+              rounded
+              label="FoodBasket"
+              @click="openFoodbasket()"
+            />
           </div>
           <!-- <div class="text-center">
             <q-btn class="col-xs-6 col-sm-6 q-my-xs adsBtn" icon="smart_display" flat @click="openYoutube()" />
@@ -57,7 +96,7 @@
           </div> -->
         </div>
 
-        <q-separator color="grey" size="8px" />
+        <q-separator color="grey" size="2px" />
         <!-- <q-separator color="grey q-mt-xs" /> -->
       </div>
       <!-- second menu section -->
@@ -72,7 +111,7 @@
                 activeMenuItem('LightsAndWater'), (lightAndWaterDialog = true)
               "
             />
-          </div> 
+          </div>
           <div class="text-center q-pt-xs menuItem">
             <q-btn class="col-xs-6 col-sm-6 q-my-sm" no-caps flat label="LightsandWater1" @click="activeMenuItem('LightsAndWater'), (lightAndWaterDialog = true)
               " />
@@ -179,10 +218,15 @@
             </q-carousel>
           </div> -->
 
-          <div v-for="ad in getAdsWithCategory" :key="ad.id">
+          <div class="adv-item" v-for="ad in getAdsWithCategory" :key="ad.id">
             <div class="q-px-md" v-html="ad.description"></div>
 
-            <img :src="ad.image" alt="add-image" class="addImage" @click="openAds(ad.url)" />
+            <img
+              :src="ad.image"
+              alt="add-image"
+              class="addImage"
+              @click="openAds(ad.url)"
+            />
 
             <!-- <q-img
               :src="ad.image"
@@ -192,7 +236,10 @@
               @click="openAds(ad.url)"
             /> -->
             <!-- add_description_scroll -->
-            <div v-show="ad.price > 0 || ad.name !== 'null'" class="add_description_scroll">
+            <div
+              v-show="ad.price > 0 || ad.name !== 'null'"
+              class="add_description_scroll"
+            >
               <div v-show="ad.price > 0" class="ads_price text-h6">
                 R {{ ad.price }}
               </div>
@@ -200,7 +247,7 @@
                 {{ ad.name }}
               </div>
             </div>
-            <q-separator color="grey-4" size="10px" class="bottomLine" />
+            <!-- <q-separator color="grey-4" size="10px" class="bottomLine" /> -->
           </div>
         </div>
       </div>
@@ -224,7 +271,12 @@
                   {{ alarm.message }}
                 </div>
                 <div class="col-auto markAsread q-pl-lg">
-                  <q-btn flat class="adsBtn" icon="close" @click="markAsRead(alarm.id)"></q-btn>
+                  <q-btn
+                    flat
+                    class="adsBtn"
+                    icon="close"
+                    @click="markAsRead(alarm.id)"
+                  ></q-btn>
                 </div>
               </div>
               <q-separator color="grey" />
@@ -249,26 +301,51 @@
             Enter the number you want to Whatsapp
           </div>
           <div class="q-mt-lg">
-            <q-input inputmode="numeric" color="black" class="q-mx-lg" mask="### ### ####" fill-mask v-model="phoneNumber"
-              :input-style="{ fontSize: '24px', textAlign: 'center' }" />
+            <q-input
+              inputmode="numeric"
+              color="black"
+              class="q-mx-lg"
+              mask="### ### ####"
+              fill-mask
+              v-model="phoneNumber"
+              :input-style="{ fontSize: '24px', textAlign: 'center' }"
+            />
           </div>
         </div>
       </q-card-section>
 
       <q-card-actions align="right">
         <q-btn flat label="Close" no-caps v-close-popup />
-        <q-btn flat label="Open WhatsApp" @click="openChatOnWhatsApp(phoneNumber)" no-caps v-close-popup />
+        <q-btn
+          flat
+          label="Open WhatsApp"
+          @click="openChatOnWhatsApp(phoneNumber)"
+          no-caps
+          v-close-popup
+        />
       </q-card-actions>
     </q-card>
   </q-dialog>
   <!-- lightsWater Ads Category -->
-  <q-dialog v-model="lightAndWaterDialog" persistent :maximized="maximizedToggle">
+  <q-dialog
+    v-model="lightAndWaterDialog"
+    persistent
+    :maximized="maximizedToggle"
+  >
     <q-card>
       <div class="ads dialogAds">
         <div v-for="ad in getAdsWithCategory" :key="ad.id">
-          <img :src="ad.image" alt="add-image" class="addImage" @click="openAds(ad.url)" />
+          <img
+            :src="ad.image"
+            alt="add-image"
+            class="addImage"
+            @click="openAds(ad.url)"
+          />
           <!-- add_description_scroll -->
-          <div v-show="ad.price > 0 || ad.name !== 'null'" class="add_description_scroll">
+          <div
+            v-show="ad.price > 0 || ad.name !== 'null'"
+            class="add_description_scroll"
+          >
             <div v-show="ad.price > 0" class="ads_price text-h6">
               R {{ ad.price }}
             </div>
@@ -276,14 +353,34 @@
               {{ ad.name }}
             </div>
           </div>
-          <q-separator v-show="getAdsWithCategory.length" color="grey-4" size="10px" class="bottomLine" />
+          <q-separator
+            v-show="getAdsWithCategory.length"
+            color="grey-4"
+            size="10px"
+            class="bottomLine"
+          />
         </div>
       </div>
       <div class="btnLightAndWater">
-        <q-btn no-caps color="primary" rounded v-close-popup class="text-white fit-content" label="Home"
-          @click="activeMenuItem('Home')" icon="arrow_back" />
-        <q-btn icon-right="arrow_forward" no-caps color="primary" rounded class="text-white fit-content"
-          label="My Manager" @click="moveTo('send_reading')" />
+        <q-btn
+          no-caps
+          color="primary"
+          rounded
+          v-close-popup
+          class="text-white fit-content"
+          label="Home"
+          @click="activeMenuItem('Home')"
+          icon="arrow_back"
+        />
+        <q-btn
+          icon-right="arrow_forward"
+          no-caps
+          color="primary"
+          rounded
+          class="text-white fit-content"
+          label="My Manager"
+          @click="moveTo('send_reading')"
+        />
       </div>
     </q-card>
   </q-dialog>
@@ -545,7 +642,7 @@ function moveTo(name) {
   margin-bottom: 10px;
 }
 
-.q-dialog__inner--maximized>div {
+.q-dialog__inner--maximized > div {
   max-width: 480px !important;
 }
 
@@ -568,6 +665,11 @@ function moveTo(name) {
   margin-top: -10px;
   object-fit: contain;
   /* margin-left: -15px; */
+}
+
+.logo-container .titleIcon {
+  margin-top: 0;
+  padding: 0;
 }
 
 .ads {
@@ -596,7 +698,7 @@ function moveTo(name) {
 .ads_main {
   display: flex;
   margin: auto;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100%;
   overflow-x: auto;
 }
@@ -685,6 +787,16 @@ function moveTo(name) {
   position: absolute;
   width: 100%;
   top: 90%;
+}
+
+.header-top-container {
+  justify-content: space-between;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+}
+.adv-item {
+  margin-top: 15px;
 }
 
 @media only screen and (min-width: 480px) {
