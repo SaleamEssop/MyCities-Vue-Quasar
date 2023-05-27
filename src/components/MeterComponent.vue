@@ -1,18 +1,17 @@
 <template>
-  <div class="container-border" :class="readingType">
-    <div class="text-container">
-      <span
-        v-for="(char, index) in chars"
-        :key="index"
-        class="text-h4"
-        :style="styles(index)"
-        >{{ char }}</span
-      >
-    </div>
+  <!-- <span v-for="(char, index) in  chars " :key="index" class="text-h4" :style="styles(index)">{{ char }}</span> -->
+  <div style="display: flex; flex-direction: row">
+    <v-otp-input ref="otpInput" :value="getValueInString()" input-classes="otp-input" separator="-" :num-inputs="8"
+      :should-auto-focus="true" input-type="letter-numeric" :placeholder="['_', '_', '_', '_', '_', '_', '_', '_']"
+      @on-change="handleOnChange" @on-complete="handleOnComplete" />
   </div>
+
+  <!-- <button @click="handleClearInput()">Clear Input</button> -->
+  <!-- // <button @click="fillInput(props?.text?.toString()?.trim())">Fill Input</button> -->
 </template>
 <script>
-import { defineComponent, computed, ref } from "vue";
+import { defineComponent, computed, ref, InstanceType } from "vue";
+import VOtpInput from "vue3-otp-input";
 const COLOR_STYLE = [
   { color: "black", background: "white" },
   { color: "white", background: "#b30101" },
@@ -26,8 +25,35 @@ export default defineComponent({
     readingType: String, //
     isInput: { default: false, type: Boolean },
   },
+  methods: {
+    handleOnComplete(value) {
+      console.log('OTP completed: ', value);
+    },
+    handleOnChange(value) {
+      console.log(this.$refs.otpInput);
+      console.log('OTP changed: ', value);
+    },
+    handleClearInput() {
+      this.$refs.otpInput.clearInput();
+    },
+  },
   setup(props) {
+    console.log(props);
+    const otpInput = ref < InstanceType < typeof VOtpInput > null > (null);
+    const bindModal = ref("");
     let lastPendingArray = [];
+    let meterStyleDigits = 6;
+    switch (props.meterStyle) {
+      case 1: {
+        meterStyleDigits = 8;
+        break;
+      }
+      case 2: {
+        meterStyleDigits = 6;
+        break;
+      }
+    }
+    console.log(meterStyleDigits);
     const chars = computed(() => {
       let meterStyleDigits = 6;
       switch (props.meterStyle) {
@@ -103,66 +129,42 @@ export default defineComponent({
     function getValueInString() {
       return chars.value.map((_char) => (_char == "_" ? 0 : _char)).join("");
     }
-
+    console.log(getValueInString);
     return { chars, styles, getValueInString };
   },
+  components: { VOtpInput }
 });
 </script>
-<style scoped>
-.container-border {
-  border-style: inset;
-  border-width: 10px;
-
-  /* border: 2px inset #b30101; */
-  /* width: fit-content; */
-  margin: auto;
-  padding: 2px;
-  border-radius: 10px;
-}
-.electricity-recorded-reading {
-  border-color: #000000;
-  background: #000000;
-}
-.water-recorded-reading {
-  border-color: #b30101;
-  background: #5f0000;
-}
-.submitted-reading {
-  border-color: #b3b3b3;
-  background: #b3b3b3;
-}
-.text-container {
-  border-top: 1px dotted black;
-  border-bottom: 1px dotted black;
-}
-.text-h4 {
-  display: inline-block;
+<style>
+.otp-input {
+  width: 40px;
+  width: 30px;
+  height: 40px;
+  padding: 5px;
+  margin: 0 10px;
+  font-size: 20px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  text-align: center;
 }
 
-.text-h4:first-child:before {
-  content: "";
-  border: 1px dotted black;
-  border-top: 0px;
-  border-bottom: 0px;
+/* Background colour of an input field with value */
+.otp-input.is-complete {
+  background-color: #e4e4e4;
 }
-.text-h4:after {
-  content: "";
-  border: 1px dotted black;
-  border-top: 0px;
-  border-bottom: 0px;
-  height: fit-content;
-}
-.text-h4:last-child {
-  border: 2px solid white;
-}
-/* .text-h4:before {
-  content: "";
-  border: 1px dotted black;
-} */
 
-.last-char-animated:last-child {
-  animation: fadeIn 1s infinite;
+.otp-input::-webkit-inner-spin-button,
+.otp-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
+
+input::placeholder {
+  font-size: 15px;
+  text-align: center;
+  font-weight: 600;
+}
+
 @keyframes fadeIn {
   0% {
     opacity: 0;
