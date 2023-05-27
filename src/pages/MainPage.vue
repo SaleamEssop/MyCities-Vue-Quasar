@@ -1,11 +1,11 @@
 <template>
   <q-page v-if="allSites.length > 0">
     <q-list bordered separator header-class="acc-list" v-show="showAccount">
-      <div class="account_header">
+      <!-- <div class="account_header">
         <i class="home-icon" @click="$router.back()"><img alt="Home-Icon" src="~assets/home-icons.svg" /></i>
-      </div>
+      </div> -->
       <!-- Site -->
-      <q-expansion-item dense group="accordion" expand-separator :default-opened="true"
+      <q-expansion-item dense expand-separator default-opened
         header-class="bg-primary accounts-list" v-for="(site, index) in   allSites  " :key="index" class="q-mt-sm"
         text-color="white">
         <template v-slot:header>

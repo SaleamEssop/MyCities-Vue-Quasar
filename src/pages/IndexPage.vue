@@ -221,7 +221,7 @@
           <div class="adv-item" v-for="ad in getAdsWithCategory" :key="ad.id">
             <!-- <div class="q-px-md" v-html="ad.description"></div> -->
 
-            <img 
+            <img v-if="ad.image"
               :src="ad.image"
               class="addImage"
               @click="openAds(ad.url)"
