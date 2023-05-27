@@ -280,11 +280,10 @@
           </div> -->
 
           <div class="adv-item" v-for="ad in getAdsWithCategory" :key="ad.id">
-            <div class="q-px-md" v-html="ad.description"></div>
+            <!-- <div class="q-px-md" v-html="ad.description"></div> -->
 
-            <img
+            <img v-if="ad.image"
               :src="ad.image"
-              alt="add-image"
               class="addImage"
               @click="openAds(ad.url)"
             />
@@ -297,17 +296,17 @@
               @click="openAds(ad.url)"
             /> -->
             <!-- add_description_scroll -->
-            <div
+            <!-- <div
               v-show="ad.price > 0 || ad.name !== 'null'"
               class="add_description_scroll"
             >
               <div v-show="ad.price > 0" class="ads_price text-h6">
                 R {{ ad.price }}
               </div>
-              <div v-show="ad.name !== 'null'" class="text-subtitle1">
-                {{ ad.name }}
-              </div>
-            </div>
+               <div v-show="ad.name !== 'null'" class="text-subtitle1"> -->
+                <!-- {{ ad.name }}
+              </div> 
+            </div> -->
             <!-- <q-separator color="grey-4" size="10px" class="bottomLine" /> -->
           </div>
         </div>
@@ -398,7 +397,7 @@
         <div v-for="ad in getAdsWithCategory" :key="ad.id">
           <img
             :src="ad.image"
-            alt="add-image"
+            alt="add-image1"
             class="addImage"
             @click="openAds(ad.url)"
           />
@@ -410,9 +409,9 @@
             <div v-show="ad.price > 0" class="ads_price text-h6">
               R {{ ad.price }}
             </div>
-            <div v-show="ad.name !== 'null'" class="text-subtitle1">
+            <!-- <div v-show="ad.name !== 'null'" class="text-subtitle1">
               {{ ad.name }}
-            </div>
+            </div> -->
           </div>
           <q-separator
             v-show="getAdsWithCategory.length"
@@ -668,6 +667,7 @@ const getAdsWithCategory = computed(() => {
     return defaultAds[0]?.ads;
   }
 });
+console.log(getAdsWithCategory);
 
 const logout = () => {
   // getAuth().signOut();
