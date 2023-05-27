@@ -34,70 +34,91 @@
         <!-- <q-separator color="grey" />
         <q-separator color="grey q-mt-xs" /> -->
         <q-separator color="grey q-mt-sm" size="2px" />
-        <q-btn @click="isHidden = !isHidden">Toggle hide and show</q-btn>
-        <div :class="{ open: isHidden }" class="sidebar-fullscreen">
-          <div class="overlay" @click="isHidden = !isHidden"></div>
-          <div class="sidebar-menu-wrapper">
-            <q-list v-for="ad in getAds" :key="ad.id">
-              <q-item
-                v-show="ad.name !== 'LightsAndWater'"
-                clickable
-                v-close-popup
-                @click="onChildItemClick"
-                v-if="ad.childs.length > 0"
-              >
-                <q-item-section>
-                  <q-item-label @click="selectLang(ad.id)">
-                    {{ ad.name }} in if</q-item-label
-                  >
-                  <div
-                    class="sub-menu-items"
-                    :class="{ active: ad.id === activeId }"
-                  >
-                    {{ ad.id }} {{ activeId }}
-                    <q-list v-for="childs in ad.childs" :key="childs.id">
-                      <q-item>
-                        <q-item-section>
-                          <q-item-label
-                            v-model="name"
-                            @click="
-                              activeMenuItem(ad.name);
-                              isHidden = !isHidden;
-                            "
-                          >
-                            {{ childs.name }}
-                          </q-item-label>
-                        </q-item-section>
-                      </q-item>
-                    </q-list>
-                  </div>
-                </q-item-section>
-              </q-item>
-              <q-item
-                v-show="ad.name !== 'LightsAndWater'"
-                clickable
-                v-close-popup
-                @click="onItemClick"
-                v-else
-              >
-                <q-item-section>
-                  <q-item-label
-                    v-model="name"
-                    @click="
-                      activeMenuItem(ad.name);
-                      isHidden = !isHidden;
-                    "
-                  >
-                    {{ ad.name }} else</q-item-label
-                  >
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </div>
-        </div>
-        <q-separator color="grey q-mt-sm" size="10px" />
+
         <div class="ads_main">
+          <!-- start new hamburger menu code -->
           <div class="text-center">
+            <q-btn-dropdown
+              flat
+              class="col-xs-6 col-sm-6 q-my-xs adsBtn"
+              icon="menu"
+              @click="isHidden = !isHidden"
+            >
+            </q-btn-dropdown>
+            <div
+              :class="{ open: isHidden }"
+              class="sidebar-fullscreen text-left"
+            >
+              <div class="overlay" @click="isHidden = !isHidden"></div>
+              <div class="sidebar-menu-wrapper">
+                <div class="sidebar-top-header">
+                  <q-btn icon="close" @click="isHidden = !isHidden"></q-btn>
+                </div>
+                <q-list v-for="ad in getAds" :key="ad.id">
+                  <q-item
+                    v-show="ad.name !== 'LightsAndWater'"
+                    clickable
+                    v-close-popup
+                    @click="onChildItemClick"
+                    v-if="ad.childs.length > 0"
+                    :class="ad.childs.length > 0 ? 'submenu' : ''"
+                  >
+                    <q-item-section>
+                      <q-item-label
+                        :class="{ active: ad.id == activeId }"
+                        @click="selectLang(ad.id)"
+                      >
+                        {{ ad.name }}</q-item-label
+                      >
+                      <div
+                        class="sub-menu-items"
+                        :class="{ active: ad.id == activeId }"
+                      >
+                        <q-list v-for="childs in ad.childs" :key="childs.id">
+                          <q-item>
+                            <q-item-section>
+                              <q-item-label
+                                v-model="name"
+                                @click="
+                                  activeMenuItem(ad.name);
+                                  isHidden = !isHidden;
+                                "
+                              >
+                                {{ childs.name }}
+                              </q-item-label>
+                            </q-item-section>
+                          </q-item>
+                        </q-list>
+                      </div>
+                    </q-item-section>
+                  </q-item>
+                  <q-item
+                    v-show="ad.name !== 'LightsAndWater'"
+                    clickable
+                    v-close-popup
+                    @click="onItemClick"
+                    v-else
+                  >
+                    <q-item-section>
+                      <q-item-label
+                        v-model="name"
+                        :class="{ active: ad.id == activeId }"
+                        @click="
+                          activeMenuItem(ad.name);
+                          isHidden = !isHidden;
+                          selectLang(ad.id);
+                        "
+                      >
+                        {{ ad.name }}</q-item-label
+                      >
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </div>
+            </div>
+          </div>
+          <!-- end new hamburger menu code-->
+          <div class="text-center" style="display: none">
             <q-btn-dropdown
               flat
               class="col-xs-6 col-sm-6 q-my-xs adsBtn"
@@ -282,7 +303,8 @@
           <div class="adv-item" v-for="ad in getAdsWithCategory" :key="ad.id">
             <!-- <div class="q-px-md" v-html="ad.description"></div> -->
 
-            <img v-if="ad.image"
+            <img
+              v-if="ad.image"
               :src="ad.image"
               class="addImage"
               @click="openAds(ad.url)"
@@ -304,8 +326,8 @@
                 R {{ ad.price }}
               </div>
                <div v-show="ad.name !== 'null'" class="text-subtitle1"> -->
-                <!-- {{ ad.name }}
-              </div> 
+            <!-- {{ ad.name }}
+              </div>
             </div> -->
             <!-- <q-separator color="grey-4" size="10px" class="bottomLine" /> -->
           </div>
@@ -565,8 +587,7 @@ console.log("512", getAds);
 // });
 
 const selectLang = (id) => {
-  console.log(id);
-  activeId = id;
+  activeId.value = id;
 };
 
 const openChatOnWhatsApp = (number) => {
@@ -884,9 +905,9 @@ function moveTo(name) {
   visibility: hidden;
 }
 .sidebar-menu-wrapper {
-  padding: 30px 0;
+  padding: 0 0 30px;
   width: 300px;
-  background: #fff;
+  background: #232424;
   top: 0;
   left: -100%;
   height: 100%;
@@ -910,6 +931,105 @@ function moveTo(name) {
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
   z-index: -1;
+}
+.sidebar-top-header {
+  border-bottom: 1px solid #fff;
+  margin-bottom: 15px;
+  padding: 15px 20px;
+}
+.sidebar-top-header button.q-btn {
+  border-radius: 50%;
+  height: 35px;
+  width: 35px;
+  background: #fff;
+  padding: 0;
+  line-height: normal;
+  transform: scale(0.9);
+}
+
+.sub-menu-items {
+  display: none;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 10px 0;
+}
+.sub-menu-items.active {
+  display: block;
+}
+.sidebar-menu-wrapper .q-item-type:hover,
+.sidebar-menu-wrapper .q-hoverable:hover > .q-focus-helper,
+body.desktop .sidebar-menu-wrapper .q-focus-helper:after,
+body.desktop .sidebar-menu-wrapper .q-focus-helper:before {
+  background: none;
+}
+body.desktop .sidebar-menu-wrapper .q-focusable:focus > .q-focus-helper,
+.sidebar-menu-wrapper .q-focus-helper,
+body.desktop .sidebar-menu-wrapper .q-hoverable:hover > .q-focus-helper {
+  background: currentColor;
+  opacity: 0;
+}
+
+.sidebar-menu-wrapper > .q-list > .q-item > .q-item__section > .q-item__label {
+  padding: 10px 20px;
+  font-weight: 700;
+}
+.sidebar-menu-wrapper .q-list .q-item {
+  color: #8d949d;
+  padding: 0;
+  min-height: auto;
+}
+.submenu > .q-item__section {
+  padding: 0;
+}
+.sidebar-menu-wrapper .q-list .q-item:hover {
+  color: #61a402;
+}
+.submenu > .q-item__section > .q-item__label {
+  position: relative;
+}
+
+.submenu > .q-item__section > .q-item__label:after {
+  content: "";
+  height: 15px;
+  width: 2px;
+  background: #8d949d;
+  position: absolute;
+  right: 24px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  transition: 0.5s all;
+}
+.submenu > .q-item__section > .q-item__label:before {
+  content: "";
+  height: 2px;
+  width: 15px;
+  background: #8d949d;
+  position: absolute;
+  right: 18px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+.submenu > .q-item__section > .q-item__label.active,
+.sidebar-menu-wrapper
+  > .q-list
+  > .q-item
+  > .q-item__section
+  > .q-item__label.active {
+  color: #61a402;
+}
+.submenu > .q-item__section > .q-item__label.active:after {
+  opacity: 0;
+}
+.sub-menu-items .q-list {
+  margin-bottom: 10px;
+}
+.sub-menu-items .q-list:last-child {
+  margin-bottom: 0;
+}
+.sub-menu-items .q-item__label {
+  padding: 5px 20px;
+  font-weight: 700;
 }
 @media only screen and (min-width: 480px) {
   .imageHeight {

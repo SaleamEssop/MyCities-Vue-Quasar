@@ -120,3 +120,13 @@
 .btn-light-green:before {
   box-shadow: none;
 }
+.sidebar-top-header .q-btn .q-icon {
+  transition: 0.5s all;
+}
+.sidebar-top-header .q-btn:hover .q-icon {
+  transform: rotate(180deg);
+}
+body.desktop .sidebar-menu-wrapper .q-hoverable:hover > .q-focus-helper {
+  background: currentColor;
+  opacity: 0;
+}
