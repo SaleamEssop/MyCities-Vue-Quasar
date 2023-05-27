@@ -34,7 +34,68 @@
         <!-- <q-separator color="grey" />
         <q-separator color="grey q-mt-xs" /> -->
         <q-separator color="grey q-mt-sm" size="2px" />
-
+        <q-btn @click="isHidden = !isHidden">Toggle hide and show</q-btn>
+        <div :class="{ open: isHidden }" class="sidebar-fullscreen">
+          <div class="overlay" @click="isHidden = !isHidden"></div>
+          <div class="sidebar-menu-wrapper">
+            <q-list v-for="ad in getAds" :key="ad.id">
+              <q-item
+                v-show="ad.name !== 'LightsAndWater'"
+                clickable
+                v-close-popup
+                @click="onChildItemClick"
+                v-if="ad.childs.length > 0"
+              >
+                <q-item-section>
+                  <q-item-label @click="selectLang(ad.id)">
+                    {{ ad.name }} in if</q-item-label
+                  >
+                  <div
+                    class="sub-menu-items"
+                    :class="{ active: ad.id === activeId }"
+                  >
+                    {{ ad.id }} {{ activeId }}
+                    <q-list v-for="childs in ad.childs" :key="childs.id">
+                      <q-item>
+                        <q-item-section>
+                          <q-item-label
+                            v-model="name"
+                            @click="
+                              activeMenuItem(ad.name);
+                              isHidden = !isHidden;
+                            "
+                          >
+                            {{ childs.name }}
+                          </q-item-label>
+                        </q-item-section>
+                      </q-item>
+                    </q-list>
+                  </div>
+                </q-item-section>
+              </q-item>
+              <q-item
+                v-show="ad.name !== 'LightsAndWater'"
+                clickable
+                v-close-popup
+                @click="onItemClick"
+                v-else
+              >
+                <q-item-section>
+                  <q-item-label
+                    v-model="name"
+                    @click="
+                      activeMenuItem(ad.name);
+                      isHidden = !isHidden;
+                    "
+                  >
+                    {{ ad.name }} else</q-item-label
+                  >
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </div>
+        </div>
+        <q-separator color="grey q-mt-sm" size="10px" />
         <div class="ads_main">
           <div class="text-center">
             <q-btn-dropdown
@@ -449,6 +510,9 @@ const phoneNumber = ref("");
 const accountStore = useAccountStore();
 // const dueDate = ref(false);
 
+let isHidden = ref(false);
+let isSubMenuVisible = ref(false);
+let activeId = ref(0);
 const alaramStore = useGetAlarmsStore();
 const getAlarm = computed(() => alaramStore.getAlarms);
 
@@ -492,6 +556,7 @@ const name = ref("");
 const selectCategory = ref(null);
 
 const getAds = computed(() => adStore.getAds);
+console.log("512", getAds);
 
 // onMounted(() => {
 //   navigator.geolocation.getCurrentPosition((position) => {
@@ -499,6 +564,11 @@ const getAds = computed(() => adStore.getAds);
 //     var longitude = position.coords.longitude;
 //   });
 // });
+
+const selectLang = (id) => {
+  console.log(id);
+  activeId = id;
+};
 
 const openChatOnWhatsApp = (number) => {
   window.open(`https://api.whatsapp.com/send?phone=+27${number}&text=Hello`);
@@ -571,6 +641,7 @@ const activeMenuItem = (name) => {
   });
   slide.value = data[0].ads[0]?.id;
   selectCategory.value = data[0]?.ads;
+  console.log("data", data);
 };
 
 const formatPhoneNumber = (phoneNumberString) => {
@@ -735,10 +806,10 @@ function moveTo(name) {
   height: 20px;
 }
 
-.q-item {
+/* .q-item {
   height: 40px !important;
   min-height: 40px !important;
-}
+} */
 
 .q-badge--rounded {
   position: absolute;
@@ -799,6 +870,47 @@ function moveTo(name) {
   margin-top: 15px;
 }
 
+.sidebar-fullscreen {
+  position: absolute;
+  z-index: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100%;
+  left: 0;
+  top: 0;
+  width: 100%;
+  transition: 0.5s all;
+  opacity: 0;
+  visibility: hidden;
+}
+.sidebar-menu-wrapper {
+  padding: 30px 0;
+  width: 300px;
+  background: #fff;
+  top: 0;
+  left: -100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transition: 0.5s all;
+  position: absolute;
+}
+.open.sidebar-fullscreen {
+  opacity: 1;
+  visibility: visible;
+}
+.open.sidebar-fullscreen .sidebar-menu-wrapper {
+  left: 0;
+}
+.sidebar-fullscreen .overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+}
 @media only screen and (min-width: 480px) {
   .imageHeight {
     width: 480px !important;
