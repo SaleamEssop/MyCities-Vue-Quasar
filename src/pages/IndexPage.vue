@@ -13,21 +13,23 @@
     <div class="container">
       <div class="header">
         <div class="header-top-container d-flex align-items-center">
-          <div class="logo-container">
-            <img class="q-px-lg titleIcon" src="~assets/MyCity.png" />
-            <!-- <div class="regionTitle">Ethekwini Region</div> -->
-          </div>
-          <div class="text-center">
-            <q-btn
-              @click="alarm = true"
-              flat
-              icon="notifications"
-              class="col-xs-6 col-sm-6 q-my-xs adsBtn"
-            >
-              <q-badge floating color="red" rounded>
-                {{ billingDate ? getAlarm.length + 1 : getAlarm.length }}
-              </q-badge>
-            </q-btn>
+          <div class="header-left-top">
+            <div class="logo-container">
+              <img class="q-px-lg titleIcon" src="~assets/MyCity.png" />
+              <!-- <div class="regionTitle">Ethekwini Region</div> -->
+            </div>
+            <div class="text-center">
+              <q-btn
+                @click="alarm = true"
+                flat
+                icon="notifications"
+                class="col-xs-6 col-sm-6 q-my-xs adsBtn"
+              >
+                <q-badge floating color="red" rounded>
+                  {{ billingDate ? getAlarm.length + 1 : getAlarm.length }}
+                </q-badge>
+              </q-btn>
+            </div>
           </div>
           <q-btn icon="settings_power" round @click="sureLogout = true"></q-btn>
         </div>
@@ -52,6 +54,7 @@
               <div class="overlay" @click="isHidden = !isHidden"></div>
               <div class="sidebar-menu-wrapper">
                 <div class="sidebar-top-header">
+                  <span class="username">{{ user?.name }}</span>
                   <q-btn icon="close" @click="isHidden = !isHidden"></q-btn>
                 </div>
                 <q-list v-for="ad in getAds" :key="ad.id">
@@ -155,7 +158,7 @@
               "
             />
           </div>
-          <div class="text-center">
+          <div class="text-center" style="display: none">
             <!-- <q-btn
               class="col-xs-6 col-sm-6 q-my-xs adsBtn"
               icon="facebook"
@@ -537,6 +540,8 @@ let activeId = ref(0);
 const alaramStore = useGetAlarmsStore();
 const getAlarm = computed(() => alaramStore.getAlarms);
 
+const user = userStore.getUser;
+
 const billingDate = computed(() => {
   let dueDate = false;
   accountStore.accounts[0]?.defaultFixedCost.map((_el) => {
@@ -577,7 +582,6 @@ const name = ref("");
 const selectCategory = ref(null);
 
 const getAds = computed(() => adStore.getAds);
-console.log("512", getAds);
 
 // onMounted(() => {
 //   navigator.geolocation.getCurrentPosition((position) => {
@@ -753,10 +757,19 @@ function moveTo(name) {
 
 .titleIcon {
   width: 100%;
-  max-height: 70px;
+  /* max-height: 70px; */
   margin-top: -10px;
   object-fit: contain;
   /* margin-left: -15px; */
+}
+
+.header-left-top {
+  display: flex;
+  align-items: center;
+}
+
+.header-left-top .logo-container {
+  width: 200px;
 }
 
 .logo-container .titleIcon {
@@ -802,6 +815,13 @@ function moveTo(name) {
 .adsBtn {
   color: #65666b;
   font-size: 18px !important;
+}
+.header-top-container .adsBtn {
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  position: relative;
+  top: 3px;
 }
 
 .markAsread {
@@ -907,7 +927,7 @@ function moveTo(name) {
 .sidebar-menu-wrapper {
   padding: 0 0 30px;
   width: 300px;
-  background: #232424;
+  background: #daeac5;
   top: 0;
   left: -100%;
   height: 100%;
@@ -933,9 +953,16 @@ function moveTo(name) {
   z-index: -1;
 }
 .sidebar-top-header {
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid #61a402;
   margin-bottom: 15px;
   padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.sidebar-top-header .username {
+  font-size: 18px;
+  font-weight: 500;
 }
 .sidebar-top-header button.q-btn {
   border-radius: 50%;
@@ -954,6 +981,11 @@ function moveTo(name) {
 }
 .sub-menu-items.active {
   display: block;
+  background: #65971c;
+}
+.sub-menu-items.active .q-list .q-item,
+.sub-menu-items.active .q-list .q-item:hover {
+  color: #fff;
 }
 .sidebar-menu-wrapper .q-item-type:hover,
 .sidebar-menu-wrapper .q-hoverable:hover > .q-focus-helper,
@@ -970,12 +1002,12 @@ body.desktop .sidebar-menu-wrapper .q-hoverable:hover > .q-focus-helper {
 
 .sidebar-menu-wrapper > .q-list > .q-item > .q-item__section > .q-item__label {
   padding: 10px 20px;
-  font-weight: 700;
 }
 .sidebar-menu-wrapper .q-list .q-item {
-  color: #8d949d;
+  color: #1d1d1d;
   padding: 0;
   min-height: auto;
+  font-size: 16px;
 }
 .submenu > .q-item__section {
   padding: 0;
@@ -989,11 +1021,11 @@ body.desktop .sidebar-menu-wrapper .q-hoverable:hover > .q-focus-helper {
 
 .submenu > .q-item__section > .q-item__label:after {
   content: "";
-  height: 15px;
-  width: 2px;
-  background: #8d949d;
+  height: 18px;
+  width: 1.5px;
+  background: #1d1d1d;
   position: absolute;
-  right: 24px;
+  right: 25px;
   top: 0;
   bottom: 0;
   margin: auto;
@@ -1001,22 +1033,14 @@ body.desktop .sidebar-menu-wrapper .q-hoverable:hover > .q-focus-helper {
 }
 .submenu > .q-item__section > .q-item__label:before {
   content: "";
-  height: 2px;
-  width: 15px;
-  background: #8d949d;
+  height: 1.5px;
+  width: 16px;
+  background: #1d1d1d;
   position: absolute;
   right: 18px;
   top: 0;
   bottom: 0;
   margin: auto;
-}
-.submenu > .q-item__section > .q-item__label.active,
-.sidebar-menu-wrapper
-  > .q-list
-  > .q-item
-  > .q-item__section
-  > .q-item__label.active {
-  color: #61a402;
 }
 .submenu > .q-item__section > .q-item__label.active:after {
   opacity: 0;
@@ -1029,7 +1053,6 @@ body.desktop .sidebar-menu-wrapper .q-hoverable:hover > .q-focus-helper {
 }
 .sub-menu-items .q-item__label {
   padding: 5px 20px;
-  font-weight: 700;
 }
 @media only screen and (min-width: 480px) {
   .imageHeight {
