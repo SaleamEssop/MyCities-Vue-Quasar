@@ -40,22 +40,22 @@
         <div class="ads_main">
           <!-- start new hamburger menu code -->
           <div class="text-center">
-            <q-btn-dropdown
+            <q-btn
+              @click="isHidden = !isHidden"
+              icon="menu"
               flat
               class="col-xs-6 col-sm-6 q-my-xs adsBtn"
-              icon="menu"
-              @click="isHidden = !isHidden"
-            >
-            </q-btn-dropdown>
+            ></q-btn>
+
             <div
               :class="{ open: isHidden }"
               class="sidebar-fullscreen text-left"
             >
-              <div class="overlay" @click="isHidden = !isHidden"></div>
+              <div class="overlay" @click="isHidden = false"></div>
               <div class="sidebar-menu-wrapper">
                 <div class="sidebar-top-header">
                   <span class="username">{{ user?.name }}</span>
-                  <q-btn icon="close" @click="isHidden = !isHidden"></q-btn>
+                  <q-btn icon="close" @click="isHidden = false"></q-btn>
                 </div>
                 <q-list v-for="ad in getAds" :key="ad.id">
                   <q-item
@@ -1003,6 +1003,13 @@ body.desktop .sidebar-menu-wrapper .q-hoverable:hover > .q-focus-helper {
 .sidebar-menu-wrapper > .q-list > .q-item > .q-item__section > .q-item__label {
   padding: 10px 20px;
 }
+.sidebar-menu-wrapper
+  > .q-list
+  > .q-item
+  > .q-item__section
+  > .q-item__label.active {
+  color: #61a402;
+}
 .sidebar-menu-wrapper .q-list .q-item {
   color: #1d1d1d;
   padding: 0;
@@ -1025,7 +1032,7 @@ body.desktop .sidebar-menu-wrapper .q-hoverable:hover > .q-focus-helper {
   width: 1.5px;
   background: #1d1d1d;
   position: absolute;
-  right: 25px;
+  right: 37px;
   top: 0;
   bottom: 0;
   margin: auto;
@@ -1037,7 +1044,7 @@ body.desktop .sidebar-menu-wrapper .q-hoverable:hover > .q-focus-helper {
   width: 16px;
   background: #1d1d1d;
   position: absolute;
-  right: 18px;
+  right: 30px;
   top: 0;
   bottom: 0;
   margin: auto;
