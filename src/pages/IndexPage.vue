@@ -45,7 +45,7 @@
                   <q-btn icon="close" @click="isHidden = false"></q-btn>
                 </div>
                 <q-list
-                  v-for="ad in                                                                    getAds                                                                   "
+                  v-for="ad in                                                                        getAds                                                                       "
                   :key="ad.id">
                   <q-item v-show="ad.name !== 'LightsAndWater'" clickable v-close-popup @click="onChildItemClick"
                     v-if="ad.childs.length > 0" :class="ad.childs.length > 0 ? 'submenu' : ''">
@@ -54,14 +54,14 @@
                         {{ ad.name }} </q-item-label>
                       <div class="sub-menu-items" :class="{ active: ad.id == activeId }">
                         <q-list
-                          v-for="childs in                                                                    ad.childs                                                                   "
+                          v-for="childs in                                                                        ad.childs                                                                       "
                           :key="childs.id">
                           <q-item>
                             <q-item-section>
                               <q-item-label v-model="name"
                                 @click="activeMenuItem(childs.id);
                                 isHidden = !isHidden;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ">
                                 {{ childs.name }}
                               </q-item-label>
                             </q-item-section>
@@ -88,7 +88,7 @@
           <div class="text-center" style="display: none">
             <q-btn-dropdown flat class="col-xs-6 col-sm-6 q-my-xs adsBtn" icon="menu">
               <q-list
-                v-for="                                                                   ad                                                                    in                                                                    getAds                                                                   "
+                v-for="                                                                       ad                                                                        in                                                                        getAds                                                                       "
                 :key=" ad.id ">
                 <q-item v-show=" ad.name !== 'LightsAndWater' " clickable v-close-popup @click=" onItemClick ">
                   <q-item-section>
@@ -288,7 +288,7 @@
             </div>
             <q-separator v-show=" billingDate " color="grey" />
             <div class=""
-              v-for="                                                                   alarm                                                                    in                                                                    getAlarm                                                                   "
+              v-for="                                                                       alarm                                                                        in                                                                        getAlarm                                                                       "
               :key=" alarm.id ">
               <div class="row no-wrap">
                 <div class="col text-subtitle1 q-py-sm">
@@ -337,7 +337,7 @@
     <q-card>
       <div class="ads dialogAds">
         <div
-          v-for="                                                                   ad                                                                    in                                                                    getAdsWithCategory                                                                   "
+          v-for="                                                                       ad                                                                        in                                                                        getAdsWithCategory                                                                       "
           :key=" ad.id ">
           <img :src=" ad.image " alt="add-image1" class="addImage" @click=" openAds(ad.url) " />
           <!-- add_description_scroll -->
@@ -345,9 +345,9 @@
             <div v-show=" ad.price > 0 " class="ads_price text-h6">
               R {{ ad.price }}
             </div>
-            <!-- <div v-show="ad.name !== 'null'" class="text-subtitle1">
-              {{ ad.name }}
-            </div> -->
+            <div v-show=" ad.description !== 'null' " class="text-subtitle1" v-html=" ad.description ">
+
+            </div>
           </div>
           <q-separator v-show=" getAdsWithCategory.length " color="grey-4" size="10px" class="bottomLine" />
         </div>
