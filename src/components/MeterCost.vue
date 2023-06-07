@@ -143,7 +143,7 @@ export default defineComponent({
     const billingCycle = computed(() => {
       let date = null;
       (account.defaultFixedCost || []).forEach((defaultCost) => {
-        if (defaultCost?.fixed_cost.title === "Enter Your Billing Date") {
+        if (defaultCost?.fixed_cost?.title === "Enter Your Billing Date") {
           date = defaultCost?.value;
         }
       });
