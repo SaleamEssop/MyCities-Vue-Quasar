@@ -45,7 +45,7 @@
                   <q-btn icon="close" @click="isHidden = false"></q-btn>
                 </div>
                 <q-list
-                  v-for="ad in                                                                        getAds                                                                       "
+                  v-for="ad in                                                                                                                     getAds                                                                                                                    "
                   :key="ad.id">
                   <q-item v-show="ad.name !== 'LightsAndWater'" clickable v-close-popup @click="onChildItemClick"
                     v-if="ad.childs.length > 0" :class="ad.childs.length > 0 ? 'submenu' : ''">
@@ -54,14 +54,14 @@
                         {{ ad.name }} </q-item-label>
                       <div class="sub-menu-items" :class="{ active: ad.id == activeId }">
                         <q-list
-                          v-for="childs in                                                                        ad.childs                                                                       "
+                          v-for="childs in                                                                                                                     ad.childs                                                                                                                    "
                           :key="childs.id">
                           <q-item>
                             <q-item-section>
                               <q-item-label v-model="name"
                                 @click="activeMenuItem(childs.id);
                                 isHidden = !isHidden;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ">
                                 {{ childs.name }}
                               </q-item-label>
                             </q-item-section>
@@ -88,7 +88,7 @@
           <div class="text-center" style="display: none">
             <q-btn-dropdown flat class="col-xs-6 col-sm-6 q-my-xs adsBtn" icon="menu">
               <q-list
-                v-for="                                                                       ad                                                                        in                                                                        getAds                                                                       "
+                v-for="                                                                                                                    ad                                                                                                                     in                                                                                                                     getAds                                                                                                                    "
                 :key=" ad.id ">
                 <q-item v-show=" ad.name !== 'LightsAndWater' " clickable v-close-popup @click=" onItemClick ">
                   <q-item-section>
@@ -271,6 +271,34 @@
             </div>
             <!-- <q-separator color="grey-4" size="10px" class="bottomLine" /> -->
           </div>
+          <div v-else>
+            <!-- {{ selectCategory[0]?.image }} -->
+            <div class="adv-item" v-if=" selectCategory && selectCategory[0]?.id ">
+              <!-- <div class="q-px-md" v-html="ad.description"></div> -->
+              <img v-if=" selectCategory[0]?.image " :src=" selectCategory[0]?.image " class="addImage"
+                @click=" openAds(selectCategory[0]?.url) " />
+
+              <!-- <q-img
+              :src="ad.image"
+              spinner-color="black"
+              alt="add-image"
+              class="addImage"
+              @click="openAds(ad.url)"
+            /> -->
+              <!-- add_description_scroll -->
+              <div v-show=" selectCategory[0]?.price > 0 || selectCategory[0]?.name !== 'null' "
+                class="add_description_scroll">
+                <!-- <div v-show=" ad.price > 0 " class="ads_price text-h6">
+                R {{ ad.price }}
+              </div> -->
+                <div v-show=" selectCategory[0]?.description !== 'null' " class="text-subtitle1"
+                  v-html=" selectCategory[0]?.description ">
+
+                </div>
+              </div>
+              <!-- <q-separator color="grey-4" size="10px" class="bottomLine" /> -->
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -288,7 +316,7 @@
             </div>
             <q-separator v-show=" billingDate " color="grey" />
             <div class=""
-              v-for="                                                                       alarm                                                                        in                                                                        getAlarm                                                                       "
+              v-for="                                                                                                                    alarm                                                                                                                     in                                                                                                                     getAlarm                                                                                                                    "
               :key=" alarm.id ">
               <div class="row no-wrap">
                 <div class="col text-subtitle1 q-py-sm">
@@ -337,7 +365,7 @@
     <q-card>
       <div class="ads dialogAds">
         <div
-          v-for="                                                                       ad                                                                        in                                                                        getAdsWithCategory                                                                       "
+          v-for="                                                                                                                    ad                                                                                                                     in                                                                                                                     getAdsWithCategory                                                                                                                    "
           :key=" ad.id ">
           <img :src=" ad.image " alt="add-image1" class="addImage" @click=" openAds(ad.url) " />
           <!-- add_description_scroll -->
@@ -574,8 +602,10 @@ const activeMenuItem = (id) => {
 };
 const activeMenuItemLightWater = (name) => {
   const childdetails = new Array();
+  if (name == "Home") {
+    name = 'Home';
+  }
   let data = getAds.value.filter((_el) => {
-
     return _el["name"] === name;
   });
   slide.value = data[0].ads[0]?.id;
@@ -585,6 +615,7 @@ const activeMenuItemLightWater = (name) => {
   //console.log(selectCategory);
 
 };
+activeMenuItemLightWater('Home');
 
 const formatPhoneNumber = (phoneNumberString) => {
   // alert();
