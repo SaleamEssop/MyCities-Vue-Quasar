@@ -6,12 +6,12 @@
       </div> -->
       <!-- Site -->
       <q-expansion-item dense expand-separator default-opened header-class="bg-primary accounts-list"
-        v-for="(site, index) in        allSites       " :key="index" class="q-mt-sm" text-color="white">
+        v-for="(site, index) in         allSites        " :key="index" class="q-mt-sm" text-color="white">
         <template v-slot:header>
           <q-item-section class="font-size larger text-white">
             {{ site.address || "Select A Location" }}</q-item-section>
         </template>
-        <template v-for="account in        getAccounts(site.id)       " :key="account.id">
+        <template v-for="account in         getAccounts(site.id)        " :key="account.id">
           <q-item>
             <q-item-section>
               <q-item-label class="text-h6">Account : {{ account.number }}</q-item-label>
@@ -20,25 +20,25 @@
             </q-item-section>
 
             <q-item-section center side>
-              <div v-if="account?.fixedCosts?.length && account.fixedCosts.length > 0
-                ">
-                <q-btn rounded color="primary" text-color="white" @click="selectAccount(account), Loading()"
-                  v-if="account == accountStore.selectedAccount" icon="check">Select</q-btn>
-                <q-btn rounded color="primary" text-color="white" v-else
-                  @click="selectAccount(account), Loading()">Select</q-btn>
-              </div>
-              <div v-else>
-                <!-- <q-btn @click="accountStore.selectedAccount = account;
+              <!-- <div v-if="account?.fixedCosts?.length && account.fixedCosts.length > 0
+                "> -->
+              <q-btn rounded color="primary" text-color="white" @click="selectAccount(account), Loading()"
+                v-if="account == accountStore.selectedAccount" icon="check">Select</q-btn>
+              <q-btn rounded color="primary" text-color="white" v-else
+                @click="selectAccount(account), Loading()">Select</q-btn>
+              <!-- </div> -->
+              <!-- <div v-else> -->
+              <!-- <q-btn @click="accountStore.selectedAccount = account;
                 modelAccountForNewEdit = true;
                                                                                                                   " rounded
                   color="negative" text-color="white">Setup</q-btn> -->
-              </div>
+              <!-- </div> -->
               <q-btn flat size="lg" icon="more_horiz" text-color="primary">
                 <q-menu anchor="center middle" self="center middle">
                   <q-list style="min-width: 100px">
                     <q-item clickable v-close-popup @click="accountStore.selectedAccount = account;
                     modelAccountForFullBill = true;
-                                        ">
+                                                            ">
                       <q-item-section>View Bill</q-item-section>
                     </q-item>
                     <q-item clickable v-close-popup @click="
@@ -198,7 +198,7 @@
 
       <!-- {{ accountStore.allAccounts }} -->
 
-      <template v-for="       meter        in        getMeters(accountStore.selectedAccount?.id)       " :key="meter.id">
+      <template v-for="        meter         in         getMeters(accountStore.selectedAccount?.id)        " :key="meter.id">
         <q-item clickable v-ripple class="q-px-none">
           <q-item-section>
             <MeterReadingSet :key=" meter.id " :meter=" { ...meter } " />
