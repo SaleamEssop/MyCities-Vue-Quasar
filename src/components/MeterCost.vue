@@ -14,21 +14,24 @@
       <q-card-section>
         <div>
           <div class="row flex justify-between items-center">
-            <div class="column col-5">
+            <div class="column col-4">
               <b class="text-center">Daily Usage</b>
 
               <div class="medium-rcorners text-h6 text-center" color="negative" text-color="white">
                 {{ billingMeterCost?.daily_usage }}
-                <!-- {{
-                meter.type.id == 2
-                  ? usesPerDay?.toFixed(2)
-                  : (usesPerDay * 1000.0)?.toFixed(2)
-              }} -->
-                <!-- {{ unit }} -->
+              </div>
+
+            </div>
+            <div class="column col-4">
+              <b class="text-center">Monthly Usage</b>
+
+              <div class="medium-rcorners text-h6 text-center" color="negative" text-color="white">
+                {{ billingMeterCost?.monthly_usage }}
+
               </div>
             </div>
 
-            <div class="column col-5">
+            <div class="column col-4">
               <b class="text-center">Daily Cost</b>
               <div class="medium-rcorners text-h6 text-center" color="negative" text-color="white">
                 <!-- R{{ (projectionCost["total"] / 30.0).toFixed(2) }} -->
