@@ -4,12 +4,7 @@
       <div class="text-subtitle2 text-white">Necessary Details</div>
     </q-card-section>
     <q-list>
-      <q-item
-        tag="label"
-        v-for="meterType in $METER_TYPES"
-        :key="meterType.id"
-        v-ripple
-      >
+      <q-item tag="label" v-for="meterType in $METER_TYPES" :key="meterType.id" v-ripple>
         <q-item-section avatar>
           <q-radio v-model="meter.type.id" :val="meterType.id" />
         </q-item-section>
@@ -23,20 +18,8 @@
     </q-list>
 
     <q-card-section>
-      <q-input
-        color="black"
-        type="text"
-        min="0"
-        v-model.trim="meter.title"
-        label="Meter Description"
-      />
-      <q-input
-        color="black"
-        type="text"
-        min="0"
-        v-model.trim="meter.number"
-        label="Meter Number"
-      />
+      <q-input color="black" type="text" min="0" v-model.trim="meter.title" label="Meter Description" />
+      <q-input color="black" type="text" min="0" v-model.trim="meter.number" label="Meter Number" />
 
       <!-- <q-separator color="primary q-my-lg" size="4px" />
       <div class="text-center">
@@ -102,34 +85,25 @@ If not available, simply enter the current date and meter reading and update it 
           </q-icon>
         </template>
       </q-input> -->
-      <div class="row justify-center q-mt-lg">
-        <q-badge class="bg-grey-4" text-color="black">
-          <span class="text-body1">Reading date: {{ readingDate }}</span>
-        </q-badge>
-      </div>
-      <div class="q-pt-md justify-center flex">
-        <span class="round-cheap text-center"
-          >Edit date
-          <q-popup-proxy
-            @before-show="updateProxy"
-            cover
-            transition-show="scale"
-            transition-hide="scale"
-          >
-            <q-date v-model="readingDate" mask="DD/MM/YYYY">
-              <div class="row items-center justify-end q-gutter-sm">
-                <q-btn label="Cancel" color="primary" flat v-close-popup />
-                <q-btn
-                  label="OK"
-                  color="primary"
-                  flat
-                  @click="save"
-                  v-close-popup
-                />
-              </div>
-            </q-date>
-          </q-popup-proxy>
-        </span>
+      <p class="caption q-field__label q-mt-lg">Current Selected Dates</p>
+      <div class="flex justify-center items-center q-mt-lg reading-text-wrapper">
+        <div class="row justify-center">
+          <q-badge class="bg-white" text-color="black">
+            <strong class="text-body1">{{ readingDate }}</strong>
+          </q-badge>
+        </div>
+        <div class="justify-center flex">
+          <span class="round-cheap-n text-center">Change
+            <q-popup-proxy @before-show="updateProxy" cover transition-show="scale" transition-hide="scale">
+              <q-date v-model="readingDate" mask="DD/MM/YYYY">
+                <div class="row items-center justify-end q-gutter-sm">
+                  <q-btn label="Cancel" color="primary" flat v-close-popup />
+                  <q-btn label="OK" color="primary" flat @click="save" v-close-popup />
+                </div>
+              </q-date>
+            </q-popup-proxy>
+          </span>
+        </div>
       </div>
       <q-separator class="q-mt-md" />
 
@@ -147,49 +121,30 @@ If not available, simply enter the current date and meter reading and update it 
           placeholder="PUT INPUT"
         /> -->
         <q-card-section>
-          <div
-            class="relative"
-            :class="inputFocus ? 'stroke-focus' : 'stroke-simple'"
-          >
+          <div class="relative" :class="inputFocus ? 'stroke-focus' : 'stroke-simple'">
             <div class="absolute" style="opacity: 0">
               <!-- autofocus -->
-              <q-input
-                type="number"
-                color="black"
-                :min="0"
+              <q-input type="number" color="black" :min="0"
                 oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                :maxlength="meter.type.id == 2 ? 6 : 8"
-                outlined
-                @focus="inputFocus = true"
-                @blur="inputFocus = false"
-                :step="1"
-                v-model="firstReading.valueInString"
-                @keypress="
-                  (event) => {
+                :maxlength="meter.type.id == 2 ? 6 : 8" outlined @focus="inputFocus = true" @blur="inputFocus = false"
+                :step="1" v-model="firstReading.valueInString" @keypress="(event) => {
                     if (
                       `${firstReading.valueInString || ''}`.length >=
-                        (meter.type.id == 2 ? 6 : 8) ||
+                      (meter.type.id == 2 ? 6 : 8) ||
                       event.keyCode == 46
                     ) {
                       event.preventDefault();
                     } else {
                     }
                   }
-                "
-              />
+                  " />
             </div>
             <div class="text-center">
-              <MeterComponent
-                ref="meterComopnentReadValue"
-                :text="firstReading.valueInString"
-                :meterStyle="meter.type.id"
-                :readingType="
-                  meter.type.id == 2
+              <MeterComponent ref="meterComopnentReadValue" :text="firstReading.valueInString" :meterStyle="meter.type.id"
+                :readingType="meter.type.id == 2
                     ? 'electricity-recorded-reading'
                     : 'water-recorded-reading'
-                "
-                :isInput="true"
-              />
+                  " :isInput="true" />
             </div>
           </div>
         </q-card-section>
@@ -204,23 +159,9 @@ If not available, simply enter the current date and meter reading and update it 
     </q-card-section>
     <q-space />
     <q-card-actions align="center">
-      <q-btn
-        color="red"
-        text-color="white"
-        class="q-my-none q-mx-none"
-        label="Cancel"
-        glossy
-        @click="$emit('close')"
-      />
+      <q-btn color="red" text-color="white" class="q-my-none q-mx-none" label="Cancel" glossy @click="$emit('close')" />
 
-      <q-btn
-        color="primary"
-        text-color="white"
-        class="q-my-none q-mx-none"
-        label="Save"
-        glossy
-        @click="addMeter"
-      />
+      <q-btn color="primary" text-color="white" class="q-my-none q-mx-none" label="Save" glossy @click="addMeter" />
     </q-card-actions>
   </q-card>
 </template>
@@ -409,5 +350,16 @@ export default defineComponent({
 <style scoped>
 .modelHeight {
   height: auto !important;
+}
+
+.reading-text-wrapper .text-body1 {
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.reading-text-wrapper .round-cheap-n {
+  font-size: 16px;
+  margin-left: 20px;
+  color: rgba(0, 0, 0, 0.6);
 }
 </style>
