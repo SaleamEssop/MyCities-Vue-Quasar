@@ -123,11 +123,13 @@ export default defineComponent({
     const readingStore = useReadingStore();
     const siteStore = useSiteStore();
     const accountStore = useAccountStore();
+    const ms = ref();
 
     const account = accountStore.getAccountById(props.meter.account.id);
 
     const meters = [props.meter];
     const $q = useQuasar();
+    console.log(meters);
     // const readingPeriod = ref(null)
 
     const site = siteStore.getSiteById(account.site.id);
@@ -146,6 +148,7 @@ export default defineComponent({
     } else {
       billingMeterCost = list[0];
     }
+    //console.log(billingMeterCost);
     const usesPerDay = ref(0);
 
     var readings = readingStore.getReadingsByMeterId(props?.meter?.id);
@@ -216,9 +219,13 @@ export default defineComponent({
         });
         readingPeriod.value = date.formatDate(getPreviousMonth, "MMM YYYY");
       }
+      let current = getNextDate();
+      let previous = getPreviousDate();
+      ms.value = getMonthWiseMeterCost(previous, current);
     };
 
     const nextMonth = (_month) => {
+      console.log(_month);
       let nextOneMonth = date.addToDate(new Date(), {
         months: 1,
       });
@@ -231,26 +238,90 @@ export default defineComponent({
         });
         readingPeriod.value = date.formatDate(getNextMonth, "MMM YYYY");
       }
+      // call api to props
+      let current = getNextDate();
+      let previous = getPreviousDate();
+      ms.value = getMonthWiseMeterCost(previous, current);
+      console.log(ms);
+      //return billingMeterCost;
+
     };
 
-    const currentBillPeriod = computed(() => {
+    const getMonthWiseMeterCost = (previous, current) => {
+      const address = getParticularMeterCost(props.meter.account.id, props.meter.id, '', previous, current);
+      const printAddress = async () => {
+        billingMeterCost = await address;
+        // console.log(props.meter);
+        return billingMeterCost.account_type_id;
+      };
+      ms.value = billingMeterCost;
+      return billingMeterCost;
+    }
+    console.log("Mitesh", ms);
 
+
+    const getPreviousDate = () => {
       let currentbillDate = null;
 
       let getCurrentMonth = date.addToDate(readingPeriod.value, {
         days: billingCycle.value - 1,
       });
       let currentMonth = date.formatDate(getCurrentMonth, "DD MMMM");
+      let current = date.formatDate(getCurrentMonth, "YYYY-MM-DD");
+
+      let getPreviousMonth = date.subtractFromDate(currentMonth, {
+        month: 1,
+      });
+      let previous = date.formatDate(getPreviousMonth, "YYYY-MM-DD");
+      currentbillDate = previous;
+      return currentbillDate;
+    }
+
+
+    const getNextDate = () => {
+      let currentbillDate = null;
+      let billingMeterCost = [];
+
+      let getCurrentMonth = date.addToDate(readingPeriod.value, {
+        days: billingCycle.value - 1,
+      });
+      let currentMonth = date.formatDate(getCurrentMonth, "DD MMMM");
+      let current = date.formatDate(getCurrentMonth, "YYYY-MM-DD");
+
+      currentbillDate = current;
+      return currentbillDate;
+    }
+    console.log('246', nextMonth('july 2023'));
+    const currentBillPeriod = computed(() => {
+
+      let currentbillDate = null;
+      let billingMeterCost = [];
+
+      let getCurrentMonth = date.addToDate(readingPeriod.value, {
+        days: billingCycle.value - 1,
+      });
+      let currentMonth = date.formatDate(getCurrentMonth, "DD MMMM");
+      let current = date.formatDate(getCurrentMonth, "YYYY-MM-DD");
 
       let getPreviousMonth = date.subtractFromDate(currentMonth, {
         month: 1,
       });
       let previousMonth = date.formatDate(getPreviousMonth, "DD MMMM");
+      let previous = date.formatDate(getPreviousMonth, "YYYY-MM-DD");
       currentbillDate = `${previousMonth}` + " to " + `${currentMonth}`;
 
+      // const address = getParticularMeterCost(props.meter.account.id, props.meter.id, '', previous, current);
+      // const printAddress = async () => {
+      //   billingMeterCost = await address;
+      //   return billingMeterCost;
+
+      // };
+      //billingMeterCost = printAddress();
+      // console.log(billingMeterCost);
       return currentbillDate;
     });
 
+    console.log("280", currentBillPeriod);
 
 
 
@@ -454,7 +525,10 @@ export default defineComponent({
       previousMonth,
       nextMonth,
       readingPeriod,
-      currentDate
+      currentDate,
+      getPreviousDate,
+      getNextDate,
+      ms
       // currentreadingPeriod,
     };
   },
