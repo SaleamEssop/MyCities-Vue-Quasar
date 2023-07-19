@@ -16,15 +16,15 @@ export const useMeterStore = defineStore("meter", {
           getCurrentInstance().appContext.config.globalProperties.$METER_TYPES;
         _meter.type = METER_TYPES.find((meter) => meter.id == _meter.type.id);
 
-        let response = getParticularMeterCost(
-          _meter.account.id,
-          _meter.id,
-          ''
-        ).then((res) => {
-          // console.log(res[0]);
-          _meter.calculation = res;
-          //readingStore.replace(res);
-        });
+        // let response = getParticularMeterCost(
+        //   _meter.account.id,
+        //   _meter.id,
+        //   ''
+        // ).then((res) => {
+        //   // console.log(res[0]);
+        //   _meter.calculation = res;
+        //   //readingStore.replace(res);
+        // });
         return _meter;
       });
     },

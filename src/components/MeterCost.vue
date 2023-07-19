@@ -267,14 +267,13 @@ export default defineComponent({
         days: billingCycle.value - 1,
       });
       let currentMonth = date.formatDate(getCurrentMonth, "DD MMMM");
-      let current = date.formatDate(getCurrentMonth, "YYYY-MM-DD");
 
-      let getPreviousMonth = date.subtractFromDate(currentMonth, {
+      let getPreviousMonth = date.subtractFromDate(getCurrentMonth, {
         month: 1,
       });
       let previous = date.formatDate(getPreviousMonth, "YYYY-MM-DD");
-      currentbillDate = previous;
-      return currentbillDate;
+
+      return previous;
     }
 
 

@@ -19,9 +19,10 @@ const readingStore = useReadingStore();
 // for each client)
 
 // const SERVER_URL = "";
-// const SERVER_URL = "http://146.190.105.178";
-//const SERVER_URL = "http://127.0.0.1:8000";
-const SERVER_URL = "http://157.245.194.89";
+//const SERVER_URL = "https://mycities.co.za"; // prod
+//const SERVER_URL = "http://146.190.105.178"; 
+const SERVER_URL = "http://127.0.0.1:8000";
+//const SERVER_URL = "http://157.245.194.89"; // staging
 
 // const SERVER_URL = "http://192.168.29.88:8000";
 
@@ -128,9 +129,9 @@ const addMeterAndReading = async (req) => {
 const getAllData = async () => {
   return await api.get(`/v1/all-data?user_id=${userStore.getUser?.id}`);
 };
-const getParticularMeterCost = async (accountId, meter_id, type) => {
-  return await api.get(
-    `/v1/regions/getEastimateCost?account_id=${accountId}&meter_id=${meter_id}&type=${type}`
+const getParticularMeterCost =  (accountId, meter_id, type,start_date,end_date) => {
+  return api.get(
+    `/v1/regions/getEastimateCost?account_id=${accountId}&meter_id=${meter_id}&type=${type}&start_date=${start_date}&end_date=${end_date}`
   );
 };
 
