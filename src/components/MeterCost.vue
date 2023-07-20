@@ -129,7 +129,7 @@ export default defineComponent({
 
     const meters = [props.meter];
     const $q = useQuasar();
-    console.log(meters);
+    // console.log(meters);
     // const readingPeriod = ref(null)
 
     const site = siteStore.getSiteById(account.site.id);
@@ -138,17 +138,17 @@ export default defineComponent({
     const getCost = durbanReading.getCost;
 
     // push data in metercost
-    var list = [];
-    let billingMeterCost = [];
-    props?.meter?.calculation?.map(function (value, key) {
-      list.push(value);
-    });
-    if ((list && list[0])) {
-      billingMeterCost = list[0];
-    } else {
-      billingMeterCost = list[0];
-    }
-    //console.log(billingMeterCost);
+    // var list = [];
+
+    // props?.meter?.calculation?.map(function (value, key) {
+    //   list.push(value);
+    // });
+    // if ((list && list[0])) {
+    //   billingMeterCost = list[0];
+    // } else {
+    //   billingMeterCost = list[0];
+    // }
+    // console.log(billingMeterCost);
     const usesPerDay = ref(0);
 
     var readings = readingStore.getReadingsByMeterId(props?.meter?.id);
@@ -205,8 +205,8 @@ export default defineComponent({
     // currentMonthReadings.value = durbanReading.calculateUnitForMonth({
     //   isLastReadings: isLastReadings,
     // });
-
-    const previousMonth = (_month) => {
+    let prev = [];
+    const previousMonth = async (_month) => {
       let firstReadingOfMeter = new Array();
       meters.forEach((meter) => {
         var readings = readingStore.getReadingsByMeterId(meter.id);
@@ -221,11 +221,13 @@ export default defineComponent({
       }
       let current = getNextDate();
       let previous = getPreviousDate();
-      ms.value = getMonthWiseMeterCost(previous, current);
+      prev = await getMonthWiseMeterCost(previous, current);
+      console.log('prev', prev);
     };
+    //console.log(prev);
 
-    const nextMonth = (_month) => {
-      console.log(_month);
+    const nextMonth = async (_month) => {
+      //  console.log(_month);
       let nextOneMonth = date.addToDate(new Date(), {
         months: 1,
       });
@@ -241,25 +243,27 @@ export default defineComponent({
       // call api to props
       let current = getNextDate();
       let previous = getPreviousDate();
-      ms.value = getMonthWiseMeterCost(previous, current);
-      console.log(ms);
+      let next = await getMonthWiseMeterCost(previous, current);
+      console.log('next', next);
+      // console.log("dddddd", ms);
       //return billingMeterCost;
 
     };
+    let billingMeterCost = [];
+    const getMonthWiseMeterCost = async (previous, current) => {
 
-    const getMonthWiseMeterCost = (previous, current) => {
-      const address = getParticularMeterCost(props.meter.account.id, props.meter.id, '', previous, current);
-      const printAddress = async () => {
-        billingMeterCost = await address;
-        // console.log(props.meter);
-        return billingMeterCost.account_type_id;
-      };
-      ms.value = billingMeterCost;
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          const address = getParticularMeterCost(props.meter.account.id, props.meter.id, '', previous, current).then(res => {
+            billingMeterCost = res[0];
+            resolve(res[0])
+          });
+        })
+      });
+      console.log('258', billingMeterCost);
       return billingMeterCost;
     }
-    console.log("Mitesh", ms);
-
-
+    console.log('266', billingMeterCost);
     const getPreviousDate = () => {
       let currentbillDate = null;
 
@@ -290,7 +294,7 @@ export default defineComponent({
       currentbillDate = current;
       return currentbillDate;
     }
-    console.log('246', nextMonth('july 2023'));
+    // console.log('246', nextMonth('july 2023'));
     const currentBillPeriod = computed(() => {
 
       let currentbillDate = null;
@@ -319,9 +323,6 @@ export default defineComponent({
       // console.log(billingMeterCost);
       return currentbillDate;
     });
-
-    console.log("280", currentBillPeriod);
-
 
 
     const isLastReadings = durbanReading.getSubmitedAndLastReading(
