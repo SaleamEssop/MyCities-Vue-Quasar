@@ -1,4 +1,4 @@
-<template >
+<template>
   <q-card>
     <div v-if="billingMeterCost?.data?.length != 0">
       <q-card-section class="bg-grey-2 row justify-center">
@@ -11,18 +11,18 @@
             @click="previousMonth(readingPeriod)" />
           <div style="font-size: 18px">
             {{ billingMeterCost?.firstReadingDate }} to {{ billingMeterCost?.endReadingDate }}
-            
+
           </div>
           <q-icon style="margin-top: -5px" name="chevron_right" size="lg" class="cursor-pointer"
             @click="nextMonth(readingPeriod)" /> -->
           <q-icon name="chevron_left" style="margin-top: -5px" size="lg" class="cursor-pointer"
-            @click="previousMonth(readingPeriod)" />
+                  @click="previousMonth(readingPeriod)"/>
           <span class="q-gutter-sm mx-3" style="font-size: 18px; margin: 0;">
             Projected bill for
             {{ readingPeriod }}
           </span>
           <q-icon style="margin-top: -5px" name="chevron_right" size="lg" class="cursor-pointer"
-            @click="nextMonth(readingPeriod)" />
+                  @click="nextMonth(readingPeriod)"/>
         </div>
         <div class="flex column content-center items-center">
           <div class="text-subtitle1 rounded-borders">{{ currentBillPeriod }}</div>
@@ -60,7 +60,7 @@
               </div>
             </div>
           </div>
-          <q-separator class="q-my-md" color="grey" size="2px" />
+          <q-separator class="q-my-md" color="grey" size="2px"/>
           <div v-if="billingMeterCost">
             <div class="row no-wrap" v-for="(cost, index) in billingMeterCost['projection']" :key="index">
               <div v-show="cost.title" class="col">
@@ -78,7 +78,7 @@
               R {{ billingMeterCost?.final_total }}
             </div>
           </div>
-          <q-separator color="grey" class="q-my-xs" size="2px" />
+          <q-separator color="grey" class="q-my-xs" size="2px"/>
 
           <div class="text-center text-h6 q-mt-md">
             <!-- <div>Date: {{ lastReadingDisplayFormat.timeDisplay }}</div>
@@ -90,25 +90,29 @@
       </q-card-section>
     </div>
     <div v-else>
+      <q-icon name="chevron_left" style="margin-top: -5px" size="lg" class="cursor-pointer"
+              @click="previousMonth()"/>
       {{ billingMeterCost?.msg }}
+      <q-icon style="margin-top: -5px" name="chevron_right" size="lg" class="cursor-pointer"
+              @click="nextMonth()"/>
     </div>
     <q-card-actions align="evenly">
       <q-btn color="grey-2" v-if="billingMeterCost?.data?.length != 0" text-color="black"
-        @click="submitBill">Email</q-btn>
+             @click="submitBill">Email
+      </q-btn>
       <q-btn color="grey-2" text-color="black" @click="$emit('close')">Close</q-btn>
     </q-card-actions>
   </q-card>
 </template>
 <script>
-import { defineComponent, ref, computed } from "vue";
-import { date } from "quasar";
-import { useReadingStore } from "/src/stores/reading";
-import { useSiteStore } from "/src/stores/site";
-import { useAccountStore } from "/src/stores/account";
-import { useQuasar } from "quasar";
+import {computed, defineComponent, ref} from "vue";
+import {date, useQuasar} from "quasar";
+import {useReadingStore} from "/src/stores/reading";
+import {useSiteStore} from "/src/stores/site";
+import {useAccountStore} from "/src/stores/account";
 
 import waterDurban from "/src/services/waterDurban.js";
-import { getParticularMeterCost } from "boot/axios";
+import {getParticularMeterCost} from "boot/axios";
 
 
 export default defineComponent({
@@ -123,6 +127,7 @@ export default defineComponent({
     const readingStore = useReadingStore();
     const siteStore = useSiteStore();
     const accountStore = useAccountStore();
+    let billingMeterCost = ref({});
     const ms = ref();
 
     const account = accountStore.getAccountById(props.meter.account.id);
@@ -190,8 +195,8 @@ export default defineComponent({
       }
       return readingPeriod;
     });
-
     const readingPeriod = ref(billingCycleMonth.value);
+    readingPeriod.value = billingCycleMonth.value
     // const readingPeriod = ref(date.formatDate(new Date(), "MMM YYYY"));
 
     const currentDate = ref(date.formatDate(new Date(), "DD MMMM YYYY"));
@@ -206,10 +211,11 @@ export default defineComponent({
     //   isLastReadings: isLastReadings,
     // });
     let prev = [];
-    const previousMonth = async (_month) => {
-      let firstReadingOfMeter = new Array();
+    const previousMonth = async () => {
+      const _month = readingPeriod.value
+      let firstReadingOfMeter = [];
       meters.forEach((meter) => {
-        var readings = readingStore.getReadingsByMeterId(meter.id);
+        const readings = readingStore.getReadingsByMeterId(meter.id);
         return (firstReadingOfMeter = readings[readings.length - 1].time);
       });
       let firstReadingMonth = date.formatDate(firstReadingOfMeter, "MMM YYYY");
@@ -226,7 +232,8 @@ export default defineComponent({
     };
     //console.log(prev);
 
-    const nextMonth = async (_month) => {
+    const nextMonth = async () => {
+      const _month = readingPeriod.value
       //  console.log(_month);
       let nextOneMonth = date.addToDate(new Date(), {
         months: 1,
@@ -249,35 +256,26 @@ export default defineComponent({
       //return billingMeterCost;
 
     };
-    let billingMeterCost = [];
     const getMonthWiseMeterCost = async (previous, current) => {
 
       await new Promise((resolve, reject) => {
         setTimeout(() => {
-          const address = getParticularMeterCost(props.meter.account.id, props.meter.id, '', previous, current).then(res => {
-            billingMeterCost = res[0];
+          getParticularMeterCost(props.meter.account.id, props.meter.id, '', previous, current).then(res => {
+            billingMeterCost.value = res[0];
             resolve(res[0])
           });
         })
       });
-      console.log('258', billingMeterCost);
       return billingMeterCost;
     }
-    console.log('266', billingMeterCost);
     const getPreviousDate = () => {
-      let currentbillDate = null;
-
       let getCurrentMonth = date.addToDate(readingPeriod.value, {
         days: billingCycle.value - 1,
       });
-      let currentMonth = date.formatDate(getCurrentMonth, "DD MMMM");
-
       let getPreviousMonth = date.subtractFromDate(getCurrentMonth, {
         month: 1,
       });
-      let previous = date.formatDate(getPreviousMonth, "YYYY-MM-DD");
-
-      return previous;
+      return date.formatDate(getPreviousMonth, "YYYY-MM-DD");
     }
 
 
@@ -341,7 +339,7 @@ export default defineComponent({
 
     // const projectionCost = getCost(usesPerDay.value, props?.meter);
 
-    const percentageCharges = [{ title: "VAT", onTotalAmount: 0.15 }];
+    const percentageCharges = [{title: "VAT", onTotalAmount: 0.15}];
 
     String.prototype.insert = function (index, string) {
       if (index > 0) {
@@ -358,11 +356,11 @@ export default defineComponent({
 
     const totalProjectionCost = computed(() => {
       let total = 0;
-      waterLevyCostByServer.value.forEach(({ value }) => {
+      waterLevyCostByServer.value.forEach(({value}) => {
         if (projectionCost.projection.length === 0) {
           total = total + value || 0;
         }
-        projectionCost.projection.forEach(({ title }) => {
+        projectionCost.projection.forEach(({title}) => {
           if (title !== "Electricity bill") {
             total = projectionCost.total + value;
             total = newVATOnMeterBill.value.value + total;
@@ -378,8 +376,8 @@ export default defineComponent({
     const newVATOnMeterBill = computed(() => {
       const VAT = new Object();
       const val = percentageCharges.forEach((_percentage) => {
-        waterLevyCostByServer.value.forEach(({ value }) => {
-          projectionCost.projection.forEach(({ title }) => {
+        waterLevyCostByServer.value.forEach(({value}) => {
+          projectionCost.projection.forEach(({title}) => {
             if (title !== "Electricity bill") {
               VAT["title"] = _percentage.title;
               VAT["value"] =
@@ -447,10 +445,10 @@ export default defineComponent({
         valueInString = `Current Reading:${meter.type.id == 2
           ? lastReadingTime.value
           : lastReadingTime.value.toFixed(2)
-          }\nDate:\t\t\t${date.formatDate(
-            new Date(lastReadingTime.time),
-            "DD MMMM YYYY"
-          )}\n`;
+        }\nDate:\t\t\t${date.formatDate(
+          new Date(lastReadingTime.time),
+          "DD MMMM YYYY"
+        )}\n`;
         //valueInString = (usesPerDay * 30).toFixed(2) + " " + unit;
 
         // body += `\n`;
@@ -500,7 +498,7 @@ export default defineComponent({
         seprated,
         "."
       );
-      return { timeDisplay, value };
+      return {timeDisplay, value};
     });
 
     return {
@@ -532,6 +530,9 @@ export default defineComponent({
       // currentreadingPeriod,
     };
   },
+  mounted() {
+    this.nextMonth().then();
+  }
 });
 </script>
 <style scoped>
