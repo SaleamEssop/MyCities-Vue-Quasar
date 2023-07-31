@@ -149,3 +149,6 @@ body.desktop .sidebar-menu-wrapper .q-hoverable:hover > .q-focus-helper {
   color: inherit;
   text-decoration: none;
 }
+.disabled, [disabled]{
+  opacity: .4 !important
+}

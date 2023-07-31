@@ -1,5 +1,9 @@
 import {api} from "boot/axios";
 
-export const getCost = (meter_id) => {
-  return api.get(`/v1/meters/${meter_id}/cost`);
+export const getCost = (meter_id, month) => {
+  return api.get(`/v1/meters/${meter_id}/cost-estimation`, {
+    params: {
+      month
+    }
+  });
 }
