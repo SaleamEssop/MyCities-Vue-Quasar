@@ -22,8 +22,7 @@
             <q-item-section center side>
               <!-- <div v-if="account?.fixedCosts?.length && account.fixedCosts.length > 0
                 "> -->
-              <q-btn rounded color="primary" text-color="white" @click="selectAccount(account), Loading()"
-                v-if="account == accountStore.selectedAccount" icon="check">Select</q-btn>
+              <q-btn rounded color="primary" text-color="white" @click="selectAccount(account); Loading()" v-if="account == accountStore.selectedAccount" icon="check">Select</q-btn>
               <q-btn rounded color="primary" text-color="white" v-else
                 @click="selectAccount(account), Loading()">Select</q-btn>
               <!-- </div> -->

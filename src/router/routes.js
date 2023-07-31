@@ -13,12 +13,29 @@ const routes = [
         meta: { title: "Home", meta: { requiresAuth: true } },
       },
       {
+        path: "/meters/:id/cost",
+        component: () => import("pages/Meters/MeterCost.vue"),
+        name: "MeterCost",
+        meta: { title: "Data", meta: { requiresAuth: true } },
+      },
+      {
+        path: "/meters",
+        component: () => import("layouts/MainLayout.vue"),
+        children: [
+          {
+            path: ":id/cost",
+            component: () => import("pages/Meters/MeterCost.vue"),
+            name: "MeterCost",
+            meta: { title: "Meter Cost", meta: { requiresAuth: true } },
+          },
+        ],
+      },
+      {
         path: "/data_set",
         component: () => import("pages/DatasetPage.vue"),
         name: "data-set",
         meta: { title: "Data", meta: { requiresAuth: true } },
       },
-
       {
         path: "/send_reading/",
         component: () => import("layouts/MainLayout.vue"),

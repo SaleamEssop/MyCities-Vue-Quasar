@@ -3,15 +3,16 @@
     <q-card-section class="text-center q-py-none">
       <div class="flex justify-between items-center">
         <span class="text-bold text-h6 text-black">{{
-          meter?.type.title
-        }} Meter :- {{ meter?.number }}</span>
+            meter?.type.title
+          }} Meter :- {{ meter?.number }}</span>
         <!-- <span class="round-cheap">Meter {{ meter?.number }}</span> -->
       </div>
       <div class="flex justify-between items-center">
 
-        <span>Last reading, <b>{{ new
-          Date(lastReading.time).toLocaleString("en-GB")
-        }}</b></span>
+        <span>Last reading, <b>{{
+            new
+            Date(lastReading.time).toLocaleString("en-GB")
+          }}</b></span>
 
         <!-- {{ date.formatDate(new Date(lastReading.time), "DD/MM/YYYY") }} -->
         <!-- <span class="round-cheap">Meter {{ meter?.number }}</span> -->
@@ -38,7 +39,7 @@
         <MeterComponent :text="lastReading.valueInString" :meterStyle="meter?.type?.id" :readingType="meter.type.id == 2
             ? 'electricity-recorded-reading'
             : 'water-recorded-reading'
-          " />
+          "/>
       </div>
     </q-card-section>
 
@@ -57,7 +58,7 @@
           <q-menu anchor="center middle" self="center middle">
             <q-list style="min-width: 100px">
               <q-item clickable v-close-popup v-ripple
-                @click="modelForReadingSet_NewReading = true;
+                      @click="modelForReadingSet_NewReading = true;
                 modelForReadingSet = true;
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ">
                 <q-item-section>Enter New Reading</q-item-section>
@@ -75,6 +76,13 @@
               <q-item @click=" getMeterCost(meter) " v-close-popup clickable v-ripple>
                 <q-item-section>Calculate Cost</q-item-section>
               </q-item>
+              <router-link class="link" :to="{name:'MeterCost',params:{id:meter.id}}">
+                <q-item clickable v-ripple>
+                  <q-item-section>Calculate Cost New</q-item-section>
+                </q-item>
+              </router-link>
+
+
               <!-- :disable="meterLength === 2 ? true : false" -->
               <q-item @click=" modelMeterForNewEdit = true " clickable v-close-popup>
                 <q-item-section>Add a new meter</q-item-section>
@@ -98,7 +106,7 @@
 
     <q-slide-transition v-if=" false ">
       <div v-show=" isExpand ">
-        <q-separator />
+        <q-separator/>
         <q-card-section>
           <div>
             <div class="row flex justify-between items-center">
@@ -128,49 +136,51 @@
 
     <q-card-actions v-if=" false ">
       <q-btn class="full-width" color="primary" text-color="black" @click=" moveTo('setReading', meter?.id) ">Set
-        Reading</q-btn>
+        Reading
+      </q-btn>
     </q-card-actions>
 
     <q-card-section v-if=" false " class="text-center q-py-none bg-primary q-mt-md">
       <q-item class="flex justify-center" clickable :class=" !isExpand ? 'bubble-bottom' : 'bubble-top' "
-        @click=" isExpand = !isExpand ">
-        <q-btn round flat dense :icon=" isExpand ? 'keyboard_arrow_up' : 'keyboard_arrow_down' " />
+              @click=" isExpand = !isExpand ">
+        <q-btn round flat dense :icon=" isExpand ? 'keyboard_arrow_up' : 'keyboard_arrow_down' "/>
       </q-item>
     </q-card-section>
   </q-card>
   <q-dialog v-model=" modelForReadingSet " @hide=" modelForReadingSet = false " persistent :full-width=" true ">
     <MeterComponentWithInput :meter=" meter " @close=" modelForReadingSet = false " @save=" modelForReadingSet = false "
-      :isNew=" modelForReadingSet_NewReading " />
+                             :isNew=" modelForReadingSet_NewReading "/>
   </q-dialog>
 
   <q-dialog v-model=" modelMeterForNewEdit " @hide=" modelMeterForNewEdit = false " :full-width=" true " persistent>
     <AddMeter :propsMeter=" null " :propsAccount=" selectedAccount " @close=" modelMeterForNewEdit = false "
-      @save=" modelMeterForNewEdit = false " />
+              @save=" modelMeterForNewEdit = false "/>
   </q-dialog>
 
   <q-dialog v-model=" modelCostForMeter " @hide=" modelCostForMeter = false " :full-width=" true " persistent>
     <MeterCost :meter=" meter " :meterCostData=" meterCostData " @close=" modelCostForMeter = false "
-      @save=" modelCostForMeter = false " :isNew=" true " />
+               @save=" modelCostForMeter = false " :isNew=" true "/>
   </q-dialog>
 </template>
 <script>
-import { defineComponent, computed, ref, watch } from "vue";
-import { useRouter } from "vue-router";
-import { date, Dialog, useQuasar } from "quasar";
+import {defineComponent, computed, ref, watch} from "vue";
+import {useRouter} from "vue-router";
+import {date, Dialog, useQuasar} from "quasar";
 
 import MeterComponent from "./MeterComponent.vue";
 
-import { useMeterStore } from "/src/stores/meter";
-import { useReadingStore } from "/src/stores/reading";
-import { useAccountStore } from "/src/stores/account";
+import {useMeterStore} from "/src/stores/meter";
+import {useReadingStore} from "/src/stores/reading";
+import {useAccountStore} from "/src/stores/account";
 
 import MeterComponentWithInput from "./MeterComponentWithInput.vue";
 import AddMeter from "./AddMeter.vue";
 import MeterCost from "./MeterCost.vue";
-import { deleteMainMeter } from "src/boot/axios";
-import { getParticularMeterCost } from "boot/axios";
-import { updateAllData } from "src/boot/firebase";
-const { formatDate } = date
+import {deleteMainMeter} from "src/boot/axios";
+import {getParticularMeterCost} from "boot/axios";
+import {updateAllData} from "src/boot/firebase";
+
+const {formatDate} = date
 const meterStore = useMeterStore();
 const readingStore = useReadingStore();
 const accountStore = useAccountStore();
@@ -233,7 +243,7 @@ export default defineComponent({
       const data = (readings || []).sort((a, b) => b.time - a.time);
       lastReading.value = data[0] || {};
       firstReading.value =
-        data.find(({ isSubmit }) => isSubmit) || data[data.length - 1] || {};
+        data.find(({isSubmit}) => isSubmit) || data[data.length - 1] || {};
     };
 
     const updateReadings = () => {
@@ -247,7 +257,7 @@ export default defineComponent({
         readings = newValue;
         getSubmitedAndLastReading();
       },
-      { deep: true }
+      {deep: true}
     );
     updateReadings();
     const showAlert = (msg) => {
@@ -266,14 +276,17 @@ export default defineComponent({
         ],
       });
     };
+
     function moveTo(path, meterId) {
-      router.push({ path: `${path}/${meterId}` });
+      router.push({path: `${path}/${meterId}`});
     }
+
     function calculateUnitForMonth() {
       const consumeUnits = lastReading.value.value - firstReading.value.value;
       const consumeTime = lastReading.value.time - firstReading.value.time;
       usesPerDay.value = (consumeUnits / consumeTime) * 1000 * 60 * 60 * 24;
     }
+
     // const readingWatcher = watch(
     //   [lastReading, firstReading],
     //   (
@@ -294,7 +307,7 @@ export default defineComponent({
         cancel: true,
         persistent: true,
       }).onOk(() => {
-        deleteMainMeter({ meter_id: meter.id }).then((status) => {
+        deleteMainMeter({meter_id: meter.id}).then((status) => {
           if (status.code == 200) {
             meterStore.deleteMeter(meter);
           }
@@ -331,7 +344,7 @@ export default defineComponent({
 
     };
   },
-  components: { MeterComponent, MeterComponentWithInput, AddMeter, MeterCost },
+  components: {MeterComponent, MeterComponentWithInput, AddMeter, MeterCost},
 });
 </script>
 <style lang="scss" scoped>
