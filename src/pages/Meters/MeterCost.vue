@@ -17,7 +17,7 @@
         <span>
           Projected bill for {{ costDetails?.month }}
         </span>
-        <q-icon v-if="currentMonth !== 1" @click="next" name="arrow_right" class="icon-styling"/>
+        <q-icon v-if="currentMonth > 1" @click="next" name="arrow_right" class="icon-styling"/>
         <q-icon v-else disabled name="arrow_right" class="icon-styling"/>
       </div>
       <span class="medium-text">{{ costDetails?.cycle }}</span>
@@ -109,7 +109,7 @@
   <template v-else>
     <div class="q-ma-sm q-pa-sm" style="display: flex;justify-content: center;align-items: center;min-height: 300px">
       <q-banner dense inline-actions class="text-white bg-red">
-        You have lost connection to the internet. This app is offline. adsa asdas dsadsa das
+        {{costDetails.message}}
       </q-banner>
     </div>
   </template>
