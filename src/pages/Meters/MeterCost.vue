@@ -24,14 +24,18 @@
       <span class="medium-text">Today is {{ costDetails.current_date }}</span>
     </div>
   </q-card>
-  <template v-if="!costDetails.message">
-    <q-card flat class="q-ma-sm q-pa-sm">
+  <template v-if="hasError">
+    <div class="q-ma-sm q-pa-sm" style="display: flex;justify-content: center;align-items: center;min-height: 300px">
+      <q-banner dense inline-actions class="text-white bg-red">
+        {{costDetails.message}}
+      </q-banner>
+    </div>
+  </template>
+  <template v-else>
+    <q-card v-if="costDetails?.meter_details?.meter_type_id === WATER_METER" flat class="q-ma-sm q-pa-sm">
       <div class="row flex justify-between items-center">
         <div class="column col-3">
           <b class="text-center">Daily Usage</b>
-          <div class="text-center basic-text">
-            {{ unitFormat.unitFormat(costDetails?.usage?.average_usage || 0) }}
-          </div>
           <div class="text-center basic-text">
             {{ unitFormat.klToLitters(costDetails?.usage?.average_usage || 0) }}
           </div>
@@ -40,23 +44,45 @@
         <div class="column col-3">
           <b class="text-center">Monthly Usage</b>
           <div class="text-center basic-text">
-            {{ unitFormat.unitFormat(costDetails?.usage?.predictive_monthly_usage || 0) }}
-          </div>
-          <div class="text-center basic-text">
-            {{ unitFormat.klToLitters(costDetails?.usage?.predictive_monthly_usage || 0) }}
+            {{unitFormat.unitFormat(costDetails?.usage?.predictive_monthly_usage || 0, costDetails?.meter_details?.meter_type_id) }}
           </div>
         </div>
         <q-separator vertical/>
         <div class="column col-3">
           <b class="text-center">Daily Cost</b>
-          <div style="margin-bottom: 22px" class="basic-text text-center">
-            R {{ numberFormat.numberFormat(costDetails?.data?.daily_predictive_cost | 0) }}
+          <div class="basic-text text-center">
+            R {{ numberFormat.numberFormat(costDetails?.data?.daily_predictive_cost || 0) }}
           </div>
         </div>
       </div>
       <q-separator class="q-mt-lg"/>
     </q-card>
-    <q-card flat class="q-ma-sm q-pa-sm">
+    <q-card v-else-if="costDetails?.meter_details?.meter_type_id === ELECTRICITY_METER" flat class="q-ma-sm q-pa-sm">
+      <div class="row flex justify-between items-center">
+        <div class="column col-3">
+          <b class="text-center">Daily Usage</b>
+          <div class="text-center basic-text">
+            {{unitFormat.unitFormat(costDetails?.usage?.average_usage || 0, costDetails?.meter_details?.meter_type_id) }}
+          </div>
+        </div>
+        <q-separator vertical/>
+        <div class="column col-3">
+          <b class="text-center">Monthly Usage</b>
+          <div class="text-center basic-text">
+            {{unitFormat.unitFormat(costDetails?.usage?.predictive_monthly_usage || 0, costDetails?.meter_details?.meter_type_id) }}
+          </div>
+        </div>
+        <q-separator vertical/>
+        <div class="column col-3">
+          <b class="text-center">Daily Cost</b>
+          <div class="basic-text text-center">
+            R {{ numberFormat.numberFormat(costDetails?.data?.daily_predictive_cost || 0) }}
+          </div>
+        </div>
+      </div>
+      <q-separator class="q-mt-lg"/>
+    </q-card>
+    <q-card v-if="costDetails?.meter_details?.meter_type_id === WATER_METER" flat class="q-ma-sm q-pa-sm">
       <q-list bordered separator>
         <q-item class="item-style">
           <q-item-section>Water in</q-item-section>
@@ -90,6 +116,20 @@
         </q-item>
       </q-list>
     </q-card>
+    <q-card v-else-if="costDetails?.meter_details?.meter_type_id === ELECTRICITY_METER" flat class="q-ma-sm q-pa-sm">
+      <q-list bordered separator>
+        <q-item class="item-style"
+                v-for="(waterInAdditionalCost,i2) in costDetails?.data?.electricity?.predictive?.additional_costs || []"
+                :key="i2">
+          <q-item-section>{{ waterInAdditionalCost.title }}</q-item-section>
+          <q-item-section side>R {{ numberFormat.numberFormat(waterInAdditionalCost?.cost || 0) }}</q-item-section>
+        </q-item>
+<!--        <q-item class="item-style">-->
+<!--          <q-item-section>VAT</q-item-section>-->
+<!--          <q-item-section side>R {{ numberFormat.numberFormat( costDetails?.data?.vat_predictive || 0) }}</q-item-section>-->
+<!--        </q-item>-->
+      </q-list>
+    </q-card>
     <q-card flat class="bg-grey-4 q-ma-sm q-pa-sm">
       <div style="flex-direction: column" class="flex column items-center" aria-label="heading">
         <span class="large-text">Monthly Projected Cost</span>
@@ -97,43 +137,41 @@
       </div>
     </q-card>
     <q-card flat class="q-ma-sm q-pa-sm">
-      <div style="flex-direction: column" class="flex column items-center" aria-label="heading">
-        <span class="large-text">Dated: {{ costDetails?.current_date }}</span>
-        <span class="large-text">Reading: {{ costDetails?.usage?.reading }}</span>
-      </div>
+<!--      <div style="flex-direction: column" class="flex column items-center" aria-label="heading">-->
+<!--        <span class="large-text">Dated: {{ costDetails?.current_date }}</span>-->
+<!--        <span class="large-text">Reading: {{ costDetails?.usage?.reading }}</span>-->
+<!--      </div>-->
       <div class="flex column items-center q-pt-lg" aria-label="heading">
         <q-btn color="primary" style="width: 100%">Email Details</q-btn>
       </div>
     </q-card>
-  </template>
-  <template v-else>
-    <div class="q-ma-sm q-pa-sm" style="display: flex;justify-content: center;align-items: center;min-height: 300px">
-      <q-banner dense inline-actions class="text-white bg-red">
-        {{costDetails.message}}
-      </q-banner>
-    </div>
   </template>
 
 </template>
 
 <script setup>
 import {useRoute, useRouter} from "vue-router";
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watchEffect} from "vue";
 import {getCost} from "src/api/meters";
 import {useNumberFormat} from "src/composable/useNumberFormat";
 import {useUnitFormat} from "src/composable/useUnitFormat";
+import {ELECTRICITY_METER, WATER_METER} from "src/config/meter";
 
 const route = useRoute();
 const router = useRouter();
 const numberFormat = useNumberFormat();
 const unitFormat = useUnitFormat();
 const costDetails = ref({});
+const hasError = ref(false);
+let month = route.query.month;
+if (month < 0){
+  router.replace({...route, query: {...route.query, month: 1}})
+}
 const currentMonth = ref(route.query.month || 1);
-const error = ref(false);
 
-watchEffect(() => {
+watchEffect(async () => {
   currentMonth.value = route.query.month || 1;
-  getCostDetails();
+  await getCostDetails();
 });
 
 
@@ -150,13 +188,16 @@ function next() {
 }
 
 async function getCostDetails() {
-  await getCost(route.params.id, currentMonth.value).then(response => {
-    costDetails.value = response;
-    error.value = false;
-  }).catch(error => {
-    error.value = true;
-    costDetails.value = error.response.data
-  })
+  try {
+    costDetails.value = await getCost(route.params.id, currentMonth.value);
+    hasError.value = false;
+  }catch (e){
+
+    hasError.value = true;
+    costDetails.value = e.response.data
+  }
+
+
 }
 
 onMounted(() => {
