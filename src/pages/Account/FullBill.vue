@@ -57,6 +57,12 @@
                 {{ numberFormat.numberFormat(waterMeter.data.water_in.predictive.total) }}
               </q-item-section>
             </q-item>
+            <q-item class="item-style">
+              <q-item-section class="item-styling">Water Out</q-item-section>
+              <q-item-section side class="item-styling">R
+                {{ numberFormat.numberFormat(waterMeter.data.water_out.predictive.total) }}
+              </q-item-section>
+            </q-item>
             <q-item class="item-style"
                     v-for="(waterInAdditionalCost,i1) in waterMeter?.data?.water_in?.predictive?.additional_costs || []"
                     :key="i1">
@@ -136,22 +142,22 @@
     </q-card>
     <q-card flat class="q-ma-sm q-pa-sm">
       <q-list bordered separator>
-        <q-item class="item-style"
-                v-for="(additionalCost,i3) in billDetails?.additional_costs || []"
-                :key="i3">
-          <q-item-section class="item-styling">{{ additionalCost.name }}</q-item-section>
-          <q-item-section side class="item-styling">R {{
-              numberFormat.numberFormat(+additionalCost?.cost || 0)
-            }}
-          </q-item-section>
-        </q-item>
+        <template v-for="(additionalCost,i3) in billDetails?.additional_costs || []" :key="i3">
+          <q-item class="item-style" v-if="additionalCost.exempt_vat === 'no'">
+            <q-item-section class="item-styling">{{ additionalCost.name }}</q-item-section>
+            <q-item-section side class="item-styling">R {{
+                numberFormat.numberFormat(+additionalCost?.cost || 0)
+              }}
+            </q-item-section>
+          </q-item>
+        </template>
       </q-list>
     </q-card>
     <q-card flat class="q-ma-sm q-pa-sm">
       <q-list>
         <q-item class="item-style">
           <q-item-section class="item-styling">Subtotal</q-item-section>
-          <q-item-section side class="item-styling">R {{ numberFormat.numberFormat(+billDetails?.subtotal || 0) }}
+          <q-item-section side class="item-styling">R {{ numberFormat.numberFormat(+billDetails?.vat_exempted_subtotal || 0) }}
           </q-item-section>
         </q-item>
       </q-list>
@@ -163,6 +169,15 @@
           <q-item-section class="item-styling">VAT</q-item-section>
           <q-item-section side class="item-styling">R {{ numberFormat.numberFormat(+billDetails?.vat || 0) }}</q-item-section>
         </q-item>
+        <template v-for="(additionalCost,i3) in billDetails?.additional_costs || []" :key="i3">
+          <q-item class="item-style" v-if="additionalCost.exempt_vat === 'yes'">
+            <q-item-section class="item-styling">{{ additionalCost.name }}</q-item-section>
+            <q-item-section side class="item-styling">R {{
+                numberFormat.numberFormat(+additionalCost?.cost || 0)
+              }}
+            </q-item-section>
+          </q-item>
+        </template>
         <q-item class="item-style">
           <q-item-section class="item-styling">Total Including VAT</q-item-section>
           <q-item-section side class="item-styling">R {{ numberFormat.numberFormat(+billDetails?.total_including_vat || 0) }}
@@ -279,34 +294,17 @@ onMounted(() => {
 .water-meter-background {
   /* For white font */
   color: #FFFFFF;
-  /* For modern browsers */
-  background: linear-gradient(to right, #ADD8E6, #1E90FF);
-
-  /* For older browsers */
-  background: -moz-linear-gradient(left, #ADD8E6, #1E90FF);
-  background: -webkit-linear-gradient(left, #ADD8E6, #1E90FF);
+  background: #1E90FF;
 
 }
 
 .electricity-meter-background {
-  /* For modern browsers */
-  background: radial-gradient(circle, #FFFF00, #00BFFF);
-
-  /* For older browsers */
-  background: -moz-radial-gradient(circle, #FFFF00, #00BFFF);
-  background: -webkit-radial-gradient(circle, #FFFF00, #00BFFF);
-
-
+  color: #FFFFFF;
+  background: #1E90FF;
 }
 
 .additional-costs-background {
   color: #FFFFFF;
-
-  /* For modern browsers */
-  background: linear-gradient(to right, #00FF7F, #008000);
-
-  /* For older browsers */
-  background: -moz-linear-gradient(left, #00FF7F, #008000);
-  background: -webkit-linear-gradient(left, #00FF7F, #008000);
+  background: #1E90FF;
 }
 </style>
