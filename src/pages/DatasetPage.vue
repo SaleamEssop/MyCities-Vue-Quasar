@@ -6,7 +6,7 @@
 
 <script>
 import DataSet from "src/components/DataSet.vue";
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   components: { DataSet },

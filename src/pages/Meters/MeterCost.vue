@@ -85,15 +85,15 @@
     <q-card v-if="costDetails?.meter_details?.meter_type_id === WATER_METER" flat class="q-ma-sm q-pa-sm">
       <q-list bordered separator>
         <q-item class="item-style">
-          <q-item-section>Water in</q-item-section>
-          <q-item-section side>R {{
+          <q-item-section class="item-styling">Water in</q-item-section>
+          <q-item-section side class="item-styling">R {{
               numberFormat.numberFormat(costDetails?.data?.water_in?.predictive.total || 0)
             }}
           </q-item-section>
         </q-item>
         <q-item class="item-style">
-          <q-item-section>Water out</q-item-section>
-          <q-item-section side>R {{
+          <q-item-section class="item-styling">Water out</q-item-section>
+          <q-item-section side class="item-styling">R {{
               numberFormat.numberFormat(costDetails?.data?.water_out?.predictive.total || 0)
             }}
           </q-item-section>
@@ -101,33 +101,29 @@
         <q-item class="item-style"
                 v-for="(waterInAdditionalCost,i1) in costDetails?.data?.water_in?.predictive?.additional_costs || []"
                 :key="i1">
-          <q-item-section>{{ waterInAdditionalCost.title }}</q-item-section>
-          <q-item-section side>R {{ numberFormat.numberFormat(waterInAdditionalCost?.cost || 0) }}</q-item-section>
+          <q-item-section class="item-styling">{{ waterInAdditionalCost.title }}</q-item-section>
+          <q-item-section side class="item-styling">R {{ numberFormat.numberFormat(waterInAdditionalCost?.cost || 0) }}</q-item-section>
         </q-item>
         <q-item class="item-style"
                 v-for="(waterInAdditionalCost,i2) in costDetails?.data?.water_out?.predictive?.additional_costs || []"
                 :key="i2">
-          <q-item-section>{{ waterInAdditionalCost.title }}</q-item-section>
-          <q-item-section side>R {{ numberFormat.numberFormat(waterInAdditionalCost?.cost || 0) }}</q-item-section>
+          <q-item-section class="item-styling">{{ waterInAdditionalCost.title }}</q-item-section>
+          <q-item-section side class="item-styling">R {{ numberFormat.numberFormat(waterInAdditionalCost?.cost || 0) }}</q-item-section>
         </q-item>
         <q-item class="item-style">
-          <q-item-section>VAT</q-item-section>
-          <q-item-section side>R {{ numberFormat.numberFormat( costDetails?.data?.vat_predictive || 0) }}</q-item-section>
+          <q-item-section class="item-styling">VAT</q-item-section>
+          <q-item-section side class="item-styling">R {{ numberFormat.numberFormat( costDetails?.data?.vat_predictive || 0) }}</q-item-section>
         </q-item>
       </q-list>
     </q-card>
     <q-card v-else-if="costDetails?.meter_details?.meter_type_id === ELECTRICITY_METER" flat class="q-ma-sm q-pa-sm">
       <q-list bordered separator>
         <q-item class="item-style"
-                v-for="(waterInAdditionalCost,i2) in costDetails?.data?.electricity?.predictive?.additional_costs || []"
+                v-for="(electricityAdditionalCost,i2) in costDetails?.data?.electricity?.predictive?.additional_costs || []"
                 :key="i2">
-          <q-item-section>{{ waterInAdditionalCost.title }}</q-item-section>
-          <q-item-section side>R {{ numberFormat.numberFormat(waterInAdditionalCost?.cost || 0) }}</q-item-section>
+          <q-item-section class="item-styling">{{ electricityAdditionalCost.title }}</q-item-section>
+          <q-item-section side class="item-styling">R {{ numberFormat.numberFormat(electricityAdditionalCost?.cost || 0) }}</q-item-section>
         </q-item>
-<!--        <q-item class="item-style">-->
-<!--          <q-item-section>VAT</q-item-section>-->
-<!--          <q-item-section side>R {{ numberFormat.numberFormat( costDetails?.data?.vat_predictive || 0) }}</q-item-section>-->
-<!--        </q-item>-->
       </q-list>
     </q-card>
     <q-card flat class="bg-grey-4 q-ma-sm q-pa-sm">

@@ -13,12 +13,6 @@ const routes = [
         meta: { title: "Home", meta: { requiresAuth: true } },
       },
       {
-        path: "/meters/:id/cost",
-        component: () => import("pages/Meters/MeterCost.vue"),
-        name: "MeterCost",
-        meta: { title: "Data", meta: { requiresAuth: true } },
-      },
-      {
         path: "/meters",
         component: () => import("layouts/MainLayout.vue"),
         children: [
@@ -27,6 +21,17 @@ const routes = [
             component: () => import("pages/Meters/MeterCost.vue"),
             name: "MeterCost",
             meta: { title: "Meter Cost", meta: { requiresAuth: true } },
+          },
+        ],
+      },{
+        path: "/accounts",
+        component: () => import("layouts/MainLayout.vue"),
+        children: [
+          {
+            path: ":id/bill",
+            component: () => import("pages/Account/FullBill.vue"),
+            name: "FullBill",
+            meta: { title: "Full Bill", meta: { requiresAuth: true } },
           },
         ],
       },

@@ -2,7 +2,6 @@
   <q-layout
     view="lHh Lpr lFf"
     class="containerWidth shadow-6 new-container"
-    style="height: 100vh"
   >
     <q-page-container>
       <router-view />

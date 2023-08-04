@@ -34,7 +34,7 @@ export default defineComponent({
 
   setup() {
     return {
-      
+
     };
   },
 
@@ -55,6 +55,9 @@ export default defineComponent({
 <style lang="scss" scoped>
 @media only screen and (min-width: 480px) {
   .backgroundImage {
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
     background-image: url("../src/assets/bg.webp");
     z-index: -1;
   }

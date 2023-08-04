@@ -6,10 +6,12 @@
       </div> -->
       <!-- Site -->
       <q-expansion-item dense expand-separator default-opened header-class="bg-primary accounts-list"
-        v-for="(site, index) in         allSites        " :key="index" class="q-mt-sm" text-color="white">
+                        v-for="(site, index) in         allSites        " :key="index" class="q-mt-sm"
+                        text-color="white">
         <template v-slot:header>
           <q-item-section class="font-size larger text-white">
-            {{ site.address || "Select A Location" }}</q-item-section>
+            {{ site.address || "Select A Location" }}
+          </q-item-section>
         </template>
         <template v-for="account in         getAccounts(site.id)        " :key="account.id">
           <q-item>
@@ -22,9 +24,12 @@
             <q-item-section center side>
               <!-- <div v-if="account?.fixedCosts?.length && account.fixedCosts.length > 0
                 "> -->
-              <q-btn rounded color="primary" text-color="white" @click="selectAccount(account); Loading()" v-if="account == accountStore.selectedAccount" icon="check">Select</q-btn>
+              <q-btn rounded color="primary" text-color="white" @click="selectAccount(account); Loading()"
+                     v-if="account == accountStore.selectedAccount" icon="check">Select
+              </q-btn>
               <q-btn rounded color="primary" text-color="white" v-else
-                @click="selectAccount(account), Loading()">Select</q-btn>
+                     @click="selectAccount(account), Loading()">Select
+              </q-btn>
               <!-- </div> -->
               <!-- <div v-else> -->
               <!-- <q-btn @click="accountStore.selectedAccount = account;
@@ -40,6 +45,11 @@
                                                             ">
                       <q-item-section>View Bill</q-item-section>
                     </q-item>
+                    <router-link class="link" :to="{name:'FullBill',params:{id:account.id}}">
+                      <q-item clickable v-ripple>
+                        <q-item-section>View Bill New</q-item-section>
+                      </q-item>
+                    </router-link>
                     <q-item clickable v-close-popup @click="
                       accountStore.selectedAccount = account;
                       modelAccountForHistory = true;
@@ -67,7 +77,7 @@
               </q-btn>
             </q-item-section>
           </q-item>
-          <q-separator />
+          <q-separator/>
         </template>
         <!-- clickable v-ripple -->
         <!-- <q-item v-for="site in allSites" :key="site.id">
@@ -171,17 +181,17 @@
           <q-btn flat dense round icon="arrow_back" text-color="white" @click="
             showMeter = false;
             showAccount = true;
-          " />
+          "/>
           <q-toolbar-title class="text-white">
             Manage > Account > {{ accountStore?.selectedAccount?.title }} ({{
-            accountStore?.selectedAccount?.number
+              accountStore?.selectedAccount?.number
             }})
           </q-toolbar-title>
         </q-toolbar>
       </q-header>
 
       <div class="account_header">
-        <i class="home-icon" @click=" $router.back() "><img alt="Home-Icon" src="~assets/home-icons.svg" /></i>
+        <i class="home-icon" @click=" $router.back() "><img alt="Home-Icon" src="~assets/home-icons.svg"/></i>
         {{ accountStore?.selectedAccount?.number }},
         {{ accountStore?.selectedAccount?.title }}
       </div>
@@ -197,13 +207,14 @@
 
       <!-- {{ accountStore.allAccounts }} -->
 
-      <template v-for="        meter         in         getMeters(accountStore.selectedAccount?.id)        " :key="meter.id">
+      <template v-for="        meter         in         getMeters(accountStore.selectedAccount?.id)        "
+                :key="meter.id">
         <q-item clickable v-ripple class="q-px-none">
           <q-item-section>
-            <MeterReadingSet :key=" meter.id " :meter=" { ...meter } " />
+            <MeterReadingSet :key=" meter.id " :meter=" { ...meter } "/>
           </q-item-section>
         </q-item>
-        <q-separator color="black" />
+        <q-separator color="black"/>
       </template>
 
       <q-item class="justify-center" v-if=" getMeters(accountStore.selectedAccount?.id).length == 0 ">
@@ -226,27 +237,28 @@
   </q-page>
 
   <q-dialog v-model=" modelAccountForHistory " @hide=" modelAccountForHistory = false " :full-width=" true "
-    :full-height=" false ">
+            :full-height=" false ">
     <AccountHistory :account=" accountStore.selectedAccount " @close=" modelAccountForHistory = false "
-      @save=" modelAccountForHistory = false " />
+                    @save=" modelAccountForHistory = false "/>
   </q-dialog>
 
   <q-dialog v-model=" modelAccountForFullBill " @hide=" modelAccountForFullBill = false " :full-width=" true "
-    :full-height=" false ">
+            :full-height=" false ">
     <AccountCost :account=" accountStore.selectedAccount " @close=" modelAccountForFullBill = false "
-      @save=" modelAccountForFullBill = false " />
+                 @save=" modelAccountForFullBill = false "/>
   </q-dialog>
 
   <q-dialog v-model=" modelAccountForNewEdit " @hide=" modelAccountForNewEdit = false " :full-width=" true "
-    :full-height=" true " persistent>
+            :full-height=" true " persistent>
     <AccountComponent :account=" accountStore.selectedAccount " @close=" modelAccountForNewEdit = false "
-      @save=" modelAccountForNewEdit = false " />
+                      @save=" modelAccountForNewEdit = false "/>
   </q-dialog>
 
   <q-dialog v-model=" modelMeterForNewEdit " @hide=" modelMeterForNewEdit = false " :full-width=" true "
-    :full-height=" true " persistent>
-    <AddMeter :propsMeter=" null " :propsAccount=" accountStore.selectedAccount " @close=" modelMeterForNewEdit = false "
-      @save=" modelMeterForNewEdit = false " />
+            :full-height=" true " persistent>
+    <AddMeter :propsMeter=" null " :propsAccount=" accountStore.selectedAccount "
+              @close=" modelMeterForNewEdit = false "
+              @save=" modelMeterForNewEdit = false "/>
   </q-dialog>
 </template>
 <script setup>
@@ -258,12 +270,12 @@ import {
   watch,
   computed,
 } from "vue";
-import { useRouter } from "vue-router";
+import {useRouter} from "vue-router";
 
-import { useSiteStore } from "/src/stores/site";
-import { useAccountStore } from "/src/stores/account";
-import { useMeterStore } from "/src/stores/meter";
-import { useUserStore } from "/src/stores/user";
+import {useSiteStore} from "/src/stores/site";
+import {useAccountStore} from "/src/stores/account";
+import {useMeterStore} from "/src/stores/meter";
+import {useUserStore} from "/src/stores/user";
 
 import MeterReadingSet from "src/components/MeterReadingSet.vue";
 import AccountComponent from "src/components/AccountComponent.vue";
@@ -275,9 +287,9 @@ import {
   deleteMainAccount,
   deleteMainSiteAccount,
 } from "src/boot/axios";
-import { updateAllData } from "boot/firebase";
+import {updateAllData} from "boot/firebase";
 
-import { date, Dialog, useQuasar } from "quasar";
+import {date, Dialog, useQuasar} from "quasar";
 
 const siteStore = useSiteStore();
 const accountStore = useAccountStore();
@@ -353,7 +365,7 @@ const deletesite = async (_site) => {
     ok: `Confirm`,
     persistent: true,
   }).onOk(() => {
-    deleteMainSiteAccount({ location_id: _site.id }).then((status) => {
+    deleteMainSiteAccount({location_id: _site.id}).then((status) => {
       console.log(status);
       if (status.code == 200) {
         window.location.reload();
@@ -380,7 +392,7 @@ const deleteAccount = (account) => {
     cancel: true,
     persistent: true,
   }).onOk(() => {
-    deleteMainAccount({ account_id: account.id }).then((status) => {
+    deleteMainAccount({account_id: account.id}).then((status) => {
       if (status.code == 200) {
         accountStore.deleteAccount(account);
         window.location.reload();

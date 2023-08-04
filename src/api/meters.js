@@ -7,3 +7,10 @@ export const getCost = (meter_id, month) => {
     }
   });
 }
+export const getFullBill = (account_id, month) => {
+  return api.get(`/v1/meters/account/${account_id}/complete-bill`, {
+    params: {
+      month
+    }
+  });
+}
