@@ -23,7 +23,8 @@ const routes = [
             meta: { title: "Meter Cost", meta: { requiresAuth: true } },
           },
         ],
-      },{
+      },
+      {
         path: "/accounts",
         component: () => import("layouts/MainLayout.vue"),
         children: [

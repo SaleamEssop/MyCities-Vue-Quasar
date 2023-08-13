@@ -15,21 +15,31 @@
           </div>
           <q-icon style="margin-top: -5px" name="chevron_right" size="lg" class="cursor-pointer"
             @click="nextMonth(readingPeriod)" /> -->
-          <q-icon name="chevron_left" style="margin-top: -5px" size="lg" class="cursor-pointer"
-                  @click="previousMonth(readingPeriod)"/>
-          <span class="q-gutter-sm mx-3" style="font-size: 18px; margin: 0;">
+          <q-icon
+            name="chevron_left"
+            style="margin-top: -5px"
+            size="lg"
+            class="cursor-pointer"
+            @click="previousMonth(readingPeriod)"
+          />
+          <span class="q-gutter-sm mx-3" style="font-size: 18px; margin: 0">
             Projected bill for
             {{ readingPeriod }}
           </span>
-          <q-icon style="margin-top: -5px" name="chevron_right" size="lg" class="cursor-pointer"
-                  @click="nextMonth(readingPeriod)"/>
+          <q-icon
+            style="margin-top: -5px"
+            name="chevron_right"
+            size="lg"
+            class="cursor-pointer"
+            @click="nextMonth(readingPeriod)"
+          />
         </div>
         <div class="flex column content-center items-center">
-          <div class="text-subtitle1 rounded-borders">{{ currentBillPeriod }}</div>
+          <div class="text-subtitle1 rounded-borders">
+            {{ currentBillPeriod }}
+          </div>
           <div class="text-subtitle2">Current Date:- {{ currentDate }}</div>
         </div>
-
-
       </q-card-section>
       <q-card-section>
         <div>
@@ -37,32 +47,46 @@
             <div class="column col-4">
               <b class="text-center">Daily Usage</b>
 
-              <div class="medium-rcorners text-h6 text-center" color="negative" text-color="white">
+              <div
+                class="medium-rcorners text-h6 text-center"
+                color="negative"
+                text-color="white"
+              >
                 {{ billingMeterCost?.daily_usage }}
               </div>
-
             </div>
             <div class="column col-4">
               <b class="text-center">Monthly Usage</b>
 
-              <div class="medium-rcorners text-h6 text-center" color="negative" text-color="white">
+              <div
+                class="medium-rcorners text-h6 text-center"
+                color="negative"
+                text-color="white"
+              >
                 {{ billingMeterCost?.monthly_usage }}
-
               </div>
             </div>
 
             <div class="column col-4">
               <b class="text-center">Daily Cost</b>
-              <div class="medium-rcorners text-h6 text-center" color="negative" text-color="white">
+              <div
+                class="medium-rcorners text-h6 text-center"
+                color="negative"
+                text-color="white"
+              >
                 <!-- R{{ (projectionCost["total"] / 30.0).toFixed(2) }} -->
                 <!-- R{{ (totalProjectionCost / 30.0).toFixed(2) }} -->
                 R {{ billingMeterCost?.daily_cost }}
               </div>
             </div>
           </div>
-          <q-separator class="q-my-md" color="grey" size="2px"/>
+          <q-separator class="q-my-md" color="grey" size="2px" />
           <div v-if="billingMeterCost">
-            <div class="row no-wrap" v-for="(cost, index) in billingMeterCost['projection']" :key="index">
+            <div
+              class="row no-wrap"
+              v-for="(cost, index) in billingMeterCost['projection']"
+              :key="index"
+            >
               <div v-show="cost.title" class="col">
                 {{ cost.title }}
               </div>
@@ -72,13 +96,17 @@
 
           <div class="column flex justify-between items-center no-wrap q-mt-md">
             <b>Monthly Projected cost</b>
-            <div class="big-rcorners text-h4 text-center" color="negative" text-color="white">
+            <div
+              class="big-rcorners text-h4 text-center"
+              color="negative"
+              text-color="white"
+            >
               <!-- R {{ projectionCost["total"].toFixed(2) }} -->
               <!-- R {{ totalProjectionCost.toFixed(2) }} -->
               R {{ billingMeterCost?.final_total }}
             </div>
           </div>
-          <q-separator color="grey" class="q-my-xs" size="2px"/>
+          <q-separator color="grey" class="q-my-xs" size="2px" />
 
           <div class="text-center text-h6 q-mt-md">
             <!-- <div>Date: {{ lastReadingDisplayFormat.timeDisplay }}</div>
@@ -90,30 +118,45 @@
       </q-card-section>
     </div>
     <div v-else>
-      <q-icon name="chevron_left" style="margin-top: -5px" size="lg" class="cursor-pointer"
-              @click="previousMonth()"/>
+      <q-icon
+        name="chevron_left"
+        style="margin-top: -5px"
+        size="lg"
+        class="cursor-pointer"
+        @click="previousMonth()"
+      />
       {{ billingMeterCost?.msg }}
-      <q-icon style="margin-top: -5px" name="chevron_right" size="lg" class="cursor-pointer"
-              @click="nextMonth()"/>
+      <q-icon
+        style="margin-top: -5px"
+        name="chevron_right"
+        size="lg"
+        class="cursor-pointer"
+        @click="nextMonth()"
+      />
     </div>
     <q-card-actions align="evenly">
-      <q-btn color="grey-2" v-if="billingMeterCost?.data?.length != 0" text-color="black"
-             @click="submitBill">Email
+      <q-btn
+        color="grey-2"
+        v-if="billingMeterCost?.data?.length != 0"
+        text-color="black"
+        @click="submitBill"
+        >Email
       </q-btn>
-      <q-btn color="grey-2" text-color="black" @click="$emit('close')">Close</q-btn>
+      <q-btn color="grey-2" text-color="black" @click="$emit('close')"
+        >Close</q-btn
+      >
     </q-card-actions>
   </q-card>
 </template>
 <script>
-import {computed, defineComponent, ref} from "vue";
-import {date, useQuasar} from "quasar";
-import {useReadingStore} from "/src/stores/reading";
-import {useSiteStore} from "/src/stores/site";
-import {useAccountStore} from "/src/stores/account";
+import { computed, defineComponent, ref } from "vue";
+import { date, useQuasar } from "quasar";
+import { useReadingStore } from "/src/stores/reading";
+import { useSiteStore } from "/src/stores/site";
+import { useAccountStore } from "/src/stores/account";
 
 import waterDurban from "/src/services/waterDurban.js";
-import {getParticularMeterCost} from "boot/axios";
-
+import { getParticularMeterCost } from "boot/axios";
 
 export default defineComponent({
   name: "MeterCost",
@@ -121,7 +164,7 @@ export default defineComponent({
     meter: Object,
     isNew: Boolean,
     account: Object,
-    meterCostData: Object
+    meterCostData: Object,
   },
   setup(props) {
     const readingStore = useReadingStore();
@@ -171,7 +214,6 @@ export default defineComponent({
       return waterLevy;
     });
     const billingCycle = computed(() => {
-
       let date = null;
       (account.defaultFixedCost || []).forEach((defaultCost) => {
         if (defaultCost?.fixed_cost?.title === "Enter Your Billing Date") {
@@ -196,7 +238,7 @@ export default defineComponent({
       return readingPeriod;
     });
     const readingPeriod = ref(billingCycleMonth.value);
-    readingPeriod.value = billingCycleMonth.value
+    readingPeriod.value = billingCycleMonth.value;
     // const readingPeriod = ref(date.formatDate(new Date(), "MMM YYYY"));
 
     const currentDate = ref(date.formatDate(new Date(), "DD MMMM YYYY"));
@@ -212,7 +254,7 @@ export default defineComponent({
     // });
     let prev = [];
     const previousMonth = async () => {
-      const _month = readingPeriod.value
+      const _month = readingPeriod.value;
       let firstReadingOfMeter = [];
       meters.forEach((meter) => {
         const readings = readingStore.getReadingsByMeterId(meter.id);
@@ -228,12 +270,12 @@ export default defineComponent({
       let current = getNextDate();
       let previous = getPreviousDate();
       prev = await getMonthWiseMeterCost(previous, current);
-      console.log('prev', prev);
+      console.log("prev", prev);
     };
     //console.log(prev);
 
     const nextMonth = async () => {
-      const _month = readingPeriod.value
+      const _month = readingPeriod.value;
       //  console.log(_month);
       let nextOneMonth = date.addToDate(new Date(), {
         months: 1,
@@ -251,23 +293,27 @@ export default defineComponent({
       let current = getNextDate();
       let previous = getPreviousDate();
       let next = await getMonthWiseMeterCost(previous, current);
-      console.log('next', next);
+      console.log("next", next);
       // console.log("dddddd", ms);
       //return billingMeterCost;
-
     };
     const getMonthWiseMeterCost = async (previous, current) => {
-
       await new Promise((resolve, reject) => {
         setTimeout(() => {
-          getParticularMeterCost(props.meter.account.id, props.meter.id, '', previous, current).then(res => {
+          getParticularMeterCost(
+            props.meter.account.id,
+            props.meter.id,
+            "",
+            previous,
+            current
+          ).then((res) => {
             billingMeterCost.value = res[0];
-            resolve(res[0])
+            resolve(res[0]);
           });
-        })
+        });
       });
       return billingMeterCost;
-    }
+    };
     const getPreviousDate = () => {
       let getCurrentMonth = date.addToDate(readingPeriod.value, {
         days: billingCycle.value - 1,
@@ -276,8 +322,7 @@ export default defineComponent({
         month: 1,
       });
       return date.formatDate(getPreviousMonth, "YYYY-MM-DD");
-    }
-
+    };
 
     const getNextDate = () => {
       let currentbillDate = null;
@@ -291,10 +336,9 @@ export default defineComponent({
 
       currentbillDate = current;
       return currentbillDate;
-    }
+    };
     // console.log('246', nextMonth('july 2023'));
     const currentBillPeriod = computed(() => {
-
       let currentbillDate = null;
       let billingMeterCost = [];
 
@@ -322,13 +366,11 @@ export default defineComponent({
       return currentbillDate;
     });
 
-
     const isLastReadings = durbanReading.getSubmitedAndLastReading(
       readings,
       billingCycleMonth.value,
       billingCycle.value
     );
-
 
     usesPerDay.value = durbanReading.calculateUnitForMonth({
       isLastReadings: isLastReadings,
@@ -339,7 +381,7 @@ export default defineComponent({
 
     // const projectionCost = getCost(usesPerDay.value, props?.meter);
 
-    const percentageCharges = [{title: "VAT", onTotalAmount: 0.15}];
+    const percentageCharges = [{ title: "VAT", onTotalAmount: 0.15 }];
 
     String.prototype.insert = function (index, string) {
       if (index > 0) {
@@ -356,11 +398,11 @@ export default defineComponent({
 
     const totalProjectionCost = computed(() => {
       let total = 0;
-      waterLevyCostByServer.value.forEach(({value}) => {
+      waterLevyCostByServer.value.forEach(({ value }) => {
         if (projectionCost.projection.length === 0) {
           total = total + value || 0;
         }
-        projectionCost.projection.forEach(({title}) => {
+        projectionCost.projection.forEach(({ title }) => {
           if (title !== "Electricity bill") {
             total = projectionCost.total + value;
             total = newVATOnMeterBill.value.value + total;
@@ -376,8 +418,8 @@ export default defineComponent({
     const newVATOnMeterBill = computed(() => {
       const VAT = new Object();
       const val = percentageCharges.forEach((_percentage) => {
-        waterLevyCostByServer.value.forEach(({value}) => {
-          projectionCost.projection.forEach(({title}) => {
+        waterLevyCostByServer.value.forEach(({ value }) => {
+          projectionCost.projection.forEach(({ title }) => {
             if (title !== "Electricity bill") {
               VAT["title"] = _percentage.title;
               VAT["value"] =
@@ -411,11 +453,11 @@ export default defineComponent({
     }
 
     const submitBill = () => {
-
       const meter = props.meter;
 
       //const email = meter.type.id == 2 ? site.email : "eservices@durban.gov.za";
-      const email = meter.type.id == 1 ? account.water_email : account.electricity_email;
+      const email =
+        meter.type.id == 1 ? account.water_email : account.electricity_email;
       const subject = `Account: ${account.number}`;
       let body = ``;
       body += `Account Number: ${account.number}\n`;
@@ -442,9 +484,10 @@ export default defineComponent({
 
         let valueInString = ""; //(lastReadingTime.value / 100.0 || "") + unit;
 
-        valueInString = `Current Reading:${meter.type.id == 2
-          ? lastReadingTime.value
-          : lastReadingTime.value.toFixed(2)
+        valueInString = `Current Reading:${
+          meter.type.id == 2
+            ? lastReadingTime.value
+            : lastReadingTime.value.toFixed(2)
         }\nDate:\t\t\t${date.formatDate(
           new Date(lastReadingTime.time),
           "DD MMMM YYYY"
@@ -498,7 +541,7 @@ export default defineComponent({
         seprated,
         "."
       );
-      return {timeDisplay, value};
+      return { timeDisplay, value };
     });
 
     return {
@@ -526,18 +569,18 @@ export default defineComponent({
       currentDate,
       getPreviousDate,
       getNextDate,
-      ms
+      ms,
       // currentreadingPeriod,
     };
   },
   mounted() {
     this.nextMonth().then();
-  }
+  },
 });
 </script>
 <style scoped>
 body {
-  font-family: 'Varela Round', sans-serif;
+  font-family: "Varela Round", sans-serif;
 }
 
 .modal-confirm {

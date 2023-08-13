@@ -24,7 +24,10 @@
         <div class="col-5">: {{ account?.title }}</div>
         <div class="col-7">Last reading</div>
         <div class="col-5">
-          : {{ unitFormat.unitFormat(lastReadingItem?.value,meter.type.id,true) }}
+          :
+          {{
+            unitFormat.unitFormat(lastReadingItem?.value, meter.type.id, true)
+          }}
         </div>
         <div class="col-7">Last reading Date</div>
         <div class="col-5">: {{ lastreadingDate }}</div>
@@ -115,12 +118,12 @@
       </div>
     </q-card-section>
     <q-card-actions align="center" style="margin-top: -10px">
-<!--      <q-btn-->
-<!--        icon="image"-->
-<!--        color="primary"-->
-<!--        text-color="white"-->
-<!--        @click="captureImage()"-->
-<!--      />-->
+      <!--      <q-btn-->
+      <!--        icon="image"-->
+      <!--        color="primary"-->
+      <!--        text-color="white"-->
+      <!--        @click="captureImage()"-->
+      <!--      />-->
       <!-- <q-btn
         icon="download"
         color="primary"
@@ -177,7 +180,7 @@ import {
   CameraDirection,
 } from "@capacitor/core";
 import domtoimage from "dom-to-image-more";
-import {useUnitFormat} from "src/composable/useUnitFormat";
+import { useUnitFormat } from "src/composable/useUnitFormat";
 
 const { Camera, Filesystem } = Plugins;
 

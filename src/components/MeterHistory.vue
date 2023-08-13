@@ -22,11 +22,7 @@
           {{ props.row.isSubmit ? "Yes" : "-" }}
         </q-td>
         <q-td key="isDelete" :props="props">
-          <q-btn
-            icon="delete"
-            flat
-            @click="deleteReading(props.row.id)"
-          />
+          <q-btn icon="delete" flat @click="deleteReading(props.row.id)" />
         </q-td>
       </q-tr>
     </template>

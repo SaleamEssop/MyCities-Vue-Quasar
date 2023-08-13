@@ -2,17 +2,16 @@
   <q-card class="no-shadow" dense>
     <q-card-section class="text-center q-py-none">
       <div class="flex justify-between items-center">
-        <span class="text-bold text-h6 text-black">{{
-            meter?.type.title
-          }} Meter :- {{ meter?.number }}</span>
+        <span class="text-bold text-h6 text-black"
+          >{{ meter?.type.title }} Meter :- {{ meter?.number }}</span
+        >
         <!-- <span class="round-cheap">Meter {{ meter?.number }}</span> -->
       </div>
       <div class="flex justify-between items-center">
-
-        <span>Last reading, <b>{{
-            new
-            Date(lastReading.time).toLocaleString("en-GB")
-          }}</b></span>
+        <span
+          >Last reading,
+          <b>{{ new Date(lastReading.time).toLocaleString("en-GB") }}</b></span
+        >
 
         <!-- {{ date.formatDate(new Date(lastReading.time), "DD/MM/YYYY") }} -->
         <!-- <span class="round-cheap">Meter {{ meter?.number }}</span> -->
@@ -36,10 +35,15 @@
           <!-- <span>Last saved reading</span>
           <b>{{ new Date(lastReading.time).toLocaleString("en-GB") }}</b> -->
         </div>
-        <MeterComponent :text="lastReading.valueInString" :meterStyle="meter?.type?.id" :readingType="meter.type.id == 2
-            ? 'electricity-recorded-reading'
-            : 'water-recorded-reading'
-          "/>
+        <MeterComponent
+          :text="lastReading.valueInString"
+          :meterStyle="meter?.type?.id"
+          :readingType="
+            meter.type.id == 2
+              ? 'electricity-recorded-reading'
+              : 'water-recorded-reading'
+          "
+        />
       </div>
     </q-card-section>
 
@@ -53,12 +57,21 @@
 
         <p class="q-mx-md"></p>
         <div>
-          <q-btn size="0.7rem" rounded color="primary"
-                 @click="modelForReadingSet_NewReading = true;
-                modelForReadingSet = true;"
-          >Enter Reading</q-btn>
+          <q-btn
+            size="0.7rem"
+            rounded
+            color="primary"
+            @click="
+              modelForReadingSet_NewReading = true;
+              modelForReadingSet = true;
+            "
+            >Enter Reading</q-btn
+          >
           &nbsp;
-          <router-link class="link" :to="{name:'MeterCost',params:{id:meter.id}}">
+          <router-link
+            class="link"
+            :to="{ name: 'MeterCost', params: { id: meter.id } }"
+          >
             <q-btn size="0.7rem" rounded color="primary">Calculate Cost</q-btn>
           </router-link>
         </div>
@@ -66,32 +79,49 @@
         <q-btn flat size="lg" icon="more_horiz" text-color="primary">
           <q-menu anchor="center middle" self="center middle">
             <q-list style="min-width: 100px">
-              <q-item clickable v-close-popup v-ripple
-                      @click="modelForReadingSet_NewReading = true;
-                modelForReadingSet = true;">
+              <q-item
+                clickable
+                v-close-popup
+                v-ripple
+                @click="
+                  modelForReadingSet_NewReading = true;
+                  modelForReadingSet = true;
+                "
+              >
                 <q-item-section>Enter New Reading</q-item-section>
               </q-item>
-              <q-item clickable v-close-popup v-ripple @click="
-                modelForReadingSet_NewReading = false;
-                modelForReadingSet = true;
-              ">
+              <q-item
+                clickable
+                v-close-popup
+                v-ripple
+                @click="
+                  modelForReadingSet_NewReading = false;
+                  modelForReadingSet = true;
+                "
+              >
                 <q-item-section>Edit last reading</q-item-section>
               </q-item>
               <!-- <q-item clickable v-close-popup>
                 <q-item-section>Submit to Municipality</q-item-section>
               </q-item> -->
-              <router-link class="link" :to="{name:'MeterCost',params:{id:meter.id}}">
+              <router-link
+                class="link"
+                :to="{ name: 'MeterCost', params: { id: meter.id } }"
+              >
                 <q-item clickable v-ripple>
                   <q-item-section>Calculate Cost</q-item-section>
                 </q-item>
               </router-link>
 
-
               <!-- :disable="meterLength === 2 ? true : false" -->
-              <q-item @click=" modelMeterForNewEdit = true " clickable v-close-popup>
+              <q-item
+                @click="modelMeterForNewEdit = true"
+                clickable
+                v-close-popup
+              >
                 <q-item-section>Add a new meter</q-item-section>
               </q-item>
-              <q-item clickable v-close-popup @click=" deleteMeter(meter) ">
+              <q-item clickable v-close-popup @click="deleteMeter(meter)">
                 <q-item-section>Delete Meter</q-item-section>
               </q-item>
             </q-list>
@@ -108,28 +138,42 @@
       /> -->
     </q-card-section>
 
-    <q-slide-transition v-if=" false ">
-      <div v-show=" isExpand ">
-        <q-separator/>
+    <q-slide-transition v-if="false">
+      <div v-show="isExpand">
+        <q-separator />
         <q-card-section>
           <div>
             <div class="row flex justify-between items-center">
               <div class="column col-5">
                 <b class="text-center">Daily Usage</b>
-                <div class="medium-rcorners text-h6" color="negative" text-color="white">
+                <div
+                  class="medium-rcorners text-h6"
+                  color="negative"
+                  text-color="white"
+                >
                   {{ usesPerDay.toFixed(2) }} L
                 </div>
               </div>
               <div class="column col-5">
                 <b class="text-center">Daily Cost</b>
-                <div class="medium-rcorners text-h6" color="negative" text-color="white">
+                <div
+                  class="medium-rcorners text-h6"
+                  color="negative"
+                  text-color="white"
+                >
                   R{{ (0.840625 * usesPerDay).toFixed(2) }}
                 </div>
               </div>
             </div>
-            <div class="column flex justify-between items-center no-wrap q-mt-md">
+            <div
+              class="column flex justify-between items-center no-wrap q-mt-md"
+            >
               <b>Monthly Projected cost</b>
-              <div class="big-rcorners text-h4" color="negative" text-color="white">
+              <div
+                class="big-rcorners text-h4"
+                color="negative"
+                text-color="white"
+              >
                 R{{ (0.840625 * usesPerDay * 30).toFixed(2) }}
               </div>
             </div>
@@ -138,53 +182,97 @@
       </div>
     </q-slide-transition>
 
-    <q-card-actions v-if=" false ">
-      <q-btn class="full-width" color="primary" text-color="black" @click=" moveTo('setReading', meter?.id) ">Set
-        Reading
+    <q-card-actions v-if="false">
+      <q-btn
+        class="full-width"
+        color="primary"
+        text-color="black"
+        @click="moveTo('setReading', meter?.id)"
+        >Set Reading
       </q-btn>
     </q-card-actions>
 
-    <q-card-section v-if=" false " class="text-center q-py-none bg-primary q-mt-md">
-      <q-item class="flex justify-center" clickable :class=" !isExpand ? 'bubble-bottom' : 'bubble-top' "
-              @click=" isExpand = !isExpand ">
-        <q-btn round flat dense :icon=" isExpand ? 'keyboard_arrow_up' : 'keyboard_arrow_down' "/>
+    <q-card-section
+      v-if="false"
+      class="text-center q-py-none bg-primary q-mt-md"
+    >
+      <q-item
+        class="flex justify-center"
+        clickable
+        :class="!isExpand ? 'bubble-bottom' : 'bubble-top'"
+        @click="isExpand = !isExpand"
+      >
+        <q-btn
+          round
+          flat
+          dense
+          :icon="isExpand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
+        />
       </q-item>
     </q-card-section>
   </q-card>
-  <q-dialog v-model=" modelForReadingSet " @hide=" modelForReadingSet = false " persistent :full-width=" true ">
-    <MeterComponentWithInput :meter=" meter " @close=" modelForReadingSet = false " @save=" modelForReadingSet = false "
-                             :isNew=" modelForReadingSet_NewReading "/>
+  <q-dialog
+    v-model="modelForReadingSet"
+    @hide="modelForReadingSet = false"
+    persistent
+    :full-width="true"
+  >
+    <MeterComponentWithInput
+      :meter="meter"
+      @close="modelForReadingSet = false"
+      @save="modelForReadingSet = false"
+      :isNew="modelForReadingSet_NewReading"
+    />
   </q-dialog>
 
-  <q-dialog v-model=" modelMeterForNewEdit " @hide=" modelMeterForNewEdit = false " :full-width=" true " persistent>
-    <AddMeter :propsMeter=" null " :propsAccount=" selectedAccount " @close=" modelMeterForNewEdit = false "
-              @save=" modelMeterForNewEdit = false "/>
+  <q-dialog
+    v-model="modelMeterForNewEdit"
+    @hide="modelMeterForNewEdit = false"
+    :full-width="true"
+    persistent
+  >
+    <AddMeter
+      :propsMeter="null"
+      :propsAccount="selectedAccount"
+      @close="modelMeterForNewEdit = false"
+      @save="modelMeterForNewEdit = false"
+    />
   </q-dialog>
 
-  <q-dialog v-model=" modelCostForMeter " @hide=" modelCostForMeter = false " :full-width=" true " persistent>
-    <MeterCost :meter=" meter " :meterCostData=" meterCostData " @close=" modelCostForMeter = false "
-               @save=" modelCostForMeter = false " :isNew=" true "/>
+  <q-dialog
+    v-model="modelCostForMeter"
+    @hide="modelCostForMeter = false"
+    :full-width="true"
+    persistent
+  >
+    <MeterCost
+      :meter="meter"
+      :meterCostData="meterCostData"
+      @close="modelCostForMeter = false"
+      @save="modelCostForMeter = false"
+      :isNew="true"
+    />
   </q-dialog>
 </template>
 <script>
-import {defineComponent, computed, ref, watch} from "vue";
-import {useRouter} from "vue-router";
-import {date, Dialog, useQuasar} from "quasar";
+import { defineComponent, computed, ref, watch } from "vue";
+import { useRouter } from "vue-router";
+import { date, Dialog, useQuasar } from "quasar";
 
 import MeterComponent from "./MeterComponent.vue";
 
-import {useMeterStore} from "/src/stores/meter";
-import {useReadingStore} from "/src/stores/reading";
-import {useAccountStore} from "/src/stores/account";
+import { useMeterStore } from "/src/stores/meter";
+import { useReadingStore } from "/src/stores/reading";
+import { useAccountStore } from "/src/stores/account";
 
 import MeterComponentWithInput from "./MeterComponentWithInput.vue";
 import AddMeter from "./AddMeter.vue";
 import MeterCost from "./MeterCost.vue";
-import {deleteMainMeter} from "src/boot/axios";
-import {getParticularMeterCost} from "boot/axios";
-import {updateAllData} from "src/boot/firebase";
+import { deleteMainMeter } from "src/boot/axios";
+import { getParticularMeterCost } from "boot/axios";
+import { updateAllData } from "src/boot/firebase";
 
-const {formatDate} = date
+const { formatDate } = date;
 const meterStore = useMeterStore();
 const readingStore = useReadingStore();
 const accountStore = useAccountStore();
@@ -242,12 +330,11 @@ export default defineComponent({
       modelCostForMeter.value = true;
     };
 
-
     const getSubmitedAndLastReading = () => {
       const data = (readings || []).sort((a, b) => b.time - a.time);
       lastReading.value = data[0] || {};
       firstReading.value =
-        data.find(({isSubmit}) => isSubmit) || data[data.length - 1] || {};
+        data.find(({ isSubmit }) => isSubmit) || data[data.length - 1] || {};
     };
 
     const updateReadings = () => {
@@ -261,7 +348,7 @@ export default defineComponent({
         readings = newValue;
         getSubmitedAndLastReading();
       },
-      {deep: true}
+      { deep: true }
     );
     updateReadings();
     const showAlert = (msg) => {
@@ -282,7 +369,7 @@ export default defineComponent({
     };
 
     function moveTo(path, meterId) {
-      router.push({path: `${path}/${meterId}`});
+      router.push({ path: `${path}/${meterId}` });
     }
 
     function calculateUnitForMonth() {
@@ -311,7 +398,7 @@ export default defineComponent({
         cancel: true,
         persistent: true,
       }).onOk(() => {
-        deleteMainMeter({meter_id: meter.id}).then((status) => {
+        deleteMainMeter({ meter_id: meter.id }).then((status) => {
           if (status.code == 200) {
             meterStore.deleteMeter(meter);
           }
@@ -344,11 +431,10 @@ export default defineComponent({
       meterLength,
       getMeterCost,
       getParticularMeterCost,
-      meterCostData
-
+      meterCostData,
     };
   },
-  components: {MeterComponent, MeterComponentWithInput, AddMeter, MeterCost},
+  components: { MeterComponent, MeterComponentWithInput, AddMeter, MeterCost },
 });
 </script>
 <style lang="scss" scoped>

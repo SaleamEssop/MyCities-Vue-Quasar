@@ -9,7 +9,7 @@ function capture() {
       var img = new Image();
       img.src = dataUrl;
       console.log("imge", img.src);
-    //   document.body.appendChild(img);
+      //   document.body.appendChild(img);
     })
     .catch(function (error) {
       console.error("oops, something went wrong!", error);

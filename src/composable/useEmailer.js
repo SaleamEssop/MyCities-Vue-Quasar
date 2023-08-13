@@ -1,7 +1,7 @@
-import {ELECTRICITY_METER, WATER_METER} from "src/config/meter";
-import {date, useQuasar} from "quasar";
+import { ELECTRICITY_METER, WATER_METER } from "src/config/meter";
+import { date, useQuasar } from "quasar";
 import EmailWarning from "components/EmailWarning.vue";
-import {useUnitFormat} from "src/composable/useUnitFormat";
+import { useUnitFormat } from "src/composable/useUnitFormat";
 
 export const useEmail = () => {
   const $q = useQuasar();
@@ -12,7 +12,10 @@ export const useEmail = () => {
       const meter = costDetails.meter_details;
       const usage = costDetails.usage;
       const account = costDetails.account;
-      const email = meter.meter_type_id === WATER_METER ? account.water_email : account.electricity_email;
+      const email =
+        meter.meter_type_id === WATER_METER
+          ? account.water_email
+          : account.electricity_email;
       const subject = `Account: ${account.account_number}`;
       let body = ``;
       body += `Account Number: ${account.account_number}\n`;
@@ -22,7 +25,11 @@ export const useEmail = () => {
       } else if (meter.meter_type_id === ELECTRICITY_METER) {
         body += `Electricity Meter: ${meter.meter_title}\n`;
       }
-      body += `Current Reading: ${unitFormat.unitFormat(usage.total_usage, meter.meter_type_id,true)}\n`;
+      body += `Current Reading: ${unitFormat.unitFormat(
+        usage.total_usage,
+        meter.meter_type_id,
+        true
+      )}\n`;
       body += `Date: ${current_date}\n\n\n\n\n`;
       body += `Powered by the MyCities App.\n`;
       body += `Visit www.mycities.co.za for information on how we can help you save on electricity and water with cutting edge technologies.`;
@@ -38,11 +45,13 @@ export const useEmail = () => {
       if (monthDate >= 25 && monthDate <= 23) {
         $q.dialog({
           component: EmailWarning,
-        }).onOk(() => {
-          window.open(urlString, "_blank");
-        }).onCancel(() => {
-          window.open(urlString, "_blank");
         })
+          .onOk(() => {
+            window.open(urlString, "_blank");
+          })
+          .onCancel(() => {
+            window.open(urlString, "_blank");
+          });
       } else {
         $q.dialog({
           title: "Confirm",
@@ -53,16 +62,18 @@ export const useEmail = () => {
           .onOk(() => {
             $q.dialog({
               component: EmailWarning,
-            }).onOk(() => {
-              window.open(urlString, "_blank");
-            }).onCancel(() => {
-              window.open(urlString, "_blank");
             })
+              .onOk(() => {
+                window.open(urlString, "_blank");
+              })
+              .onCancel(() => {
+                window.open(urlString, "_blank");
+              });
           })
           .onCancel(() => {
             // console.log(">>>> Cancel");
           });
       }
     },
-  }
-}
+  };
+};

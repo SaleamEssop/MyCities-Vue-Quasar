@@ -4,48 +4,126 @@
       <div class="text-subtitle2 text-white">Necessary Details</div>
     </q-card-section>
     <q-card-section>
-      <q-select color="black" type="text" label="Enter a location address" use-input input-debounce="0"
-        :options="siteOptions" @filter="filterFn" behavior="menu" v-model="site" option-label="address" emit-value
-        map-options v-if="isNew" />
+      <q-select
+        color="black"
+        type="text"
+        label="Enter a location address"
+        use-input
+        input-debounce="0"
+        :options="siteOptions"
+        @filter="filterFn"
+        behavior="menu"
+        v-model="site"
+        option-label="address"
+        emit-value
+        map-options
+        v-if="isNew"
+      />
       <div v-else>
         {{ site?.address }}
       </div>
 
       <h6>Email {{ site?.email }}</h6>
 
-      <q-select color="black" v-model="regionmodel" v-if="isNew" @update:model-value="onchangeRegion($event)"
-        :options="regionOptions" label="Select Region" option-value="id" option-label="name" />
+      <q-select
+        color="black"
+        v-model="regionmodel"
+        v-if="isNew"
+        @update:model-value="onchangeRegion($event)"
+        :options="regionOptions"
+        label="Select Region"
+        option-value="id"
+        option-label="name"
+      />
       <div v-else>
-        <q-select color="black" v-model="selectedAccount.region_id"
-          @update:model-value="onchangeRegion($event, selectedAccount)" :options="regionOptions" emit-value map-options
-          label="Select Region" disable readonly option-value="id" option-label="name" />
+        <q-select
+          color="black"
+          v-model="selectedAccount.region_id"
+          @update:model-value="onchangeRegion($event, selectedAccount)"
+          :options="regionOptions"
+          emit-value
+          map-options
+          label="Select Region"
+          disable
+          readonly
+          option-value="id"
+          option-label="name"
+        />
       </div>
 
-      <q-select color="black" v-model="accountmodel" v-if="isNew" :options="accountOptions" label="Enter Account Type"
-        option-value="id" option-label="type" />
+      <q-select
+        color="black"
+        v-model="accountmodel"
+        v-if="isNew"
+        :options="accountOptions"
+        label="Enter Account Type"
+        option-value="id"
+        option-label="type"
+      />
       <div v-else>
-        <q-select color="black" emit-value v-model="selectedAccount.account_type_id" :options="accountOptions"
-          label="Enter Account Type" option-value="id" map-options option-label="type" disable readonly />
+        <q-select
+          color="black"
+          emit-value
+          v-model="selectedAccount.account_type_id"
+          :options="accountOptions"
+          label="Enter Account Type"
+          option-value="id"
+          map-options
+          option-label="type"
+          disable
+          readonly
+        />
       </div>
 
       <div v-if="site?.ethekwini_water">
-        <q-input color="black" type="text" v-model="site.ethekwini_water" label="Enter Water Email" />
+        <q-input
+          color="black"
+          type="text"
+          v-model="site.ethekwini_water"
+          label="Enter Water Email"
+        />
       </div>
       <div v-else>
-        <q-input color="black" type="text" v-model="water_email" v-if="isNew" label="Enter Water Email" />
+        <q-input
+          color="black"
+          type="text"
+          v-model="water_email"
+          v-if="isNew"
+          label="Enter Water Email"
+        />
         <div v-else>
-          <q-input color="black" type="text" v-model="selectedAccount.water_email" label="Enter Water Email" />
+          <q-input
+            color="black"
+            type="text"
+            v-model="selectedAccount.water_email"
+            label="Enter Water Email"
+          />
         </div>
       </div>
 
       <div v-if="site?.ethekwini_electricity">
-        <q-input color="black" type="text" v-model="site.ethekwini_electricity" label="Enter Electricity Email" />
+        <q-input
+          color="black"
+          type="text"
+          v-model="site.ethekwini_electricity"
+          label="Enter Electricity Email"
+        />
       </div>
       <div v-else>
-        <q-input color="black" type="text" v-model="electricity_email" v-if="isNew" label="Enter Electricity Email" />
+        <q-input
+          color="black"
+          type="text"
+          v-model="electricity_email"
+          v-if="isNew"
+          label="Enter Electricity Email"
+        />
         <div v-else>
-          <q-input color="black" type="text" v-model="selectedAccount.electricity_email"
-            label="Enter Electricity Email" />
+          <q-input
+            color="black"
+            type="text"
+            v-model="selectedAccount.electricity_email"
+            label="Enter Electricity Email"
+          />
         </div>
       </div>
 
@@ -53,12 +131,22 @@
       <div v-else>
         <q-input color="black" type="text" v-model="selectedAccount.electricity_email" label="Enter Electricity Email" />
       </div> -->
-      <q-input color="black" type="text" label="Enter name - As per bill" v-if="isNew"
-        v-model.trim="selectedAccount.title" />
+      <q-input
+        color="black"
+        type="text"
+        label="Enter name - As per bill"
+        v-if="isNew"
+        v-model.trim="selectedAccount.title"
+      />
       <div v-else>Name : -{{ selectedAccount.title }}</div>
 
-      <q-input color="black" type="text" label="Enter account number - As per bill" v-if="isNew"
-        v-model="selectedAccount.number" />
+      <q-input
+        color="black"
+        type="text"
+        label="Enter account number - As per bill"
+        v-if="isNew"
+        v-model="selectedAccount.number"
+      />
       <div v-else>Account :- {{ selectedAccount.number }}</div>
     </q-card-section>
 
@@ -68,7 +156,12 @@
       </div>
     </q-card-section>
     <q-card-section>
-      <q-input color="black" type="text" label="Account description" v-model="selectedAccount.option" />
+      <q-input
+        color="black"
+        type="text"
+        label="Account description"
+        v-model="selectedAccount.option"
+      />
     </q-card-section>
     <!-- <q-card-section class="bg-primary">
       <div class="text-subtitle2">Fixed Cost - according to bill</div>
@@ -97,16 +190,27 @@
     </q-card-section>
     <div class="q-card__section q-card__section--vert">
       <div class="text-h7">
-        <q-input type="text" :placeholder="'Bill Day'" @blur="(evt) => onChanged(evt.target.value, selectedAccount)"
-          v-model.trim="selectedAccount.bill_day" />
+        <q-input
+          type="text"
+          :placeholder="'Bill Day'"
+          @blur="(evt) => onChanged(evt.target.value, selectedAccount)"
+          v-model.trim="selectedAccount.bill_day"
+        />
         <div class="flex justify-between">
-          <q-input type="text" :placeholder="'Read Day'" v-model.trim="selectedAccount.read_day" />
+          <q-input
+            type="text"
+            :placeholder="'Read Day'"
+            v-model.trim="selectedAccount.read_day"
+          />
           <q-toggle v-model="selectedAccount.bill_read_day_active" />
         </div>
       </div>
     </div>
     <!-- Default cost from server -->
-    <q-card-section class="bg-primary" v-if="selectedAccount?.new_additional_cost">
+    <q-card-section
+      class="bg-primary"
+      v-if="selectedAccount?.new_additional_cost"
+    >
       <div class="text-subtitle2 text-white">Additional Cost</div>
       <!-- <q-btn
         fab
@@ -121,7 +225,10 @@
     <!-- v-for="(defaultCost, index) in selectedAccount.defaultCosts" -->
     <!-- edit update -->
     <!-- v-for="(defaultCost, index) in isNew ? selectedAccount.defaultCosts  : selectedAccount.defaultFixedCost" -->
-    <template v-for="(additional_cost, index) in selectedAccount?.new_additional_cost" :key="index">
+    <template
+      v-for="(additional_cost, index) in selectedAccount?.new_additional_cost"
+      :key="index"
+    >
       <q-separator />
       <q-card-section>
         <div class="flex justify-between items-center">
@@ -133,7 +240,11 @@
           <q-toggle v-model="additional_cost.isApplicable" />
           <!-- :model-value="defaultCost.isApplicable" -->
         </div>
-        <q-input type="number" :placeholder="'R0.00'" v-model.number="additional_cost.cost" />
+        <q-input
+          type="number"
+          :placeholder="'R0.00'"
+          v-model.number="additional_cost.cost"
+        />
 
         <!-- <q-input v-else :placeholder="defaultCost.fixed_cost.title === 'Enter Your Billing Date'
             ? 'Enter Only Dates'
@@ -175,11 +286,25 @@
     <q-separator />
     <q-space />
     <q-card-actions align="center">
-      <q-btn color="red" v-if="!autoUpdate" text-color="white" class="q-my-none q-mx-none" label="Cancel" glossy
-        @click="$emit('close')" />
+      <q-btn
+        color="red"
+        v-if="!autoUpdate"
+        text-color="white"
+        class="q-my-none q-mx-none"
+        label="Cancel"
+        glossy
+        @click="$emit('close')"
+      />
 
-      <q-btn color="primary" text-color="white" v-if="!autoUpdate" class="q-my-none q-mx-noe" label="Save" glossy
-        @click="onSaveSelectAccount" />
+      <q-btn
+        color="primary"
+        text-color="white"
+        v-if="!autoUpdate"
+        class="q-my-none q-mx-noe"
+        label="Save"
+        glossy
+        @click="onSaveSelectAccount"
+      />
     </q-card-actions>
   </q-card>
 </template>
@@ -715,7 +840,6 @@ export default defineComponent({
           .map((cost) => {
             console.log(cost);
             if (cost.is_active == 1) {
-
               let id = cost?.id;
               const accountCost = accountValue.defaultFixedCost.find(
                 (_cost) => _cost?.fixed_cost?.id === cost?.id
@@ -845,7 +969,7 @@ export default defineComponent({
           };
         });
         return suggestions;
-      } catch (_) { }
+      } catch (_) {}
     };
 
     const finLatLngByMagicKey = async (singleLine, magicKey) => {
@@ -861,7 +985,7 @@ export default defineComponent({
           };
         });
         return address;
-      } catch (_) { }
+      } catch (_) {}
     };
 
     const watchSite = watch(site, async (newValue, oldValue) => {

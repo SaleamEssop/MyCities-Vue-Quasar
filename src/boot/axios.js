@@ -129,7 +129,13 @@ const addMeterAndReading = async (req) => {
 const getAllData = async () => {
   return await api.get(`/v1/all-data?user_id=${userStore.getUser?.id}`);
 };
-const getParticularMeterCost =  (accountId, meter_id, type,start_date,end_date) => {
+const getParticularMeterCost = (
+  accountId,
+  meter_id,
+  type,
+  start_date,
+  end_date
+) => {
   return api.get(
     `/v1/regions/getEastimateCost?account_id=${accountId}&meter_id=${meter_id}&type=${type}&start_date=${start_date}&end_date=${end_date}`
   );

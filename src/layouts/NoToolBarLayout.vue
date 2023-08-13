@@ -1,8 +1,5 @@
 <template>
-  <q-layout
-    view="lHh Lpr lFf"
-    class="containerWidth shadow-6 new-container"
-  >
+  <q-layout view="lHh Lpr lFf" class="containerWidth shadow-6 new-container">
     <q-page-container>
       <router-view />
     </q-page-container>

@@ -61,7 +61,7 @@ const handleKeyDown = (event, index) => {
   }
 
   // if (new RegExp("^([0-9])$").test(event.key)) {
-    if(event.key >= 0 && event.key <= 9){
+  if (event.key >= 0 && event.key <= 9) {
     digits[index] = event.key;
 
     if (index != props.digitCount - 1) {

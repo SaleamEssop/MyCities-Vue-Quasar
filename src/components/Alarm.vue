@@ -45,11 +45,11 @@ export default defineComponent({
         let alarmDateInMiliSecond =
           date.formatDate(alarmDate, "x") - currentDateInMiliSecond;
         if (alarmDateInMiliSecond >= 0) {
-        alarms.push({
-          id: id,
-          message: message,
-          alarmDateInMiliSecond: alarmDateInMiliSecond,
-        });
+          alarms.push({
+            id: id,
+            message: message,
+            alarmDateInMiliSecond: alarmDateInMiliSecond,
+          });
         }
       });
       return { alarms };

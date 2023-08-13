@@ -150,8 +150,9 @@ body.desktop .sidebar-menu-wrapper .q-hoverable:hover > .q-focus-helper {
   text-decoration: none;
 }
 
-.disabled, [disabled] {
-  opacity: .4 !important
+.disabled,
+[disabled] {
+  opacity: 0.4 !important;
 }
 
 .item-styling {
