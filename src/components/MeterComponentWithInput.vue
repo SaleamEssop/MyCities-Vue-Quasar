@@ -24,8 +24,7 @@
         <div class="col-5">: {{ account?.title }}</div>
         <div class="col-7">Last reading</div>
         <div class="col-5">
-          : {{ lastReadingItem?.value }}
-          {{ meter.type.id == 1 ? "kl" : "kW" }}
+          : {{ unitFormat.unitFormat(lastReadingItem?.value,meter.type.id,true) }}
         </div>
         <div class="col-7">Last reading Date</div>
         <div class="col-5">: {{ lastreadingDate }}</div>
@@ -116,12 +115,12 @@
       </div>
     </q-card-section>
     <q-card-actions align="center" style="margin-top: -10px">
-      <q-btn
-        icon="image"
-        color="primary"
-        text-color="white"
-        @click="captureImage()"
-      />
+<!--      <q-btn-->
+<!--        icon="image"-->
+<!--        color="primary"-->
+<!--        text-color="white"-->
+<!--        @click="captureImage()"-->
+<!--      />-->
       <!-- <q-btn
         icon="download"
         color="primary"
@@ -142,7 +141,7 @@
     <q-separator color="grey" size="10px" />
 
     <q-card-section>
-      <div class="text-subtitle1" style="margin-top: -10px">Powered by the</div>
+      <div class="text-subtitle1" style="margin-top: -10px">Powered by</div>
       <div style="margin-top: 15px">
         <img class="q-px-lg myCityIcon" src="~assets/logo_small.png" />
       </div>
@@ -178,6 +177,7 @@ import {
   CameraDirection,
 } from "@capacitor/core";
 import domtoimage from "dom-to-image-more";
+import {useUnitFormat} from "src/composable/useUnitFormat";
 
 const { Camera, Filesystem } = Plugins;
 
@@ -188,6 +188,7 @@ export default defineComponent({
     isNew: Boolean,
   },
   setup(props, { emit }) {
+    const unitFormat = useUnitFormat();
     const meterComopnentReadValue = ref();
     const readingStore = useReadingStore();
     const accountStore = useAccountStore();
@@ -604,6 +605,7 @@ export default defineComponent({
     };
 
     return {
+      unitFormat,
       account,
       inputFocus,
       currentReading,

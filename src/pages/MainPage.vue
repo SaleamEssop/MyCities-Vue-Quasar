@@ -40,14 +40,14 @@
               <q-btn flat size="lg" icon="more_horiz" text-color="primary">
                 <q-menu anchor="center middle" self="center middle">
                   <q-list style="min-width: 100px">
-                    <q-item clickable v-close-popup @click="accountStore.selectedAccount = account;
-                    modelAccountForFullBill = true;
-                                                            ">
-                      <q-item-section>View Bill</q-item-section>
-                    </q-item>
+<!--                    <q-item clickable v-close-popup @click="accountStore.selectedAccount = account;-->
+<!--                    modelAccountForFullBill = true;-->
+<!--                                                            ">-->
+<!--                      <q-item-section>View Bill</q-item-section>-->
+<!--                    </q-item>-->
                     <router-link class="link" :to="{name:'FullBill',params:{id:account.id}}">
                       <q-item clickable v-ripple>
-                        <q-item-section>View Bill New</q-item-section>
+                        <q-item-section>View Bill</q-item-section>
                       </q-item>
                     </router-link>
                     <q-item clickable v-close-popup @click="

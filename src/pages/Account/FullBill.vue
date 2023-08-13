@@ -10,17 +10,17 @@
 
   <q-card flat class="bg-grey-4 q-ma-sm q-pa-sm">
     <div style="flex-direction: column" class="flex column items-center" aria-label="heading">
-      <div class="medium-text">
+      <div class="medium-text" style="display: flex;">
         <q-icon v-if="billDetails?.has_history" @click="previous" name="arrow_left" class="icon-styling"/>
         <q-icon disabled v-else name="arrow_left" class="icon-styling"/>
-        <span>
-          Projected bill for {{ billDetails?.month }}
-        </span>
+        <div style="display: flex;flex-direction: column;justify-content: center;align-items: center">
+          <span class="large-text">{{ billDetails?.cycle }}</span>
+          <span class="medium-text">Current Date: {{ billDetails.current_date }}</span>
+        </div>
         <q-icon v-if="currentMonth > 1" @click="next" name="arrow_right" class="icon-styling"/>
         <q-icon v-else disabled name="arrow_right" class="icon-styling"/>
       </div>
-      <span class="medium-text">{{ billDetails?.cycle }}</span>
-      <span class="medium-text">Today is {{ billDetails.current_date }}</span>
+      <span class="large-text" style="font-weight: bold;font-size: 3rem">R {{ numberFormat.numberFormat(billDetails?.total_including_vat || 0) }}</span>
     </div>
   </q-card>
   <template v-if="hasError">
@@ -42,7 +42,7 @@
         <q-card flat class="q-ma-sm q-pa-sm">
           <div style="justify-content: space-between;align-items: center" class="flex" aria-label="heading">
             <span class="large-text">Meter# {{ waterMeter.meter_details.meter_number }}</span>
-            <q-btn class="q-mt-sm" style="margin-top: 0" color="blue-2" rounded unelevated text-color="black" size="sm">Email Now</q-btn>
+            <q-btn @click="email.mailCost(waterMeter)" class="q-mt-sm" style="margin-top: 0" color="blue-2" rounded unelevated text-color="black" size="sm">Email Now</q-btn>
           </div>
         </q-card>
         <q-card flat class="q-ma-sm q-pa-sm">
@@ -98,7 +98,7 @@
         <q-card flat class="q-ma-sm q-pa-sm">
           <div style="justify-content: space-between" class="flex" aria-label="heading">
             <span class="large-text">Meter# {{ electricityMeter.meter_details.meter_number }}</span>
-            <q-btn class="q-mt-sm" style="margin-top: 0" color="blue-2" rounded unelevated text-color="black" size="sm">Email Now</q-btn>
+            <q-btn @click="email.mailCost(electricityMeter)" class="q-mt-sm" style="margin-top: 0" color="blue-2" rounded unelevated text-color="black" size="sm">Email Now</q-btn>
           </div>
         </q-card>
         <q-card flat class="q-ma-sm q-pa-sm">
@@ -209,7 +209,9 @@ import {onMounted, ref, watchEffect} from "vue";
 import {getFullBill} from "src/api/meters";
 import {useNumberFormat} from "src/composable/useNumberFormat";
 import {useUnitFormat} from "src/composable/useUnitFormat";
+import {useEmail} from "src/composable/useEmailer";
 
+const email = useEmail();
 const route = useRoute();
 const router = useRouter();
 const numberFormat = useNumberFormat();
@@ -287,24 +289,24 @@ onMounted(() => {
 
 .icon-styling {
   cursor: pointer;
-  font-size: 2.5rem;
+  font-size: 4rem;
   font-weight: 700
 }
 
 .water-meter-background {
   /* For white font */
   color: #FFFFFF;
-  background: #1E90FF;
+  background: #61a402;
 
 }
 
 .electricity-meter-background {
   color: #FFFFFF;
-  background: #1E90FF;
+  background: #61a402;
 }
 
 .additional-costs-background {
   color: #FFFFFF;
-  background: #1E90FF;
+  background: #61a402;
 }
 </style>

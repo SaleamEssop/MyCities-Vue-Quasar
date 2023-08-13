@@ -15,7 +15,7 @@
         <div class="header-top-container d-flex align-items-center">
           <div class="header-left-top">
             <div class="logo-container">
-              <img class="q-px-lg titleIcon" src="~assets/MyCity.png" />
+              <img class="q-px-lg titleIcon" src="~assets/MyCity.png"/>
               <!-- <div class="regionTitle">Ethekwini Region</div> -->
             </div>
             <div class="text-center">
@@ -30,7 +30,7 @@
         </div>
         <!-- <q-separator color="grey" />
         <q-separator color="grey q-mt-xs" /> -->
-        <q-separator color="grey q-mt-sm" size="2px" />
+        <q-separator color="grey q-mt-sm" size="2px"/>
 
         <div class="ads_main">
           <!-- start new hamburger menu code -->
@@ -47,11 +47,12 @@
                 <q-list
                   v-for="ad in                                                                                                                              getAds                                                                                                                             "
                   :key="ad.id">
-                  <q-item v-show="ad.name !== 'LightsAndWater'" clickable v-close-popup @click="onChildItemClick"
-                    v-if="ad.childs.length > 0" :class="ad.childs.length > 0 ? 'submenu' : ''">
+                  <q-item v-show="ad?.name !== 'LightsAndWater'" clickable v-close-popup @click="onChildItemClick"
+                          v-if="ad.childs.length > 0" :class="ad.childs.length > 0 ? 'submenu' : ''">
                     <q-item-section>
                       <q-item-label :class="{ active: ad.id == activeId }" @click="selectLang(ad.id)">
-                        {{ ad.name }} </q-item-label>
+                        {{ ad?.name }}
+                      </q-item-label>
                       <div class="sub-menu-items" :class="{ active: ad.id == activeId }">
                         <q-list
                           v-for="childs in                                                                                                                              ad.childs                                                                                                                             "
@@ -59,7 +60,7 @@
                           <q-item>
                             <q-item-section>
                               <q-item-label v-model="name"
-                                @click="activeMenuItem(childs.id);
+                                            @click="activeMenuItem(childs.id);
                                 isHidden = !isHidden;
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ">
                                 {{ childs.name }}
@@ -70,14 +71,16 @@
                       </div>
                     </q-item-section>
                   </q-item>
-                  <q-item v-show=" ad.name !== 'LightsAndWater' " clickable v-close-popup @click=" onItemClick " v-else>
+                  <q-item v-show=" ad?.name !== 'LightsAndWater' " clickable v-close-popup @click=" onItemClick "
+                          v-else>
                     <q-item-section v-if=" ad.parent_id == null ">
-                      <q-item-label v-model=" name " :class=" { active: ad.id == activeId } " @click="
-                        activeMenuItem(childs.name);
+                      <q-item-label v-model="name" :class=" { active: ad.id == activeId } " @click="
+                        activeMenuItem(childs?.name);
                         isHidden = !isHidden;
                         selectLang(ad.id);
                       ">
-                        {{ ad.name }}</q-item-label>
+                        {{ ad?.name }}
+                      </q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -93,7 +96,8 @@
                 <q-item v-show=" ad.name !== 'LightsAndWater' " clickable v-close-popup @click=" onItemClick ">
                   <q-item-section>
                     <q-item-label v-model=" name " @click=" activeMenuItem(ad.name) ">
-                      {{ ad.name }}</q-item-label>
+                      {{ ad.name }}
+                    </q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -102,10 +106,10 @@
 
           <div class="text-center">
             <q-btn class="col-xs-6 col-sm-6 q-my-sm btn-light-green" rounded no-caps label="Home"
-              @click=" activeMenuItemLightWater('Home') " />
+                   @click=" activeMenuItemLightWater('Home') "/>
             <q-btn class="col-xs-6 col-sm-6 q-my-sm btn-light-green" rounded no-caps label="Lights And Water" @click="
               activeMenuItemLightWater('LightsAndWater'), (lightAndWaterDialog = true)
-            " />
+            "/>
           </div>
           <div class="text-center" style="display: none">
             <!-- <q-btn
@@ -115,7 +119,7 @@
               @click="openFacebook()"
             /> -->
             <q-btn class="col-xs-6 col-sm-6 q-my-sm btn-light-green" no-caps rounded label="FoodBasket"
-              @click=" openFoodbasket() " />
+                   @click=" openFoodbasket() "/>
           </div>
           <!-- <div class="text-center">
             <q-btn class="col-xs-6 col-sm-6 q-my-xs adsBtn" icon="smart_display" flat @click="openYoutube()" />
@@ -125,7 +129,7 @@
           </div> -->
         </div>
 
-        <q-separator color="grey" size="2px" />
+        <q-separator color="grey" size="2px"/>
         <!-- <q-separator color="grey q-mt-xs" /> -->
       </div>
       <!-- second menu section -->
@@ -251,7 +255,7 @@
           <div class="adv-item" v-if=" getAdsWithCategory?.id ">
             <!-- <div class="q-px-md" v-html="ad.description"></div> -->
             <img v-if=" getAdsWithCategory.image " :src=" getAdsWithCategory.image " class="addImage"
-              @click=" openAds(getAdsWithCategory.url) " />
+                 @click=" openAds(getAdsWithCategory.url) "/>
 
             <!-- <q-img
               :src="ad.image"
@@ -262,12 +266,12 @@
             /> -->
             <!-- add_description_scroll -->
             <div v-show=" getAdsWithCategory.price > 0 || getAdsWithCategory.name !== 'null' "
-              class="add_description_scroll">
+                 class="add_description_scroll">
               <!-- <div v-show=" ad.price > 0 " class="ads_price text-h6">
                 R {{ ad.price }}
               </div> -->
               <div v-show=" getAdsWithCategory.description !== 'null' " class="text-subtitle1"
-                v-html=" getAdsWithCategory.description ">
+                   v-html=" getAdsWithCategory.description ">
 
               </div>
             </div>
@@ -278,7 +282,7 @@
             <div class="adv-item" v-if=" selectCategory && selectCategory[0]?.id ">
               <!-- <div class="q-px-md" v-html="ad.description"></div> -->
               <img v-if=" selectCategory[0]?.image " :src=" selectCategory[0]?.image " class="addImage"
-                @click=" openAds(selectCategory[0]?.url) " />
+                   @click=" openAds(selectCategory[0]?.url) "/>
 
               <!-- <q-img
               :src="ad.image"
@@ -289,12 +293,12 @@
             /> -->
               <!-- add_description_scroll -->
               <div v-show=" selectCategory[0]?.price > 0 || selectCategory[0]?.name !== 'null' "
-                class="add_description_scroll">
+                   class="add_description_scroll">
                 <!-- <div v-show=" ad.price > 0 " class="ads_price text-h6">
                 R {{ ad.price }}
               </div> -->
                 <div v-show=" selectCategory[0]?.description !== 'null' " class="text-subtitle1"
-                  v-html=" selectCategory[0]?.description ">
+                     v-html=" selectCategory[0]?.description ">
 
                 </div>
               </div>
@@ -316,10 +320,10 @@
             <div class="dueMessage" v-show=" billingDate ">
               "Your scheduled meter reading is due. Please read and submit."
             </div>
-            <q-separator v-show=" billingDate " color="grey" />
+            <q-separator v-show=" billingDate " color="grey"/>
             <div class=""
-              v-for="                                                                                                                             alarm                                                                                                                              in                                                                                                                              getAlarm                                                                                                                             "
-              :key=" alarm.id ">
+                 v-for="                                                                                                                             alarm                                                                                                                              in                                                                                                                              getAlarm                                                                                                                             "
+                 :key=" alarm.id ">
               <div class="row no-wrap">
                 <div class="col text-subtitle1 q-py-sm">
                   {{ alarm.message }}
@@ -328,7 +332,7 @@
                   <q-btn flat class="adsBtn" icon="close" @click=" markAsRead(alarm.id) "></q-btn>
                 </div>
               </div>
-              <q-separator color="grey" />
+              <q-separator color="grey"/>
             </div>
           </div>
         </div>
@@ -336,7 +340,7 @@
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn dense label="Done" v-close-popup />
+        <q-btn dense label="Done" v-close-popup/>
         <!-- <q-btn dense label="Remind me later" v-close-popup /> -->
       </q-card-actions>
     </q-card>
@@ -351,14 +355,14 @@
           </div>
           <div class="q-mt-lg">
             <q-input inputmode="numeric" color="black" class="q-mx-lg" mask="### ### ####" fill-mask
-              v-model=" phoneNumber " :input-style=" { fontSize: '24px', textAlign: 'center' } " />
+                     v-model=" phoneNumber " :input-style=" { fontSize: '24px', textAlign: 'center' } "/>
           </div>
         </div>
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn flat label="Close" no-caps v-close-popup />
-        <q-btn flat label="Open WhatsApp" @click=" openChatOnWhatsApp(phoneNumber) " no-caps v-close-popup />
+        <q-btn flat label="Close" no-caps v-close-popup/>
+        <q-btn flat label="Open WhatsApp" @click=" openChatOnWhatsApp(phoneNumber) " no-caps v-close-popup/>
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -369,7 +373,7 @@
         <div
           v-for="                                                                                                                             ad                                                                                                                              in                                                                                                                              getAdsWithCategory                                                                                                                             "
           :key=" ad.id ">
-          <img :src=" ad.image " alt="add-image1" class="addImage" @click=" openAds(ad.url) " />
+          <img :src=" ad.image " alt="add-image1" class="addImage" @click=" openAds(ad.url) "/>
           <!-- add_description_scroll -->
           <div v-show=" ad.price > 0 || ad.name !== 'null' " class="add_description_scroll">
             <div v-show=" ad.price > 0 " class="ads_price text-h6">
@@ -379,14 +383,14 @@
 
             </div>
           </div>
-          <q-separator v-show=" getAdsWithCategory.length " color="grey-4" size="10px" class="bottomLine" />
+          <q-separator v-show=" getAdsWithCategory.length " color="grey-4" size="10px" class="bottomLine"/>
         </div>
       </div>
       <div class="btnLightAndWater">
         <q-btn no-caps color="primary" rounded v-close-popup class="text-white fit-content" label="Home"
-          icon="arrow_back" />
+               icon="arrow_back"/>
         <q-btn icon-right="arrow_forward" no-caps color="primary" rounded class="text-white fit-content"
-          label="My Manager" @click=" moveTo('send_reading') " />
+               label="My Manager" @click=" moveTo('send_reading') "/>
       </div>
     </q-card>
   </q-dialog>
@@ -401,25 +405,25 @@
         <div class="q-mt-sm">Are you sure you want to Logout?</div>
       </q-card-section>
       <q-card-actions align="right">
-        <q-btn label="Cancel" dense no-caps v-close-popup />
-        <q-btn label="Logout" dense no-caps @click=" logout " />
+        <q-btn label="Cancel" dense no-caps v-close-popup/>
+        <q-btn label="Logout" dense no-caps @click=" logout "/>
       </q-card-actions>
     </q-card>
   </q-dialog>
 </template>
 <script setup>
-import { computed, onMounted, watch, ref } from "vue";
+import {computed, onMounted, watch, ref} from "vue";
 
 // import { getAuth, onAuthStateChanged } from "firebase/auth";
 // import { onBeforeUpdate } from "vue";
-import { useQuasar } from "quasar";
-import { useRouter } from "vue-router";
-import { useUserStore } from "src/stores/user";
-import { useAdStore } from "src/stores/ads";
-import { useGetAlarmsStore } from "src/stores/alarm";
-import { useAccountStore } from "/src/stores/account";
+import {useQuasar} from "quasar";
+import {useRouter} from "vue-router";
+import {useUserStore} from "src/stores/user";
+import {useAdStore} from "src/stores/ads";
+import {useGetAlarmsStore} from "src/stores/alarm";
+import {useAccountStore} from "/src/stores/account";
 
-import { date } from "quasar";
+import {date} from "quasar";
 // import { Plugins } from "@capacitor/core";
 // const { Accessibility, Modals } = Plugins;
 
@@ -539,7 +543,7 @@ const openDialCall = (number) => {
 };
 
 const markAsRead = (id) => {
-  let alarm = getAlarm.value.findIndex(({ id }) => {
+  let alarm = getAlarm.value.findIndex(({id}) => {
     return id == id;
   });
   if (id > -1) {
@@ -598,7 +602,7 @@ const activeMenuItem = (id) => {
   //slide.value = data[0].ads[0]?.id;
   //selectCategory.value = data[0]?.ads;
 
-  selectCategory.value = childdetails[0].ads[0];
+  selectCategory.value = childdetails[0]?.ads[0];
   console.log(selectCategory);
 
 };
@@ -634,12 +638,11 @@ const getAdsWithCategory = computed(() => {
   console.log(getAdsWithCategory);
   if (selectCategory.value !== null) {
     return selectCategory.value;
-  }
-  else {
+  } else {
     let defaultAds = getAds.value.filter((_el) => {
       return _el["name"] === "Home";
     });
-    defaultAds.findIndex(({ ads }) => {
+    defaultAds.findIndex(({ads}) => {
       slide.value = ads[0]?.id;
     });
     return [];
@@ -655,10 +658,9 @@ const logout = () => {
     router
       .push("/auth/login")
       .then(() => {
-        $q.notify({ message: "Signed out" });
+        $q.notify({message: "Signed out"});
       })
       .catch((error) => console.log("error", error));
-    timer = void 0;
     // $q.loading.hide();
   }, 1000);
 };
@@ -666,20 +668,21 @@ const totalItems = ref([
   {
     title: "AppartmentMeter 409",
     icon: "water",
-    type: { title: "Water", id: 1 },
+    type: {title: "Water", id: 1},
   },
   {
     title: "AppartmentMeter 410",
     icon: "water",
-    type: { title: "Water", id: 1 },
+    type: {title: "Water", id: 1},
   },
 ]);
 
 function log() {
   console.log(msg);
 }
+
 function moveTo(name) {
-  router.push({ name: name });
+  router.push({name: name});
 }
 </script>
 
@@ -691,7 +694,7 @@ function moveTo(name) {
   margin-bottom: 10px;
 }
 
-.q-dialog__inner--maximized>div {
+.q-dialog__inner--maximized > div {
   max-width: 480px !important;
 }
 
@@ -953,24 +956,24 @@ function moveTo(name) {
 }
 
 .sidebar-menu-wrapper .q-item-type:hover,
-.sidebar-menu-wrapper .q-hoverable:hover>.q-focus-helper,
+.sidebar-menu-wrapper .q-hoverable:hover > .q-focus-helper,
 body.desktop .sidebar-menu-wrapper .q-focus-helper:after,
 body.desktop .sidebar-menu-wrapper .q-focus-helper:before {
   background: none;
 }
 
-body.desktop .sidebar-menu-wrapper .q-focusable:focus>.q-focus-helper,
+body.desktop .sidebar-menu-wrapper .q-focusable:focus > .q-focus-helper,
 .sidebar-menu-wrapper .q-focus-helper,
-body.desktop .sidebar-menu-wrapper .q-hoverable:hover>.q-focus-helper {
+body.desktop .sidebar-menu-wrapper .q-hoverable:hover > .q-focus-helper {
   background: currentColor;
   opacity: 0;
 }
 
-.sidebar-menu-wrapper>.q-list>.q-item>.q-item__section>.q-item__label {
+.sidebar-menu-wrapper > .q-list > .q-item > .q-item__section > .q-item__label {
   padding: 10px 20px;
 }
 
-.sidebar-menu-wrapper>.q-list>.q-item>.q-item__section>.q-item__label.active {
+.sidebar-menu-wrapper > .q-list > .q-item > .q-item__section > .q-item__label.active {
   color: #61a402;
 }
 
@@ -981,7 +984,7 @@ body.desktop .sidebar-menu-wrapper .q-hoverable:hover>.q-focus-helper {
   font-size: 16px;
 }
 
-.submenu>.q-item__section {
+.submenu > .q-item__section {
   padding: 0;
 }
 
@@ -989,11 +992,11 @@ body.desktop .sidebar-menu-wrapper .q-hoverable:hover>.q-focus-helper {
   color: #61a402;
 }
 
-.submenu>.q-item__section>.q-item__label {
+.submenu > .q-item__section > .q-item__label {
   position: relative;
 }
 
-.submenu>.q-item__section>.q-item__label:after {
+.submenu > .q-item__section > .q-item__label:after {
   content: "";
   height: 18px;
   width: 1.5px;
@@ -1006,7 +1009,7 @@ body.desktop .sidebar-menu-wrapper .q-hoverable:hover>.q-focus-helper {
   transition: 0.5s all;
 }
 
-.submenu>.q-item__section>.q-item__label:before {
+.submenu > .q-item__section > .q-item__label:before {
   content: "";
   height: 1.5px;
   width: 16px;
@@ -1018,7 +1021,7 @@ body.desktop .sidebar-menu-wrapper .q-hoverable:hover>.q-focus-helper {
   margin: auto;
 }
 
-.submenu>.q-item__section>.q-item__label.active:after {
+.submenu > .q-item__section > .q-item__label.active:after {
   opacity: 0;
 }
 

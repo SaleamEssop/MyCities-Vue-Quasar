@@ -52,15 +52,23 @@
           Reading</span> -->
 
         <p class="q-mx-md"></p>
-
+        <div>
+          <q-btn size="0.7rem" rounded color="primary"
+                 @click="modelForReadingSet_NewReading = true;
+                modelForReadingSet = true;"
+          >Enter Reading</q-btn>
+          &nbsp;
+          <router-link class="link" :to="{name:'MeterCost',params:{id:meter.id}}">
+            <q-btn size="0.7rem" rounded color="primary">Calculate Cost</q-btn>
+          </router-link>
+        </div>
         <!-- <span class="round-cheap" clickable v-ripple @click=" getMeterCost(meter) ">Cost</span> -->
         <q-btn flat size="lg" icon="more_horiz" text-color="primary">
           <q-menu anchor="center middle" self="center middle">
             <q-list style="min-width: 100px">
               <q-item clickable v-close-popup v-ripple
                       @click="modelForReadingSet_NewReading = true;
-                modelForReadingSet = true;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ">
+                modelForReadingSet = true;">
                 <q-item-section>Enter New Reading</q-item-section>
               </q-item>
               <q-item clickable v-close-popup v-ripple @click="
@@ -72,13 +80,9 @@
               <!-- <q-item clickable v-close-popup>
                 <q-item-section>Submit to Municipality</q-item-section>
               </q-item> -->
-
-              <q-item @click=" getMeterCost(meter) " v-close-popup clickable v-ripple>
-                <q-item-section>Calculate Cost</q-item-section>
-              </q-item>
               <router-link class="link" :to="{name:'MeterCost',params:{id:meter.id}}">
                 <q-item clickable v-ripple>
-                  <q-item-section>Calculate Cost New</q-item-section>
+                  <q-item-section>Calculate Cost</q-item-section>
                 </q-item>
               </router-link>
 

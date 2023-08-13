@@ -35,7 +35,7 @@
             </q-input>
             <div v-if="isLogin">
               <div class="row q-mb-sm">
-                <q-checkbox v-model="agreeToTCs" label="Agree our T&Cs.">
+                <q-checkbox v-model="agreeToTCs" label="Agree to our T&Cs.">
                 </q-checkbox>
                 <span
                   class="readTerms"
@@ -93,7 +93,7 @@
               />
 
               <div class="row q-mb-sm">
-                <q-checkbox v-model="agreeToTCs" label="Agree our T&Cs.">
+                <q-checkbox v-model="agreeToTCs" label="Agree to our T&Cs.">
                 </q-checkbox>
                 <span
                   class="readTerms"
