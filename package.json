@@ -30,7 +30,8 @@
     "pinia-plugin-persistedstate": "^2.1.1",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
-    "vue-router": "^4.0.0"
+    "vue-router": "^4.0.0",
+    "vue-social-sharing": "^4.0.0-alpha4"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",

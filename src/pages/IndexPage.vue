@@ -278,6 +278,37 @@
       </div>
       <!-- <q-separator color="grey q-mb-lg" size="2px" /> -->
 
+      <q-btn-dropdown color="primary" icon="share" fab style="position: absolute;bottom: 30px;right: 30px;z-index: 1">
+        <q-list>
+          <q-item clickable v-for="(network,i) in networks" :key="i">
+            <ShareNetwork
+              :network="network.network"
+              url="https://www.mycities.co.za"
+              title="Mycities"
+              description="I am sharing this fantastic Web app I found which makes managing your water and lights so easy. You just have to try it."
+              hashtags="mycities.co.za"
+            >
+              <q-icon size="md" :name="network.icon" :color="network.color"/>
+            </ShareNetwork>
+          </q-item>
+<!--          <q-item clickable v-close-popup >-->
+<!--            <q-icon size="md" name="fa-brands fa-facebook" />-->
+<!--          </q-item>-->
+<!--          <q-item clickable v-close-popup >-->
+<!--            <q-icon size="md" name="fa-brands fa-twitter" />-->
+<!--          </q-item>-->
+<!--          <q-item clickable v-close-popup >-->
+<!--            <q-icon size="md" name="fa-brands fa-instagram" />-->
+<!--          </q-item>-->
+<!--          <q-item clickable v-close-popup >-->
+<!--            <q-icon size="md" name="fa-brands fa-linkedin" />-->
+<!--          </q-item>-->
+<!--          <q-item clickable v-close-popup >-->
+<!--            <q-icon size="md" name="fa-solid fa-comment-sms" />-->
+<!--          </q-item>-->
+        </q-list>
+      </q-btn-dropdown>
+
       <div class="ads">
         <!-- q-pa-md -->
         <div>
@@ -630,6 +661,15 @@ const billingDate = computed(() => {
 //   return alerm;
 // });
 
+const networks = [
+  { network: 'email', name: 'Email', icon: 'far fah fa-lg fa-envelope', color: 'grey-10' },
+  { network: 'facebook', name: 'Facebook', icon: 'fab fah fa-lg fa-facebook-f', color: 'blue-10' },
+  { network: 'linkedin', name: 'LinkedIn', icon: 'fab fah fa-lg fa-linkedin', color: 'blue-6' },
+  { network: 'messenger', name: 'Messenger', icon: 'fab fah fa-lg fa-facebook-messenger', color: 'blue-10' },
+  { network: 'sms', name: 'SMS', icon: 'far fah fa-lg fa-comment-dots', color: 'black-5' },
+  { network: 'twitter', name: 'Twitter', icon: 'fab fah fa-lg fa-twitter', color: 'blue-6' },
+  { network: 'whatsapp', name: 'Whatsapp', icon: 'fab fah fa-lg fa-whatsapp', color: 'green-5' },
+];
 const slide = ref(null);
 const autoplay = ref(true);
 
