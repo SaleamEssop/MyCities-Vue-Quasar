@@ -1,14 +1,5 @@
 import { ELECTRICITY_METER, WATER_METER } from "src/config/meter";
-
 const formatter = new Intl.NumberFormat("en-US");
-const formatterFraction = new Intl.NumberFormat("en-US", {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-const electricytFormatterFraction = new Intl.NumberFormat("en-US", {
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1,
-});
 export const useUnitFormat = () => {
   function formatNumberWithLeading4Zeroes(number) {
     const numberAsString = number.toString(); // Convert the number to a string
@@ -32,23 +23,24 @@ export const useUnitFormat = () => {
       if (type === WATER_METER) {
         if (fractions) {
           return `${formatNumberWithLeading4Zeroes(
-            formatterFraction.format(value)
+            value.toFixed(2)
           )} kL`;
         } else {
-          return `${formatter.format(value)} kL`;
+          return `${value.toFixed(2)} kL`;
         }
       } else if (type === ELECTRICITY_METER) {
         if (fractions) {
           console.log(value);
           return `${formatNumberWithLeading5Zeroes(
-            electricytFormatterFraction.format(value)
+            value.toFixed(1)
           )} kWh`;
         } else {
-          return `${formatter.format(value)} kWh`;
+          return `${value.toFixed(2)} kWh`;
         }
       }
     },
     klToLitters(value) {
+      console.log(value)
       if (typeof value !== "number") {
         return value;
       }

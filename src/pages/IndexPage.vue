@@ -15,7 +15,7 @@
         <div class="header-top-container d-flex align-items-center">
           <div class="header-left-top">
             <div class="logo-container">
-              <img class="q-px-lg titleIcon" src="~assets/MyCity.png" />
+              <img class="q-px-lg titleIcon" src="~assets/MyCity.png"/>
               <!-- <div class="regionTitle">Ethekwini Region</div> -->
             </div>
             <div class="text-center">
@@ -35,7 +35,7 @@
         </div>
         <!-- <q-separator color="grey" />
         <q-separator color="grey q-mt-xs" /> -->
-        <q-separator color="grey q-mt-sm" size="2px" />
+        <q-separator color="grey q-mt-sm" size="2px"/>
 
         <div class="ads_main">
           <!-- start new hamburger menu code -->
@@ -46,7 +46,6 @@
               flat
               class="col-xs-6 col-sm-6 q-my-xs adsBtn"
             ></q-btn>
-
             <div
               :class="{ open: isHidden }"
               class="sidebar-fullscreen text-left"
@@ -57,66 +56,70 @@
                   <span class="username">{{ user?.name }}</span>
                   <q-btn icon="close" @click="isHidden = false"></q-btn>
                 </div>
-                <q-list v-for="ad in getAds" :key="ad.id">
-                  <q-item
-                    v-show="ad?.name !== 'LightsAndWater'"
-                    clickable
-                    v-close-popup
-                    @click="onChildItemClick"
-                    v-if="ad.childs.length > 0"
-                    :class="ad.childs.length > 0 ? 'submenu' : ''"
-                  >
-                    <q-item-section>
-                      <q-item-label
-                        :class="{ active: ad.id == activeId }"
-                        @click="selectLang(ad.id)"
-                      >
-                        {{ ad?.name }}
-                      </q-item-label>
-                      <div
-                        class="sub-menu-items"
-                        :class="{ active: ad.id == activeId }"
-                      >
-                        <q-list v-for="childs in ad.childs" :key="childs.id">
-                          <q-item>
-                            <q-item-section>
-                              <q-item-label
-                                v-model="name"
-                                @click="
+                <template v-for="ad in getAds" :key="ad.id">
+                  <q-list v-if="ad.ads && ad.ads.length">
+                    <q-item
+                      v-show="ad?.name !== 'LightsAndWater'"
+                      clickable
+                      v-close-popup
+                      @click="onChildItemClick"
+                      v-if="ad.childs.length > 0"
+                      :class="ad.childs.length > 0 ? 'submenu' : ''"
+                    >
+                      <q-item-section>
+                        <q-item-label
+                          :class="{ active: ad.id == activeId }"
+                          @click="selectLang(ad.id)"
+                          style="font-size: 1.2rem;font-weight: bold"
+                        >
+                          {{ ad?.name }}
+                        </q-item-label>
+                        <div
+                          class="sub-menu-items"
+                          :class="{ active: ad.id === activeId }"
+                        >
+                          <q-list v-for="childs in ad.childs" :key="childs.id">
+                            <q-item>
+                              <q-item-section>
+                                <q-item-label
+                                  v-model="name"
+                                  @click="
                                   activeMenuItem(childs.id);
                                   isHidden = !isHidden;
                                 "
-                              >
-                                {{ childs.name }}
-                              </q-item-label>
-                            </q-item-section>
-                          </q-item>
-                        </q-list>
-                      </div>
-                    </q-item-section>
-                  </q-item>
-                  <q-item
-                    v-show="ad?.name !== 'LightsAndWater'"
-                    clickable
-                    v-close-popup
-                    @click="onItemClick"
-                    v-else
-                  >
-                    <q-item-section v-if="ad.parent_id == null">
-                      <q-item-label
-                        v-model="name"
-                        :class="{ active: ad.id == activeId }"
-                        @click="
-                          activeMenuItem(childs?.name);
+                                >
+                                  {{ childs.name }}
+                                </q-item-label>
+                              </q-item-section>
+                            </q-item>
+                          </q-list>
+                        </div>
+                      </q-item-section>
+                    </q-item>
+                    <q-item
+                      v-show="ad?.name !== 'LightsAndWater'"
+                      clickable
+                      v-close-popup
+                      v-else
+                    >
+                      <q-item-section v-if="ad.parent_id == null">
+                        <q-item-label
+                          v-model="name"
+                          :class="{ active: ad.id === activeId }"
+                          @click="
+                          activeMenuItem(ad.id);
                           isHidden = !isHidden;
                           selectLang(ad.id);
                         "
-                      >
-                        {{ ad?.name }}
-                      </q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </q-list>
+                          style="font-size: 1.2rem;font-weight: bold"
+                        >
+                          {{ ad?.name }}
+                          <!-- Side Menu working-->
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </template>
               </div>
             </div>
           </div>
@@ -132,12 +135,11 @@
                   v-show="ad.name !== 'LightsAndWater'"
                   clickable
                   v-close-popup
-                  @click="onItemClick"
                 >
                   <q-item-section>
                     <q-item-label
                       v-model="name"
-                      @click="activeMenuItem(ad.name)"
+                      @click="activeMenuItem(ad.id)"
                     >
                       {{ ad.name }}
                     </q-item-label>
@@ -189,7 +191,7 @@
           </div> -->
         </div>
 
-        <q-separator color="grey" size="2px" />
+        <q-separator color="grey" size="2px"/>
         <!-- <q-separator color="grey q-mt-xs" /> -->
       </div>
       <!-- second menu section -->
@@ -403,7 +405,7 @@
             <div class="dueMessage" v-show="billingDate">
               "Your scheduled meter reading is due. Please read and submit."
             </div>
-            <q-separator v-show="billingDate" color="grey" />
+            <q-separator v-show="billingDate" color="grey"/>
             <div class="" v-for="alarm in getAlarm" :key="alarm.id">
               <div class="row no-wrap">
                 <div class="col text-subtitle1 q-py-sm">
@@ -418,7 +420,7 @@
                   ></q-btn>
                 </div>
               </div>
-              <q-separator color="grey" />
+              <q-separator color="grey"/>
             </div>
           </div>
         </div>
@@ -426,7 +428,7 @@
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn dense label="Done" v-close-popup />
+        <q-btn dense label="Done" v-close-popup/>
         <!-- <q-btn dense label="Remind me later" v-close-popup /> -->
       </q-card-actions>
     </q-card>
@@ -454,7 +456,7 @@
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn flat label="Close" no-caps v-close-popup />
+        <q-btn flat label="Close" no-caps v-close-popup/>
         <q-btn
           flat
           label="Open WhatsApp"
@@ -535,28 +537,28 @@
         <div class="q-mt-sm">Are you sure you want to Logout?</div>
       </q-card-section>
       <q-card-actions align="right">
-        <q-btn label="Cancel" dense no-caps v-close-popup />
-        <q-btn label="Logout" dense no-caps @click="logout" />
+        <q-btn label="Cancel" dense no-caps v-close-popup/>
+        <q-btn label="Logout" dense no-caps @click="logout"/>
       </q-card-actions>
     </q-card>
   </q-dialog>
 </template>
 <script setup>
-import { computed, onMounted, watch, ref } from "vue";
+import {computed, onMounted, watch, ref} from "vue";
 
 // import { getAuth, onAuthStateChanged } from "firebase/auth";
 // import { onBeforeUpdate } from "vue";
-import { useQuasar } from "quasar";
-import { useRouter } from "vue-router";
-import { useUserStore } from "src/stores/user";
-import { useAdStore } from "src/stores/ads";
-import { useGetAlarmsStore } from "src/stores/alarm";
-import { useAccountStore } from "/src/stores/account";
+import {useQuasar} from "quasar";
+import {useRouter} from "vue-router";
+import {useUserStore} from "src/stores/user";
+import {useAdStore} from "src/stores/ads";
+import {useGetAlarmsStore} from "src/stores/alarm";
+import {useAccountStore} from "/src/stores/account";
+import {date} from "quasar";
+import {updateAllData} from "boot/firebase";
 
-import { date } from "quasar";
 // import { Plugins } from "@capacitor/core";
 // const { Accessibility, Modals } = Plugins;
-
 // Accessibility.addListener("accessibilityScreenReaderStateChange", (state) => {
 //   console.log("Accessibility", state.value);
 // });
@@ -673,7 +675,7 @@ const openDialCall = (number) => {
 };
 
 const markAsRead = (id) => {
-  let alarm = getAlarm.value.findIndex(({ id }) => {
+  let alarm = getAlarm.value.findIndex(({id}) => {
     return id == id;
   });
   if (id > -1) {
@@ -717,37 +719,35 @@ const shareViaWebShare = () => {
   // shareto:water.meter.power.meter/?title=Hello%20World&msg=https://www.google.co.in/
 };
 
-const activeMenuItem = (id) => {
-  const childdetails = new Array();
-  let data = getAds.value.filter((_el) => {
-    // _el['childs'].filter((childs_val) => {
-
-    if (_el["id"] == id) {
-      childdetails.push(_el);
-      //return selectSubcategory.value = childs_val;
-    }
-    // return childs_val["name"] === name;
-    // })
-  });
-  //slide.value = data[0].ads[0]?.id;
-  //selectCategory.value = data[0]?.ads;
-
-  selectCategory.value = childdetails[0]?.ads[0];
-  console.log(selectCategory);
+const activeMenuItem = (adId) => {
+  const ad = getAds.value.find(item => item.id === adId);
+  slide.value = ad.ads[0]?.id;
+  selectCategory.value = ad.ads;
 };
-const activeMenuItemLightWater = (name) => {
-  const childdetails = new Array();
-  if (name == "Home") {
-    name = "Home";
+const activeMenuItemLightWater = async (name) => {
+  if (!(getAds.value && getAds.value.length)) {
+    updateAllData();
+    setTimeout(()=>{
+      if (name === "Home") {
+        name = "Home";
+      }
+      let data = getAds.value.find((_el) => {
+        return _el["name"] === name;
+      });
+      slide.value = data.ads[0]?.id;
+      selectCategory.value = data.ads;
+    },2000)
+  } else {
+    if (name === "Home") {
+      name = "Home";
+    }
+    let data = getAds.value.find((_el) => {
+      return _el["name"] === name;
+    });
+    slide.value = data.ads[0]?.id;
+    selectCategory.value = data.ads;
   }
-  let data = getAds.value.filter((_el) => {
-    return _el["name"] === name;
-  });
-  slide.value = data[0].ads[0]?.id;
-  selectCategory.value = data[0]?.ads;
 
-  //selectCategory.value = childdetails[0].ads[0];
-  //console.log(selectCategory);
 };
 activeMenuItemLightWater("Home");
 
@@ -770,7 +770,7 @@ const getAdsWithCategory = computed(() => {
     let defaultAds = getAds.value.filter((_el) => {
       return _el["name"] === "Home";
     });
-    defaultAds.findIndex(({ ads }) => {
+    defaultAds.findIndex(({ads}) => {
       slide.value = ads[0]?.id;
     });
     return [];
@@ -786,7 +786,7 @@ const logout = () => {
     router
       .push("/auth/login")
       .then(() => {
-        $q.notify({ message: "Signed out" });
+        $q.notify({message: "Signed out"});
       })
       .catch((error) => console.log("error", error));
     // $q.loading.hide();
@@ -796,12 +796,12 @@ const totalItems = ref([
   {
     title: "AppartmentMeter 409",
     icon: "water",
-    type: { title: "Water", id: 1 },
+    type: {title: "Water", id: 1},
   },
   {
     title: "AppartmentMeter 410",
     icon: "water",
-    type: { title: "Water", id: 1 },
+    type: {title: "Water", id: 1},
   },
 ]);
 
@@ -810,7 +810,7 @@ function log() {
 }
 
 function moveTo(name) {
-  router.push({ name: name });
+  router.push({name: name});
 }
 </script>
 
@@ -1014,7 +1014,7 @@ function moveTo(name) {
 .sidebar-menu-wrapper {
   padding: 0 0 30px;
   width: 300px;
-  background: #daeac5;
+  background: #e9ede4;
   top: 0;
   left: -100%;
   height: 100%;
@@ -1044,7 +1044,7 @@ function moveTo(name) {
 }
 
 .sidebar-top-header {
-  border-bottom: 1px solid #61a402;
+  background: #e7f4d4;
   margin-bottom: 15px;
   padding: 15px 20px;
   display: flex;
@@ -1075,12 +1075,12 @@ function moveTo(name) {
 
 .sub-menu-items.active {
   display: block;
-  background: #65971c;
+  font-size: 1rem;
 }
 
 .sub-menu-items.active .q-list .q-item,
 .sub-menu-items.active .q-list .q-item:hover {
-  color: #fff;
+  color: #000000;
 }
 
 .sidebar-menu-wrapper .q-item-type:hover,
@@ -1102,10 +1102,10 @@ body.desktop .sidebar-menu-wrapper .q-hoverable:hover > .q-focus-helper {
 }
 
 .sidebar-menu-wrapper
-  > .q-list
-  > .q-item
-  > .q-item__section
-  > .q-item__label.active {
+> .q-list
+> .q-item
+> .q-item__section
+> .q-item__label.active {
   color: #61a402;
 }
 

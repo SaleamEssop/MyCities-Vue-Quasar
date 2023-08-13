@@ -2,6 +2,7 @@ import { ELECTRICITY_METER, WATER_METER } from "src/config/meter";
 import { date, useQuasar } from "quasar";
 import EmailWarning from "components/EmailWarning.vue";
 import { useUnitFormat } from "src/composable/useUnitFormat";
+import EmailWarningBoundary from "components/EmailWarningBoundary.vue";
 
 export const useEmail = () => {
   const $q = useQuasar();
@@ -21,9 +22,9 @@ export const useEmail = () => {
       body += `Account Number: ${account.account_number}\n`;
       body += `Account Holder: ${account.account_name}\n`;
       if (meter.meter_type_id === WATER_METER) {
-        body += `Water Meter: ${meter.meter_title}\n`;
+        body += `Meter Number: ${meter.meter_number}\n`;
       } else if (meter.meter_type_id === ELECTRICITY_METER) {
-        body += `Electricity Meter: ${meter.meter_title}\n`;
+        body += `Meter Number: ${meter.meter_number}\n`;
       }
       body += `Current Reading: ${unitFormat.unitFormat(
         usage.total_usage,
@@ -54,10 +55,7 @@ export const useEmail = () => {
           });
       } else {
         $q.dialog({
-          title: "Confirm",
-          message: `You are outside the meter reading submission dates. Are you sure you want to email the reading for this meter?`,
-          cancel: true,
-          persistent: true,
+          component: EmailWarningBoundary,
         })
           .onOk(() => {
             $q.dialog({
