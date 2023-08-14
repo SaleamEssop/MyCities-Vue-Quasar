@@ -663,12 +663,12 @@ const billingDate = computed(() => {
 
 const networks = [
   { network: 'email', name: 'Email', icon: 'far fah fa-lg fa-envelope', color: 'grey-10' },
-  { network: 'facebook', name: 'Facebook', icon: 'fab fah fa-lg fa-facebook-f', color: 'blue-10' },
-  { network: 'linkedin', name: 'LinkedIn', icon: 'fab fah fa-lg fa-linkedin', color: 'blue-6' },
-  { network: 'messenger', name: 'Messenger', icon: 'fab fah fa-lg fa-facebook-messenger', color: 'blue-10' },
-  { network: 'sms', name: 'SMS', icon: 'far fah fa-lg fa-comment-dots', color: 'black-5' },
-  { network: 'twitter', name: 'Twitter', icon: 'fab fah fa-lg fa-twitter', color: 'blue-6' },
-  { network: 'whatsapp', name: 'Whatsapp', icon: 'fab fah fa-lg fa-whatsapp', color: 'green-5' },
+  { network: 'facebook', name: 'Facebook', icon: 'fab fah fa-lg fa-facebook-f', color: 'grey-10' },
+  { network: 'linkedin', name: 'LinkedIn', icon: 'fab fah fa-lg fa-linkedin', color: 'grey-10' },
+  { network: 'messenger', name: 'Messenger', icon: 'fab fah fa-lg fa-facebook-messenger', color: 'grey-10' },
+  { network: 'sms', name: 'SMS', icon: 'far fah fa-lg fa-comment-dots', color: 'grey-10' },
+  { network: 'twitter', name: 'Twitter', icon: 'fab fah fa-lg fa-twitter', color: 'grey-10' },
+  { network: 'whatsapp', name: 'Whatsapp', icon: 'fab fah fa-lg fa-whatsapp', color: 'grey-10' },
 ];
 const slide = ref(null);
 const autoplay = ref(true);
