@@ -10,9 +10,8 @@
       <div class="flex justify-between items-center">
         <span
           >Last reading,
-          <b>{{ new Date(lastReading.time).toLocaleString("en-GB") }}</b></span
+          <b>{{ new Date(lastReading.time).toLocaleDateString("en-GB") }}</b></span
         >
-
         <!-- {{ date.formatDate(new Date(lastReading.time), "DD/MM/YYYY") }} -->
         <!-- <span class="round-cheap">Meter {{ meter?.number }}</span> -->
       </div>

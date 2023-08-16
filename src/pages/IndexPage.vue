@@ -22,16 +22,17 @@
               <q-btn
                 @click="alarm = true"
                 flat
-                icon="notifications"
+                icon="fa-solid fa-bell"
                 class="col-xs-6 col-sm-6 q-my-xs adsBtn"
               >
-                <q-badge floating color="red" rounded>
+                <q-badge floating color="red" rounded style="margin-left: 10px">
                   {{ billingDate ? getAlarm.length + 1 : getAlarm.length }}
                 </q-badge>
               </q-btn>
             </div>
           </div>
-          <q-btn icon="settings_power" round @click="sureLogout = true"></q-btn>
+          <span style="font-weight: 700;cursor: pointer" @click="sureLogout = true">Logout</span>
+<!--          <q-btn icon="logout" round @click="sureLogout = true"></q-btn>-->
         </div>
         <!-- <q-separator color="grey" />
         <q-separator color="grey q-mt-xs" /> -->
@@ -668,7 +669,7 @@ const networks = [
   { network: 'messenger', name: 'Messenger', icon: 'fab fah fa-lg fa-facebook-messenger', color: 'grey-10' },
   { network: 'sms', name: 'SMS', icon: 'far fah fa-lg fa-comment-dots', color: 'grey-10' },
   { network: 'twitter', name: 'Twitter', icon: 'fab fah fa-lg fa-twitter', color: 'grey-10' },
-  { network: 'whatsapp', name: 'Whatsapp', icon: 'fab fah fa-lg fa-whatsapp', color: 'grey-10' },
+  { network: 'whatsapp', name: 'Whatsappnvm ', icon: 'fab fah fa-lg fa-whatsapp', color: 'grey-10' },
 ];
 const slide = ref(null);
 const autoplay = ref(true);
@@ -979,8 +980,8 @@ function moveTo(name) {
 
 .q-badge--rounded {
   position: absolute;
-  top: 3px;
-  right: 13px;
+  top: 6px;
+  right: 9px;
   cursor: inherit;
 }
 
