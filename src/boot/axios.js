@@ -157,7 +157,7 @@ const updateReadingInMeter = async (req) => {
 //   return await api.get("/v1/ads/get");
 // };
 const getAds = async () => {
-  return await api.get("/v1/ads/get-categories");
+  return await api.get("/v1/menu/get-categories");
 };
 
 // Delete Main account
