@@ -5,19 +5,19 @@
     </q-card-section>
     <q-card-section>
       <q-select
-        color="black"
-        type="text"
-        label="Enter a location address"
-        use-input
-        input-debounce="0"
-        :options="siteOptions"
-        @filter="filterFn"
-        behavior="menu"
-        v-model="site"
-        option-label="address"
-        emit-value
-        map-options
-        v-if="isNew"
+          color="black"
+          type="text"
+          label="Enter a location address"
+          use-input
+          input-debounce="0"
+          :options="siteOptions"
+          @filter="filterFn"
+          behavior="menu"
+          v-model="site"
+          option-label="address"
+          emit-value
+          map-options
+          v-if="isNew"
       />
       <div v-else>
         {{ site?.address }}
@@ -26,103 +26,103 @@
       <h6>Email {{ site?.email }}</h6>
 
       <q-select
-        color="black"
-        v-model="regionmodel"
-        v-if="isNew"
-        @update:model-value="onchangeRegion($event)"
-        :options="regionOptions"
-        label="Select Region"
-        option-value="id"
-        option-label="name"
+          color="black"
+          v-model="regionmodel"
+          v-if="isNew"
+          @update:model-value="onchangeRegion($event)"
+          :options="regionOptions"
+          label="Select Region"
+          option-value="id"
+          option-label="name"
       />
       <div v-else>
         <q-select
-          color="black"
-          v-model="selectedAccount.region_id"
-          @update:model-value="onchangeRegion($event, selectedAccount)"
-          :options="regionOptions"
-          emit-value
-          map-options
-          label="Select Region"
-          disable
-          readonly
-          option-value="id"
-          option-label="name"
+            color="black"
+            v-model="selectedAccount.region_id"
+            @update:model-value="onchangeRegion($event, selectedAccount)"
+            :options="regionOptions"
+            emit-value
+            map-options
+            label="Select Region"
+            disable
+            readonly
+            option-value="id"
+            option-label="name"
         />
       </div>
 
       <q-select
-        color="black"
-        v-model="accountmodel"
-        v-if="isNew"
-        :options="accountOptions"
-        label="Enter Account Type"
-        option-value="id"
-        option-label="type"
-      />
-      <div v-else>
-        <q-select
           color="black"
-          emit-value
-          v-model="selectedAccount.account_type_id"
+          v-model="accountmodel"
+          v-if="isNew"
           :options="accountOptions"
           label="Enter Account Type"
           option-value="id"
-          map-options
           option-label="type"
-          disable
-          readonly
+      />
+      <div v-else>
+        <q-select
+            color="black"
+            emit-value
+            v-model="selectedAccount.account_type_id"
+            :options="accountOptions"
+            label="Enter Account Type"
+            option-value="id"
+            map-options
+            option-label="type"
+            disable
+            readonly
         />
       </div>
 
       <div v-if="site?.ethekwini_water">
         <q-input
-          color="black"
-          type="text"
-          v-model="site.ethekwini_water"
-          label="Enter Water Email"
+            color="black"
+            type="text"
+            v-model="site.ethekwini_water"
+            label="Enter Water Email"
         />
       </div>
       <div v-else>
         <q-input
-          color="black"
-          type="text"
-          v-model="water_email"
-          v-if="isNew"
-          label="Enter Water Email"
+            color="black"
+            type="text"
+            v-model="water_email"
+            v-if="isNew"
+            label="Enter Water Email"
         />
         <div v-else>
           <q-input
-            color="black"
-            type="text"
-            v-model="selectedAccount.water_email"
-            label="Enter Water Email"
+              color="black"
+              type="text"
+              v-model="selectedAccount.water_email"
+              label="Enter Water Email"
           />
         </div>
       </div>
 
       <div v-if="site?.ethekwini_electricity">
         <q-input
-          color="black"
-          type="text"
-          v-model="site.ethekwini_electricity"
-          label="Enter Electricity Email"
+            color="black"
+            type="text"
+            v-model="site.ethekwini_electricity"
+            label="Enter Electricity Email"
         />
       </div>
       <div v-else>
         <q-input
-          color="black"
-          type="text"
-          v-model="electricity_email"
-          v-if="isNew"
-          label="Enter Electricity Email"
+            color="black"
+            type="text"
+            v-model="electricity_email"
+            v-if="isNew"
+            label="Enter Electricity Email"
         />
         <div v-else>
           <q-input
-            color="black"
-            type="text"
-            v-model="selectedAccount.electricity_email"
-            label="Enter Electricity Email"
+              color="black"
+              type="text"
+              v-model="selectedAccount.electricity_email"
+              label="Enter Electricity Email"
           />
         </div>
       </div>
@@ -132,20 +132,20 @@
         <q-input color="black" type="text" v-model="selectedAccount.electricity_email" label="Enter Electricity Email" />
       </div> -->
       <q-input
-        color="black"
-        type="text"
-        label="Enter name - As per bill"
-        v-if="isNew"
-        v-model.trim="selectedAccount.title"
+          color="black"
+          type="text"
+          label="Enter name - As per bill"
+          v-if="isNew"
+          v-model.trim="selectedAccount.title"
       />
       <div v-else>Name : -{{ selectedAccount.title }}</div>
 
       <q-input
-        color="black"
-        type="text"
-        label="Enter account number - As per bill"
-        v-if="isNew"
-        v-model="selectedAccount.number"
+          color="black"
+          type="text"
+          label="Enter account number - As per bill"
+          v-if="isNew"
+          v-model="selectedAccount.number"
       />
       <div v-else>Account :- {{ selectedAccount.number }}</div>
     </q-card-section>
@@ -157,10 +157,10 @@
     </q-card-section>
     <q-card-section>
       <q-input
-        color="black"
-        type="text"
-        label="Account description"
-        v-model="selectedAccount.option"
+          color="black"
+          type="text"
+          label="Account description"
+          v-model="selectedAccount.option"
       />
     </q-card-section>
     <!-- <q-card-section class="bg-primary">
@@ -191,25 +191,25 @@
     <div class="q-card__section q-card__section--vert">
       <div class="text-h7">
         <q-input
-          type="text"
-          :placeholder="'Bill Day'"
-          @blur="(evt) => onChanged(evt.target.value, selectedAccount)"
-          v-model.trim="selectedAccount.bill_day"
+            type="text"
+            :placeholder="'Bill Day'"
+            @blur="(evt) => onChanged(evt.target.value, selectedAccount)"
+            v-model.trim="selectedAccount.bill_day"
         />
         <div class="flex justify-between">
           <q-input
-            type="text"
-            :placeholder="'Read Day'"
-            v-model.trim="selectedAccount.read_day"
+              type="text"
+              :placeholder="'Read Day'"
+              v-model.trim="selectedAccount.read_day"
           />
-          <q-toggle v-model="selectedAccount.bill_read_day_active" />
+          <q-toggle v-model="selectedAccount.bill_read_day_active"/>
         </div>
       </div>
     </div>
     <!-- Default cost from server -->
     <q-card-section
-      class="bg-primary"
-      v-if="selectedAccount?.new_additional_cost"
+        class="bg-primary"
+        v-if="selectedAccount?.new_additional_cost"
     >
       <div class="text-subtitle2 text-white">Additional Cost</div>
       <!-- <q-btn
@@ -226,10 +226,10 @@
     <!-- edit update -->
     <!-- v-for="(defaultCost, index) in isNew ? selectedAccount.defaultCosts  : selectedAccount.defaultFixedCost" -->
     <template
-      v-for="(additional_cost, index) in selectedAccount?.new_additional_cost"
-      :key="index"
+        v-for="(additional_cost, index) in selectedAccount?.new_additional_cost"
+        :key="index"
     >
-      <q-separator />
+      <q-separator/>
       <q-card-section>
         <div class="flex justify-between items-center">
           <div class="text-h7">
@@ -237,13 +237,14 @@
             <!-- {{ isNew ? additional_cost?.name : defaultCost?.fixed_cost?.title }} -->
             <!-- {{ defaultCost.title }} -->
           </div>
-          <q-toggle v-model="additional_cost.isApplicable" />
+          <q-toggle v-model="additional_cost.isApplicable"/>
           <!-- :model-value="defaultCost.isApplicable" -->
         </div>
         <q-input
-          type="number"
-          :placeholder="'R0.00'"
-          v-model.number="additional_cost.cost"
+            type="number"
+            :placeholder="'R0.00'"
+            v-model.number="additional_cost.cost"
+            @change="handleChangeInput(additional_cost,index)"
         />
 
         <!-- <q-input v-else :placeholder="defaultCost.fixed_cost.title === 'Enter Your Billing Date'
@@ -283,38 +284,37 @@
       </q-card-section>
     </template> -->
 
-    <q-separator />
-    <q-space />
+    <q-separator/>
+    <q-space/>
     <q-card-actions align="center">
       <q-btn
-        color="red"
-        v-if="!autoUpdate"
-        text-color="white"
-        class="q-my-none q-mx-none"
-        label="Cancel"
-        glossy
-        @click="$emit('close')"
+          color="red"
+          v-if="!autoUpdate"
+          text-color="white"
+          class="q-my-none q-mx-none"
+          label="Cancel"
+          glossy
+          @click="$emit('close')"
       />
 
       <q-btn
-        color="primary"
-        text-color="white"
-        v-if="!autoUpdate"
-        class="q-my-none q-mx-noe"
-        label="Save"
-        glossy
-        @click="onSaveSelectAccount"
+          color="primary"
+          text-color="white"
+          v-if="!autoUpdate"
+          class="q-my-none q-mx-noe"
+          label="Save"
+          glossy
+          @click="onSaveSelectAccount"
       />
     </q-card-actions>
   </q-card>
 </template>
 <script>
-import { ref, reactive, watch, computed, defineComponent } from "vue";
-import { useSiteStore } from "/src/stores/site";
-import { useAccountStore } from "/src/stores/account";
-import { useQuasar } from "quasar";
-import { useDefaultCostStore } from "src/stores/defaultCost";
-import { getProxyData } from "src/utils";
+import {ref, watch, computed, defineComponent} from "vue";
+import {useSiteStore} from "/src/stores/site";
+import {useAccountStore} from "/src/stores/account";
+import {useQuasar} from "quasar";
+import {useDefaultCostStore} from "src/stores/defaultCost";
 import {
   getAllRegion,
   getAllAccount,
@@ -324,23 +324,21 @@ import {
 } from "boot/axios";
 
 import {
-  locationApi,
   suggestLocation,
   findAddressCandidates,
   findEmailFromLocation,
   addSiteAndAccount,
   updateAccount,
 } from "boot/axios";
-import { imageOverlay } from "leaflet";
 
-import { updateAllData } from "boot/firebase";
+import {updateAllData} from "boot/firebase";
 
 const nullAccount = {
   id: Date.now(),
   title: null,
   number: null,
   option: null,
-  site: { id: null, email: null },
+  site: {id: null, email: null},
   fixedCosts: [],
   defaultCosts: [],
   // fixedCosts: [
@@ -363,23 +361,29 @@ const nullAccount = {
   // ],
 };
 const defaultCostStore = useDefaultCostStore();
-console.log("default_cost", defaultCostStore);
 // const getDefaultCost = computed(() => defaultCostStore.getDefaultCost);
 
 export default defineComponent({
   name: "AccountComponent",
   props: {
     account: Object,
-    autoUpdate: { type: Boolean, default: false },
+    autoUpdate: {type: Boolean, default: false},
   },
 
   methods: {
+    handleChangeInput(costItem, index) {
+      if (costItem.name.toLowerCase().includes('rebate')){
+        if (costItem.cost > 0){
+          this.selectedAccount.new_additional_cost[index].cost = costItem.cost * -1;
+        }
+      }
+    },
     onChanged(val, selectedAccount) {
       if (val >= 1 && val <= 31) {
         this.bill_read_date = val;
       } else {
         this.customalert(
-          "This value must be from 1 to 31 represeting the day on which you are billed."
+            "This value must be from 1 to 31 represeting the day on which you are billed."
         );
         val = 1;
         this.bill_read_date = val;
@@ -412,14 +416,14 @@ export default defineComponent({
 
       if (selectedAccount?.new_additional_cost) {
         if (
-          selectedAccount.region_id &&
-          selectedAccount.account_type_id &&
-          selectedAccount.id
+            selectedAccount.region_id &&
+            selectedAccount.account_type_id &&
+            selectedAccount.id
         ) {
           getAdditionalCost(
-            selectedAccount.id,
-            selectedAccount.region_id,
-            selectedAccount.account_type_id
+              selectedAccount.id,
+              selectedAccount.region_id,
+              selectedAccount.account_type_id
           ).then((res) => {
             selectedAccount.new_additional_cost = res;
             //selectedAccount.electricity_email = res.water_email;
@@ -446,7 +450,7 @@ export default defineComponent({
     },
   },
   emits: ["update:account"],
-  setup(props, { emit }) {
+  setup(props, {emit}) {
     const accountOptions = ref([]);
     const regionsOptions = ref([]);
     const regionmodel = ref([]);
@@ -481,15 +485,16 @@ export default defineComponent({
         color: "positive",
       });
     }
+
     initialState["selectedAccount"]["defaultCosts"] =
-      defaultCostStore.getDefaultCost.map((_cost) => {
-        if (_cost.title === "Rates Rebate") {
-          _cost["isApplicable"] = false;
-        } else {
-          _cost["isApplicable"] = true;
-        }
-        return _cost;
-      });
+        defaultCostStore.getDefaultCost.map((_cost) => {
+          if (_cost.title === "Rates Rebate") {
+            _cost["isApplicable"] = false;
+          } else {
+            _cost["isApplicable"] = true;
+          }
+          return _cost;
+        });
 
     const siteStore = useSiteStore();
     const accountStore = useAccountStore();
@@ -498,14 +503,14 @@ export default defineComponent({
     const selectedAccount = ref(initialState.selectedAccount);
 
     if (
-      selectedAccount.value.region_id &&
-      selectedAccount.value.account_type_id &&
-      selectedAccount.value.id
+        selectedAccount.value.region_id &&
+        selectedAccount.value.account_type_id &&
+        selectedAccount.value.id
     ) {
       getAdditionalCost(
-        selectedAccount.value.id,
-        selectedAccount.value.region_id,
-        selectedAccount.value.account_type_id
+          selectedAccount.value.id,
+          selectedAccount.value.region_id,
+          selectedAccount.value.account_type_id
       ).then((res) => {
         //console.log('response_ms', res);
         selectedAccount.value.new_additional_cost = res;
@@ -535,20 +540,20 @@ export default defineComponent({
     console.log(selectedAccount);
 
     const checkIdFromDB = accountStore.getAccountById(
-      selectedAccount?.value?.id
+        selectedAccount?.value?.id
     )?.id;
     console.log(checkIdFromDB);
     const isNew = computed(
-      () =>
-        !(
-          checkIdFromDB != null &&
-          checkIdFromDB != undefined &&
-          checkIdFromDB > 0
-        )
+        () =>
+            !(
+                checkIdFromDB != null &&
+                checkIdFromDB != undefined &&
+                checkIdFromDB > 0
+            )
     );
 
     const site = ref(
-      isNew.value ? null : siteStore.getSiteById(selectedAccount.value.site.id)
+        isNew.value ? null : siteStore.getSiteById(selectedAccount.value.site.id)
     );
 
     // const selectedAccount = props.autoUpdate
@@ -596,7 +601,7 @@ export default defineComponent({
         console.log(site?.value?.ethekwini_electricity);
         if (site?.value?.ethekwini_electricity) {
           selectedAccount.value.electricity_email =
-            site?.value?.ethekwini_electricity;
+              site?.value?.ethekwini_electricity;
         }
         if (site?.value?.ethekwini_water) {
           selectedAccount.value.water_email = site?.value?.ethekwini_water;
@@ -629,8 +634,8 @@ export default defineComponent({
           return;
         }
         if (
-          selectedAccount.value.water_email &&
-          selectedAccount.value.water_email == null
+            selectedAccount.value.water_email &&
+            selectedAccount.value.water_email == null
         ) {
           $q.notify({
             message: "Please enter water email",
@@ -638,8 +643,8 @@ export default defineComponent({
           return;
         }
         if (
-          selectedAccount.value.electricity_email &&
-          selectedAccount.value.electricity_email == null
+            selectedAccount.value.electricity_email &&
+            selectedAccount.value.electricity_email == null
         ) {
           $q.notify({
             message: "Please enter electricity email",
@@ -683,8 +688,8 @@ export default defineComponent({
       }
 
       if (
-        selectedAccount.value == null ||
-        !(selectedAccount.value.title && selectedAccount.value.number)
+          selectedAccount.value == null ||
+          !(selectedAccount.value.title && selectedAccount.value.number)
       ) {
         $q.notify({
           message: "Fill valid name and number details",
@@ -703,16 +708,16 @@ export default defineComponent({
           const siteValue = site.value;
           const accountValue = selectedAccount.value;
           const default_cost = accountValue.defaultCosts
-            // .filter((cost) => cost.isApplicable)
-            .map((cost) => {
-              return {
-                name: cost.title,
-                id: cost.id,
-                value: cost.value,
-                is_active: cost.isApplicable ? 1 : 0,
-              };
-            })
-            .filter((cost) => cost !== null);
+              // .filter((cost) => cost.isApplicable)
+              .map((cost) => {
+                return {
+                  name: cost.title,
+                  id: cost.id,
+                  value: cost.value,
+                  is_active: cost.isApplicable ? 1 : 0,
+                };
+              })
+              .filter((cost) => cost !== null);
           addSiteAndAccount({
             address: siteValue.address,
             email: siteValue.email,
@@ -730,7 +735,7 @@ export default defineComponent({
             bill_day: accountValue.bill_day,
             read_day: accountValue.read_day,
             bill_read_day_active: accountValue.bill_read_day_active,
-          }).then(({ status, code, msg, data }) => {
+          }).then(({status, code, msg, data}) => {
             console.log(data);
 
             if (status) {
@@ -763,7 +768,7 @@ export default defineComponent({
                 // }),
                 number: accountValue.number,
                 option: accountValue.option,
-                site: { id: data.site_id },
+                site: {id: data.site_id},
                 title: accountValue.title,
                 region_id: regionmodel.value.id,
                 account_type_id: accountmodel.value.id,
@@ -782,16 +787,16 @@ export default defineComponent({
         } else {
           const accountValue = selectedAccount.value;
           const default_cost = accountValue.defaultCosts
-            // .filter((cost) => cost.isApplicable)
-            .map((cost) => {
-              return {
-                name: cost.title,
-                value: cost.value,
-                id: cost.id,
-                is_active: cost.isApplicable ? 1 : 0,
-              };
-            })
-            .filter((cost) => cost !== null);
+              // .filter((cost) => cost.isApplicable)
+              .map((cost) => {
+                return {
+                  name: cost.title,
+                  value: cost.value,
+                  id: cost.id,
+                  is_active: cost.isApplicable ? 1 : 0,
+                };
+              })
+              .filter((cost) => cost !== null);
           addSiteAndAccount({
             site_id: site.value.id,
             account_name: accountValue.title,
@@ -805,7 +810,7 @@ export default defineComponent({
             bill_day: accountValue.bill_day,
             read_day: accountValue.read_day,
             bill_read_day_active: accountValue.bill_read_day_active,
-          }).then(({ status, code, msg, data }) => {
+          }).then(({status, code, msg, data}) => {
             if (status) {
               accountStore.addAccount({
                 id: data.id,
@@ -820,7 +825,7 @@ export default defineComponent({
                 // }),
                 number: accountValue.number,
                 option: accountValue.option,
-                site: { id: data.site_id },
+                site: {id: data.site_id},
                 title: accountValue.title,
                 region_id: regionmodel.value.id,
                 account_type_id: accountmodel.value.id,
@@ -837,25 +842,25 @@ export default defineComponent({
         const accountValue = selectedAccount.value;
         console.log(accountValue.defaultFixedCost);
         const default_cost = accountValue.defaultFixedCost
-          .map((cost) => {
-            console.log(cost);
-            if (cost.is_active == 1) {
-              let id = cost?.id;
-              const accountCost = accountValue.defaultFixedCost.find(
-                (_cost) => _cost?.fixed_cost?.id === cost?.id
-              );
-              if (accountCost) {
-                id = accountCost?.id;
+            .map((cost) => {
+              console.log(cost);
+              if (cost.is_active == 1) {
+                let id = cost?.id;
+                const accountCost = accountValue.defaultFixedCost.find(
+                    (_cost) => _cost?.fixed_cost?.id === cost?.id
+                );
+                if (accountCost) {
+                  id = accountCost?.id;
+                }
+                return {
+                  name: cost.title,
+                  value: cost.value,
+                  is_active: cost.isApplicable ? 1 : 0,
+                  id: id,
+                };
               }
-              return {
-                name: cost.title,
-                value: cost.value,
-                is_active: cost.isApplicable ? 1 : 0,
-                id: id,
-              };
-            }
-          })
-          .filter((cost) => cost !== null);
+            })
+            .filter((cost) => cost !== null);
 
         updateAccount({
           site_id: site.value.id,
@@ -872,7 +877,7 @@ export default defineComponent({
           account_type_id: account_type_id,
           water_email: selectedAccount.value.water_email,
           electricity_email: selectedAccount.value.electricity_email,
-        }).then(({ status, code, msg, data }) => {
+        }).then(({status, code, msg, data}) => {
           if (status) {
             accountStore.update({
               id: data.id,
@@ -887,7 +892,7 @@ export default defineComponent({
               // }),
               number: accountValue.number,
               option: accountValue.option,
-              site: { id: data.site_id },
+              site: {id: data.site_id},
               title: accountValue.title,
               region_id: selectedAccount.value.region_id,
               account_type_id: selectedAccount.value.account_type_id,
@@ -933,7 +938,7 @@ export default defineComponent({
 
       const needle = val.toLowerCase();
       const findItems = siteStore.allSites.filter(
-        (v) => v.address.toLowerCase().indexOf(needle) > -1
+          (v) => v.address.toLowerCase().indexOf(needle) > -1
       );
 
       if (findItems.length == 0) {
@@ -969,7 +974,8 @@ export default defineComponent({
           };
         });
         return suggestions;
-      } catch (_) {}
+      } catch (_) {
+      }
     };
 
     const finLatLngByMagicKey = async (singleLine, magicKey) => {
@@ -979,37 +985,38 @@ export default defineComponent({
           return {
             id: `new-${index}`,
             title: "",
-            latLng: { lat: item.location.x, lng: item.location.y },
+            latLng: {lat: item.location.x, lng: item.location.y},
             address: singleLine,
             newSite: true,
           };
         });
         return address;
-      } catch (_) {}
+      } catch (_) {
+      }
     };
 
     const watchSite = watch(site, async (newValue, oldValue) => {
       if (newValue?.magicKey) {
         try {
           let address = await finLatLngByMagicKey(
-            newValue.address,
-            newValue.magicKey
+              newValue.address,
+              newValue.magicKey
           );
           console.log(address);
           if (address.length == 1) {
             // console.log("address", address[0]);
-            let { data } = await findEmailFromLocation({
+            let {data} = await findEmailFromLocation({
               x: address[0].latLng.lat,
               y: address[0].latLng.lng,
             });
             const spatialData = data;
             console.log("email_data", spatialData);
             address[0]["email"] =
-              spatialData["features"][0]["attributes"]["MREMAIL"];
+                spatialData["features"][0]["attributes"]["MREMAIL"];
             site.value = address[0];
             if (
-              site.value.address.includes("EThekwini") ||
-              site.value.address.includes("eThekwini")
+                site.value.address.includes("EThekwini") ||
+                site.value.address.includes("eThekwini")
             ) {
               site.value.ethekwini_water = "eservices@durban.gov.za";
               site.value.ethekwini_electricity = site.value.email;
@@ -1023,8 +1030,8 @@ export default defineComponent({
         }
       } else {
         if (
-          newValue.address.includes("EThekwini") ||
-          site.value.address.includes("eThekwini")
+            newValue.address.includes("EThekwini") ||
+            site.value.address.includes("eThekwini")
         ) {
           site.value.ethekwini_water = "eservices@durban.gov.za";
           site.value.ethekwini_electricity = site.value.email;
@@ -1034,7 +1041,7 @@ export default defineComponent({
       }
     });
 
-    function alert({ title, message }) {
+    function alert({title, message}) {
       $q.dialog({
         dark: false,
         title: title,
@@ -1042,15 +1049,15 @@ export default defineComponent({
         cancel: true,
         persistent: false,
       })
-        .onOk((data) => {
-          // console.log('>>>> OK, received', data)
-        })
-        .onCancel(() => {
-          // console.log('>>>> Cancel')
-        })
-        .onDismiss(() => {
-          // console.log('I am triggered on both OK and Cancel')
-        });
+          .onOk((data) => {
+            // console.log('>>>> OK, received', data)
+          })
+          .onCancel(() => {
+            // console.log('>>>> Cancel')
+          })
+          .onDismiss(() => {
+            // console.log('I am triggered on both OK and Cancel')
+          });
     }
 
     return {

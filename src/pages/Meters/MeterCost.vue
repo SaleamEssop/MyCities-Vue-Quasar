@@ -304,33 +304,18 @@ const unitFormat = useUnitFormat();
 const costDetails = ref({});
 const hasError = ref(false);
 const email = useEmail();
-let month = route.query.month;
-if (month < 0) {
-  router.replace({ ...route, query: { ...route.query, month: 1 } });
-}
-const currentMonth = ref(route.query.month || 1);
+const currentMonth = ref(1);
 
-watchEffect(async () => {
-  currentMonth.value = route.query.month || 1;
-  await getCostDetails();
-});
-
-function previous() {
+async function previous() {
   if (costDetails.value?.has_history) {
     currentMonth.value++;
-    router.push({
-      ...route,
-      query: { ...route.query, month: currentMonth.value },
-    });
+    await getCostDetails();
   }
 }
 
-function next() {
+async function next() {
   currentMonth.value--;
-  router.push({
-    ...route,
-    query: { ...route.query, month: currentMonth.value },
-  });
+  await getCostDetails();
 }
 
 async function getCostDetails() {
