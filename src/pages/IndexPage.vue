@@ -38,7 +38,7 @@
         <q-separator color="grey q-mt-xs" /> -->
         <q-separator color="grey q-mt-sm" size="2px"/>
 
-        <div class="ads_main">
+        <div class="menu_main">
           <!-- start new hamburger menu code -->
           <div class="text-center">
             <q-btn
@@ -57,29 +57,29 @@
                   <span class="username">{{ user?.name }}</span>
                   <q-btn icon="close" @click="isHidden = false"></q-btn>
                 </div>
-                <template v-for="ad in getAds" :key="ad.id">
-                  <q-list v-if="ad.ads && ad.ads.length">
+                <template v-for="menu in getMenu" :key="menu.id">
+                  <q-list v-if="menu.ads && menu.ads.length">
                     <q-item
-                      v-show="ad?.name !== 'LightsAndWater'"
+                      v-show="menu?.name !== 'LightsAndWater'"
                       clickable
                       v-close-popup
                       @click="onChildItemClick"
-                      v-if="ad.childs.length > 0"
-                      :class="ad.childs.length > 0 ? 'submenu' : ''"
+                      v-if="menu.childs.length > 0"
+                      :class="menu.childs.length > 0 ? 'submenu' : ''"
                     >
                       <q-item-section>
                         <q-item-label
-                          :class="{ active: ad.id == activeId }"
-                          @click="selectLang(ad.id)"
+                          :class="{ active: menu.id == activeId }"
+                          @click="selectLang(menu.id)"
                           style="font-size: 1.2rem;font-weight: bold"
                         >
-                          {{ ad?.name }}
+                          {{ menu?.name }}
                         </q-item-label>
                         <div
                           class="sub-menu-items"
-                          :class="{ active: ad.id === activeId }"
+                          :class="{ active: menu.id === activeId }"
                         >
-                          <q-list v-for="childs in ad.childs" :key="childs.id">
+                          <q-list v-for="childs in menu.childs" :key="childs.id">
                             <q-item>
                               <q-item-section>
                                 <q-item-label
@@ -98,23 +98,23 @@
                       </q-item-section>
                     </q-item>
                     <q-item
-                      v-show="ad?.name !== 'LightsAndWater'"
+                      v-show="menu?.name !== 'LightsAndWater'"
                       clickable
                       v-close-popup
                       v-else
                     >
-                      <q-item-section v-if="ad.parent_id == null">
+                      <q-item-section v-if="menu.parent_id == null">
                         <q-item-label
                           v-model="name"
-                          :class="{ active: ad.id === activeId }"
+                          :class="{ active: menu.id === activeId }"
                           @click="
-                          activeMenuItem(ad.id);
+                          activeMenuItem(menu.id);
                           isHidden = !isHidden;
-                          selectLang(ad.id);
+                          selectLang(menu.id);
                         "
                           style="font-size: 1.2rem;font-weight: bold"
                         >
-                          {{ ad?.name }}
+                          {{ menu?.name }}
                           <!-- Side Menu working-->
                         </q-item-label>
                       </q-item-section>
@@ -131,18 +131,18 @@
               class="col-xs-6 col-sm-6 q-my-xs adsBtn"
               icon="menu"
             >
-              <q-list v-for="ad in getAds" :key="ad.id">
+              <q-list v-for="menu in getMenu" :key="menu.id">
                 <q-item
-                  v-show="ad.name !== 'LightsAndWater'"
+                  v-show="menu.name !== 'LightsAndWater'"
                   clickable
                   v-close-popup
                 >
                   <q-item-section>
                     <q-item-label
                       v-model="name"
-                      @click="activeMenuItem(ad.id)"
+                      @click="activeMenuItem(menu.id)"
                     >
-                      {{ ad.name }}
+                      {{ menu.name }}
                     </q-item-label>
                   </q-item-section>
                 </q-item>
@@ -329,25 +329,25 @@
               vertical
             >
               <q-carousel-slide
-                v-for="ad in getAdsWithCategory"
-                :key="ad.id"
-                :name="ad.id"
-                :img-src="ad.image"
+                v-for="menu in getAdsWithCategory"
+                :key="menu.id"
+                :name="menu.id"
+                :img-src="menu.image"
                 class="addImage"
                 role="link"
-                @click="openAds(ad.url)"
+                @click="openAds(menu.url)"
               >
-                <div v-show="ad.price > 0" class="add_description">
-                  <div class="text-h6">{{ ad.name }}</div>
-                  <div class="text-h6 text-bold">Price {{ ad.price }}</div>
+                <div v-show="menu.price > 0" class="add_description">
+                  <div class="text-h6">{{ menu.name }}</div>
+                  <div class="text-h6 text-bold">Price {{ menu.price }}</div>
                 </div>
               </q-carousel-slide>
             </q-carousel>
           </div> -->
 
-          <!-- <div class="adv-item" v-for="      ad        in      getAdsWithCategory       " :key=" ad.id "> -->
+          <!-- <div class="adv-item" v-for="      menu        in      getAdsWithCategory       " :key=" menu.id "> -->
           <div class="adv-item" v-if="getAdsWithCategory?.id">
-            <!-- <div class="q-px-md" v-html="ad.description"></div> -->
+            <!-- <div class="q-px-md" v-html="menu.description"></div> -->
             <img
               v-if="getAdsWithCategory.image"
               :src="getAdsWithCategory.image"
@@ -356,11 +356,11 @@
             />
 
             <!-- <q-img
-              :src="ad.image"
+              :src="menu.image"
               spinner-color="black"
               alt="add-image"
               class="addImage"
-              @click="openAds(ad.url)"
+              @click="openAds(menu.url)"
             /> -->
             <!-- add_description_scroll -->
             <div
@@ -370,8 +370,8 @@
               "
               class="add_description_scroll"
             >
-              <!-- <div v-show=" ad.price > 0 " class="ads_price text-h6">
-                R {{ ad.price }}
+              <!-- <div v-show=" menu.price > 0 " class="ads_price text-h6">
+                R {{ menu.price }}
               </div> -->
               <div
                 v-show="getAdsWithCategory.description !== 'null'"
@@ -387,7 +387,7 @@
               class="adv-item"
               v-if="selectCategory && selectCategory[0]?.id"
             >
-              <!-- <div class="q-px-md" v-html="ad.description"></div> -->
+              <!-- <div class="q-px-md" v-html="menu.description"></div> -->
               <img
                 v-if="selectCategory[0]?.image"
                 :src="selectCategory[0]?.image"
@@ -396,11 +396,11 @@
               />
 
               <!-- <q-img
-              :src="ad.image"
+              :src="menu.image"
               spinner-color="black"
               alt="add-image"
               class="addImage"
-              @click="openAds(ad.url)"
+              @click="openAds(menu.url)"
             /> -->
               <!-- add_description_scroll -->
               <div
@@ -410,8 +410,8 @@
                 "
                 class="add_description_scroll"
               >
-                <!-- <div v-show=" ad.price > 0 " class="ads_price text-h6">
-                R {{ ad.price }}
+                <!-- <div v-show=" menu.price > 0 " class="ads_price text-h6">
+                R {{ menu.price }}
               </div> -->
                 <div
                   v-show="selectCategory[0]?.description !== 'null'"
@@ -499,7 +499,7 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
-  <!-- lightsWater Ads Category -->
+  <!-- lightsWater Menu Category -->
   <q-dialog
     v-model="lightAndWaterDialog"
     persistent
@@ -507,25 +507,25 @@
   >
     <q-card>
       <div class="ads dialogAds">
-        <div v-for="ad in getAdsWithCategory" :key="ad.id">
+        <div v-for="menu in getAdsWithCategory" :key="menu.id">
           <img
-            :src="ad.image"
+            :src="menu.image"
             alt="add-image1"
             class="addImage"
-            @click="openAds(ad.url)"
+            @click="openAds(menu.url)"
           />
           <!-- add_description_scroll -->
           <div
-            v-show="ad.price > 0 || ad.name !== 'null'"
+            v-show="menu.price > 0 || menu.name !== 'null'"
             class="add_description_scroll"
           >
-            <div v-show="ad.price > 0" class="ads_price text-h6">
-              R {{ ad.price }}
+            <div v-show="menu.price > 0" class="ads_price text-h6">
+              R {{ menu.price }}
             </div>
             <div
-              v-show="ad.description !== 'null'"
+              v-show="menu.description !== 'null'"
               class="text-subtitle1"
-              v-html="ad.description"
+              v-html="menu.description"
             ></div>
           </div>
           <q-separator
@@ -679,7 +679,7 @@ const email = ref("");
 const name = ref("");
 const selectCategory = ref(null);
 
-const getAds = computed(() => adStore.getAds);
+const getMenu = computed(() => adStore.getMenu);
 
 // onMounted(() => {
 //   navigator.geolocation.getCurrentPosition((position) => {
@@ -761,18 +761,18 @@ const shareViaWebShare = () => {
 };
 
 const activeMenuItem = (adId) => {
-  const ad = getAds.value.find(item => item.id === adId);
-  slide.value = ad.ads[0]?.id;
-  selectCategory.value = ad.ads;
+  const menu = getMenu.value.find(item => item.id === adId);
+  slide.value = menu.ads[0]?.id;
+  selectCategory.value = menu.ads;
 };
 const activeMenuItemLightWater = async (name) => {
-  if (!(getAds.value && getAds.value.length)) {
+  if (!(getMenu.value && getMenu.value.length)) {
     updateAllData();
     setTimeout(()=>{
       if (name === "Home") {
         name = "Home";
       }
-      let data = getAds.value.find((_el) => {
+      let data = getMenu.value.find((_el) => {
         return _el["name"] === name;
       });
       slide.value = data.ads[0]?.id;
@@ -782,7 +782,7 @@ const activeMenuItemLightWater = async (name) => {
     if (name === "Home") {
       name = "Home";
     }
-    let data = getAds.value.find((_el) => {
+    let data = getMenu.value.find((_el) => {
       return _el["name"] === name;
     });
     slide.value = data.ads[0]?.id;
@@ -808,7 +808,7 @@ const getAdsWithCategory = computed(() => {
   if (selectCategory.value !== null) {
     return selectCategory.value;
   } else {
-    let defaultAds = getAds.value.filter((_el) => {
+    let defaultAds = getMenu.value.filter((_el) => {
       return _el["name"] === "Home";
     });
     defaultAds.findIndex(({ads}) => {
@@ -925,7 +925,7 @@ function moveTo(name) {
   /* height: auto; */
 }
 
-.ads_main {
+.menu_main {
   display: flex;
   margin: auto;
   justify-content: flex-start;
