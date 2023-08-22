@@ -491,14 +491,13 @@ const deleteAccount = (account) => {
     persistent: true,
   }).onOk(() => {
     deleteMainAccount({ account_id: account.id }).then((status) => {
-      if (status.code == 200) {
+      if (status.code === 200) {
         accountStore.deleteAccount(account);
-        window.location.reload();
         updateAllData();
+        setTimeout(()=>{
+          window.location.reload();
+        },2000)
       }
-      // if (status.code == 200) {
-      //   accountStore.deleteAccount(account);
-      // }
     });
   });
 

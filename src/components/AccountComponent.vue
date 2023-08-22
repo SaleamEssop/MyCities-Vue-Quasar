@@ -372,8 +372,8 @@ export default defineComponent({
 
   methods: {
     handleChangeInput(costItem, index) {
-      if (costItem.name.toLowerCase().includes('rebate')){
-        if (costItem.cost > 0){
+      if (costItem.name.toLowerCase().includes('rebate')) {
+        if (costItem.cost > 0) {
           this.selectedAccount.new_additional_cost[index].cost = costItem.cost * -1;
         }
       }
@@ -924,6 +924,9 @@ export default defineComponent({
       }
       // emit("update:account", selectedAccount.value);
       emit("save");
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000)
       await updateAllData();
     };
 
