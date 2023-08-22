@@ -40,7 +40,6 @@ export const useUnitFormat = () => {
       }
     },
     klToLitters(value) {
-      console.log(value)
       if (typeof value !== "number") {
         return value;
       }

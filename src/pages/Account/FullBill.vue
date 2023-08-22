@@ -68,8 +68,16 @@
         min-height: 300px;
       "
     >
-      <q-banner dense inline-actions class="text-white bg-red">
-        {{ billDetails.message }}
+      <q-banner dense inline-actions class="bg-grey-4">
+        <p v-if="billDetails.status_code === 422" style="text-align: justify">
+          Dear User.
+          <br>
+          <br>
+          Some of your meters readings need to be updated. Go to the individual meters and follow the instructions.
+        </p>
+        <p v-else>
+          {{ billDetails.message }}
+        </p>
       </q-banner>
     </div>
   </template>
@@ -398,33 +406,19 @@ const numberFormat = useNumberFormat();
 const unitFormat = useUnitFormat();
 const billDetails = ref({});
 const hasError = ref(false);
-let month = route.query.month;
-if (month < 0) {
-  router.replace({ ...route, query: { ...route.query, month: 1 } });
-}
-const currentMonth = ref(route.query.month || 1);
+const currentMonth = ref( 1);
 
-watchEffect(async () => {
-  currentMonth.value = route.query.month || 1;
-  await getCostDetails();
-});
 
-function previous() {
+async function previous() {
   if (billDetails.value?.has_history) {
     currentMonth.value++;
-    router.push({
-      ...route,
-      query: { ...route.query, month: currentMonth.value },
-    });
+    await getCostDetails();
   }
 }
 
-function next() {
+async function next() {
   currentMonth.value--;
-  router.push({
-    ...route,
-    query: { ...route.query, month: currentMonth.value },
-  });
+  await getCostDetails();
 }
 
 async function getCostDetails() {

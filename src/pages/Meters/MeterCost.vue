@@ -75,8 +75,23 @@
         min-height: 300px;
       "
     >
-      <q-banner dense inline-actions class="text-white bg-red">
-        {{ costDetails.message }}
+      <q-banner dense inline-actions class="bg-grey-4">
+        <p v-if="costDetails.status_code === 422" style="text-align: justify">
+          Dear User.
+          <br>
+          <br>
+          You have either entered your first reading for this meter or, no usable previous readings exist.
+          <br>
+          <br>
+
+          No problem. Just enter an additional reading in the next fews days to enable us to calculate your usage.
+          <br>
+          <br>
+          We need at least two readings in the same billing cycle to calculate usage and cost.
+        </p>
+        <p v-else>
+          {{ costDetails.message }}
+        </p>
       </q-banner>
     </div>
   </template>
