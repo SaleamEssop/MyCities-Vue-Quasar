@@ -150,8 +150,8 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: `MyCity`,
-        short_name: `MyCity`,
+        name: `MyCities`,
+        short_name: `MyCities`,
         description: `A Quasar Project`,
         display: "standalone",
         orientation: "portrait",

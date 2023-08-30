@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">MyCity</string>
-    <string name="title_activity_main">MyCity</string>
+    <string name="app_name">MyCities</string>
+    <string name="title_activity_main">MyCities</string>
     <string name="package_name">org.capacitor.quasar.app</string>
     <string name="custom_url_scheme">org.capacitor.quasar.app</string>
 </resources>

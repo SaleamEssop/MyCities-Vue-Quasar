@@ -1,6 +1,6 @@
 {
   "appId": "com.light.water.app",
-  "appName": "MyCity",
+  "appName": "MyCities",
   "bundledWebRuntime": false,
   "npmClient": "yarn",
   "webDir": "www",

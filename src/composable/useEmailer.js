@@ -27,7 +27,7 @@ export const useEmail = () => {
         body += `Meter Number: ${meter.meter_number}\n`;
       }
       body += `Current Reading: ${unitFormat.unitFormat(
-        usage.total_usage,
+        usage.current_reading,
         meter.meter_type_id,
         true
       )}\n`;

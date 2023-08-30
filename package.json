@@ -2,7 +2,7 @@
   "name": "com.smart.meter.reading",
   "version": "0.0.1",
   "description": "A Quasar Project",
-  "productName": "MyCity",
+  "productName": "MyCities",
   "author": "blukhi99 <blukhi99@outlook.com>",
   "private": true,
   "scripts": {
