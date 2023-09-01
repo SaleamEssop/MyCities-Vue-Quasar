@@ -43,7 +43,7 @@
           >
         </div>
         <q-icon
-          v-if="currentMonth > 1"
+          v-if="billDetails?.has_future"
           @click="next"
           name="arrow_right"
           class="icon-styling"
@@ -398,6 +398,7 @@ import { getFullBill } from "src/api/meters";
 import { useNumberFormat } from "src/composable/useNumberFormat";
 import { useUnitFormat } from "src/composable/useUnitFormat";
 import { useEmail } from "src/composable/useEmailer";
+import {useQuasar} from "quasar";
 
 const email = useEmail();
 const route = useRoute();
@@ -407,35 +408,33 @@ const unitFormat = useUnitFormat();
 const billDetails = ref({});
 const hasError = ref(false);
 const currentMonth = ref( 1);
+const $q = useQuasar();
 
 
 async function previous() {
   if (billDetails.value?.has_history) {
-    currentMonth.value++;
+    currentMonth.value += billDetails.value?.add_previous_months || 1;
     await getCostDetails();
   }
 }
 
 async function next() {
-  currentMonth.value--;
-  await getCostDetails();
+  if (billDetails.value?.has_future) {
+    currentMonth.value--;
+    await getCostDetails();
+  }
 }
 
 async function getCostDetails() {
+  $q.loading.show();
   try {
-    // throw {
-    //   response:{
-    //     data:{
-    //       message:'sdassa'
-    //     }
-    //   }
-    // }
     billDetails.value = await getFullBill(route.params.id, currentMonth.value);
     hasError.value = false;
   } catch (e) {
     hasError.value = true;
     billDetails.value = e.response.data;
   }
+  $q.loading.hide();
 }
 
 onMounted(() => {
@@ -458,7 +457,7 @@ onMounted(() => {
 }
 
 .large-text {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 500;
 }
 

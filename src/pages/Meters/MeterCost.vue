@@ -22,7 +22,7 @@
       aria-label="heading"
     >
       <span class="medium-text"
-        >Projected Cost: Meter#
+      >Projected Cost: Meter#
         {{ costDetails?.meter_details?.meter_number }}</span
       >
       <div class="large-text" style="display: flex">
@@ -32,7 +32,7 @@
           name="arrow_left"
           class="icon-styling"
         />
-        <q-icon disabled v-else name="arrow_left" class="icon-styling" />
+        <q-icon disabled v-else name="arrow_left" class="icon-styling"/>
         <div
           style="
             display: flex;
@@ -43,22 +43,22 @@
         >
           <span class="large-text">{{ costDetails?.cycle }}</span>
           <span class="medium-text"
-            >Current Date: {{ costDetails.current_date }}</span
+          >Current Date: {{ costDetails.current_date }}</span
           >
         </div>
         <!--        <span>-->
         <!--          Projected bill for {{ costDetails?.month }}-->
         <!--        </span>-->
         <q-icon
-          v-if="currentMonth > 1"
+          v-if="costDetails?.has_future"
           @click="next"
           name="arrow_right"
           class="icon-styling"
         />
-        <q-icon v-else disabled name="arrow_right" class="icon-styling" />
+        <q-icon v-else disabled name="arrow_right" class="icon-styling"/>
       </div>
       <span style="font-size: 3rem; font-weight: bold"
-        >R
+      >R
         {{
           numberFormat.numberFormat(costDetails?.data?.predictive || 0)
         }}</span
@@ -108,7 +108,7 @@
             {{ unitFormat.klToLitters(costDetails?.usage?.average_usage || 0) }}
           </div>
         </div>
-        <q-separator vertical />
+        <q-separator vertical/>
         <div class="column col-3">
           <b class="text-center bold-text">Monthly Usage</b>
           <div class="text-center large-text bold-text">
@@ -120,7 +120,7 @@
             }}
           </div>
         </div>
-        <q-separator vertical />
+        <q-separator vertical/>
         <div class="column col-3">
           <b class="text-center bold-text">Daily Cost</b>
           <div class="text-center large-text bold-text">
@@ -133,7 +133,7 @@
           </div>
         </div>
       </div>
-      <q-separator class="q-mt-lg" />
+      <q-separator class="q-mt-lg"/>
     </q-card>
     <q-card
       v-else-if="
@@ -154,7 +154,7 @@
             }}
           </div>
         </div>
-        <q-separator vertical />
+        <q-separator vertical/>
         <div class="column col-3">
           <b class="text-center">Monthly Usage</b>
           <div class="text-center basic-text">
@@ -166,7 +166,7 @@
             }}
           </div>
         </div>
-        <q-separator vertical />
+        <q-separator vertical/>
         <div class="column col-3">
           <b class="text-center">Daily Cost</b>
           <div class="basic-text text-center">
@@ -179,7 +179,7 @@
           </div>
         </div>
       </div>
-      <q-separator class="q-mt-lg" />
+      <q-separator class="q-mt-lg"/>
     </q-card>
     <q-card
       v-if="costDetails?.meter_details?.meter_type_id === WATER_METER"
@@ -190,7 +190,7 @@
         <q-item class="item-style">
           <q-item-section class="item-styling">Water in</q-item-section>
           <q-item-section side class="item-styling"
-            >R
+          >R
             {{
               numberFormat.numberFormat(
                 costDetails?.data?.water_in?.predictive.total || 0
@@ -201,7 +201,7 @@
         <q-item class="item-style">
           <q-item-section class="item-styling">Water out</q-item-section>
           <q-item-section side class="item-styling"
-            >R
+          >R
             {{
               numberFormat.numberFormat(
                 costDetails?.data?.water_out?.predictive.total || 0
@@ -216,10 +216,11 @@
           :key="i1"
         >
           <q-item-section class="item-styling">{{
-            waterInAdditionalCost.title
-          }}</q-item-section>
+              waterInAdditionalCost.title
+            }}
+          </q-item-section>
           <q-item-section side class="item-styling"
-            >R {{ numberFormat.numberFormat(waterInAdditionalCost?.cost || 0) }}
+          >R {{ numberFormat.numberFormat(waterInAdditionalCost?.cost || 0) }}
           </q-item-section>
         </q-item>
         <q-item
@@ -229,16 +230,17 @@
           :key="i2"
         >
           <q-item-section class="item-styling">{{
-            waterInAdditionalCost.title
-          }}</q-item-section>
+              waterInAdditionalCost.title
+            }}
+          </q-item-section>
           <q-item-section side class="item-styling"
-            >R {{ numberFormat.numberFormat(waterInAdditionalCost?.cost || 0) }}
+          >R {{ numberFormat.numberFormat(waterInAdditionalCost?.cost || 0) }}
           </q-item-section>
         </q-item>
         <q-item class="item-style">
           <q-item-section class="item-styling">VAT</q-item-section>
           <q-item-section side class="item-styling"
-            >R
+          >R
             {{
               numberFormat.numberFormat(costDetails?.data?.vat_predictive || 0)
             }}
@@ -261,10 +263,11 @@
           :key="i2"
         >
           <q-item-section class="item-styling">{{
-            electricityAdditionalCost.title
-          }}</q-item-section>
+              electricityAdditionalCost.title
+            }}
+          </q-item-section>
           <q-item-section side class="item-styling"
-            >R
+          >R
             {{
               numberFormat.numberFormat(electricityAdditionalCost?.cost || 0)
             }}
@@ -280,7 +283,7 @@
       >
         <span class="large-text">Monthly Projected Cost</span>
         <span class="large-text"
-          >R
+        >R
           {{
             numberFormat.numberFormat(costDetails?.data?.predictive || 0)
           }}</span
@@ -297,7 +300,8 @@
           color="primary"
           style="width: 100%"
           @click="email.mailCost(costDetails)"
-          >Email Details</q-btn
+        >Email Details
+        </q-btn
         >
       </div>
     </q-card>
@@ -305,13 +309,15 @@
 </template>
 
 <script setup>
-import { useRoute, useRouter } from "vue-router";
-import { onMounted, ref, watchEffect } from "vue";
-import { getCost } from "src/api/meters";
-import { useNumberFormat } from "src/composable/useNumberFormat";
-import { useUnitFormat } from "src/composable/useUnitFormat";
-import { ELECTRICITY_METER, WATER_METER } from "src/config/meter";
-import { useEmail } from "src/composable/useEmailer";
+import {useRoute, useRouter} from "vue-router";
+import {onMounted, ref, watchEffect} from "vue";
+import {getCost} from "src/api/meters";
+import {useNumberFormat} from "src/composable/useNumberFormat";
+import {useUnitFormat} from "src/composable/useUnitFormat";
+import {ELECTRICITY_METER, WATER_METER} from "src/config/meter";
+import {useEmail} from "src/composable/useEmailer";
+import {useQuasar} from "quasar";
+
 const route = useRoute();
 const router = useRouter();
 const numberFormat = useNumberFormat();
@@ -320,20 +326,24 @@ const costDetails = ref({});
 const hasError = ref(false);
 const email = useEmail();
 const currentMonth = ref(1);
+const $q = useQuasar();
 
 async function previous() {
   if (costDetails.value?.has_history) {
-    currentMonth.value++;
+    currentMonth.value += costDetails.value?.add_previous_months || 1;
     await getCostDetails();
   }
 }
 
 async function next() {
-  currentMonth.value--;
-  await getCostDetails();
+  if (costDetails.value?.has_future) {
+    currentMonth.value--;
+    await getCostDetails();
+  }
 }
 
 async function getCostDetails() {
+  $q.loading.show();
   try {
     costDetails.value = await getCost(route.params.id, currentMonth.value);
     hasError.value = false;
@@ -341,6 +351,7 @@ async function getCostDetails() {
     hasError.value = true;
     costDetails.value = e.response.data;
   }
+  $q.loading.hide();
 }
 
 onMounted(() => {
@@ -363,9 +374,10 @@ onMounted(() => {
 }
 
 .large-text {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 500;
 }
+
 .bold-text {
   font-weight: bold;
 }
