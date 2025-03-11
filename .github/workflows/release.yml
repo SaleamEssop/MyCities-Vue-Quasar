@@ -31,7 +31,7 @@ jobs:
       - name: Prepare deployment package
         run: |
           mkdir -p my_cities_deploy_release
-          cp -r .dist/pwa/* my_cities_deploy_release/
+          cp -r dist/pwa/* my_cities_deploy_release/
 
       - name: Zip deployment package
         run: |
