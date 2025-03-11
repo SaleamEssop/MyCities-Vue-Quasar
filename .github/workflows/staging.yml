@@ -1,0 +1,60 @@
+# .github/workflows/deploy.yml
+name: Deploy Staging MyCities Web App
+on:
+  push:
+    branches:
+      - staging
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Increase Memory Limit & Build the project
+        run: |
+          npm run build
+
+      - name: Prepare deployment package
+        run: |
+          mkdir -p my_cities_deploy_release
+          cp -r .dist/pwa/* my_cities_deploy_release/
+
+      - name: Zip deployment package
+        run: |
+          cd my_cities_deploy_release
+          zip -r ../my_cities_deploy_release.zip .  > /dev/null 2>&1
+
+      - name: Deploy to Server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_USER: ${{ vars.SSH_USER }}
+          SERVER_IP: ${{ vars.SERVER_IP }}
+        run: |
+          # Save the SSH key
+          echo "$SSH_PRIVATE_KEY" > ssh_key
+          chmod 600 ssh_key
+
+          # Transfer the zipped file to the server
+          scp -i ssh_key -o StrictHostKeyChecking=no my_cities_deploy_release.zip $SSH_USER@$SERVER_IP:/var/www
+
+          # Connect to the server, unzip the file, and restart the application 1
+          ssh -i ssh_key -o StrictHostKeyChecking=no $SSH_USER@$SERVER_IP << 'EOF'
+            rm -rf /var/www/staging.mycities.co.za/public/web-app
+            unzip -o /var/www/my_cities_deploy_release.zip -d /var/www/staging.mycities.co.za/public/web-app  > /dev/null 2>&1
+            rm /var/www/my_cities_deploy_release.zip
+          EOF
+
+      - name: Clean up
+        run: rm -f ssh_key my_cities_deploy_release.zip
