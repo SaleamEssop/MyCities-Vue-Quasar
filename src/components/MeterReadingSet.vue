@@ -10,7 +10,9 @@
       <div class="flex justify-between items-center">
         <span
           >Last reading,
-          <b>{{ new Date(lastReading.time).toLocaleDateString("en-GB") }}</b></span
+          <b>{{
+            new Date(lastReading.time).toLocaleDateString("en-GB")
+          }}</b></span
         >
         <!-- {{ date.formatDate(new Date(lastReading.time), "DD/MM/YYYY") }} -->
         <!-- <span class="round-cheap">Meter {{ meter?.number }}</span> -->
@@ -117,10 +119,24 @@
                 @click="modelMeterForNewEdit = true"
                 clickable
                 v-close-popup
+                v-if="
+                  propertyData &&
+                  (propertyData.property_name ||
+                    propertyData.property_manager) === null
+                "
               >
                 <q-item-section>Add a new meter</q-item-section>
               </q-item>
-              <q-item clickable v-close-popup @click="deleteMeter(meter)">
+              <q-item
+                clickable
+                v-close-popup
+                @click="deleteMeter(meter)"
+                v-if="
+                  propertyData &&
+                  (propertyData.property_name ||
+                    propertyData.property_manager) === null
+                "
+              >
                 <q-item-section>Delete Meter</q-item-section>
               </q-item>
             </q-list>
@@ -275,6 +291,10 @@ const { formatDate } = date;
 const meterStore = useMeterStore();
 const readingStore = useReadingStore();
 const accountStore = useAccountStore();
+//get property data from response
+
+
+
 
 export default defineComponent({
   name: "MeterReadingSet",

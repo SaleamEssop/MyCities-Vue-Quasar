@@ -6,79 +6,71 @@
         :key="index"
         class="text-h4"
         :style="styles(index)"
-        >{{ char }}</span
       >
+        {{ char }}
+      </span>
     </div>
+    <input
+      v-if="isInput"
+      type="text"
+      class="input-field"
+      v-model="inputValue"
+      :maxlength="meterStyleDigits"
+      @input="handleInput"
+    />
   </div>
 </template>
+
 <script>
-import { defineComponent, computed, ref } from "vue";
+import { defineComponent, computed, ref, watch } from "vue";
+
 const COLOR_STYLE = [
   { color: "black", background: "white" },
   { color: "white", background: "#b30101" },
   { color: "white", background: "#666666" },
 ];
+
 export default defineComponent({
   name: "MeterComponent",
   props: {
     text: String,
-    meterStyle: Number,
-    readingType: String, //
-    isInput: { default: false, type: Boolean },
+    meterStyle: Number, 
+    readingType: String,
+    isInput: { type: Boolean, default: false },
   },
-  setup(props) {
-    let lastPendingArray = [];
+  emits: ["update:valueInString"],
+  setup(props, { emit }) {
+    const inputValue = ref(props.text || "");
+
+   
+    const meterStyleDigits = computed(() => {
+      return props.meterStyle === 1 ? 8 : 6; 
+    });
+
+   
+    watch(
+      () => props.text,
+      (newText) => {
+        inputValue.value = newText || "";
+      }
+    );
+
     const chars = computed(() => {
-      let meterStyleDigits = 6;
-      switch (props.meterStyle) {
-        case 1: {
-          meterStyleDigits = 8;
-          break;
-        }
-        case 2: {
-          meterStyleDigits = 6;
-          break;
-        }
+      let inputReading = inputValue.value.toString().trim();
+
+      if (inputReading.includes(".")) {
+        inputReading = inputReading.replace(".", "");
       }
 
-      let inputReading = props?.text?.toString()?.trim();
-
-      if (props.isInput) {
-        if (inputReading) {
-          if (inputReading.includes(".")) {
-            inputReading = inputReading.replace(".", "");
-          }
-        } else {
-          inputReading = "";
-        }
-        const fillArray = [...inputReading];
-        let newArr = [];
-        if (fillArray.length < meterStyleDigits) {
-          newArr = [...new Array(meterStyleDigits - fillArray.length)].map(
-            (x) => (props.isInput ? "_" : "0")
-            // (inputReading || "").length > 0 ? "0" : "_"
-            // "_"
-          );
-        }
-        lastPendingArray = newArr;
-        return [...fillArray, ...newArr];
-      } else {
-        if (inputReading) {
-          if (inputReading.includes(".")) {
-            inputReading = inputReading.replace(".", "");
-          }
-        } else {
-          inputReading = "";
-        }
-        const fillArray = [...inputReading];
-        let newArr = [];
-        if (fillArray.length < meterStyleDigits) {
-          newArr = [...new Array(meterStyleDigits - fillArray.length)].map(
-            (x) => ((inputReading || "").length > 0 ? "0" : "_")
-          );
-        }
-        return [...newArr, ...fillArray];
+      const fillArray = [...inputReading];
+      let newArr = [];
+      if (fillArray.length < meterStyleDigits.value) {
+        newArr = [...new Array(meterStyleDigits.value - fillArray.length)].map(
+          (x) => (props.isInput ? "_" : "0")
+        );
       }
+
+      return [...fillArray, ...newArr];
     });
 
     const styles = (index) => {
@@ -89,22 +81,38 @@ export default defineComponent({
           if (index >= size - 4) {
             return COLOR_STYLE[1];
           }
+          break;
         }
         case 2: {
           // Electricity
           if (index >= size - 1) {
             return COLOR_STYLE[2];
           }
+          break;
         }
       }
       return COLOR_STYLE[0];
+    };
+
+    const handleInput = (event) => {
+     
+      inputValue.value = event.target.value.replace(/[^0-9]/g, "");
+    
+      emit("update:valueInString", inputValue.value);
     };
 
     function getValueInString() {
       return chars.value.map((_char) => (_char == "_" ? 0 : _char)).join("");
     }
 
-    return { chars, styles, getValueInString };
+    return {
+      chars,
+      styles,
+      inputValue,
+      handleInput,
+      getValueInString,
+      meterStyleDigits,
+    };
   },
 });
 </script>
@@ -162,6 +170,16 @@ export default defineComponent({
 
 .last-char-animated:last-child {
   animation: fadeIn 1s infinite;
+}
+
+.input-field {
+  width: 100%;
+  padding: 5px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 20px;
+  text-align: center;
 }
 @keyframes fadeIn {
   0% {

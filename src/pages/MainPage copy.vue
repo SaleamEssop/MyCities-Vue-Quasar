@@ -15,40 +15,33 @@
         class="q-mt-sm"
         text-color="white"
       >
-        <template v-slot:header>
-          <!-- <q-item-section class="font-size larger text-white">
-            {{ site.address || "Select A Location" }}
-          </q-item-section> -->
+      <template v-slot:header>
           <q-item-section class="font-size larger text-white">
             <div class="items-center">
               <q-item-label
                 class="q-mt-md"
                 style="margin-top: 10px; padding-bottom: 5px"
               >
-                <template v-if="loading">
-                  <div style="margin-bottom: 5px">Loading...</div>
-                </template>
+                <!-- Show loading state if data isn’t ready -->
+                <div v-if="loading" style="margin-bottom: 5px">
+                  <strong>Name:</strong> Loading...
+                </div>
+                <div v-else style="margin-bottom: 5px">
+                  <strong>Name:</strong>
+                  {{
+                    propertyData.property_name ||
+                    site.address ||
+                    "Select A Location"
+                  }}
+                </div>
 
-                <template
-                  v-else-if="
-                    propertyData &&
-                    (propertyData.property_name ||
-                      propertyData.property_manager)
-                  "
-                >
-                  <div style="margin-bottom: 5px">
-                    <strong>Name:</strong>
-                    {{ propertyData.property_name || "N/A" }}
-                  </div>
-
-                  <div>
-                    <strong>Manager:</strong>
-                    {{ propertyData.property_manager || "N/A" }}
-                  </div>
-                </template>
-
-                <div v-else>
-                  {{ site.address || "Select A Location" }}
+                <div>
+                  <strong>Manager:</strong>
+                  {{
+                    loading
+                      ? "Loading..."
+                      : propertyData.property_manager || "N/A"
+                  }}
                 </div>
               </q-item-label>
             </div>
@@ -131,16 +124,10 @@
                     >
                       <q-item-section>Edit Account</q-item-section>
                     </q-item>
-
                     <q-item
                       clickable
                       v-close-popup
                       @click="deleteAccount(account)"
-                      v-if="
-                        propertyData &&
-                        (propertyData.property_name ||
-                          propertyData.property_manager) === null
-                      "
                     >
                       <q-item-section>Delete Account</q-item-section>
                     </q-item>
@@ -150,11 +137,6 @@
                       @click="
                         accountStore.selectedAccount = null;
                         modelAccountForNewEdit = true;
-                      "
-                      v-if="
-                        propertyData &&
-                        (propertyData.property_name ||
-                          propertyData.property_manager) === null
                       "
                     >
                       <q-item-section>Add Account</q-item-section>
@@ -326,11 +308,6 @@
           text-color="black"
           icon="add"
           @click="modelMeterForNewEdit = true"
-          v-if="
-            propertyData &&
-            (propertyData.property_name || propertyData.property_manager) ===
-              null
-          "
         >
           Add New Meters
         </q-btn>
@@ -347,10 +324,6 @@
         rounded
         text-color="black"
         @click="modelAccountForNewEdit = true"
-        v-if="
-          propertyData &&
-          (propertyData.property_name || propertyData.property_manager) === null
-        "
       >
         Start
       </q-btn>
@@ -414,35 +387,14 @@
   </q-dialog>
 </template>
 <script setup>
-import {
-  ref,
-  onBeforeMount,
-  onMounted,
-  onBeforeUnmount,
-  watch,
-  computed,
-} from "vue";
-import { useRouter } from "vue-router";
-
+import { ref, onMounted } from "vue";
 import { useSiteStore } from "/src/stores/site";
 import { useAccountStore } from "/src/stores/account";
 import { useMeterStore } from "/src/stores/meter";
 import { useUserStore } from "/src/stores/user";
-
-import MeterReadingSet from "src/components/MeterReadingSet.vue";
-import AccountComponent from "src/components/AccountComponent.vue";
-import AddMeter from "src/components/AddMeter.vue";
-import AccountCost from "src/components/AccountCost.vue";
-import AccountHistory from "src/components/AccountHistory.vue";
-import {
-  getAllData,
-  fetchAndSaveMeterOnAccount,
-  deleteMainAccount,
-  deleteMainSiteAccount,
-} from "src/boot/axios";
+import { getAllData, fetchAndSaveMeterOnAccount, deleteMainAccount, deleteMainSiteAccount } from "src/boot/axios";
 import { updateAllData } from "boot/firebase";
-
-import { date, Dialog, useQuasar } from "quasar";
+import { useQuasar } from "quasar";
 
 const siteStore = useSiteStore();
 const accountStore = useAccountStore();
@@ -453,31 +405,32 @@ const $q = useQuasar();
 const propertyData = ref({});
 const loading = ref(true);
 
+// ✅ Fixed: Handle `getAllData()` properly
 const loadData = async () => {
   try {
     const response = await getAllData();
     if (response && response.data) {
-      propertyData.value = response.data.property || null;
+      propertyData.value = response.data.property || {};
     } else {
       console.warn("Invalid response from getAllData()", response);
-      propertyData.value = null;
+      propertyData.value = {};
     }
   } catch (error) {
     console.error("Error fetching data:", error);
-    propertyData.value = null;
+    propertyData.value = {};
   } finally {
-    loading.value = false;
+    loading.value = false; // ✅ Ensures loading is set to false after API call
   }
 };
 
 onMounted(loadData);
 
+// ✅ Fixed: Ensure `allSites` exists before logging
 const allSites = siteStore.allSites || [];
 console.log("All Sites:", allSites);
 
-const selectedAccountId = accountStore.selectedAccount
-  ? accountStore.selectedAccount.id
-  : null;
+// ✅ Fixed: Handle `selectedAccount?.id` safely
+const selectedAccountId = accountStore.selectedAccount ? accountStore.selectedAccount.id : null;
 
 const getAccountDetails = (id) => {
   if (!id) {
@@ -497,8 +450,10 @@ const getMeters = (accountId) => {
   return meterStore.getByAccuntId(accountId) || [];
 };
 
+// ✅ Fixed: Ensure `getMeters()` returns an array before accessing `.length`
 const Loading = () => {
-  if (getMeters(accountStore.selectedAccount?.id).length > 0) {
+  const meters = getMeters(accountStore.selectedAccount?.id);
+  if (meters.length > 0) {
     $q.loading.hide();
   } else {
     $q.loading.show();
@@ -525,8 +480,13 @@ const selectSite = (_site) => {
   meterStore.selectedMeter = null;
   isExpandAccount.value = true;
 };
+
 const selectAccount = (_account) => {
-  console.log(_account);
+  if (!_account) {
+    console.warn("Invalid account selected.");
+    return;
+  }
+  console.log("Selected Account:", _account);
   accountStore.selectedAccount = _account;
   meterStore.selectedMeter = null;
   isExpandMeter.value = true;
@@ -534,46 +494,55 @@ const selectAccount = (_account) => {
   showMeter.value = true;
   fetchAndSaveMeterOnAccount(_account.id);
 };
-// console.log("Select Account", accountStore.selectedAccount);
-const deletesite = async (_site) => {
-  //await updateAllData();
-  //let meters = meterStore.getByAccuntId(account.id);
-  $q.dialog({
-    title: "Confirm",
-    message:
-      "Are you sure you want to delete this location? All accounts,meters and history associated with this location will be deleted.",
-    cancel: true,
-    ok: `Confirm`,
-    persistent: true,
-  }).onOk(() => {
-    deleteMainSiteAccount({ location_id: _site.id }).then((status) => {
-      console.log(status);
-      if (status.code == 200) {
-        window.location.reload();
-        updateAllData();
-      }
-    });
-  });
-};
 
-const deleteAccount = (account) => {
-  let meters = meterStore.getByAccuntId(account.id);
-  if (meters.length || [] > 0) {
-    $q.notify({
-      message:
-        "You can only delete an account after you delete all meters associated with the account.",
-      color: "error",
-    });
+const deletesite = async (_site) => {
+  if (!_site || !_site.id) {
+    console.warn("Invalid site selected for deletion.");
     return;
   }
   $q.dialog({
     title: "Confirm",
     message:
-      "Are you sure you want to delete this account? All data will be permanently lost.",
+      "Are you sure you want to delete this location? All accounts, meters, and history associated with this location will be deleted.",
+    cancel: true,
+    ok: `Confirm`,
+    persistent: true,
+  }).onOk(() => {
+    deleteMainSiteAccount({ location_id: _site.id }).then((status) => {
+      console.log("Delete Site Status:", status);
+      if (status.code == 200) {
+        window.location.reload();
+        updateAllData();
+      }
+    }).catch(error => {
+      console.error("Error deleting site:", error);
+    });
+  });
+};
+
+const deleteAccount = (account) => {
+  if (!account || !account.id) {
+    console.warn("Invalid account selected for deletion.");
+    return;
+  }
+  
+  let meters = getMeters(account.id);
+  if (meters.length > 0) {
+    $q.notify({
+      message: "You can only delete an account after you delete all meters associated with the account.",
+      color: "error",
+    });
+    return;
+  }
+  
+  $q.dialog({
+    title: "Confirm",
+    message: "Are you sure you want to delete this account? All data will be permanently lost.",
     cancel: true,
     persistent: true,
   }).onOk(() => {
     deleteMainAccount({ account_id: account.id }).then((status) => {
+      console.log("Delete Account Status:", status);
       if (status.code === 200) {
         accountStore.deleteAccount(account);
         updateAllData();
@@ -581,17 +550,10 @@ const deleteAccount = (account) => {
           window.location.reload();
         }, 2000);
       }
+    }).catch(error => {
+      console.error("Error deleting account:", error);
     });
   });
-
-  // .onOk(() => {
-  //   // console.log('>>>> OK')
-  //   accountStore.deleteAccount(account);
-  // })
-  // .onOk(() => {
-  //   // console.log('>>>> second OK catcher')
-  //   accountStore.deleteAccount(account);
-  // });
 };
 </script>
 

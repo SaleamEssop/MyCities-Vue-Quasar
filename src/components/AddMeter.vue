@@ -20,6 +20,10 @@
           <q-item-label>{{ meterType.title }}</q-item-label>
         </q-item-section>
       </q-item>
+      <div v-if="imageSrc" class=" ">
+        <q-img :src="imageSrc" class="captureImage" />
+        <q-separator color="grey" size="6px" />
+      </div>
     </q-list>
 
     <q-card-section>
@@ -194,6 +198,7 @@ If not available, simply enter the current date and meter reading and update it 
                     : 'water-recorded-reading'
                 "
                 :isInput="true"
+                @update:valueInString="updateValueInString"
               />
             </div>
           </div>
@@ -209,6 +214,12 @@ If not available, simply enter the current date and meter reading and update it 
     </q-card-section>
     <q-space />
     <q-card-actions align="center">
+      <q-btn
+        icon="image"
+        color="primary"
+        text-color="white"
+        @click="captureImage()"
+      />
       <q-btn
         color="red"
         text-color="white"
@@ -237,8 +248,18 @@ import { useMeterStore } from "/src/stores/meter";
 import { useReadingStore } from "/src/stores/reading";
 import { useQuasar } from "quasar";
 import MeterComponent from "/src/components/MeterComponent.vue";
-import MeterComponentWithInput from "./MeterComponentWithInput.vue";
 import { addMeterAndReading } from "src/boot/axios";
+import {
+  Plugins,
+  CameraResultType,
+  CameraSource,
+  FilesystemDirectory,
+  CameraDirection,
+} from "@capacitor/core";
+import domtoimage from "dom-to-image-more";
+import { useUnitFormat } from "src/composable/useUnitFormat";
+
+const { Camera, Filesystem } = Plugins;
 
 const nullReading = {
   isSubmit: true,
@@ -266,28 +287,45 @@ export default defineComponent({
   setup(props, { emit }) {
     const $q = useQuasar();
 
-    const readingDate = computed({
-      get() {
-        return date.formatDate(new Date(firstReading.value.time), "DD/MM/YYYY");
-      },
-      set(newValue) {
-        if (newValue !== null) {
-          firstReading.value.time = new Date(
-            date.extractDate(newValue, "DD/MM/YYYY")
-          ).getTime();
-        }
-      },
-    });
-
-    // const currentDate = new Date();
-    // const upcomingDate = date.addToDate(currentDate, { days: 1 });
-    // const options = (currentDate) => {
-    //   return currentDate < date.formatDate(upcomingDate, "YYYY/MM/DD");
-    // };
-
     const meterStore = useMeterStore();
-
     const readingStore = useReadingStore();
+
+    const imageSrc = ref("");
+
+    const captureImage = async () => {
+      try {
+        const image = await Camera.getPhoto({
+          quality: 100,
+          source: CameraSource.Prompt,
+          resultType: CameraResultType.Uri,
+          direction: CameraDirection.Rear,
+        });
+        imageSrc.value = image.webPath; // Set the image URL
+        customalert(
+          "Please ensure that the entered reading matches the meter image reading"
+        );
+      } catch (error) {
+        console.error("Error capturing image:", error);
+        $q.notify({ message: "Failed to capture image.", color: "negative" });
+      }
+    };
+    function customalert(message) {
+      $q.dialog({
+        dark: false,
+        message: message,
+        ok: `Confirm`,
+        color: "positive",
+      });
+    }
+
+    function blobToBase64(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
 
     const meter = ref(
       props.propsMeter || JSON.parse(JSON.stringify(nullMeter))
@@ -296,45 +334,65 @@ export default defineComponent({
     const meterComopnentReadValue = ref();
 
     const firstReading = ref(JSON.parse(JSON.stringify(nullReading)));
-    const addMeter = () => {
-      if (meter.value.id == null) {
-        meter.value.id = Date.now();
-        meter.value.account.id = props.propsAccount.id;
-      }
-      firstReading.value.meter.id = meter.value.id;
 
-      if (meter.value.title == null || meter.value.number == null) {
-        $q.notify({ message: "Fill all details before saving." });
-        return;
-      }
+    // Add this function to update `valueInString`
+    const updateValueInString = (newValue) => {
+      firstReading.value.valueInString = newValue;
+    };
 
-      if (
-        firstReading.value.valueInString == null ||
-        firstReading.value.valueInString.trim() == ""
-      ) {
-        $q.notify({
-          message:
-            "You must enter a reading before saving even if it is all zeroes.",
+    const addMeter = async () => {
+      try {
+        let base64Image = null;
+
+        // Convert the captured image URL to a base64 string (if image is captured)
+        if (imageSrc.value) {
+          const response = await fetch(imageSrc.value);
+          const blob = await response.blob();
+          base64Image = await blobToBase64(blob);
+        }
+
+        if (meter.value.id == null) {
+          meter.value.id = Date.now();
+          meter.value.account.id = props.propsAccount.id;
+        }
+        firstReading.value.meter.id = meter.value.id;
+
+        if (meter.value.title == null || meter.value.number == null) {
+          $q.notify({ message: "Fill all details before saving." });
+          return;
+        }
+
+        // Update validation logic
+        if (
+          !firstReading.value.valueInString ||
+          firstReading.value.valueInString.replace(/_/g, "").length === 0
+        ) {
+          $q.notify({
+            message:
+              "You must enter a reading before saving even if it is all zeroes.",
+          });
+          return;
+        }
+
+        firstReading.value.valueInString =
+          meterComopnentReadValue.value.getValueInString();
+        firstReading.value.value =
+          firstReading.value.valueInString /
+          (meter.value.type.id == 2 ? 10.0 : 10000.0);
+
+        // Send the request with or without the base64 image
+        const responseData = await addMeterAndReading({
+          meter_type_id: meter.value.type.id,
+          meter_title: meter.value.title,
+          meter_number: meter.value.number,
+          meter_reading_image: base64Image, // This will be null if no image is captured
+          meter_reading_date: new Date(firstReading.value.time).toISOString(),
+          meter_reading: firstReading.value.valueInString,
+          account_id: meter.value.account.id,
         });
-        return;
-      }
 
-      firstReading.value.valueInString =
-        meterComopnentReadValue.value.getValueInString();
-      firstReading.value.value =
-        firstReading.value.valueInString /
-        (meter.value.type.id == 2 ? 10.0 : 10000.0);
-
-      addMeterAndReading({
-        meter_type_id: meter.value.type.id,
-        meter_title: meter.value.title,
-        meter_number: meter.value.number,
-        meter_reading_date: new Date(firstReading.value.time).toISOString(),
-        meter_reading: firstReading.value.valueInString,
-        account_id: meter.value.account.id,
-      }).then(({ status, data }) => {
-        if (status) {
-          data.readings.forEach((reading) => {
+        if (responseData.status) {
+          responseData.data.readings.forEach((reading) => {
             readingStore.addReading({
               id: reading.id,
               meter: { id: reading.meter_id },
@@ -344,67 +402,29 @@ export default defineComponent({
             });
           });
           meterStore.addMeter({
-            account: { id: data.account_id },
-            id: data.id,
-            number: data.meter_number,
-            title: data.meter_title,
+            account: { id: responseData.data.account_id },
+            id: responseData.data.id,
+            number: responseData.data.meter_number,
+            title: responseData.data.meter_title,
             type: {
-              id: data.meter_type_id,
+              id: responseData.data.meter_type_id,
             },
           });
           emit("save");
         }
-      });
-    };
-
-    function alert({ title, message }) {
-      $q.dialog({
-        dark: false,
-        title: title,
-        message: message,
-      })
-        .onOk((data) => {
-          // console.log('>>>> OK, received', data)
-        })
-        .onCancel(() => {
-          // console.log('>>>> Cancel')
-        })
-        .onDismiss(() => {
-          // console.log('I am triggered on both OK and Cancel')
-        });
-    }
-
-    const inputFocus = ref(false);
-
-    const showAlert = (msg) => {
-      $q.notify({
-        attrs: {
-          // for the notification itself:
-          role: "alertdialog",
-        },
-        message: msg,
-        actions: [
-          {
-            icon: "close",
-            // for individual action (button):
-            "aria-label": "Dismiss",
-          },
-        ],
-      });
+      } catch (error) {
+        console.error("Error saving meter:", error);
+        $q.notify({ message: "Failed to save meter.", color: "negative" });
+      }
     };
 
     return {
-      readingDate,
-      firstReading,
       meter,
-      alert,
-      addMeter,
-      inputFocus,
+      firstReading,
       meterComopnentReadValue,
-      showAlert,
-      // currentDate,
-      // options,
-      // upcomingDate,
+      addMeter,
+      captureImage,
+      updateValueInString, // Add this line
     };
   },
   components: { MeterComponent },
@@ -425,5 +445,10 @@ export default defineComponent({
   font-size: 16px;
   margin-left: 20px;
   color: rgba(0, 0, 0, 0.6);
+}
+
+.captureImage {
+  max-height: 200px;
+  max-width: 400px;
 }
 </style>

@@ -34,38 +34,41 @@ const adStore = useAdStore();
 const defaultCostStore = useDefaultCostStore();
 const alarmStore = useGetAlarmsStore();
 
-const updateAllData = () => {
+const updateAllData = () => { 
   getAllData().then(({ status, data }) => {
-    const sitesSplit = data.reduce(
+    // Ensure `data.sites` exists and is an array before calling reduce
+    if (!data.sites || !Array.isArray(data.sites)) {
+      console.error("Expected an array at data.sites but received:", data.sites);
+      return;
+    }
+
+    const sitesSplit = data.sites.reduce(
       (acc, site) => {
         acc.accounts = acc.accounts.concat(
-          site.account.map((account) => {
-            return {
-              title: account.account_name,
-              id: account.id,
-              number: account.account_number,
-              region_id: account.region_id,
-              account_type_id: account.account_type_id,
-              bill_day: account.bill_day,
-              read_day: account.read_day,
-              bill_read_day_active: account.bill_read_day_active,
-              water_email: account.water_email,
-              electricity_email: account.electricity_email,
-              option: account.optional_information,
-              site: { id: account.site_id },
-              fixedCosts: account.fixed_costs.map((cost) => {
-                return {
-                  title: cost.title,
-                  value: parseFloat(cost.value),
-                  isApplicable: cost.is_active == 1,
-                  isFromUser: true,
-                  id: cost.id,
-                };
-              }),
-              defaultFixedCost: account.default_fixed_costs,
-            };
-          })
+          (site.account || []).map((account) => ({
+            title: account.account_name,
+            id: account.id,
+            number: account.account_number,
+            region_id: account.region_id,
+            account_type_id: account.account_type_id,
+            bill_day: account.bill_day,
+            read_day: account.read_day,
+            bill_read_day_active: account.bill_read_day_active,
+            water_email: account.water_email,
+            electricity_email: account.electricity_email,
+            option: account.optional_information,
+            site: { id: account.site_id },
+            fixedCosts: (account.fixed_costs || []).map((cost) => ({
+              title: cost.title,
+              value: parseFloat(cost.value),
+              isApplicable: cost.is_active == 1,
+              isFromUser: true,
+              id: cost.id,
+            })),
+            defaultFixedCost: account.default_fixed_costs || [],
+          }))
         );
+
         site["latLng"] = { lat: site.lat, lng: site.lng };
         delete site.account;
         delete site.lat;
@@ -76,15 +79,21 @@ const updateAllData = () => {
       },
       { sites: [], accounts: [] }
     );
+
     siteStore.replace(sitesSplit.sites);
     accountStore.replace(sitesSplit.accounts);
+  }).catch(error => {
+    console.error("Error fetching data:", error);
   });
+
   getAds().then(({ data }) => {
     adStore.setAds(data);
   });
+
   defaultCost().then(({ data }) => {
     defaultCostStore.setDefaultCost(data);
   });
+
   getAlarms().then(({ data }) => {
     alarmStore.setAlarms(data);
   });
