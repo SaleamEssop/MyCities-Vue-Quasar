@@ -253,7 +253,6 @@ import {
   Plugins,
   CameraResultType,
   CameraSource,
-  FilesystemDirectory,
   CameraDirection,
 } from "@capacitor/core";
 import domtoimage from "dom-to-image-more";
@@ -287,10 +286,31 @@ export default defineComponent({
   setup(props, { emit }) {
     const $q = useQuasar();
 
+    const firstReading = ref({
+      ...JSON.parse(JSON.stringify(nullReading)),
+      time: Date.now(),
+    });
+
+    const readingDate = computed({
+      get() {
+        const time = firstReading.value.time || Date.now();
+        return date.formatDate(new Date(time), "DD/MM/YYYY");
+      },
+      set(newValue) {
+        if (newValue) {
+          const extractedDate = date.extractDate(newValue, "DD/MM/YYYY");
+          firstReading.value.time = extractedDate.getTime();
+        }
+      },
+    });
+
+    watch(readingDate, (newVal) => {
+      console.log("Current readingDate:", newVal);
+    });
+
     const meterStore = useMeterStore();
     const readingStore = useReadingStore();
-
-    const imageSrc = ref("");
+    const imageSrc = ref(""); // Holds the image URL
 
     const captureImage = async () => {
       try {
@@ -301,6 +321,7 @@ export default defineComponent({
           direction: CameraDirection.Rear,
         });
         imageSrc.value = image.webPath; // Set the image URL
+        console.log("Image captured, webPath:", image.webPath); // Debug log
         customalert(
           "Please ensure that the entered reading matches the meter image reading"
         );
@@ -309,6 +330,12 @@ export default defineComponent({
         $q.notify({ message: "Failed to capture image.", color: "negative" });
       }
     };
+
+    // Watch imageSrc to debug
+    watch(imageSrc, (newVal) => {
+      console.log("imageSrc updated to:", newVal);
+    });
+
     function customalert(message) {
       $q.dialog({
         dark: false,
@@ -333,9 +360,6 @@ export default defineComponent({
 
     const meterComopnentReadValue = ref();
 
-    const firstReading = ref(JSON.parse(JSON.stringify(nullReading)));
-
-    // Add this function to update `valueInString`
     const updateValueInString = (newValue) => {
       firstReading.value.valueInString = newValue;
     };
@@ -344,7 +368,6 @@ export default defineComponent({
       try {
         let base64Image = null;
 
-        // Convert the captured image URL to a base64 string (if image is captured)
         if (imageSrc.value) {
           const response = await fetch(imageSrc.value);
           const blob = await response.blob();
@@ -362,7 +385,6 @@ export default defineComponent({
           return;
         }
 
-        // Update validation logic
         if (
           !firstReading.value.valueInString ||
           firstReading.value.valueInString.replace(/_/g, "").length === 0
@@ -380,12 +402,11 @@ export default defineComponent({
           firstReading.value.valueInString /
           (meter.value.type.id == 2 ? 10.0 : 10000.0);
 
-        // Send the request with or without the base64 image
         const responseData = await addMeterAndReading({
           meter_type_id: meter.value.type.id,
           meter_title: meter.value.title,
           meter_number: meter.value.number,
-          meter_reading_image: base64Image, // This will be null if no image is captured
+          meter_reading_image: base64Image,
           meter_reading_date: new Date(firstReading.value.time).toISOString(),
           meter_reading: firstReading.value.valueInString,
           account_id: meter.value.account.id,
@@ -424,7 +445,9 @@ export default defineComponent({
       meterComopnentReadValue,
       addMeter,
       captureImage,
-      updateValueInString, // Add this line
+      updateValueInString,
+      readingDate,
+      imageSrc, // Return imageSrc for template binding
     };
   },
   components: { MeterComponent },
