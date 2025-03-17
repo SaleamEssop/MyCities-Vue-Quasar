@@ -119,11 +119,7 @@
                 @click="modelMeterForNewEdit = true"
                 clickable
                 v-close-popup
-                v-if="
-                  propertyData &&
-                  (propertyData.property_name ||
-                    propertyData.property_manager) === null
-                "
+             
               >
                 <q-item-section>Add a new meter</q-item-section>
               </q-item>
@@ -131,11 +127,7 @@
                 clickable
                 v-close-popup
                 @click="deleteMeter(meter)"
-                v-if="
-                  propertyData &&
-                  (propertyData.property_name ||
-                    propertyData.property_manager) === null
-                "
+          
               >
                 <q-item-section>Delete Meter</q-item-section>
               </q-item>
