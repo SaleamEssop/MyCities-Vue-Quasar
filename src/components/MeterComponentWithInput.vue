@@ -118,12 +118,12 @@
       </div>
     </q-card-section>
     <q-card-actions align="center" style="margin-top: -10px">
-      <!--      <q-btn-->
-      <!--        icon="image"-->
-      <!--        color="primary"-->
-      <!--        text-color="white"-->
-      <!--        @click="captureImage()"-->
-      <!--      />-->
+      <q-btn
+        icon="image"
+        color="primary"
+        text-color="white"
+        @click="captureImage()"
+      />
       <!-- <q-btn
         icon="download"
         color="primary"
@@ -350,6 +350,19 @@ export default defineComponent({
     //     reader.readAsDataURL(blob);
     //   });
 
+    const convertBlobToBase64 = (blobUrl) => {
+      return fetch(blobUrl)
+        .then((response) => response.blob())
+        .then((blob) => {
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result); // This is the base64 data
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          });
+        });
+    };
+
     // const savePicture = async (photo, fileName) => {
     //   let base64Data = "";
     //   const response = await fetch(photo.webPath);
@@ -466,56 +479,89 @@ export default defineComponent({
 
     const saveReading = (isSubmit = false) => {
       const doSave = (currentReadingValue, valueInString) => {
-        // screenShotCapture();
-        // const timeToSave = new Date().toISOString();
-        const timeToSave = new Date(
-          date.extractDate(readingDate.value, "DD-MMM-YYYY")
-        ).toISOString();
+  convertBlobToBase64(imageSrc.value).then((base64Image) => {
+    const timeToSave = new Date(
+      date.extractDate(readingDate.value, "DD-MMM-YYYY")
+    ).toISOString();
 
-        if (props.isNew) {
-          addReadingInMeter({
-            meter_id: props.meter.id,
-            meter_reading_date: timeToSave,
-            meter_reading: valueInString,
-          }).then(({ status, data }) => {
-            if (status) {
-              readingStore.addReading({
-                id: data.id,
-                value: currentReadingValue,
-                valueInString: valueInString,
-                time: new Date(timeToSave).getTime(),
-                isSubmit: isSubmit,
-                meter: { id: props.meter.id },
-              });
-            }
+    if (props.isNew) {
+      addReadingInMeter({
+        meter_id: props.meter.id,
+        meter_reading_date: timeToSave,
+        meter_reading: valueInString,
+        reading_image: base64Image,
+      })
+        .then((response) => {
+          if (response.status) {
+            readingStore.addReading({
+              id: response.data.id,
+              value: currentReadingValue,
+              valueInString: valueInString,
+              time: new Date(timeToSave).getTime(),
+              isSubmit: isSubmit,
+              meter: { id: props.meter.id },
+            });
+            $q.notify({
+              message: response.msg || 'Reading added successfully!',
+              color: 'positive',
+            });
+          } else {
+            $q.notify({
+              message: response.msg || 'Oops, something went wrong!',
+              color: 'negative',
+            });
+          }
+        })
+        .catch((error) => {
+          $q.notify({
+            message: error.response?.data?.msg || 'An unexpected error occurred.',
+            color: 'negative',
           });
-          // screenShotCapture();
-        } else {
-          let lastEditDate = date.formatDate(
-            new Date(lastEditTime.value).toISOString()
-          );
-          updateReadingInMeter({
-            meter_id: props.meter.id,
-            meter_reading_date: lastEditDate,
-            meter_reading: valueInString,
-            meter_reading_id: currentReadingItem.value.id,
-          }).then(({ status, data }) => {
-            if (status) {
-              readingStore.updateReading({
-                id: currentReadingItem.value.id,
-                value: currentReadingValue,
-                valueInString: valueInString,
-                time: new Date(lastEditDate).getTime(),
-                isSubmit: isSubmit,
-                meter: { id: props.meter.id },
-              });
-            }
+        });
+    } else {
+      let lastEditDate = date.formatDate(
+        new Date(lastEditTime.value).toISOString()
+      );
+      updateReadingInMeter({
+        meter_id: props.meter.id,
+        meter_reading_date: lastEditDate,
+        meter_reading: valueInString,
+        meter_reading_id: currentReadingItem.value.id,
+        reading_image: base64Image,
+      })
+        .then((response) => {
+          if (response.status) {
+            readingStore.updateReading({
+              id: currentReadingItem.value.id,
+              value: currentReadingValue,
+              valueInString: valueInString,
+              time: new Date(lastEditDate).getTime(),
+              isSubmit: isSubmit,
+              meter: { id: props.meter.id },
+            });
+            $q.notify({
+              message: response.msg || 'Reading updated successfully!',
+              color: 'positive',
+            });
+          } else {
+            $q.notify({
+              message: response.msg || 'Oops, something went wrong!',
+              color: 'negative',
+            });
+          }
+        })
+        .catch((error) => {
+          $q.notify({
+            message: error.response?.data?.msg || 'An unexpected error occurred.',
+            color: 'negative',
           });
-        }
+        });
+    }
 
-        emit("save");
-        console.log("need to reload page");
-      };
+    emit("save");
+    console.log("need to reload page");
+  });
+};
 
       const valueInString = meterComopnentReadValue.value.getValueInString();
       const currentReadingValue =

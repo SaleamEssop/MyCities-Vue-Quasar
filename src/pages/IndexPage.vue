@@ -15,7 +15,7 @@
         <div class="header-top-container d-flex align-items-center">
           <div class="header-left-top">
             <div class="logo-container">
-              <img class="q-px-lg titleIcon" src="~assets/MyCity.png"/>
+              <img class="q-px-lg titleIcon" src="~assets/MyCity.png" />
               <!-- <div class="regionTitle">Ethekwini Region</div> -->
             </div>
             <div class="text-center">
@@ -31,12 +31,29 @@
               </q-btn>
             </div>
           </div>
-          <span style="font-weight: 700;cursor: pointer" @click="sureLogout = true">Logout</span>
-<!--          <q-btn icon="logout" round @click="sureLogout = true"></q-btn>-->
+
+          <div class="header-right-top d-flex align-items-center">
+            <div class="user-profile d-flex align-items-center">
+              <!-- Remove d-flex from this div to allow proper centering -->
+              <div class="user-profile-name">
+                {{ user?.name }}
+              </div>
+            </div>
+            <q-btn
+              flat
+              label="Logout"
+              color="primary"
+              @click="sureLogout = true"
+              class="logout-btn"
+            ></q-btn>
+          </div>
+
+          <!-- <span style="font-weight: 700;cursor: pointer" @click="sureLogout = true">Logout</span> -->
+          <!--          <q-btn icon="logout" round @click="sureLogout = true"></q-btn>-->
         </div>
         <!-- <q-separator color="grey" />
         <q-separator color="grey q-mt-xs" /> -->
-        <q-separator color="grey q-mt-sm" size="2px"/>
+        <q-separator color="grey q-mt-sm" size="2px" />
 
         <div class="menu_main">
           <!-- start new hamburger menu code -->
@@ -71,7 +88,7 @@
                         <q-item-label
                           :class="{ active: menu.id == activeId }"
                           @click="selectLang(menu.id)"
-                          style="font-size: 1.2rem;font-weight: bold"
+                          style="font-size: 1.2rem; font-weight: bold"
                         >
                           {{ menu?.name }}
                         </q-item-label>
@@ -79,15 +96,18 @@
                           class="sub-menu-items"
                           :class="{ active: menu.id === activeId }"
                         >
-                          <q-list v-for="childs in menu.childs" :key="childs.id">
+                          <q-list
+                            v-for="childs in menu.childs"
+                            :key="childs.id"
+                          >
                             <q-item>
                               <q-item-section>
                                 <q-item-label
                                   v-model="name"
                                   @click="
-                                  activeMenuItem(childs.id);
-                                  isHidden = !isHidden;
-                                "
+                                    activeMenuItem(childs.id);
+                                    isHidden = !isHidden;
+                                  "
                                 >
                                   {{ childs.name }}
                                 </q-item-label>
@@ -108,11 +128,11 @@
                           v-model="name"
                           :class="{ active: menu.id === activeId }"
                           @click="
-                          activeMenuItem(menu.id);
-                          isHidden = !isHidden;
-                          selectLang(menu.id);
-                        "
-                          style="font-size: 1.2rem;font-weight: bold"
+                            activeMenuItem(menu.id);
+                            isHidden = !isHidden;
+                            selectLang(menu.id);
+                          "
+                          style="font-size: 1.2rem; font-weight: bold"
                         >
                           {{ menu?.name }}
                           <!-- Side Menu working-->
@@ -192,7 +212,7 @@
           </div> -->
         </div>
 
-        <q-separator color="grey" size="2px"/>
+        <q-separator color="grey" size="2px" />
         <!-- <q-separator color="grey q-mt-xs" /> -->
       </div>
       <!-- second menu section -->
@@ -279,9 +299,14 @@
       </div>
       <!-- <q-separator color="grey q-mb-lg" size="2px" /> -->
 
-      <q-btn-dropdown color="primary" icon="share" fab style="position: absolute;bottom: 30px;right: 30px;z-index: 1">
+      <q-btn-dropdown
+        color="primary"
+        icon="share"
+        fab
+        style="position: absolute; bottom: 30px; right: 30px; z-index: 1"
+      >
         <q-list>
-          <q-item clickable v-for="(network,i) in networks" :key="i">
+          <q-item clickable v-for="(network, i) in networks" :key="i">
             <ShareNetwork
               :network="network.network"
               url="https://www.mycities.co.za"
@@ -289,24 +314,24 @@
               description="I am sharing this fantastic Web app I found which makes managing your water and lights so easy. You just have to try it."
               hashtags="mycities.co.za"
             >
-              <q-icon size="md" :name="network.icon" :color="network.color"/>
+              <q-icon size="md" :name="network.icon" :color="network.color" />
             </ShareNetwork>
           </q-item>
-<!--          <q-item clickable v-close-popup >-->
-<!--            <q-icon size="md" name="fa-brands fa-facebook" />-->
-<!--          </q-item>-->
-<!--          <q-item clickable v-close-popup >-->
-<!--            <q-icon size="md" name="fa-brands fa-twitter" />-->
-<!--          </q-item>-->
-<!--          <q-item clickable v-close-popup >-->
-<!--            <q-icon size="md" name="fa-brands fa-instagram" />-->
-<!--          </q-item>-->
-<!--          <q-item clickable v-close-popup >-->
-<!--            <q-icon size="md" name="fa-brands fa-linkedin" />-->
-<!--          </q-item>-->
-<!--          <q-item clickable v-close-popup >-->
-<!--            <q-icon size="md" name="fa-solid fa-comment-sms" />-->
-<!--          </q-item>-->
+          <!--          <q-item clickable v-close-popup >-->
+          <!--            <q-icon size="md" name="fa-brands fa-facebook" />-->
+          <!--          </q-item>-->
+          <!--          <q-item clickable v-close-popup >-->
+          <!--            <q-icon size="md" name="fa-brands fa-twitter" />-->
+          <!--          </q-item>-->
+          <!--          <q-item clickable v-close-popup >-->
+          <!--            <q-icon size="md" name="fa-brands fa-instagram" />-->
+          <!--          </q-item>-->
+          <!--          <q-item clickable v-close-popup >-->
+          <!--            <q-icon size="md" name="fa-brands fa-linkedin" />-->
+          <!--          </q-item>-->
+          <!--          <q-item clickable v-close-popup >-->
+          <!--            <q-icon size="md" name="fa-solid fa-comment-sms" />-->
+          <!--          </q-item>-->
         </q-list>
       </q-btn-dropdown>
 
@@ -437,7 +462,7 @@
             <div class="dueMessage" v-show="billingDate">
               "Your scheduled meter reading is due. Please read and submit."
             </div>
-            <q-separator v-show="billingDate" color="grey"/>
+            <q-separator v-show="billingDate" color="grey" />
             <div class="" v-for="alarm in getAlarm" :key="alarm.id">
               <div class="row no-wrap">
                 <div class="col text-subtitle1 q-py-sm">
@@ -452,7 +477,7 @@
                   ></q-btn>
                 </div>
               </div>
-              <q-separator color="grey"/>
+              <q-separator color="grey" />
             </div>
           </div>
         </div>
@@ -460,7 +485,7 @@
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn dense label="Done" v-close-popup/>
+        <q-btn dense label="Done" v-close-popup />
         <!-- <q-btn dense label="Remind me later" v-close-popup /> -->
       </q-card-actions>
     </q-card>
@@ -488,7 +513,7 @@
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn flat label="Close" no-caps v-close-popup/>
+        <q-btn flat label="Close" no-caps v-close-popup />
         <q-btn
           flat
           label="Open WhatsApp"
@@ -569,25 +594,25 @@
         <div class="q-mt-sm">Are you sure you want to Logout?</div>
       </q-card-section>
       <q-card-actions align="right">
-        <q-btn label="Cancel" dense no-caps v-close-popup/>
-        <q-btn label="Logout" dense no-caps @click="logout"/>
+        <q-btn label="Cancel" dense no-caps v-close-popup />
+        <q-btn label="Logout" dense no-caps @click="logout" />
       </q-card-actions>
     </q-card>
   </q-dialog>
 </template>
 <script setup>
-import {computed, onMounted, watch, ref} from "vue";
+import { computed, onMounted, watch, ref } from "vue";
 
 // import { getAuth, onAuthStateChanged } from "firebase/auth";
 // import { onBeforeUpdate } from "vue";
-import {useQuasar} from "quasar";
-import {useRouter} from "vue-router";
-import {useUserStore} from "src/stores/user";
-import {useAdStore} from "src/stores/ads";
-import {useGetAlarmsStore} from "src/stores/alarm";
-import {useAccountStore} from "/src/stores/account";
-import {date} from "quasar";
-import {updateAllData} from "boot/firebase";
+import { useQuasar } from "quasar";
+import { useRouter } from "vue-router";
+import { useUserStore } from "src/stores/user";
+import { useAdStore } from "src/stores/ads";
+import { useGetAlarmsStore } from "src/stores/alarm";
+import { useAccountStore } from "/src/stores/account";
+import { date } from "quasar";
+import { updateAllData } from "boot/firebase";
 
 // import { Plugins } from "@capacitor/core";
 // const { Accessibility, Modals } = Plugins;
@@ -663,13 +688,48 @@ const billingDate = computed(() => {
 // });
 
 const networks = [
-  { network: 'email', name: 'Email', icon: 'far fah fa-lg fa-envelope', color: 'grey-10' },
-  { network: 'facebook', name: 'Facebook', icon: 'fab fah fa-lg fa-facebook-f', color: 'grey-10' },
-  { network: 'linkedin', name: 'LinkedIn', icon: 'fab fah fa-lg fa-linkedin', color: 'grey-10' },
-  { network: 'messenger', name: 'Messenger', icon: 'fab fah fa-lg fa-facebook-messenger', color: 'grey-10' },
-  { network: 'sms', name: 'SMS', icon: 'far fah fa-lg fa-comment-dots', color: 'grey-10' },
-  { network: 'twitter', name: 'Twitter', icon: 'fab fah fa-lg fa-twitter', color: 'grey-10' },
-  { network: 'whatsapp', name: 'Whatsappnvm ', icon: 'fab fah fa-lg fa-whatsapp', color: 'grey-10' },
+  {
+    network: "email",
+    name: "Email",
+    icon: "far fah fa-lg fa-envelope",
+    color: "grey-10",
+  },
+  {
+    network: "facebook",
+    name: "Facebook",
+    icon: "fab fah fa-lg fa-facebook-f",
+    color: "grey-10",
+  },
+  {
+    network: "linkedin",
+    name: "LinkedIn",
+    icon: "fab fah fa-lg fa-linkedin",
+    color: "grey-10",
+  },
+  {
+    network: "messenger",
+    name: "Messenger",
+    icon: "fab fah fa-lg fa-facebook-messenger",
+    color: "grey-10",
+  },
+  {
+    network: "sms",
+    name: "SMS",
+    icon: "far fah fa-lg fa-comment-dots",
+    color: "grey-10",
+  },
+  {
+    network: "twitter",
+    name: "Twitter",
+    icon: "fab fah fa-lg fa-twitter",
+    color: "grey-10",
+  },
+  {
+    network: "whatsapp",
+    name: "Whatsappnvm ",
+    icon: "fab fah fa-lg fa-whatsapp",
+    color: "grey-10",
+  },
 ];
 const slide = ref(null);
 const autoplay = ref(true);
@@ -716,7 +776,7 @@ const openDialCall = (number) => {
 };
 
 const markAsRead = (id) => {
-  let alarm = getAlarm.value.findIndex(({id}) => {
+  let alarm = getAlarm.value.findIndex(({ id }) => {
     return id == id;
   });
   if (id > -1) {
@@ -761,14 +821,14 @@ const shareViaWebShare = () => {
 };
 
 const activeMenuItem = (adId) => {
-  const menu = getMenu.value.find(item => item.id === adId);
+  const menu = getMenu.value.find((item) => item.id === adId);
   slide.value = menu.ads[0]?.id;
   selectCategory.value = menu.ads;
 };
 const activeMenuItemLightWater = async (name) => {
   if (!(getMenu.value && getMenu.value.length)) {
     updateAllData();
-    setTimeout(()=>{
+    setTimeout(() => {
       if (name === "Home") {
         name = "Home";
       }
@@ -777,7 +837,7 @@ const activeMenuItemLightWater = async (name) => {
       });
       slide.value = data.ads[0]?.id;
       selectCategory.value = data.ads;
-    },2000)
+    }, 2000);
   } else {
     if (name === "Home") {
       name = "Home";
@@ -788,7 +848,6 @@ const activeMenuItemLightWater = async (name) => {
     slide.value = data.ads[0]?.id;
     selectCategory.value = data.ads;
   }
-
 };
 activeMenuItemLightWater("Home");
 
@@ -811,7 +870,7 @@ const getAdsWithCategory = computed(() => {
     let defaultAds = getMenu.value.filter((_el) => {
       return _el["name"] === "Home";
     });
-    defaultAds.findIndex(({ads}) => {
+    defaultAds.findIndex(({ ads }) => {
       slide.value = ads[0]?.id;
     });
     return [];
@@ -827,7 +886,7 @@ const logout = () => {
     router
       .push("/auth/login")
       .then(() => {
-        $q.notify({message: "Signed out"});
+        $q.notify({ message: "Signed out" });
       })
       .catch((error) => console.log("error", error));
     // $q.loading.hide();
@@ -837,12 +896,12 @@ const totalItems = ref([
   {
     title: "AppartmentMeter 409",
     icon: "water",
-    type: {title: "Water", id: 1},
+    type: { title: "Water", id: 1 },
   },
   {
     title: "AppartmentMeter 410",
     icon: "water",
-    type: {title: "Water", id: 1},
+    type: { title: "Water", id: 1 },
   },
 ]);
 
@@ -851,7 +910,7 @@ function log() {
 }
 
 function moveTo(name) {
-  router.push({name: name});
+  router.push({ name: name });
 }
 </script>
 
@@ -1143,10 +1202,10 @@ body.desktop .sidebar-menu-wrapper .q-hoverable:hover > .q-focus-helper {
 }
 
 .sidebar-menu-wrapper
-> .q-list
-> .q-item
-> .q-item__section
-> .q-item__label.active {
+  > .q-list
+  > .q-item
+  > .q-item__section
+  > .q-item__label.active {
   color: #61a402;
 }
 
@@ -1208,6 +1267,22 @@ body.desktop .sidebar-menu-wrapper .q-hoverable:hover > .q-focus-helper {
 
 .sub-menu-items .q-item__label {
   padding: 5px 20px;
+}
+
+.user-profile-name {
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.logout-btn {
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  padding-left: 30px;
 }
 
 @media only screen and (min-width: 480px) {

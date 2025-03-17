@@ -23,8 +23,8 @@ const readingStore = useReadingStore();
 //const SERVER_URL = "http://146.190.105.178";
 // const SERVER_URL = "http://157.245.194.89"; // staging
 
-// const SERVER_URL = "http://192.168.29.88:8000";
-const SERVER_URL = process.env.API;
+const SERVER_URL = "http://127.0.0.1:8000";
+// const SERVER_URL = process.env.API;
 
 const api = axios.create({ baseURL: `${SERVER_URL}/api` });
 api.interceptors.request.use((config) => {
