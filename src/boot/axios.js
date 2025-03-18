@@ -19,7 +19,7 @@ const readingStore = useReadingStore();
 // for each client)
 
 // const SERVER_URL = "";
-//const SERVER_URL = "https://mycities.co.za"; // prod
+// const SERVER_URL = "https://mycities.co.za"; // prod
 //const SERVER_URL = "http://146.190.105.178";
 // const SERVER_URL = "http://157.245.194.89"; // staging
 
