@@ -24,7 +24,7 @@ const readingStore = useReadingStore();
 // const SERVER_URL = "http://157.245.194.89"; // staging
 
 // const SERVER_URL = "http://127.0.0.1:8000";
-const SERVER_URL = process.env.API;
+const SERVER_URL = process.env.API_URL;
 //
 
 const api = axios.create({ baseURL: `${SERVER_URL}/api` });
@@ -144,7 +144,7 @@ const getParticularMeterCost = (
 
 const fetchMetersByAccountId = async (accountId) => {
   return await api.get(`/v1/meter/get?account_id=${accountId}`);
- 
+
 };
 
 
