@@ -144,7 +144,9 @@ const getParticularMeterCost = (
 
 const fetchMetersByAccountId = async (accountId) => {
   return await api.get(`/v1/meter/get?account_id=${accountId}`);
+ 
 };
+
 
 const addReadingInMeter = async (req) => {
   return await api.post("/v1/meter/add-readings", req);
@@ -301,4 +303,5 @@ export {
   getAdditionalCost,
   getBillday,
   deleteMainSiteAccount,
+
 };
