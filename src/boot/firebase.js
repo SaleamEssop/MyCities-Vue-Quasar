@@ -81,6 +81,7 @@ const updateAllData = () => {
     );
 
     siteStore.replace(sitesSplit.sites);
+    siteStore.property = data.property;
     accountStore.replace(sitesSplit.accounts);
   }).catch(error => {
     console.error("Error fetching data:", error);

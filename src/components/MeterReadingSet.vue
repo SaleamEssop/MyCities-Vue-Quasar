@@ -5,8 +5,10 @@
         <span class="text-bold text-h6 text-black"
           >{{ meter?.type.title }} Meter :- {{ meter?.number }}</span
         >
+
         <!-- <span class="round-cheap">Meter {{ meter?.number }}</span> -->
       </div>
+
       <div class="flex justify-between items-center">
         <span
           >Last reading,
@@ -69,9 +71,15 @@
             >Enter Reading</q-btn
           >
           &nbsp;
-          <router-link
+          <router-link v-if="!property || !property.property_name"
             class="link"
             :to="{ name: 'MeterCost', params: { id: meter.id } }"
+          >
+            <q-btn size="0.7rem" rounded color="primary">Calculate Cost</q-btn>
+          </router-link>
+          <router-link  v-if="property && property.property_name"
+            class="link"
+                :to="{ name: 'MeterCostProperty', params: { id: meter.id } }"
           >
             <q-btn size="0.7rem" rounded color="primary">Calculate Cost</q-btn>
           </router-link>
@@ -109,6 +117,25 @@
                 class="link"
                 :to="{ name: 'MeterCost', params: { id: meter.id } }"
               >
+                <q-item v-if="!property || !property.property_name"
+                 clickable v-ripple>
+                  <q-item-section>Calculate Cost</q-item-section>
+                </q-item>
+              </router-link>
+              <router-link
+                v-if="property && property.property_name"
+                class="link"
+                :to="{ name: 'AccountSummary', params: { id: meter.id } }"
+              >
+                <q-item clickable v-ripple>
+                  <q-item-section>Account Summary</q-item-section>
+                </q-item>
+              </router-link>
+              <router-link
+                v-if="property && property.property_name"
+                class="link"
+                :to="{ name: 'MeterCostProperty', params: { id: meter.id } }"
+              >
                 <q-item clickable v-ripple>
                   <q-item-section>Calculate Cost</q-item-section>
                 </q-item>
@@ -116,19 +143,16 @@
 
               <!-- :disable="meterLength === 2 ? true : false" -->
               <q-item
+                v-if="!property || !property.property_name"
                 @click="modelMeterForNewEdit = true"
                 clickable
                 v-close-popup
-             
               >
                 <q-item-section>Add a new meter</q-item-section>
               </q-item>
-              <q-item
-                clickable
-                v-close-popup
-                @click="deleteMeter(meter)"
-          
-              >
+
+              <q-item v-if="!property || !property.property_name"
+               clickable v-close-popup @click="deleteMeter(meter)">
                 <q-item-section>Delete Meter</q-item-section>
               </q-item>
             </q-list>
@@ -262,7 +286,7 @@
   </q-dialog>
 </template>
 <script>
-import { defineComponent, computed, ref, watch } from "vue";
+import { defineComponent, computed, ref, watch, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { date, Dialog, useQuasar } from "quasar";
 
@@ -278,15 +302,17 @@ import MeterCost from "./MeterCost.vue";
 import { deleteMainMeter } from "src/boot/axios";
 import { getParticularMeterCost } from "boot/axios";
 import { updateAllData } from "src/boot/firebase";
+import { useSiteStore } from "/src/stores/site";
 
 const { formatDate } = date;
 const meterStore = useMeterStore();
 const readingStore = useReadingStore();
 const accountStore = useAccountStore();
-//get property data from response
+const siteStore = useSiteStore();
 
+const property = computed(() => siteStore.property);
 
-
+// store = property;
 
 export default defineComponent({
   name: "MeterReadingSet",
@@ -305,6 +331,7 @@ export default defineComponent({
     const modelMeterForNewEdit = ref(false);
     const modelCostForMeter = ref(false);
     const meterLength = computed(() => meterStore.meters.length);
+
     const selectedAccount = ref(
       accountStore.getAccountById(props.meter.account.id)
     );
@@ -443,6 +470,7 @@ export default defineComponent({
       getMeterCost,
       getParticularMeterCost,
       meterCostData,
+      property,
     };
   },
   components: { MeterComponent, MeterComponentWithInput, AddMeter, MeterCost },

@@ -22,6 +22,18 @@ const routes = [
             name: "MeterCost",
             meta: { title: "Meter Cost", meta: { requiresAuth: true } },
           },
+          {
+            path: ":id/meter-cost",
+            component: () => import("pages/Meters/MeterCostPropertyUser.vue"),
+            name: "MeterCostProperty",
+            meta: { title: "Meter Cost", meta: { requiresAuth: true } },
+          },
+          {
+            path: ":id/AccountSummary",
+            component: () => import("pages/Meters/AccountSummary.vue"),
+            name: "AccountSummary",
+            meta: { title: "Account Summary", meta: { requiresAuth: true } },
+          },
         ],
       },
       {

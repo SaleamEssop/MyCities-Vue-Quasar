@@ -19,12 +19,12 @@ const readingStore = useReadingStore();
 // for each client)
 
 // const SERVER_URL = "";
-const SERVER_URL = "https://staging.mycities.co.za"; // prod
+// const SERVER_URL = "https://staging.mycities.co.za"; // prod
 //const SERVER_URL = "http://146.190.105.178";
 // const SERVER_URL = "http://157.245.194.89"; // staging
 
 // const SERVER_URL = "http://127.0.0.1:8000";
-// const SERVER_URL = process.env.API;
+const SERVER_URL = process.env.API;
 //
 
 const api = axios.create({ baseURL: `${SERVER_URL}/api` });
@@ -144,7 +144,9 @@ const getParticularMeterCost = (
 
 const fetchMetersByAccountId = async (accountId) => {
   return await api.get(`/v1/meter/get?account_id=${accountId}`);
+ 
 };
+
 
 const addReadingInMeter = async (req) => {
   return await api.post("/v1/meter/add-readings", req);
@@ -301,4 +303,5 @@ export {
   getAdditionalCost,
   getBillday,
   deleteMainSiteAccount,
+
 };
