@@ -417,6 +417,7 @@ export default {
           response.current_period_start_date,
           response.current_period_end_date
         ),
+        //new
         currentDate: this.formatDate(new Date()),
         readIn: `Read in ${
           response.currentPeriodRemainingReadingDays || 0
