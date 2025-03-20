@@ -414,9 +414,10 @@ export default {
         meter_reading: response.latest_meter_reading?.reading_value || "N/A",
 
         dateRange: this.getDateRange(
-          response.estimated_bill?.start_date,
-          response.estimated_bill?.end_date
+          response.current_period_start_date,
+          response.current_period_end_date
         ),
+        //new
         currentDate: this.formatDate(new Date()),
         readIn: `Read in ${
           response.currentPeriodRemainingReadingDays || 0
