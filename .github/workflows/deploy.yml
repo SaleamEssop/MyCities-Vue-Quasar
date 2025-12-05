@@ -36,7 +36,7 @@ jobs:
           REMOTE_HOST: ${{ secrets.DO_HOST }}
           REMOTE_USER: ${{ secrets.DO_USERNAME }}
           SOURCE: "dist/spa/"
-          TARGET: /var/www/app.mycities.co.za
+          TARGET: /var/www/mycities.co.za/web-app
           EXCLUDE: ".git/, .github/, node_modules/, .env*"
 
       - name: Post-deploy commands
@@ -47,12 +47,12 @@ jobs:
           key: ${{ secrets.DO_SSH_KEY }}
           script: |
             # Set proper ownership for web files
-            chown -R www-data:www-data /var/www/app.mycities.co.za
+            chown -R www-data:www-data /var/www/mycities.co.za/web-app
             # Set 755 for directories and 644 for files (more secure)
-            find /var/www/app.mycities.co.za -type d -exec chmod 755 {} \;
-            find /var/www/app.mycities.co.za -type f -exec chmod 644 {} \;
+            find /var/www/mycities.co.za/web-app -type d -exec chmod 755 {} \;
+            find /var/www/mycities.co.za/web-app -type f -exec chmod 644 {} \;
             # Verify deployment
-            if [ -f /var/www/app.mycities.co.za/index.html ]; then
+            if [ -f /var/www/mycities.co.za/web-app/index.html ]; then
               echo "✅ Quasar app deployment complete - index.html found"
             else
               echo "❌ Deployment verification failed - index.html not found"
