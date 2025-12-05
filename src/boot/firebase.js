@@ -46,6 +46,7 @@ const updateAllData = () => {
               number: account.account_number,
               option: account.optional_information,
               site: { id: account.site_id },
+              tariff_template_id: account.tariff_template_id,
               fixedCosts: account.fixed_costs.map((cost) => {
                 return {
                   title: cost.title,

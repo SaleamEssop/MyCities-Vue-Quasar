@@ -42,6 +42,19 @@
         v-model="selectedAccount.number"
       />
       <div v-else>Account :- {{ selectedAccount.number }}</div>
+
+      <q-select
+        color="black"
+        label="Select Tariff Template"
+        :options="tariffTemplateOptions"
+        v-model="selectedAccount.tariff_template_id"
+        option-value="id"
+        option-label="name"
+        emit-value
+        map-options
+        :loading="tariffTemplatesLoading"
+        class="q-mt-md"
+      />
     </q-card-section>
 
     <q-card-section class="bg-primary">
@@ -174,7 +187,7 @@
   </q-card>
 </template>
 <script>
-import { ref, reactive, watch, computed, defineComponent } from "vue";
+import { ref, reactive, watch, computed, defineComponent, onMounted } from "vue";
 import { useSiteStore } from "/src/stores/site";
 import { useAccountStore } from "/src/stores/account";
 import { useQuasar } from "quasar";
@@ -188,6 +201,7 @@ import {
   findEmailFromLocation,
   addSiteAndAccount,
   updateAccount,
+  getTariffTemplates,
 } from "boot/axios";
 
 //import { updateAllData } from "boot/firebase";
@@ -197,6 +211,7 @@ const nullAccount = {
   title: null,
   number: null,
   option: null,
+  tariff_template_id: null,
   site: { id: null, email: null },
   fixedCosts: [],
   defaultCosts: [],
@@ -282,6 +297,25 @@ export default defineComponent({
     //   : ref(nullAccount);
     const siteOptions = ref(siteStore.allSites);
 
+    // Tariff template options
+    const tariffTemplateOptions = ref([]);
+    const tariffTemplatesLoading = ref(false);
+
+    // Fetch tariff templates on mount
+    onMounted(async () => {
+      tariffTemplatesLoading.value = true;
+      try {
+        const response = await getTariffTemplates();
+        if (response.status && response.data) {
+          tariffTemplateOptions.value = response.data;
+        }
+      } catch (error) {
+        console.error("Failed to fetch tariff templates:", error);
+      } finally {
+        tariffTemplatesLoading.value = false;
+      }
+    });
+
     let resetInstance = () => {
       site.value = initialState.site;
       selectedAccount.value = initialState.selectedAccount;
@@ -347,6 +381,7 @@ export default defineComponent({
               account_number: accountValue.number,
               optional_information: accountValue.option,
               default_fixed_cost: default_cost,
+              tariff_template_id: accountValue.tariff_template_id,
             }).then(({ status, code, msg, data }) => {
               if (status) {
                 siteStore.addSite({
@@ -376,6 +411,7 @@ export default defineComponent({
                   option: accountValue.option,
                   site: { id: data.site_id },
                   title: accountValue.title,
+                  tariff_template_id: accountValue.tariff_template_id,
                 });
               }
             });
@@ -402,6 +438,7 @@ export default defineComponent({
             account_number: accountValue.number,
             optional_information: accountValue.option,
             default_fixed_cost: default_cost,
+            tariff_template_id: accountValue.tariff_template_id,
           }).then(({ status, code, msg, data }) => {
             if (status) {
               accountStore.addAccount({
@@ -419,6 +456,7 @@ export default defineComponent({
                 option: accountValue.option,
                 site: { id: data.site_id },
                 title: accountValue.title,
+                tariff_template_id: accountValue.tariff_template_id,
               });
             }
           });
@@ -450,6 +488,7 @@ export default defineComponent({
           optional_information: accountValue.option,
           default_fixed_cost: default_cost,
           account_id: accountValue.id,
+          tariff_template_id: accountValue.tariff_template_id,
         }).then(({ status, code, msg, data }) => {
           if (status) {
             accountStore.update({
@@ -467,6 +506,7 @@ export default defineComponent({
               option: accountValue.option,
               site: { id: data.site_id },
               title: accountValue.title,
+              tariff_template_id: accountValue.tariff_template_id,
             });
           }
         });
@@ -617,6 +657,8 @@ export default defineComponent({
       watchSite,
       isNew,
       alert,
+      tariffTemplateOptions,
+      tariffTemplatesLoading,
     };
   },
 });
