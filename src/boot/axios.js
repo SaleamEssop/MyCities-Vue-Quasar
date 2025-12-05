@@ -152,6 +152,11 @@ const getAlarms = async () => {
   return await api.get("/v1/get-alarms");
 };
 
+//Get Tariff Templates From Server
+const getTariffTemplates = async () => {
+  return await api.get("/v1/tariff-templates");
+};
+
 // Forgot password verification
 const forgotPasswordVerification = async (email) => {
   return await api.post("/v1/forgot-password/email-verification", email);
@@ -253,4 +258,5 @@ export {
   forgotPasswordVerificationCode,
   resetNewPassword,
   deleteMeterReadings,
+  getTariffTemplates,
 };
