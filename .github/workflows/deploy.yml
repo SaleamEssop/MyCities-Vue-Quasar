@@ -7,6 +7,8 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout code
@@ -28,14 +30,14 @@ jobs:
         run: quasar build
 
       - name: Deploy to server
-        uses: easingthemes/ssh-deploy@main
+        uses: easingthemes/ssh-deploy@v5.1.0
         with:
           SSH_PRIVATE_KEY: ${{ secrets.DO_SSH_KEY }}
           REMOTE_HOST: ${{ secrets.DO_HOST }}
           REMOTE_USER: ${{ secrets.DO_USERNAME }}
           SOURCE: "dist/spa/"
           TARGET: /var/www/app.mycities.co.za
-          EXCLUDE: ".git/, .github/, node_modules/, .env, .env.local, .env.production, .env.*"
+          EXCLUDE: ".git/, .github/, node_modules/, .env*"
 
       - name: Post-deploy commands
         uses: appleboy/ssh-action@v1.0.3
@@ -44,9 +46,11 @@ jobs:
           username: ${{ secrets.DO_USERNAME }}
           key: ${{ secrets.DO_SSH_KEY }}
           script: |
-            # Set proper ownership and permissions for web files
+            # Set proper ownership for web files
             chown -R www-data:www-data /var/www/app.mycities.co.za
-            chmod -R 755 /var/www/app.mycities.co.za
+            # Set 755 for directories and 644 for files (more secure)
+            find /var/www/app.mycities.co.za -type d -exec chmod 755 {} \;
+            find /var/www/app.mycities.co.za -type f -exec chmod 644 {} \;
             # Verify deployment
             if [ -f /var/www/app.mycities.co.za/index.html ]; then
               echo "✅ Quasar app deployment complete - index.html found"
