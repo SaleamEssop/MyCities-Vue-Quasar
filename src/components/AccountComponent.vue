@@ -311,6 +311,10 @@ export default defineComponent({
         }
       } catch (error) {
         console.error("Failed to fetch tariff templates:", error);
+        $q.notify({
+          message: "Failed to load tariff templates. Please try again.",
+          color: "negative",
+        });
       } finally {
         tariffTemplatesLoading.value = false;
       }
