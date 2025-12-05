@@ -1,0 +1,56 @@
+name: Deploy Quasar App
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install Quasar CLI
+        run: npm install -g @quasar/cli
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Quasar SPA
+        run: quasar build
+
+      - name: Deploy to server
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.DO_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.DO_HOST }}
+          REMOTE_USER: ${{ secrets.DO_USERNAME }}
+          SOURCE: "dist/spa/"
+          TARGET: /var/www/app.mycities.co.za
+          EXCLUDE: ".git/, .github/, node_modules/, .env, .env.local, .env.production, .env.*"
+
+      - name: Post-deploy commands
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USERNAME }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          script: |
+            # Set proper ownership and permissions for web files
+            chown -R www-data:www-data /var/www/app.mycities.co.za
+            chmod -R 755 /var/www/app.mycities.co.za
+            # Verify deployment
+            if [ -f /var/www/app.mycities.co.za/index.html ]; then
+              echo "✅ Quasar app deployment complete - index.html found"
+            else
+              echo "❌ Deployment verification failed - index.html not found"
+              exit 1
+            fi
