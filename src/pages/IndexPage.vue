@@ -628,12 +628,13 @@ const shareViaWebShare = () => {
 };
 
 const activeMenuItem = (name) => {
-  let data = getAds.value.filter((_el) => {
-    return _el["name"] === name;
-  });
-  if (data.length > 0 && data[0]) {
-    slide.value = data[0].ads?.[0]?.id;
-    selectCategory.value = data[0]?.ads;
+  const data = getAds.value.filter((_el) => _el["name"] === name);
+  
+  if (data.length > 0 && data[0]?.ads) {
+    slide.value = data[0].ads[0]?.id;
+    selectCategory.value = data[0].ads;
+  } else {
+    selectCategory.value = [];
   }
 };
 
@@ -651,19 +652,23 @@ const formatPhoneNumber = (phoneNumberString) => {
 const getAdsWithCategory = computed(() => {
   if (selectCategory.value !== null) {
     return selectCategory.value;
-  } else {
-    let defaultAds = getAds.value.filter((_el) => {
-      return _el["name"] === "Home";
-    });
-    if (defaultAds.length > 0 && defaultAds[0]?.ads) {
-      defaultAds.findIndex(({ ads }) => {
-        slide.value = ads[0]?.id;
-      });
-      return defaultAds[0].ads;
-    }
-    return [];
   }
+  
+  const defaultAds = getAds.value.filter((_el) => _el["name"] === "Home");
+  
+  if (defaultAds.length > 0 && defaultAds[0]?.ads?.length > 0) {
+    return defaultAds[0].ads;
+  }
+  
+  return [];
 });
+
+// Watch for changes to getAdsWithCategory and update slide accordingly
+watch(getAdsWithCategory, (newAds) => {
+  if (newAds && newAds.length > 0 && newAds[0]?.id) {
+    slide.value = newAds[0].id;
+  }
+}, { immediate: true });
 
 const logout = () => {
   // getAuth().signOut();
