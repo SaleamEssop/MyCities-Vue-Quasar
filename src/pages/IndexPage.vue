@@ -631,7 +631,7 @@ const activeMenuItem = (name) => {
   const data = getAds.value.filter((_el) => _el["name"] === name);
   
   if (data.length > 0 && data[0]?.ads) {
-    slide.value = data[0].ads[0]?.id ?? null;
+    slide.value = data[0].ads[0]?.id;
     selectCategory.value = data[0].ads;
   } else {
     selectCategory.value = [];
