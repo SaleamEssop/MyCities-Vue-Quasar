@@ -631,8 +631,10 @@ const activeMenuItem = (name) => {
   let data = getAds.value.filter((_el) => {
     return _el["name"] === name;
   });
-  slide.value = data[0].ads[0]?.id;
-  selectCategory.value = data[0]?.ads;
+  if (data.length > 0 && data[0]) {
+    slide.value = data[0].ads?.[0]?.id;
+    selectCategory.value = data[0]?.ads;
+  }
 };
 
 const formatPhoneNumber = (phoneNumberString) => {
@@ -653,10 +655,13 @@ const getAdsWithCategory = computed(() => {
     let defaultAds = getAds.value.filter((_el) => {
       return _el["name"] === "Home";
     });
-    defaultAds.findIndex(({ ads }) => {
-      slide.value = ads[0]?.id;
-    });
-    return defaultAds[0]?.ads;
+    if (defaultAds.length > 0 && defaultAds[0]?.ads) {
+      defaultAds.findIndex(({ ads }) => {
+        slide.value = ads[0]?.id;
+      });
+      return defaultAds[0].ads;
+    }
+    return [];
   }
 });
 
