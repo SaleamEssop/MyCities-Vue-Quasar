@@ -1,0 +1,185 @@
+/**
+ * MyCities Design Tokens
+ * 
+ * Single source of truth for all design values.
+ * These tokens are used throughout the application for consistent styling.
+ * 
+ * Usage in Vue components:
+ *   @import '@/styles/tokens.scss';
+ *   or access via CSS custom properties (--mc-*)
+ */
+
+// =============================================================================
+// COLOR PALETTE
+// =============================================================================
+
+// Primary Brand Colors
+$mc-primary: #3294B8;           // MyCities Teal
+$mc-primary-dark: #1a5a6e;      // Darker teal for gradients
+$mc-primary-light: #5cb8d6;     // Lighter teal for hover states
+
+// Secondary Colors
+$mc-secondary: #2f7088;         // Secondary teal
+$mc-success: #61A301;           // Green for success states
+$mc-warning: #f0ad4e;           // Orange for warnings
+$mc-negative: #cc0000;          // Red for errors and meter red digits
+$mc-info: #5bc0de;              // Blue for information
+
+// Neutral Colors
+$mc-black: #000000;
+$mc-white: #ffffff;
+$mc-grey-100: #f5f5f5;          // Background light
+$mc-grey-200: #e0e0e0;          // Borders
+$mc-grey-300: #c0c0c0;          // Disabled text
+$mc-grey-500: #666666;          // Secondary text
+$mc-grey-700: #333333;          // Primary text
+
+// Meter-specific Colors
+$mc-meter-red: #cc0000;         // Water meter red digits (liters)
+$mc-meter-black: #000000;       // Water meter black digits (kiloliters)
+
+// =============================================================================
+// TYPOGRAPHY
+// =============================================================================
+
+// Font Families
+$mc-font-primary: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$mc-font-mono: 'Roboto Mono', 'Courier New', monospace;
+
+// Font Sizes
+$mc-font-xs: 12px;
+$mc-font-sm: 14px;
+$mc-font-md: 16px;
+$mc-font-lg: 20px;
+$mc-font-xl: 24px;
+$mc-font-2xl: 28px;
+$mc-font-3xl: 36px;
+$mc-font-4xl: 48px;
+
+// Font Weights
+$mc-font-normal: 400;
+$mc-font-medium: 500;
+$mc-font-semibold: 600;
+$mc-font-bold: 700;
+
+// Line Heights
+$mc-leading-tight: 1.25;
+$mc-leading-normal: 1.5;
+$mc-leading-relaxed: 1.75;
+
+// =============================================================================
+// SPACING
+// =============================================================================
+
+$mc-space-xs: 4px;
+$mc-space-sm: 8px;
+$mc-space-md: 16px;
+$mc-space-lg: 24px;
+$mc-space-xl: 32px;
+$mc-space-2xl: 48px;
+$mc-space-3xl: 64px;
+
+// =============================================================================
+// BORDERS & RADIUS
+// =============================================================================
+
+$mc-border-width: 1px;
+$mc-border-color: $mc-grey-200;
+
+$mc-radius-sm: 4px;
+$mc-radius-md: 8px;
+$mc-radius-lg: 16px;
+$mc-radius-full: 9999px;
+
+// =============================================================================
+// SHADOWS
+// =============================================================================
+
+$mc-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+$mc-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+$mc-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+// =============================================================================
+// BREAKPOINTS (aligned with Quasar)
+// =============================================================================
+
+$mc-breakpoint-xs: 0;
+$mc-breakpoint-sm: 600px;
+$mc-breakpoint-md: 1024px;
+$mc-breakpoint-lg: 1440px;
+$mc-breakpoint-xl: 1920px;
+
+// =============================================================================
+// TRANSITIONS
+// =============================================================================
+
+$mc-transition-fast: 150ms ease;
+$mc-transition-normal: 300ms ease;
+$mc-transition-slow: 500ms ease;
+
+// =============================================================================
+// Z-INDEX LAYERS
+// =============================================================================
+
+$mc-z-base: 0;
+$mc-z-dropdown: 100;
+$mc-z-sticky: 200;
+$mc-z-fixed: 300;
+$mc-z-modal-backdrop: 400;
+$mc-z-modal: 500;
+$mc-z-popover: 600;
+$mc-z-tooltip: 700;
+
+// =============================================================================
+// COMPONENT-SPECIFIC TOKENS
+// =============================================================================
+
+// Keypad
+$mc-keypad-btn-height: 60px;
+$mc-keypad-action-height: 48px;
+$mc-keypad-bg: $mc-white;
+$mc-keypad-action-bg: $mc-black;
+
+// Digit Groups
+$mc-digit-width: 40px;
+$mc-digit-height: 56px;
+$mc-digit-font-size: 32px;
+
+// =============================================================================
+// CSS CUSTOM PROPERTIES (for runtime access)
+// =============================================================================
+
+:root {
+  // Colors
+  --mc-primary: #{$mc-primary};
+  --mc-primary-dark: #{$mc-primary-dark};
+  --mc-primary-light: #{$mc-primary-light};
+  --mc-secondary: #{$mc-secondary};
+  --mc-success: #{$mc-success};
+  --mc-warning: #{$mc-warning};
+  --mc-negative: #{$mc-negative};
+  --mc-meter-red: #{$mc-meter-red};
+  --mc-meter-black: #{$mc-meter-black};
+  
+  // Typography
+  --mc-font-primary: #{$mc-font-primary};
+  --mc-font-mono: #{$mc-font-mono};
+  
+  // Spacing
+  --mc-space-xs: #{$mc-space-xs};
+  --mc-space-sm: #{$mc-space-sm};
+  --mc-space-md: #{$mc-space-md};
+  --mc-space-lg: #{$mc-space-lg};
+  --mc-space-xl: #{$mc-space-xl};
+  
+  // Viewport height fix for mobile
+  --vh: 1vh;
+  
+  // Safe area insets (iOS)
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-left: env(safe-area-inset-left, 0px);
+  --safe-area-inset-right: env(safe-area-inset-right, 0px);
+}
+
+

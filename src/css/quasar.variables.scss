@@ -1,0 +1,41 @@
+// Quasar SCSS (& Sass) Variables
+// --------------------------------------------------
+// To customize the look and feel of this app, you can override
+// the Sass/SCSS variables found in Quasar's source Sass/SCSS files.
+
+// Check documentation for full list of Quasar variables
+
+// Your own variables (that are declared here) and Quasar's own
+// ones will be available out of the box in your .vue/.scss/.sass files
+
+// It's highly recommended to change the default colors
+// to match your app's branding.
+// Tip: Use the "Theme Builder" on Quasar's documentation website.
+
+$primary: #3294B8; // MyCities teal
+$secondary: #2f4858;
+$accent: #f5f5f5;
+
+$dark: #1d1d1d;
+
+$positive: #61A301; // MyCities green (success/badge)
+$negative: #c10015;
+$info: #3294B8;
+$warning: #f2c037;
+
+$myred: #cc0000; // Red digits for water meter
+$grey: #e0e0e0;
+$header-bg: rgba(224, 224, 224, 0.78); // MyCities header gray
+
+// optional tonal steps
+$primary-dark: mix($primary, #000, 20%);
+$primary-light: mix($primary, #fff, 20%);
+
+// Surfaces / text
+$surface: #fafafa;
+$panel: #ebebeb;
+$surface-2: #ededed;
+$surface-3: #e7e7e7;
+$muted-text: #65666b;
+$overlay-weak: #00000029;
+$accent-strong: #4d7cc4b3;

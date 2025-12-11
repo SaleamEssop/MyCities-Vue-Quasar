@@ -1,0 +1,405 @@
+/**
+ * MyCities Design Theme
+ * Based on Figma design: MyCities - Final
+ */
+
+// =============================================================================
+// COLOR PALETTE
+// =============================================================================
+
+$mc-primary: #3294B8;           // Main teal/cyan
+$mc-primary-dark: #2a7a9a;      // Darker teal for hover
+$mc-primary-light: #5cb8d6;     // Lighter teal
+
+$mc-black: #000000;
+$mc-white: #FFFFFF;
+$mc-dark-bg: #1a1a1a;           // Dark header background
+
+$mc-success: #4CAF50;           // Green for badges
+$mc-success-dark: #388E3C;
+$mc-danger: #cc0000;            // Red for warnings/errors
+
+$mc-text-primary: #000000;
+$mc-text-secondary: #666666;
+$mc-text-muted: #999999;
+
+$mc-border: #e0e0e0;
+$mc-bg-light: #f5f5f5;
+
+// =============================================================================
+// TYPOGRAPHY
+// =============================================================================
+
+$mc-font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$mc-font-mono: 'Roboto Mono', 'Courier New', monospace;
+
+// Font sizes
+$mc-text-xs: 10px;
+$mc-text-sm: 12px;
+$mc-text-base: 14px;
+$mc-text-lg: 16px;
+$mc-text-xl: 20px;
+$mc-text-2xl: 24px;
+$mc-text-3xl: 32px;
+$mc-text-4xl: 40px;
+
+// =============================================================================
+// SPACING
+// =============================================================================
+
+$mc-space-1: 4px;
+$mc-space-2: 8px;
+$mc-space-3: 12px;
+$mc-space-4: 16px;
+$mc-space-5: 20px;
+$mc-space-6: 24px;
+$mc-space-8: 32px;
+
+// =============================================================================
+// COMPONENT STYLES
+// =============================================================================
+
+// Header bar (black top)
+.mc-header-bar {
+  background: $mc-dark-bg;
+  color: $mc-white;
+  padding: $mc-space-2 $mc-space-4;
+  font-size: $mc-text-sm;
+}
+
+// Navigation row with arrows and badge
+.mc-nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $mc-space-2 $mc-space-4;
+  background: $mc-dark-bg;
+  gap: $mc-space-3;
+}
+
+.mc-nav-arrow {
+  color: $mc-white;
+  font-size: $mc-text-xl;
+  cursor: pointer;
+  padding: $mc-space-1;
+  
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.mc-due-badge {
+  background: $mc-success;
+  color: $mc-white;
+  padding: $mc-space-1 $mc-space-3;
+  border-radius: 4px;
+  font-size: $mc-text-sm;
+  font-weight: 500;
+}
+
+// Amount display
+.mc-amount-large {
+  font-size: $mc-text-4xl;
+  font-weight: 700;
+  color: $mc-primary;
+  text-align: center;
+  padding: $mc-space-2 0;
+}
+
+.mc-period-text {
+  text-align: center;
+  font-size: $mc-text-sm;
+  color: $mc-text-secondary;
+  padding-bottom: $mc-space-3;
+}
+
+// Meter section header
+.mc-meter-header {
+  display: flex;
+  align-items: center;
+  background: $mc-primary;
+  color: $mc-white;
+  padding: $mc-space-3 $mc-space-4;
+  gap: $mc-space-3;
+}
+
+.mc-meter-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mc-meter-stats {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  
+  .stat-item {
+    text-align: center;
+    
+    .stat-label {
+      font-size: $mc-text-xs;
+      opacity: 0.9;
+    }
+    
+    .stat-value {
+      font-size: $mc-text-base;
+      font-weight: 600;
+    }
+  }
+}
+
+// Action links row
+.mc-action-links {
+  display: flex;
+  gap: $mc-space-4;
+  padding: $mc-space-3 $mc-space-4;
+  border-bottom: 1px solid $mc-border;
+  
+  a, button {
+    color: $mc-primary;
+    font-size: $mc-text-sm;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Charges list
+.mc-charges-list {
+  padding: $mc-space-3 $mc-space-4;
+  
+  .charge-row {
+    display: flex;
+    justify-content: space-between;
+    padding: $mc-space-2 0;
+    font-size: $mc-text-sm;
+    
+    .charge-label {
+      color: $mc-text-primary;
+    }
+    
+    .charge-value {
+      color: $mc-text-primary;
+      font-weight: 500;
+    }
+  }
+  
+  .charge-row-highlight {
+    .charge-label {
+      font-weight: 600;
+    }
+    
+    .charge-value {
+      font-size: $mc-text-lg;
+      color: $mc-primary;
+    }
+  }
+}
+
+// Total row
+.mc-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $mc-space-4;
+  border-top: 1px solid $mc-border;
+  
+  .total-label {
+    font-size: $mc-text-2xl;
+    color: $mc-primary;
+    font-weight: 500;
+  }
+  
+  .total-value {
+    font-size: $mc-text-2xl;
+    color: $mc-primary;
+    font-weight: 700;
+  }
+}
+
+// =============================================================================
+// ENTER READINGS SCREEN
+// =============================================================================
+
+.mc-readings-title {
+  font-size: $mc-text-2xl;
+  font-weight: 700;
+  color: $mc-primary;
+  text-align: center;
+  padding: $mc-space-4 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.mc-meter-section {
+  padding: $mc-space-4;
+  border-bottom: 1px solid $mc-border;
+}
+
+.mc-meter-type-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $mc-space-2;
+  margin-bottom: $mc-space-3;
+  
+  .meter-icon {
+    width: 24px;
+    height: 24px;
+    color: $mc-primary;
+  }
+  
+  .meter-type-name {
+    font-size: $mc-text-xl;
+    font-weight: 600;
+    color: $mc-text-primary;
+  }
+}
+
+.mc-meter-number {
+  text-align: center;
+  font-size: $mc-text-sm;
+  color: $mc-text-secondary;
+  margin-bottom: $mc-space-3;
+}
+
+.mc-reading-history {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: $mc-text-sm;
+  margin-bottom: $mc-space-2;
+  
+  .reading-label {
+    color: $mc-text-secondary;
+  }
+  
+  .reading-value {
+    color: $mc-text-primary;
+    font-weight: 500;
+  }
+  
+  .reading-edit {
+    color: $mc-primary;
+    cursor: pointer;
+    margin-left: $mc-space-2;
+  }
+}
+
+.mc-add-reading-link {
+  text-align: center;
+  padding: $mc-space-3 0;
+  
+  a {
+    color: $mc-primary;
+    font-size: $mc-text-sm;
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Digit display
+.mc-digit-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: $mc-space-2;
+  padding: $mc-space-4 0;
+  font-family: $mc-font-mono;
+  font-size: $mc-text-3xl;
+  font-weight: 600;
+  letter-spacing: 8px;
+  
+  .digit-separator {
+    color: $mc-text-primary;
+    margin: 0 $mc-space-2;
+  }
+}
+
+// Numeric keypad
+.mc-keypad {
+  background: $mc-white;
+  border-top: 1px solid $mc-border;
+}
+
+.mc-keypad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.mc-keypad-btn {
+  height: 56px;
+  border: none;
+  border-right: 1px solid $mc-border;
+  border-bottom: 1px solid $mc-border;
+  background: $mc-white;
+  font-size: $mc-text-2xl;
+  font-weight: 500;
+  color: $mc-text-primary;
+  cursor: pointer;
+  transition: background 0.15s;
+  
+  &:nth-child(3n) {
+    border-right: none;
+  }
+  
+  &:active {
+    background: $mc-bg-light;
+  }
+}
+
+.mc-keypad-actions {
+  display: flex;
+  gap: 0;
+}
+
+.mc-keypad-action-btn {
+  flex: 1;
+  height: 48px;
+  border: none;
+  font-size: $mc-text-base;
+  font-weight: 700;
+  color: $mc-white;
+  cursor: pointer;
+  text-transform: uppercase;
+  
+  &.cancel {
+    background: $mc-primary-dark;
+  }
+  
+  &.enter {
+    background: $mc-primary;
+  }
+  
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+// =============================================================================
+// UTILITY CLASSES
+// =============================================================================
+
+.mc-text-primary { color: $mc-primary; }
+.mc-text-success { color: $mc-success; }
+.mc-text-danger { color: $mc-danger; }
+.mc-text-muted { color: $mc-text-muted; }
+
+.mc-bg-primary { background: $mc-primary; }
+.mc-bg-dark { background: $mc-dark-bg; }
+.mc-bg-white { background: $mc-white; }
+
+.mc-font-mono { font-family: $mc-font-mono; }
+
