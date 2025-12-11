@@ -1,16 +1,4 @@
 import { boot } from "quasar/wrappers";
-// import firebase from 'firebase'
-// import { initializeApp, getCurrentUser } from "firebase/app";
-// import { getAuth } from "firebase/auth";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBm2iQusA8JG7sKxXU0aRj6YXqefMH7vps",
-  authDomain: "essop-115c5.firebaseapp.com",
-  projectId: "essop-115c5",
-  storageBucket: "essop-115c5.appspot.com",
-  messagingSenderId: "1002729962409",
-  appId: "1:1002729962409:web:e6b9209a285f44965922b8",
-};
 
 // Store instances - initialized in boot function
 let userStore = null;
@@ -21,11 +9,24 @@ let defaultCostStore = null;
 let alarmStore = null;
 
 const updateAllData = () => {
+  // Skip API calls if stores aren't ready
+  if (!userStore || !userStore.getUser) {
+    console.log("Skipping data fetch - user not logged in");
+    return;
+  }
+
   // Import API functions
   const { getAllData, getAds, defaultCost, getAlarms } = require("boot/axios");
   
-  getAllData().then(({ status, data }) => {
+  getAllData().then((response) => {
+    const data = response?.data || response;
     if (!data || !siteStore || !accountStore) return;
+    
+    // Handle case where data is not an array
+    if (!Array.isArray(data)) {
+      console.log("getAllData response is not an array:", data);
+      return;
+    }
     
     const sitesSplit = data.reduce(
       (acc, site) => {
@@ -67,15 +68,17 @@ const updateAllData = () => {
     console.log("Error fetching all data:", err);
   });
   
-  getAds().then(({ data }) => {
+  getAds().then((response) => {
+    const data = response?.data || response;
     if (adStore && data) {
-      adStore.setAds(data);
+      adStore.setAds(Array.isArray(data) ? data : []);
     }
   }).catch((err) => {
     console.log("Error fetching ads:", err);
   });
   
-  defaultCost().then(({ data }) => {
+  defaultCost().then((response) => {
+    const data = response?.data || response;
     if (defaultCostStore && data) {
       defaultCostStore.setDefaultCost(data);
     }
@@ -83,9 +86,10 @@ const updateAllData = () => {
     console.log("Error fetching default cost:", err);
   });
   
-  getAlarms().then(({ data }) => {
+  getAlarms().then((response) => {
+    const data = response?.data || response;
     if (alarmStore && data) {
-      alarmStore.setAlarms(data);
+      alarmStore.setAlarms(Array.isArray(data) ? data : []);
     }
   }).catch((err) => {
     console.log("Error fetching alarms:", err);
@@ -111,8 +115,8 @@ export default boot(async ({ router, app }) => {
   defaultCostStore = useDefaultCostStore();
   alarmStore = useGetAlarmsStore();
 
-  // Fetch initial data
-  updateAllData();
+  // DON'T fetch data on boot - wait until user is logged in
+  // updateAllData();
 
   // Navigation guard for authentication
   router.beforeEach((to, from, next) => {
@@ -129,10 +133,6 @@ export default boot(async ({ router, app }) => {
       next();
     }
   });
-
-  // Firebase initialization (commented out - using Laravel backend instead)
-  // initializeApp(firebaseConfig);
-  // const auth = getAuth();
 });
 
 export { updateAllData };
