@@ -99,40 +99,52 @@ const updateAllData = () => {
 // "async" is optional;
 // more info on params: https://v2.quasar.dev/quasar-cli/boot-files
 export default boot(async ({ router, app }) => {
-  // Import stores inside boot function (Vue context is available)
-  const { useUserStore } = require("src/stores/user");
-  const { useSiteStore } = require("src/stores/site");
-  const { useAccountStore } = require("src/stores/account");
-  const { useAdStore } = require("src/stores/ads");
-  const { useDefaultCostStore } = require("src/stores/defaultCost");
-  const { useGetAlarmsStore } = require("src/stores/alarm");
-
-  // Initialize store instances
-  userStore = useUserStore();
-  siteStore = useSiteStore();
-  accountStore = useAccountStore();
-  adStore = useAdStore();
-  defaultCostStore = useDefaultCostStore();
-  alarmStore = useGetAlarmsStore();
-
-  // DON'T fetch data on boot - wait until user is logged in
-  // updateAllData();
-
-  // Navigation guard for authentication
-  router.beforeEach((to, from, next) => {
-    const user = userStore.getUser;
+  try {
+    console.log("[firebase boot] Starting...");
     
-    // Check if route requires auth
-    if (to.meta.requiresAuth && !user) {
-      // Redirect to login if not authenticated
-      next("/login");
-    } else if (user && (to.path === "/auth/login" || to.path === "/login")) {
-      // Redirect to home if already authenticated
-      next("/");
-    } else {
-      next();
-    }
-  });
+    // Import stores inside boot function (Vue context is available)
+    const { useUserStore } = require("src/stores/user");
+    const { useSiteStore } = require("src/stores/site");
+    const { useAccountStore } = require("src/stores/account");
+    const { useAdStore } = require("src/stores/ads");
+    const { useDefaultCostStore } = require("src/stores/defaultCost");
+    const { useGetAlarmsStore } = require("src/stores/alarm");
+
+    console.log("[firebase boot] Stores imported");
+    
+    // Initialize store instances
+    userStore = useUserStore();
+    siteStore = useSiteStore();
+    accountStore = useAccountStore();
+    adStore = useAdStore();
+    defaultCostStore = useDefaultCostStore();
+    alarmStore = useGetAlarmsStore();
+
+    console.log("[firebase boot] Stores initialized");
+
+    // DON'T fetch data on boot - wait until user is logged in
+    // updateAllData();
+
+    // Navigation guard for authentication
+    router.beforeEach((to, from, next) => {
+      const user = userStore.getUser;
+      
+      // Check if route requires auth
+      if (to.meta.requiresAuth && !user) {
+        // Redirect to login if not authenticated
+        next("/login");
+      } else if (user && (to.path === "/auth/login" || to.path === "/login")) {
+        // Redirect to home if already authenticated
+        next("/");
+      } else {
+        next();
+      }
+    });
+    
+    console.log("[firebase boot] Complete!");
+  } catch (error) {
+    console.error("[firebase boot] ERROR:", error);
+  }
 });
 
 export { updateAllData };

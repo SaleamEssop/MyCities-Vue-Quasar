@@ -217,23 +217,37 @@ const fetchAndSaveMeterOnAccount = (accountId) => {
 };
 
 export default boot(({ app }) => {
-  // Import stores inside boot function (Vue context is available)
-  const { useUserStore } = require("src/stores/user");
-  const { useMeterStore } = require("src/stores/meter");
-  const { useReadingStore } = require("src/stores/reading");
+  try {
+    console.log("[axios boot] Starting...");
+    
+    // Import stores inside boot function (Vue context is available)
+    const { useUserStore } = require("src/stores/user");
+    const { useMeterStore } = require("src/stores/meter");
+    const { useReadingStore } = require("src/stores/reading");
 
-  // Initialize store instances
-  userStoreInstance = useUserStore();
-  meterStoreInstance = useMeterStore();
-  readingStoreInstance = useReadingStore();
+    console.log("[axios boot] Stores imported");
+    
+    // Initialize store instances
+    userStoreInstance = useUserStore();
+    meterStoreInstance = useMeterStore();
+    readingStoreInstance = useReadingStore();
 
-  // Initialize the API with the user store
-  getApi();
+    console.log("[axios boot] Stores initialized");
+    
+    // Initialize the API with the user store
+    getApi();
 
-  // Make axios available globally in Vue components
-  app.config.globalProperties.$axios = axios;
-  app.config.globalProperties.$api = getApi();
-  app.config.globalProperties.$locationApi = locationApi;
+    console.log("[axios boot] API initialized");
+    
+    // Make axios available globally in Vue components
+    app.config.globalProperties.$axios = axios;
+    app.config.globalProperties.$api = getApi();
+    app.config.globalProperties.$locationApi = locationApi;
+    
+    console.log("[axios boot] Complete!");
+  } catch (error) {
+    console.error("[axios boot] ERROR:", error);
+  }
 });
 
 export {
